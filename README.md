@@ -10,6 +10,7 @@ This project REQUIRES the STRICT USAGE of CERTAIN LIBRARIES AND UTILITIES whenev
 4. [winston](https://github.com/winstonjs/winston) as logging provider with /src/utils/logger.ts being the central/default logger
 5. [picocolors](https://github.com/alexeyraspopov/picocolors) for terminal output formatting with colors
 6. [treeify](https://github.com/notatestuser/treeify) for converting JS/TS objects into nicely formatted trees for terminal output
+7. [drizzle-orm](https://orm.drizzle.team/docs/overview) for database access and as ORM with Bun's integrated sqlite driver
 
 ## Non-Negotiable Assumptions
 
@@ -30,6 +31,48 @@ The following rules MUST always be respected during design and implementation:
 6. Fixes MUST be tested and validated before they can be accepted.
 7. Errors or incomplete work MUST trigger iterative improvement until validation succeeds.
 8. Simplicity MUST be prioritized in all design and code decisions.
+
+## Account and Credentials Database Schema
+
+```ts
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const user = sqliteTable("user", {
+  banExpires: integer("ban_expires", { mode: "timestamp" }),
+  banned: integer("banned", { mode: "boolean" }),
+  banReason: text("ban_reason"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
+  id: text("id").primaryKey(),
+  image: text("image"),
+  name: text("name").notNull(),
+  role: text("role"),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const account = sqliteTable("account", {
+  accessToken: text("access_token"),
+  accessTokenExpiresAt: integer("access_token_expires_at", {
+    mode: "timestamp",
+  }),
+  accountId: text("account_id").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  id: text("id").primaryKey(),
+  idToken: text("id_token"),
+  password: text("password"),
+  providerId: text("provider_id").notNull(),
+  refreshToken: text("refresh_token"),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
+    mode: "timestamp",
+  }),
+  scope: text("scope"),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+});
+```
 
 # Project Introduction
 
