@@ -257,7 +257,7 @@ This acts as the **canonical specification** for the implementation.
 }
 ```
 
-## Data processing and storage
+## Core Responsibilities
 
 The application must implement the following **core responsibilities** in addition to crawling:
 
