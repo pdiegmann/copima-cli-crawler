@@ -1,34 +1,27 @@
-# dependencies (bun install)
-node_modules
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# output
-out
-dist
-*.tgz
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# code coverage
+# Coverage directory used by tools like istanbul
 coverage
 *.lcov
 
-# logs
-logs
-_.log
-report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+# nyc test coverage
+.nyc_output
 
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+# Dependency directories
+node_modules/
+jspm_packages/
 
-# caches
-.eslintcache
-.cache
 *.tsbuildinfo
-
-# IntelliJ based IDEs
-.idea
-
-# Finder (MacOS) folder config
-.DS_Store
+dist

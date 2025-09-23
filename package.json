@@ -1,29 +1,84 @@
 {
-  "name": "copima-cli-crawler",
-  "version": "0.1.0",
-  "type": "module",
-  "description": "A CLI built with Bunli",
-  "author": "",
-  "bin": {
-    "copima-cli-crawler": "./dist/index.js"
-  },
-  "scripts": {
-    "dev": "bun run src/index.ts",
-    "build": "bunli build",
-    "test": "bun test",
-    "type-check": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@bunli/core": "latest"
-  },
-  "devDependencies": {
-    "@bunli/test": "latest",
-    "@types/bun": "latest",
-    "bunli": "latest",
-    "typescript": "^5.0.0"
-  },
-  "bunli": {
-    "entry": "./src/index.ts",
-    "outDir": "./dist"
-  }
+    "name": "copima-cli-crawler",
+    "author": "",
+    "description": "Stricli command line application",
+    "license": "MIT",
+    "type": "module",
+    "main": "dist/index.cjs",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "version": "0.0.0",
+    "files": [
+        "dist"
+    ],
+    "bin": {
+        "copima-cli-crawler": "dist/cli.js",
+        "__copima-cli-crawler_bash_complete": "dist/bash-complete.js"
+    },
+    "engines": {
+        "bun": ">=1.2.8"
+    },
+    "scripts": {
+        "prebuild": "tsc -p src/tsconfig.json",
+        "build": "tsup",
+        "prepublishOnly": "bun run build",
+        "lint": "eslint .",
+        "lint:fix": "eslint . — fix && prettier — write .",
+        "prepare": "lint-staged"
+    },
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.cjs"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "tsup": {
+        "entry": [
+            "src/bin/cli.ts",
+            "src/bin/bash-complete.ts"
+        ],
+        "format": [
+            "esm"
+        ],
+        "tsconfig": "src/tsconfig.json",
+        "clean": true,
+        "splitting": true,
+        "minify": true
+    },
+    "lint-staged": {
+        ".{ts,js}": "eslint — cache — fix",
+        ".{ts,js,css,md}": "prettier — write",
+        ".js": "eslint — cache — fix",
+        ".{js,css,md}": "prettier — write"
+    },
+    "dependencies": {
+        "@stricli/auto-complete": "^1.2.0",
+        "@stricli/core": "^1.2.0",
+        "picocolors": "^1.1.1",
+        "treeify": "^1.1.0",
+        "winston": "^3.17.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.36.0",
+        "@types/bun": "^1.2.22",
+        "@types/node": "^24.5.2",
+        "eslint": "^9.36.0",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-security": "^3.0.1",
+        "eslint-plugin-unicorn": "^61.0.2",
+        "globals": "^16.4.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.2.0",
+        "prettier": "^3.6.2",
+        "tsup": "^8.5.0",
+        "typescript": "^5.9.2",
+        "typescript-eslint": "^8.44.1"
+    }
 }
