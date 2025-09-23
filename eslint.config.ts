@@ -4,6 +4,12 @@ import securityPlugin from 'eslint-plugin-security';
 import unicornPlugin from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tsPlugin from 'typescript-eslint';
+import jiti from 'jiti';
+
+const _require = jiti(__filename);
+
+// Explicitly ensure jiti is used for TypeScript configuration
+const tsConfig = _require('./tsconfig.json');
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [

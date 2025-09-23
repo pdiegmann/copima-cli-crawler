@@ -1,0 +1,112 @@
+import createLogger from '../utils/logger';
+
+const logger = createLogger('GitLabRestClient');
+
+import fetch from 'node-fetch';
+
+
+export class GitLabRestClient {
+  private baseUrl: string;
+  private accessToken: string;
+
+  constructor(baseUrl: string, accessToken: string) {
+    this.baseUrl = baseUrl;
+    this.accessToken = accessToken;
+  }
+
+  async request(endpoint: string, method: string = 'GET', body: Record<string, any> | null = null): Promise<any> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        body: body ? JSON.stringify(body) : null,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        logger.error(`REST request failed: ${response.status} - ${errorText}`);
+        throw new Error(`REST request failed: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      logger.error('REST request failed:', error);
+      throw error;
+    }
+  }
+// Fetch repository branches
+async fetchBranches(projectId: string): Promise<any> {
+  return await this.request(`/projects/${projectId}/repository/branches`);
+}
+
+// Fetch repository commits
+async fetchCommits(projectId: string): Promise<any> {
+  return await this.request(`/projects/${projectId}/repository/commits`);
+}
+
+// Fetch repository tags
+async fetchTags(projectId: string): Promise<any> {
+  return await this.request(`/projects/${projectId}/repository/tags`);
+}
+
+// Fetch file blobs
+async fetchFileBlob(projectId: string, sha: string): Promise<any> {
+  return await this.request(`/projects/${projectId}/repository/blobs/${sha}`);
+}
+}
+
+export async function fetchGroups(flags: any): Promise<any[]> {
+    return this.request('/groups', 'GET');
+}
+
+export async function fetchProjects(flags: any): Promise<any[]> {
+    return this.request('/projects', 'GET');
+}
+
+export async function fetchUsers(flags: any): Promise<any[]> {
+    return this.request('/users', 'GET');
+}
+
+export async function fetchLabels(flags: any): Promise<any[]> {
+    return this.request('/labels', 'GET');
+}
+
+export async function fetchMilestones(flags: any): Promise<any[]> {
+    return this.request('/milestones', 'GET');
+}
+
+export async function fetchIssues(flags: any): Promise<any[]> {
+    return this.request('/issues', 'GET');
+}
+
+export async function fetchMergeRequests(flags: any): Promise<any[]> {
+    return this.request('/merge_requests', 'GET');
+}
+
+fetchArtifacts = async (projectId: string, jobId: string): Promise<any> => {
+    return this.request(`/projects/${projectId}/jobs/${jobId}/artifacts`, 'GET');
+};
+
+async fetchJobLogs(projectId: string, jobId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/jobs/${jobId}/trace`, 'GET');
+}
+
+async fetchDependencyList(projectId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/dependencies`, 'GET');
+}
+// Add methods for specialized REST-only domains crawling (security, compliance, package registries)
+
+async fetchSecurityVulnerabilities(projectId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/vulnerabilities`, 'GET');
+}
+
+async fetchComplianceFrameworks(projectId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/compliance_frameworks`, 'GET');
+}
+
+async fetchPackageRegistries(projectId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/packages`, 'GET');
+}

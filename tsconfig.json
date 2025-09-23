@@ -9,6 +9,7 @@
     "noEmit": true,
     "composite": true,
     "strict": true,
+    "esModuleInterop": true,
     "downlevelIteration": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
@@ -16,7 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "types": [
-      "bun-types" // add Bun global
+      "bun-types"
     ]
   }
 }
