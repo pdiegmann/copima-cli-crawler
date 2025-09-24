@@ -1,12 +1,11 @@
-import fetch from "node-fetch";
-import type { HttpMethod, SafeRecord } from "../types/api";
-import { createLogger } from "../utils/logger";
+import type { HttpMethod, SafeRecord } from "../types/api.js";
+import { createLogger } from "../utils/logger.js";
 
 const logger = createLogger("GitLabRestClient");
 
 export class GitLabRestClient {
-  private baseUrl: string;
-  private accessToken: string;
+  private readonly baseUrl: string;
+  private readonly accessToken: string;
 
   constructor(baseUrl: string, accessToken: string) {
     this.baseUrl = baseUrl;

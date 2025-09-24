@@ -195,6 +195,114 @@ export type OAuth2TokenResponse = {
   scope?: string;
 };
 
+// OAuth2 Token Management Types
+export type OAuth2RefreshRequest = {
+  refreshToken: string;
+  clientId?: string;
+  clientSecret?: string;
+  scope?: string;
+};
+
+export type OAuth2RefreshResponse = {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_in: number;
+  scope?: string;
+};
+
+// Progress Reporting Types (YAML Format)
+export type ProgressMetadata = {
+  startTime: Date;
+  lastUpdate: Date;
+  currentStep: string;
+  completedSteps: number;
+  totalSteps: number;
+  estimatedTimeRemaining?: number;
+};
+
+export type ResourceCount = {
+  total: number;
+  processed: number;
+  filtered: number;
+  errors: number;
+};
+
+export type PerformanceMetrics = {
+  requestsPerSecond: number;
+  avgResponseTime: number;
+  errorRate: number;
+};
+
+export type ProgressStats = {
+  startTime: Date;
+  lastUpdate: Date;
+  currentStep: string;
+  completedSteps: number;
+  totalSteps: number;
+  resourceCounts: Record<string, ResourceCount>;
+  performance: PerformanceMetrics;
+};
+
+export type YAMLProgressReport = {
+  metadata: ProgressMetadata;
+  stats: ProgressStats;
+  performance: PerformanceMetrics;
+  resources: Record<string, ResourceCount>;
+  errors: Array<{
+    timestamp: Date;
+    step: string;
+    message: string;
+    recoverable: boolean;
+  }>;
+};
+
+// Resume State Types
+export type CrawlState = {
+  stepId: string;
+  resourceType: string;
+  processedIds: Set<string>;
+  lastProcessedId?: string;
+  metadata: Record<string, unknown>;
+};
+
+export type ResumeState = {
+  sessionId: string;
+  startTime: Date;
+  lastUpdateTime: Date;
+  completedSteps: string[];
+  currentStep?: string;
+  stepStates: Record<string, CrawlState>;
+  globalMetadata: Record<string, unknown>;
+};
+
+// Enhanced Callback Types
+export type CallbackResult<T = any> = {
+  data?: T;
+  skip?: boolean;
+  metadata?: Record<string, unknown>;
+};
+
+export type ProcessingCallback<T = any, R = T> = (context: CallbackContext, data: T) => Promise<CallbackResult<R> | R | false> | CallbackResult<R> | R | false;
+
+export type CallbackContext = {
+  host: string;
+  accountId: string;
+  resourceType: string;
+};
+
+// Enhanced API Response Types
+export type PaginatedResponse<T> = {
+  data: T[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    hasNext: boolean;
+    nextPageToken?: string;
+  };
+};
+
 // Error types
 export type ApiError = {
   message: string;

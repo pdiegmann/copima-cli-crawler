@@ -32,7 +32,7 @@ type ProgressStats = {
 };
 
 class ProgressReporter {
-  private filePath: string;
+  private readonly filePath: string;
   private intervalId: NodeJS.Timeout | null = null;
   private state: ProgressState = {};
   private stats: ProgressStats = {
@@ -49,7 +49,7 @@ class ProgressReporter {
     },
   };
   private writeStream: fs.WriteStream | null = null;
-  private enableTerminalOutput: boolean = true;
+  private readonly enableTerminalOutput: boolean = true;
 
   constructor(filePath: string, enableTerminalOutput: boolean = true) {
     this.filePath = filePath;
@@ -114,9 +114,7 @@ class ProgressReporter {
       errors: number;
     }>
   ): void {
-    if (!this.stats.resourceCounts) {
-      this.stats.resourceCounts = {};
-    }
+    this.stats.resourceCounts ??= {};
 
     this.stats.resourceCounts[resourceType] = {
       ...this.stats.resourceCounts[resourceType],
@@ -203,10 +201,7 @@ class ProgressReporter {
 
       // Display performance metrics if available
       if (this.stats.performance && this.stats.performance.requestsPerSecond > 0) {
-        const perfLine =
-          `${pc.green("Performance:")} ${this.stats.performance.requestsPerSecond.toFixed(1)} req/s, ` +
-          `${this.stats.performance.avgResponseTime.toFixed(0)}ms avg, ` +
-          `${(this.stats.performance.errorRate * 100).toFixed(1)}% errors`;
+        const perfLine = `${pc.green("Performance:")} ${this.stats.performance.requestsPerSecond.toFixed(1)} req/s, ${this.stats.performance.avgResponseTime.toFixed(0)}ms avg, ${(this.stats.performance.errorRate * 100).toFixed(1)}% errors`;
         console.log(perfLine);
       }
 

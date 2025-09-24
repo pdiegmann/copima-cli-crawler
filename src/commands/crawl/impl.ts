@@ -411,9 +411,53 @@ export const repository = async function (this: LocalContext, _flags: Record<str
   }
 };
 
+// Legacy individual step functions remain available for backward compatibility
+// New orchestrated crawl implementation
 export const crawlAll = async (this: LocalContext, flags: any): Promise<void> => {
+  const logger = this.logger;
+
+  logger.info("🚀 Starting complete GitLab crawl with enhanced orchestrator");
+
+  try {
+    // Import the new crawl implementation
+    const { crawlAll: newCrawlAll } = await import("./newImpl.js");
+
+    // Convert LocalContext config to standard config format
+    const config = this.config;
+
+    // Execute the new crawl implementation
+    const result = await newCrawlAll(config, {
+      sessionId: `crawl-${Date.now()}`,
+      resumeEnabled: config.resume?.enabled !== false,
+      progressReporting: config.progress?.enabled !== false,
+    });
+
+    if (result.success) {
+      logger.info("✅ GitLab crawl completed successfully", {
+        totalProcessingTime: `${result.totalProcessingTime}ms`,
+        summary: result.summary,
+      });
+    } else {
+      logger.warn("⚠️ GitLab crawl completed with errors", {
+        errors: result.summary.errors,
+        summary: result.summary,
+      });
+    }
+  } catch (error) {
+    logger.error("❌ GitLab crawl failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+
+    // Fall back to legacy implementation if new one fails
+    logger.info("Falling back to legacy crawl implementation");
+    await this.legacyCrawlAll(flags);
+  }
+};
+
+// Preserve original implementation as legacy fallback
+export const legacyCrawlAll = async function (this: LocalContext, flags: any): Promise<void> {
   // Implementing complete GitLab crawl (all 4 steps)
-  console.log("🚀 Starting complete GitLab crawl");
+  console.log("🚀 Starting complete GitLab crawl (legacy mode)");
   // Define and implement crawl methods
   const { fetchGroups, fetchProjects, fetchUsers, fetchLabels, fetchMilestones, fetchIssues, fetchMergeRequests, fetchArtifacts, fetchJobLogs, fetchDependencyList } = await import(
     "../../api/gitlabRestClient"

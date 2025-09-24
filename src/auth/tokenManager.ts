@@ -2,10 +2,12 @@
 
 import { addSeconds } from "date-fns";
 import type { OAuth2TokenResponse } from "../types/api";
-import logger from "../utils/logger";
+import { createLogger } from "../utils/logger.js";
+
+const logger = createLogger("TokenManager");
 
 export class TokenManager {
-  private db: any;
+  private readonly db: any;
 
   constructor(db: any) {
     this.db = db;
@@ -33,7 +35,7 @@ export class TokenManager {
 
   private async refreshAccessToken(accountId: string): Promise<string | null> {
     const account = await this.db.account.findUnique({ where: { accountId } });
-    if (!account || !account.refreshToken) {
+    if (!account?.refreshToken) {
       logger.error(`Cannot refresh token for account ${accountId}. Refresh token missing.`);
       return null;
     }
