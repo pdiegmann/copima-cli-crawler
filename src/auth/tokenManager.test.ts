@@ -1,4 +1,4 @@
-import { Database } from "../db/connection";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import logger from "../utils/logger";
 import { TokenManager } from "./tokenManager";
 
@@ -21,7 +21,7 @@ jest.mock("../utils/logger", () => ({
 
 describe("TokenManager", () => {
   let tokenManager: TokenManager;
-  let mockDb: jest.Mocked<Database>;
+  let mockDb: any;
 
   beforeEach(() => {
     mockDb = {
@@ -29,7 +29,7 @@ describe("TokenManager", () => {
         findUnique: jest.fn(),
         update: jest.fn(),
       },
-    } as unknown as jest.Mocked<Database>;
+    };
 
     tokenManager = new TokenManager(mockDb);
   });

@@ -1,7 +1,6 @@
 // Unit tests for GitLabRestClient
 
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import fetchMock from "jest-fetch-mock";
 
 // Create the mock logger instance outside
 const mockLogger = {
@@ -20,8 +19,11 @@ jest.mock("../utils/logger", () => ({
   createLogger: mockCreateLogger,
 }));
 
-// Mock node-fetch
-jest.mock("node-fetch", () => require("jest-fetch-mock"));
+// Mock fetch function with proper typing
+const mockFetch = jest.fn() as jest.MockedFunction<any>;
+
+// Mock node-fetch module
+jest.mock("node-fetch", () => mockFetch);
 
 // Import GitLabRestClient AFTER mocking
 import { GitLabRestClient } from "./gitlabRestClient";
@@ -32,7 +34,7 @@ describe("GitLabRestClient", () => {
   let client: GitLabRestClient;
 
   beforeEach(() => {
-    fetchMock.resetMocks();
+    mockFetch.mockClear();
 
     // Clear only logger method history, not the createLogger history
     // since we want to verify it was called during module import
@@ -45,13 +47,15 @@ describe("GitLabRestClient", () => {
   });
 
   it("should log and throw an error for failed requests", async () => {
-    fetchMock.mockResponseOnce("", { status: 500 });
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      text: () => Promise.resolve("")
+    });
 
     await expect(client.request("/test")).rejects.toThrow("REST request failed: 500");
 
-    // The actual logger is working (we can see the output), but the mock isn't intercepting
-    // Let's just verify the core functionality works - that errors are thrown correctly
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       "https://gitlab.example.com/api/v4/test",
       expect.objectContaining({
         method: "GET",
@@ -65,7 +69,11 @@ describe("GitLabRestClient", () => {
 
   it("should log and return JSON for successful requests", async () => {
     const mockResponse = { data: "test" };
-    fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(mockResponse)
+    } as any);
 
     const result = await client.request("/test");
     expect(result).toEqual(mockResponse);
@@ -76,7 +84,11 @@ describe("GitLabRestClient", () => {
 
   it("should fetch branches", async () => {
     const mockBranches = [{ name: "main" }];
-    fetchMock.mockResponseOnce(JSON.stringify(mockBranches));
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(mockBranches)
+    } as any);
 
     const result = await client.fetchBranches("123");
     expect(result).toEqual(mockBranches);
@@ -84,7 +96,11 @@ describe("GitLabRestClient", () => {
 
   it("should fetch commits", async () => {
     const mockCommits = [{ id: "abc123" }];
-    fetchMock.mockResponseOnce(JSON.stringify(mockCommits));
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(mockCommits)
+    } as any);
 
     const result = await client.fetchCommits("123");
     expect(result).toEqual(mockCommits);
@@ -92,7 +108,11 @@ describe("GitLabRestClient", () => {
 
   it("should fetch tags", async () => {
     const mockTags = [{ name: "v1.0.0" }];
-    fetchMock.mockResponseOnce(JSON.stringify(mockTags));
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(mockTags)
+    } as any);
 
     const result = await client.fetchTags("123");
     expect(result).toEqual(mockTags);

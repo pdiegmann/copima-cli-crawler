@@ -1,14 +1,13 @@
 // src/auth/tokenManager.ts
 
 import { addSeconds } from "date-fns";
-import { Database } from "../db/connection";
-import { OAuth2TokenResponse } from "../types";
-import { logger } from "../utils/logger";
+import type { OAuth2TokenResponse } from "../types/api";
+import logger from "../utils/logger";
 
 export class TokenManager {
-  private db: Database;
+  private db: any;
 
-  constructor(db: Database) {
+  constructor(db: any) {
     this.db = db;
   }
 
@@ -44,7 +43,8 @@ export class TokenManager {
       await this.updateTokens(accountId, response);
       return response.access_token;
     } catch (error) {
-      logger.error(`Failed to refresh access token for account ${accountId}: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Failed to refresh access token for account ${accountId}: ${errorMessage}`);
       return null;
     }
   }

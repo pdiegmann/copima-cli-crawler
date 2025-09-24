@@ -1,10 +1,10 @@
 // Import necessary modules
+import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import fs from "fs";
 import yaml from "js-yaml";
-import logger from "./logger";
 import ProgressReporter from "./progressReporter";
 
-// Mock dependencies
+// Mock fs and js-yaml
 jest.mock("fs", () => ({
   createWriteStream: jest.fn(),
   existsSync: jest.fn(),
@@ -15,21 +15,33 @@ jest.mock("js-yaml", () => ({
   dump: jest.fn(),
   load: jest.fn(),
 }));
-jest.mock("./logger", () => ({
-  __esModule: true,
-  default: {
+jest.mock("./logger", () => {
+  const mockLogger = {
     info: jest.fn(),
     error: jest.fn(),
     warn: jest.fn(),
     debug: jest.fn(),
-  },
-  createLogger: jest.fn(() => ({
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  })),
-}));
+  };
+  return {
+    __esModule: true,
+    default: {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    },
+    createLogger: jest.fn(() => mockLogger),
+  };
+});
+
+// Access the mocked logger instance for tests
+const { createLogger } = jest.requireMock("./logger") as { createLogger: jest.Mock };
+const loggerMocks = createLogger() as {
+  info: jest.Mock;
+  error: jest.Mock;
+  warn: jest.Mock;
+  debug: jest.Mock;
+};
 
 describe("ProgressReporter", () => {
   const mockFilePath = "mockProgress.yaml";
@@ -49,7 +61,7 @@ describe("ProgressReporter", () => {
     expect(fs.createWriteStream).toHaveBeenCalledWith(mockFilePath, {
       flags: "w",
     });
-    expect(logger.info).toHaveBeenCalledWith("Progress reporting started.");
+    expect(loggerMocks.info).toHaveBeenCalledWith("Progress reporting started.");
   });
 
   test("stop() stops progress reporting", () => {
@@ -60,7 +72,7 @@ describe("ProgressReporter", () => {
     progressReporter.stop();
 
     expect(mockWriteStream.close).toHaveBeenCalled();
-    expect(logger.info).toHaveBeenCalledWith("Progress reporting stopped.");
+    expect(loggerMocks.info).toHaveBeenCalledWith("Progress reporting stopped.");
   });
 
   test("updateState() updates the progress state", () => {
@@ -79,8 +91,13 @@ describe("ProgressReporter", () => {
     progressReporter.updateState({ progress: 50 });
     progressReporter["writeProgress"]();
 
-    expect(yaml.dump).toHaveBeenCalledWith({ progress: 50 });
-    expect(mockWriteStream.write).toHaveBeenCalledWith("mockYamlData\n");
+    expect(yaml.dump).toHaveBeenCalledWith(expect.objectContaining({
+      progress: 50,
+      stats: expect.any(Object),
+      timestamp: expect.any(String)
+    }));
+    expect(mockWriteStream.write).toHaveBeenCalledWith("");
+    expect(mockWriteStream.write).toHaveBeenCalledWith("mockYamlData");
   });
 
   test("writeProgress() logs error if write fails", () => {
@@ -95,6 +112,6 @@ describe("ProgressReporter", () => {
     progressReporter.start();
     progressReporter["writeProgress"]();
 
-    expect(logger.error).toHaveBeenCalledWith("Failed to write progress: Write error");
+    expect(loggerMocks.error).toHaveBeenCalledWith("Failed to write progress: Write error");
   });
 });

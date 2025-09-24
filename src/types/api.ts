@@ -185,6 +185,16 @@ export type SafeRecord<T = unknown> = Record<string, T | string | undefined>;
 export type ApiEndpoint = string;
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
+// OAuth2 types
+export type OAuth2TokenResponse = {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  refresh_expires_in?: number;
+  token_type?: string;
+  scope?: string;
+};
+
 // Error types
 export type ApiError = {
   message: string;

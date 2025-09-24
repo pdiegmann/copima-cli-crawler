@@ -1,7 +1,7 @@
 // Import required modules
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import fs from "fs";
 import yaml from "js-yaml";
-import logger from "./logger";
 import ResumeManager from "./resumeManager";
 
 // Mock external dependencies
@@ -14,6 +14,12 @@ jest.mock("js-yaml", () => ({
   load: jest.fn(),
   dump: jest.fn(),
 }));
+// Mock logger functions
+const mockLoggerInfo = jest.fn();
+const mockLoggerError = jest.fn();
+const mockLoggerWarn = jest.fn();
+const mockLoggerDebug = jest.fn();
+
 jest.mock("./logger", () => ({
   __esModule: true,
   default: {
@@ -23,10 +29,10 @@ jest.mock("./logger", () => ({
     debug: jest.fn(),
   },
   createLogger: jest.fn(() => ({
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
+    info: mockLoggerInfo,
+    error: mockLoggerError,
+    warn: mockLoggerWarn,
+    debug: mockLoggerDebug,
   })),
 }));
 
@@ -53,7 +59,7 @@ describe("ResumeManager", () => {
       expect(fs.existsSync).toHaveBeenCalledWith(mockFilePath);
       expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, "utf8");
       expect(yaml.load).toHaveBeenCalledWith(mockFileContent);
-      expect(logger.info).toHaveBeenCalledWith("Resume state loaded successfully.");
+      expect(mockLoggerInfo).toHaveBeenCalledWith("Resume state loaded successfully.");
       expect(state).toEqual(mockState);
     });
 
@@ -63,7 +69,7 @@ describe("ResumeManager", () => {
       const state = resumeManager.loadState();
 
       expect(fs.existsSync).toHaveBeenCalledWith(mockFilePath);
-      expect(logger.warn).toHaveBeenCalledWith("Resume file does not exist. Starting fresh.");
+      expect(mockLoggerWarn).toHaveBeenCalledWith("Resume file does not exist. Starting fresh.");
       expect(state).toEqual({});
     });
 
@@ -75,7 +81,7 @@ describe("ResumeManager", () => {
 
       const state = resumeManager.loadState();
 
-      expect(logger.error).toHaveBeenCalledWith("Failed to load resume state: Read error");
+      expect(mockLoggerError).toHaveBeenCalledWith("Failed to load resume state: Read error");
       expect(state).toEqual({});
     });
   });
@@ -91,7 +97,7 @@ describe("ResumeManager", () => {
 
       expect(yaml.dump).toHaveBeenCalledWith(mockState);
       expect(fs.writeFileSync).toHaveBeenCalledWith(mockFilePath, mockYamlData, "utf8");
-      expect(logger.info).toHaveBeenCalledWith("Resume state saved successfully.");
+      expect(mockLoggerInfo).toHaveBeenCalledWith("Resume state saved successfully.");
     });
 
     it("should handle errors gracefully when saving state", () => {
@@ -103,7 +109,7 @@ describe("ResumeManager", () => {
 
       resumeManager.saveState(mockState);
 
-      expect(logger.error).toHaveBeenCalledWith("Failed to save resume state: YAML error");
+      expect(mockLoggerError).toHaveBeenCalledWith("Failed to save resume state: YAML error");
     });
   });
 });

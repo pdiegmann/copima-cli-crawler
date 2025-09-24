@@ -3,14 +3,15 @@ module.exports = {
   testEnvironment: "node",
   moduleFileExtensions: ["ts", "js"],
   transform: {
-    "^.+\\.ts$": "ts-jest",
+    "^.+\\.ts$": [
+      "ts-jest",
+      {
+        tsconfig: "tsconfig.json",
+        useESM: true,
+      },
+    ],
   },
   extensionsToTreatAsEsm: [".ts"],
   transformIgnorePatterns: ["<rootDir>/node_modules/"],
-  globals: {
-    "ts-jest": {
-      tsconfig: "tsconfig.json",
-      useESM: true,
-    },
-  },
+  setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
 };

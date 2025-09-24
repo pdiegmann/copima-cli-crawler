@@ -25,6 +25,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix && prettier --write .",
     "prepare": "lint-staged",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:bun": "bun test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
@@ -96,8 +101,11 @@
     "eslint-plugin-unicorn": "^61.0.2",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
+    "jest": "^30.1.3",
     "lint-staged": "^16.2.0",
     "prettier": "^3.6.2",
+    "ts-jest": "^29.4.4",
+    "ts-node": "^10.9.2",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.44.1"

@@ -119,11 +119,11 @@ class ProgressReporter {
     }
 
     this.stats.resourceCounts[resourceType] = {
+      ...this.stats.resourceCounts[resourceType],
       total: 0,
       processed: 0,
       filtered: 0,
       errors: 0,
-      ...this.stats.resourceCounts[resourceType],
       ...updates,
     };
     this.stats.lastUpdate = new Date();
@@ -214,7 +214,7 @@ class ProgressReporter {
       process.stdout.write(`\x1b[${this.getDisplayLineCount()}A`);
     } catch (error) {
       // If terminal display fails, don't crash the application
-      logger.debug("Terminal progress display failed:", error);
+      logger.debug("Terminal progress display failed:", error instanceof Error ? { message: error.message, stack: error.stack } : { error: String(error) });
     }
   }
 
@@ -240,7 +240,7 @@ class ProgressReporter {
 
       console.log(pc.bold(pc.green("═══════════════════════")));
     } catch (error) {
-      logger.debug("Final summary display failed:", error);
+      logger.debug("Final summary display failed:", error instanceof Error ? { message: error.message, stack: error.stack } : { error: String(error) });
     }
   }
 

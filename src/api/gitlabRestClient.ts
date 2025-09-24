@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
-import type { HttpMethod, SafeRecord } from "../types/api.js";
-import { createLogger } from "../utils/logger.js";
+import type { HttpMethod, SafeRecord } from "../types/api";
+import { createLogger } from "../utils/logger";
 
 const logger = createLogger("GitLabRestClient");
 
@@ -21,7 +21,7 @@ export class GitLabRestClient {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.accessToken}`,
         },
-        body: body ? JSON.stringify(body) : null,
+        body: body ? JSON.stringify(body) : undefined,
       });
 
       if (!response.ok) {
@@ -30,9 +30,9 @@ export class GitLabRestClient {
         throw new Error(`REST request failed: ${response.status}`);
       }
 
-      return await response.json();
+      return (await response.json()) as T;
     } catch (error) {
-      logger.error("REST request failed:", error);
+      logger.error("REST request failed:", error as SafeRecord);
       throw error;
     }
   }
