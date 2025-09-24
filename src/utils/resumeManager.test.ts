@@ -5,9 +5,30 @@ import logger from "./logger";
 import ResumeManager from "./resumeManager";
 
 // Mock external dependencies
-jest.mock("fs");
-jest.mock("js-yaml");
-jest.mock("./logger");
+jest.mock("fs", () => ({
+  existsSync: jest.fn(),
+  readFileSync: jest.fn(),
+  writeFileSync: jest.fn(),
+}));
+jest.mock("js-yaml", () => ({
+  load: jest.fn(),
+  dump: jest.fn(),
+}));
+jest.mock("./logger", () => ({
+  __esModule: true,
+  default: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
+  createLogger: jest.fn(() => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  })),
+}));
 
 describe("ResumeManager", () => {
   const mockFilePath = "/path/to/resume.yaml";

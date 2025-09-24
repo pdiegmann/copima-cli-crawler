@@ -5,7 +5,7 @@ import type { Logger } from "../types/utilities.js";
 
 const logFilePath = join(process.cwd(), "logs", "app.log");
 
-export const createLogger = (context: string): Logger => {
+const createLogger = (context: string): Logger => {
   return winstonCreateLogger({
     level: "info",
     format: format.combine(
@@ -26,3 +26,12 @@ export const createLogger = (context: string): Logger => {
     transports: [new transports.Console(), new transports.File({ filename: logFilePath })],
   });
 };
+
+// Create a default logger instance for backward compatibility
+const defaultLogger = createLogger("Default");
+
+// Named export for new usage
+export { createLogger };
+
+// Default export for backward compatibility
+export default defaultLogger;

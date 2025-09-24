@@ -1,21 +1,23 @@
-import { TokenManager } from "./tokenManager";
 import { Database } from "../db/connection";
 import logger from "../utils/logger";
+import { TokenManager } from "./tokenManager";
 
 jest.mock("../db/connection");
-jest.mock("../utils/logger", () => {
-  const actualLogger = jest.requireActual("../utils/logger");
-  return {
-    __esModule: true,
-    default: {
-      ...actualLogger.default,
-      info: jest.fn(),
-      error: jest.fn(),
-      warn: jest.fn(),
-      debug: jest.fn(),
-    },
-  };
-});
+jest.mock("../utils/logger", () => ({
+  __esModule: true,
+  default: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
+  createLogger: jest.fn(() => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  })),
+}));
 
 describe("TokenManager", () => {
   let tokenManager: TokenManager;

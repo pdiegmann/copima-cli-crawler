@@ -1,13 +1,35 @@
 // Import necessary modules
 import fs from "fs";
 import yaml from "js-yaml";
-import ProgressReporter from "./progressReporter";
 import logger from "./logger";
+import ProgressReporter from "./progressReporter";
 
 // Mock dependencies
-jest.mock("fs");
-jest.mock("js-yaml");
-jest.mock("./logger");
+jest.mock("fs", () => ({
+  createWriteStream: jest.fn(),
+  existsSync: jest.fn(),
+  readFileSync: jest.fn(),
+  writeFileSync: jest.fn(),
+}));
+jest.mock("js-yaml", () => ({
+  dump: jest.fn(),
+  load: jest.fn(),
+}));
+jest.mock("./logger", () => ({
+  __esModule: true,
+  default: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
+  createLogger: jest.fn(() => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  })),
+}));
 
 describe("ProgressReporter", () => {
   const mockFilePath = "mockProgress.yaml";
