@@ -1,6 +1,7 @@
-import logger from '../utils/logger';
 import fetch from 'node-fetch';
+import { createLogger } from '../utils/logger';
 
+const logger = createLogger('GitLabGraphQLClient');
 
 export class GitLabGraphQLClient {
   private baseUrl: string;
@@ -40,9 +41,10 @@ export class GitLabGraphQLClient {
       throw error;
     }
   }
+
   /**
    * Fetches all users from the GitLab GraphQL API.
-   * @returns {Promise<any[]>} A promise that resolves to an array of users.
+   * Step 2 of the crawling workflow.
    */
   async fetchUsers(): Promise<any[]> {
     const query = `
@@ -64,6 +66,304 @@ export class GitLabGraphQLClient {
       return data.users.nodes;
     } catch (error) {
       logger.error('Failed to fetch users:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches all groups from the GitLab GraphQL API.
+   * Step 1 of the crawling workflow.
+   */
+  async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+    const query = `
+      query($first: Int, $after: String) {
+        groups(first: $first, after: $after) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            id
+            name
+            path
+            fullName
+            fullPath
+            description
+            visibility
+            createdAt
+            updatedAt
+            webUrl
+            avatarUrl
+            parentId
+            subgroupCreationLevel
+            projectCreationLevel
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { first, after });
+      return data.groups;
+    } catch (error) {
+      logger.error('Failed to fetch groups:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches all projects from the GitLab GraphQL API.
+   * Step 1 of the crawling workflow.
+   */
+  async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+    const query = `
+      query($first: Int, $after: String) {
+        projects(first: $first, after: $after) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            id
+            name
+            path
+            fullPath
+            description
+            visibility
+            createdAt
+            updatedAt
+            lastActivityAt
+            webUrl
+            avatarUrl
+            defaultBranch
+            archived
+            forksCount
+            starCount
+            issuesEnabled
+            mergeRequestsEnabled
+            wikiEnabled
+            snippetsEnabled
+            containerRegistryEnabled
+            lfsEnabled
+            requestAccessEnabled
+            nameWithNamespace
+            pathWithNamespace
+            topics
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { first, after });
+      return data.projects;
+    } catch (error) {
+      logger.error('Failed to fetch projects:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches projects within a specific group.
+   * Part of Step 1 of the crawling workflow.
+   */
+  async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+    const query = `
+      query($id: ID!, $first: Int, $after: String) {
+        group(id: $id) {
+          projects(first: $first, after: $after) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              id
+              name
+              path
+              fullPath
+              description
+              visibility
+              createdAt
+              updatedAt
+              lastActivityAt
+              webUrl
+              avatarUrl
+              defaultBranch
+              archived
+              forksCount
+              starCount
+              issuesEnabled
+              mergeRequestsEnabled
+              wikiEnabled
+              snippetsEnabled
+              containerRegistryEnabled
+              lfsEnabled
+              requestAccessEnabled
+              nameWithNamespace
+              pathWithNamespace
+              topics
+            }
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { id: groupId, first, after });
+      return data.group?.projects || { nodes: [], pageInfo: { hasNextPage: false } };
+    } catch (error) {
+      logger.error(`Failed to fetch projects for group ${groupId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches subgroups within a specific group.
+   * Part of Step 1 of the crawling workflow.
+   */
+  async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+    const query = `
+      query($id: ID!, $first: Int, $after: String) {
+        group(id: $id) {
+          subgroups(first: $first, after: $after) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              id
+              name
+              path
+              fullName
+              fullPath
+              description
+              visibility
+              createdAt
+              updatedAt
+              webUrl
+              avatarUrl
+              parentId
+              subgroupCreationLevel
+              projectCreationLevel
+            }
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { id: groupId, first, after });
+      return data.group?.subgroups || { nodes: [], pageInfo: { hasNextPage: false } };
+    } catch (error) {
+      logger.error(`Failed to fetch subgroups for group ${groupId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches a specific group by ID with detailed information.
+   */
+  async fetchGroup(groupId: string): Promise<any> {
+    const query = `
+      query($id: ID!) {
+        group(id: $id) {
+          id
+          name
+          path
+          fullName
+          fullPath
+          description
+          visibility
+          createdAt
+          updatedAt
+          webUrl
+          avatarUrl
+          parentId
+          subgroupCreationLevel
+          projectCreationLevel
+          repositorySizeLimit
+          lfsEnabled
+          requestAccessEnabled
+          fullName
+          fullPath
+          rootStorageStatistics {
+            storageSize
+            repositorySize
+            lfsObjectsSize
+            buildArtifactsSize
+            packagesSize
+            snippetsSize
+            uploadsSize
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { id: groupId });
+      return data.group;
+    } catch (error) {
+      logger.error(`Failed to fetch group ${groupId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches a specific project by ID with detailed information.
+   */
+  async fetchProject(projectId: string): Promise<any> {
+    const query = `
+      query($id: ID!) {
+        project(id: $id) {
+          id
+          name
+          path
+          fullPath
+          description
+          visibility
+          createdAt
+          updatedAt
+          lastActivityAt
+          webUrl
+          avatarUrl
+          defaultBranch
+          archived
+          forksCount
+          starCount
+          issuesEnabled
+          mergeRequestsEnabled
+          wikiEnabled
+          snippetsEnabled
+          containerRegistryEnabled
+          lfsEnabled
+          requestAccessEnabled
+          nameWithNamespace
+          pathWithNamespace
+          topics
+          repository {
+            exists
+            empty
+            rootRef
+          }
+          statistics {
+            commitCount
+            storageSize
+            repositorySize
+            lfsObjectsSize
+            buildArtifactsSize
+            packagesSize
+            snippetsSize
+            uploadsSize
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { id: projectId });
+      return data.project;
+    } catch (error) {
+      logger.error(`Failed to fetch project ${projectId}:`, error);
       throw error;
     }
   }
