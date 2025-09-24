@@ -151,7 +151,7 @@ export const listAccounts = async (flags: ListAccountsFlags): Promise<void | Err
       });
 
       logger.info(colors.bold("\n📋 GitLab Accounts:"));
-      logger.info(treeify.asTree(tree, true, true));
+      logger.info(treeify.asTree(tree as any, true, true));
     }
 
     logger.info(colors.green(`✅ Found ${accounts.length} account(s)`));
@@ -282,12 +282,12 @@ export const refreshToken = async (flags: RefreshTokenFlags, _positionals?: stri
 
     const data = await response.json();
     logger.info(colors.green("✅ Token refreshed successfully"));
-    logger.info(`🔑 New Access Token: ${data.access_token}`);
+    logger.info(`🔑 New Access Token: ${(data as any).access_token}`);
     logger.info("🔄 Refresh Token Updated");
     // Update tokens in the database
-    acc.accessToken = data.access_token;
-    acc.refreshToken = data.refresh_token;
-    acc.accessTokenExpiresAt = Date.now() + data.expires_in * 1000;
+    (acc as any).accessToken = (data as any).access_token;
+    (acc as any).refreshToken = (data as any).refresh_token;
+    (acc as any).accessTokenExpiresAt = Date.now() + (data as any).expires_in * 1000;
   } catch (error) {
     logger.error(colors.red("❌ Failed to refresh tokens"));
     logger.error(error instanceof Error ? error.message : String(error));

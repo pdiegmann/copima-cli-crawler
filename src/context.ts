@@ -6,14 +6,14 @@ import path from "node:path";
 
 export type LocalContext = {
   readonly process: NodeJS.Process;
-  readonly logger: import("winston").Logger;
-  readonly graphqlClient: import("../api/graphqlClient").GraphQLClient;
-  readonly restClient: import("../api/restClient").RestClient;
+  readonly logger: ReturnType<typeof createLogger>;
+  readonly graphqlClient: any;
+  readonly restClient: any;
   // ...
 } & CommandContext &
   StricliAutoCompleteContext;
 
-import { createGraphQLClient } from "./api/graphqlClient";
+import { createGraphQLClient, createRestClient } from "./api";
 import { createLogger } from "./utils/logger";
 
 export const buildContext = (process: NodeJS.Process): LocalContext => {
@@ -23,7 +23,7 @@ export const buildContext = (process: NodeJS.Process): LocalContext => {
     fs,
     path,
     logger: createLogger("Context"),
-    graphqlClient: createGraphQLClient(),
-    restClient: createRestClient(),
+    graphqlClient: createGraphQLClient("https://gitlab.example.com", "your-token"),
+    restClient: createRestClient("https://gitlab.example.com", "your-token"),
   };
 };

@@ -55,6 +55,14 @@ export const getDatabase = (): ReturnType<typeof drizzle> => {
   return db;
 };
 
+// Extend Database type to include schema properties
+export type Database = ReturnType<typeof drizzle> & {
+  account: {
+    update: (args: { where: { accountId: string }; data: Record<string, unknown> }) => Promise<void>;
+    findUnique: (args: { where: { accountId: string } }) => Promise<Record<string, unknown> | null>;
+  };
+};
+
 export const closeDatabase = (): void => {
   if (db) {
     logger.info("Closing database connection");

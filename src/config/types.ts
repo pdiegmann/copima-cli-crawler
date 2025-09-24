@@ -184,6 +184,8 @@ export type EnvMapping = {
 
   CALLBACK_ENABLED?: string;
   CALLBACK_MODULE_PATH?: string;
+
+  [key: string]: string | undefined;
 };
 
 /**

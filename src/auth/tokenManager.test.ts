@@ -1,22 +1,17 @@
+const mockLogger = {
+  info: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
+};
+const mockCreateLogger = jest.fn(() => mockLogger);
+
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import logger from "../utils/logger";
 import { TokenManager } from "./tokenManager";
 
 jest.mock("../db/connection");
 jest.mock("../utils/logger", () => ({
-  __esModule: true,
-  default: {
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  },
-  createLogger: jest.fn(() => ({
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  })),
+  createLogger: mockCreateLogger,
 }));
 
 describe("TokenManager", () => {
@@ -81,7 +76,7 @@ describe("TokenManager", () => {
       const token = await tokenManager.getAccessToken(accountId);
 
       expect(token).toBeNull();
-      expect(logger.error).toHaveBeenCalledWith(`Account with ID ${accountId} not found.`);
+      expect(mockLogger.error).toHaveBeenCalledWith(`Account with ID ${accountId} not found.`);
     });
   });
 
@@ -96,7 +91,7 @@ describe("TokenManager", () => {
       const token = await (tokenManager as any).refreshAccessToken(accountId);
 
       expect(token).toBeNull();
-      expect(logger.error).toHaveBeenCalledWith(`Cannot refresh token for account ${accountId}. Refresh token missing.`);
+      expect(mockLogger.error).toHaveBeenCalledWith(`Cannot refresh token for account ${accountId}. Refresh token missing.`);
     });
   });
 });

@@ -169,7 +169,7 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { first, after });
-      return data.projects as { nodes: GitLabProject[]; pageInfo: PageInfo };
+      return data["projects"] as { nodes: GitLabProject[]; pageInfo: PageInfo };
     } catch (error) {
       logger.error("Failed to fetch projects:", {
         error: error instanceof Error ? error.message : String(error),

@@ -1,5 +1,5 @@
 import type { HttpMethod, SafeRecord } from "../types/api.js";
-import { createLogger } from "../utils/logger.js";
+import { createLogger } from "../utils/logger";
 
 const logger = createLogger("GitLabRestClient");
 

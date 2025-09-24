@@ -33,5 +33,8 @@ const defaultLogger = createLogger("Default");
 // Named export for new usage
 export { createLogger };
 
+// Named export of default logger for compatibility with { logger } imports
+export { defaultLogger as logger };
+
 // Default export for backward compatibility
 export default defaultLogger;

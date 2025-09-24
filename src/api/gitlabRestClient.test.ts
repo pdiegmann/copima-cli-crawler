@@ -19,11 +19,8 @@ jest.mock("../utils/logger", () => ({
   createLogger: mockCreateLogger,
 }));
 
-// Mock fetch function with proper typing
-const mockFetch = jest.fn() as jest.MockedFunction<any>;
-
-// Mock node-fetch module
-jest.mock("node-fetch", () => mockFetch);
+const mockFetch: any = jest.fn();
+(global as any).fetch = mockFetch;
 
 // Import GitLabRestClient AFTER mocking
 import { GitLabRestClient } from "./gitlabRestClient";
@@ -51,7 +48,7 @@ describe("GitLabRestClient", () => {
       ok: false,
       status: 500,
       text: () => Promise.resolve("")
-    });
+    } as any);
 
     await expect(client.request("/test")).rejects.toThrow("REST request failed: 500");
 

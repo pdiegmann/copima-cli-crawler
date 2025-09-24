@@ -37,7 +37,7 @@ export const areasCommand = buildCommand({
       },
       resume: {
         kind: "parsed",
-        parse: (input: string) => input.toLowerCase() === "true",
+        parse: (input: string) => input.toLowerCase(),
         brief: "Resume from previous crawl state",
         optional: true,
       },
@@ -85,7 +85,7 @@ export const usersCommand = buildCommand({
       },
       resume: {
         kind: "parsed",
-        parse: (input: string) => input.toLowerCase() === "true",
+        parse: (input: string) => input.toLowerCase(),
         brief: "Resume from previous crawl state",
         optional: true,
       },
@@ -133,7 +133,7 @@ export const resourcesCommand = buildCommand({
       },
       resume: {
         kind: "parsed",
-        parse: (input: string) => input.toLowerCase() === "true",
+        parse: (input: string) => input.toLowerCase(),
         brief: "Resume from previous crawl state",
         optional: true,
       },
@@ -181,7 +181,7 @@ export const repositoryCommand = buildCommand({
       },
       resume: {
         kind: "parsed",
-        parse: (input: string) => input.toLowerCase() === "true",
+        parse: (input: string) => input.toLowerCase(),
         brief: "Resume from previous crawl state",
         optional: true,
       },

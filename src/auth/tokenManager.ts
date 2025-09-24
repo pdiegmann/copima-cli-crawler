@@ -2,7 +2,7 @@
 
 import { addSeconds } from "date-fns";
 import type { OAuth2TokenResponse } from "../types/api";
-import { createLogger } from "../utils/logger.js";
+import { createLogger } from "../utils/logger";
 
 const logger = createLogger("TokenManager");
 

@@ -53,7 +53,7 @@ export class CommonResourcesFetcher {
 
       logger.info(`Fetching members for ${areaType}: ${areaPath}`);
       const data = await this.client.query(query, { id: areaId });
-      const members = data[areaType]?.groupMembers?.nodes || [];
+      const members = (data[areaType] && (data[areaType] as any).groupMembers?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
@@ -73,11 +73,11 @@ export class CommonResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("members", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMembers, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMembers as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} members for ${areaPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch members for ${areaType} ${areaPath}:`, error);
+      logger.error(`Failed to fetch members for ${areaType} ${areaPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -107,7 +107,7 @@ export class CommonResourcesFetcher {
 
       logger.info(`Fetching labels for ${areaType}: ${areaPath}`);
       const data = await this.client.query(query, { id: areaId });
-      const labels = data[areaType]?.labels?.nodes || [];
+      const labels = (data[areaType] && (data[areaType] as any).labels?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
@@ -127,11 +127,11 @@ export class CommonResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("labels", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedLabels, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedLabels as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} labels for ${areaPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch labels for ${areaType} ${areaPath}:`, error);
+      logger.error(`Failed to fetch labels for ${areaType} ${areaPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -168,7 +168,7 @@ export class CommonResourcesFetcher {
 
       logger.info(`Fetching milestones for ${areaType}: ${areaPath}`);
       const data = await this.client.query(query, { id: areaId });
-      const milestones = data[areaType]?.milestones?.nodes || [];
+      const milestones = (data[areaType] && (data[areaType] as any).milestones?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
@@ -188,11 +188,11 @@ export class CommonResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("milestones", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMilestones, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMilestones as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} milestones for ${areaPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch milestones for ${areaType} ${areaPath}:`, error);
+      logger.error(`Failed to fetch milestones for ${areaType} ${areaPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -257,13 +257,13 @@ export class CommonResourcesFetcher {
 
       // Paginate through all issues
       while (hasNextPage) {
-        const data = await this.client.query(query, {
+        const data: any = await this.client.query(query, {
           id: projectId,
           first: 100,
           after,
         });
 
-        const issuesData = data.project?.issues;
+        const issuesData: any = (data["project"] && (data["project"] as any).issues) || [];
         const issues = issuesData?.nodes || [];
         allIssues = allIssues.concat(issues);
 
@@ -291,11 +291,11 @@ export class CommonResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("issues", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedIssues, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedIssues as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} issues for ${projectPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch issues for project ${projectPath}:`, error);
+      logger.error(`Failed to fetch issues for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -370,13 +370,13 @@ export class CommonResourcesFetcher {
 
       // Paginate through all merge requests
       while (hasNextPage) {
-        const data = await this.client.query(query, {
+        const data: any = await this.client.query(query, {
           id: projectId,
           first: 100,
           after,
         });
 
-        const mergeRequestsData = data.project?.mergeRequests;
+        const mergeRequestsData: any = (data["project"] && (data["project"] as any).mergeRequests) || [];
         const mergeRequests = mergeRequestsData?.nodes || [];
         allMergeRequests = allMergeRequests.concat(mergeRequests);
 
@@ -404,11 +404,11 @@ export class CommonResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("mergerequests", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMergeRequests, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMergeRequests as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} merge requests for ${projectPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch merge requests for project ${projectPath}:`, error);
+      logger.error(`Failed to fetch merge requests for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }

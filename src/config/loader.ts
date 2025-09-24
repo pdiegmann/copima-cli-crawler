@@ -16,9 +16,10 @@ import type { CliArgs, Config, EnvMapping } from "./types.js";
  */
 export class ConfigLoader {
   private config: Config;
-  private logger = createLogger("ConfigLoader");
+  private readonly logger = createLogger("ConfigLoader");
 
-  constructor() {
+  constructor(logger: ReturnType<typeof createLogger> = createLogger("ConfigLoader")) {
+    this.logger = logger;
     this.config = { ...defaultConfig };
   }
 
@@ -63,7 +64,7 @@ export class ConfigLoader {
           this.logger.debug(`Loaded local config from ${configPath}`);
           return;
         } catch (error) {
-          this.logger.warn(`Failed to load local config from ${configPath}:`, error);
+          this.logger.warn(`Failed to load local config from ${configPath}:`, { error: error instanceof Error ? error.message : String(error) });
         }
       }
     }
@@ -87,7 +88,7 @@ export class ConfigLoader {
           this.logger.debug(`Loaded user config from ${configPath}`);
           return;
         } catch (error) {
-          this.logger.warn(`Failed to load user config from ${configPath}:`, error);
+          this.logger.warn(`Failed to load user config from ${configPath}:`, { error: error instanceof Error ? error.message : String(error) });
         }
       }
     }

@@ -46,11 +46,11 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository"];
       const filePath = this.storageManager.createHierarchicalPath("branches", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBranches, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBranches as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} branches for ${projectPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch branches for project ${projectPath}:`, error);
+      logger.error(`Failed to fetch branches for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -81,11 +81,11 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository"];
       const filePath = this.storageManager.createHierarchicalPath("tags", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTags, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTags as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} tags for ${projectPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch tags for project ${projectPath}:`, error);
+      logger.error(`Failed to fetch tags for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -153,11 +153,11 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "branches", branchName];
       const filePath = this.storageManager.createHierarchicalPath("commits", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedCommits, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedCommits as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} commits for ${projectPath}/${branchName} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch commits for project ${projectPath}, branch ${branchName}:`, error);
+      logger.error(`Failed to fetch commits for project ${projectPath}, branch ${branchName}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -198,11 +198,11 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "branches", branchName];
       const filePath = this.storageManager.createHierarchicalPath("tree", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTreeItems, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTreeItems as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} tree items for ${projectPath}/${branchName} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch repository tree for project ${projectPath}, branch ${branchName}:`, error);
+      logger.error(`Failed to fetch repository tree for project ${projectPath}, branch ${branchName}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -257,11 +257,11 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("releases", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedReleases, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedReleases as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} releases for ${projectPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch releases for project ${projectPath}:`, error);
+      logger.error(`Failed to fetch releases for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -326,11 +326,11 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
       const filePath = this.storageManager.createHierarchicalPath("pipelines", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines as any, false);
 
       logger.info(`Successfully wrote ${writtenCount} pipelines for ${projectPath} to ${filePath}`);
     } catch (error) {
-      logger.error(`Failed to fetch pipelines for project ${projectPath}:`, error);
+      logger.error(`Failed to fetch pipelines for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -363,12 +363,12 @@ export class RestResourcesFetcher {
         const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "files"];
         const fileName = `${sanitizedFilePath}_content`;
         const outputPath = this.storageManager.createHierarchicalPath(fileName, hierarchy);
-        const writtenCount = this.storageManager.writeJsonlFile(outputPath, [processedContent], false);
+        const writtenCount = this.storageManager.writeJsonlFile(outputPath, [processedContent] as any, false);
 
         logger.info(`Successfully wrote ${writtenCount} file content for ${filePath} to ${outputPath}`);
       }
     } catch (error) {
-      logger.error(`Failed to fetch file content for ${projectPath}/${filePath}:`, error);
+      logger.error(`Failed to fetch file content for ${projectPath}/${filePath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -393,12 +393,12 @@ export class RestResourcesFetcher {
         // Store in hierarchical structure
         const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
         const filePath = this.storageManager.createHierarchicalPath("metadata", hierarchy);
-        this.storageManager.writeJsonlFile(filePath, [processedMetadata], false);
+        this.storageManager.writeJsonlFile(filePath, [processedMetadata] as any, false);
 
         logger.info(`Successfully wrote project metadata for ${projectPath} to ${filePath}`);
       }
     } catch (error) {
-      logger.error(`Failed to fetch project metadata for ${projectPath}:`, error);
+      logger.error(`Failed to fetch project metadata for ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }

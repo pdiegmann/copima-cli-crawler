@@ -1,12 +1,12 @@
 // src/auth/refreshTokenManager.ts
 
-import { Database } from "../db/connection";
-import { logger } from "../utils/logger";
-import { OAuth2TokenResponse } from "../types";
 import { addSeconds } from "date-fns";
+import type { Database } from "../db/connection";
+import type { OAuth2TokenResponse } from "../types/api";
+import { logger } from "../utils/logger";
 
 export class RefreshTokenManager {
-  private db: Database;
+  private readonly db: Database;
 
   constructor(db: Database) {
     this.db = db;
@@ -46,13 +46,18 @@ export class RefreshTokenManager {
       return false;
     }
 
-    if (!account.refreshToken || !account.refreshTokenExpiresAt) {
+    if (!account["refreshToken"] || !account["refreshTokenExpiresAt"]) {
       logger.error(`Refresh token or expiration missing for account ${accountId}`);
       return false;
     }
 
     const now = new Date();
-    if (now > new Date(account.refreshTokenExpiresAt)) {
+    const expiresAt = account["refreshTokenExpiresAt"];
+    if (!expiresAt || !(typeof expiresAt === "string" || typeof expiresAt === "number" || expiresAt instanceof Date)) {
+      logger.error(`Invalid refreshTokenExpiresAt value for account ${accountId}`);
+      return false;
+    }
+    if (now > new Date(expiresAt)) {
       logger.error(`Refresh token expired for account ${accountId}`);
       return false;
     }

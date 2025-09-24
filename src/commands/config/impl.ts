@@ -98,7 +98,7 @@ export const setConfig = async (flags: SetConfigFlags): Promise<void | Error> =>
     let config: Record<string, unknown> = {} as Record<string, unknown>;
     if (existsSync(configFile)) {
       const yamlContent = readFileSync(configFile, "utf8");
-      config = yaml.load(yamlContent) || {};
+      config = (yaml.load(yamlContent) as Record<string, unknown>) || {};
     }
 
     // Parse value based on type
@@ -161,7 +161,7 @@ export const unsetConfig = async (flags: UnsetConfigFlags): Promise<void | Error
     const config = yaml.load(yamlContent) || {};
 
     // Remove nested property using dot notation
-    const removed = unsetNestedProperty(config, flags.key);
+    const removed = unsetNestedProperty(config as Record<string, unknown>, flags.key);
 
     if (!removed) {
       logger.warn(colors.yellow(`⚠️  Configuration key not found: ${flags.key}`));
@@ -272,7 +272,7 @@ const setNestedProperty = (obj: Record<string, unknown>, path: string, value: un
     if (!(key in current) || typeof current[key] !== "object") {
       current[key] = {};
     }
-    current = current[key];
+    current = (current as Record<string, unknown>)[key] as Record<string, unknown>;
   }
 
   current[lastKey] = value;
@@ -287,7 +287,7 @@ const unsetNestedProperty = (obj: Record<string, unknown>, path: string): boolea
     if (!(key in current) || typeof current[key] !== "object") {
       return false; // Path doesn't exist
     }
-    current = current[key];
+    current = ((current as Record<string, unknown> | null)?.[key] ?? {}) as Record<string, unknown>;
   }
 
   if (lastKey in current) {

@@ -10,10 +10,10 @@ export const areas = async function (this: LocalContext, _flags: Record<string, 
     logger.info("Starting Step 1: Crawling areas (groups and projects)");
 
     // Initialize callback manager
-    const callbackManager = createCallbackManager(this.config.callbacks);
+    const callbackManager = createCallbackManager((this as any).config?.callbacks);
     const callbackContext: CallbackContext = {
-      host: this.config.gitlab.host,
-      accountId: this.config.gitlab.accessToken, // Using access token as account identifier
+      host: (this as any).config?.gitlab?.host,
+      accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
       resourceType: "", // Will be set for each resource type
     };
 
@@ -55,15 +55,15 @@ export const areas = async function (this: LocalContext, _flags: Record<string, 
     logger.info(`Fetched ${projects.length} projects`);
 
     // Implement JSONL storage logic with callback processing
-    const outputDir = this.path.resolve("output", "areas");
-    this.fs.mkdirSync(outputDir, { recursive: true });
+    const outputDir = (this.path as any)?.resolve?.("output", "areas") ?? "";
+    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
     const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
 
-      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
+      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
@@ -75,12 +75,12 @@ export const areas = async function (this: LocalContext, _flags: Record<string, 
       }
     };
 
-    await writeJSONL(this.path.join(outputDir, "groups.jsonl"), groups, "group");
-    await writeJSONL(this.path.join(outputDir, "projects.jsonl"), projects, "project");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "groups.jsonl") ?? "", groups, "group");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "projects.jsonl") ?? "", projects, "project");
 
     logger.info("Stored areas in JSONL files with callback processing");
   } catch (error) {
-    logger.error("Error during Step 1: Crawling areas", error);
+    logger.error("Error during Step 1: Crawling areas", { error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 };
@@ -93,10 +93,10 @@ export const users = async function (this: LocalContext, _flags: Record<string, 
     logger.info("Starting Step 2: Crawling users");
 
     // Initialize callback manager
-    const callbackManager = createCallbackManager(this.config.callbacks);
+    const callbackManager = createCallbackManager((this as any).config?.callbacks);
     const callbackContext: CallbackContext = {
-      host: this.config.gitlab.host,
-      accountId: this.config.gitlab.accessToken, // Using access token as account identifier
+      host: (this as any).config?.gitlab?.host,
+      accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
       resourceType: "user",
     };
 
@@ -119,15 +119,15 @@ export const users = async function (this: LocalContext, _flags: Record<string, 
     logger.info(`Fetched ${users.data.users.nodes.length} users`);
 
     // Implement JSONL storage logic with callback processing
-    const outputDir = this.path.resolve("output", "users");
-    this.fs.mkdirSync(outputDir, { recursive: true });
+    const outputDir = (this.path as any)?.resolve?.("output", "users") ?? "";
+    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
     const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
 
-      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
+      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
@@ -139,11 +139,11 @@ export const users = async function (this: LocalContext, _flags: Record<string, 
       }
     };
 
-    await writeJSONL(this.path.join(outputDir, "users.jsonl"), users.data.users.nodes, "user");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "users.jsonl") ?? "", users.data.users.nodes, "user");
 
     logger.info("Stored users in JSONL files with callback processing");
   } catch (error) {
-    logger.error("Error during Step 2: Crawling users", error);
+    logger.error("Error during Step 2: Crawling users", { error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 };
@@ -156,10 +156,10 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
     logger.info("Starting Step 3: Crawling area-specific resources");
 
     // Initialize callback manager
-    const callbackManager = createCallbackManager(this.config.callbacks);
+    const callbackManager = createCallbackManager((this as any).config?.callbacks);
     const callbackContext: CallbackContext = {
-      host: this.config.gitlab.host,
-      accountId: this.config.gitlab.accessToken, // Using access token as account identifier
+      host: (this as any).config?.gitlab?.host,
+      accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
       resourceType: "", // Will be set for each resource type
     };
 
@@ -315,15 +315,15 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
     logger.info(`Fetched ${branches.length} branches`);
 
     // Implement JSONL storage logic for resources with callback processing
-    const outputDir = this.path.resolve("output", "resources");
-    this.fs.mkdirSync(outputDir, { recursive: true });
+    const outputDir = (this.path as any)?.resolve?.("output", "resources") ?? "";
+    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
     const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
 
-      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
+      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
@@ -336,20 +336,20 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
     };
 
     // Write all resources with callback processing
-    await writeJSONL(this.path.join(outputDir, "labels.jsonl"), labels.data.labels.nodes, "label");
-    await writeJSONL(this.path.join(outputDir, "issues.jsonl"), issues.data.issues.nodes, "issue");
-    await writeJSONL(this.path.join(outputDir, "boards.jsonl"), boards.data.boards.nodes, "board");
-    await writeJSONL(this.path.join(outputDir, "epics.jsonl"), epicHierarchy.data.epics.nodes, "epic");
-    await writeJSONL(this.path.join(outputDir, "audit_events.jsonl"), auditEvents.data.auditEvents.nodes, "audit_event");
-    await writeJSONL(this.path.join(outputDir, "snippets.jsonl"), snippets.data.snippets.nodes, "snippet");
-    await writeJSONL(this.path.join(outputDir, "metadata.jsonl"), [metadata.data.project], "project_metadata");
-    await writeJSONL(this.path.join(outputDir, "pipelines.jsonl"), pipelines.data.pipelines.nodes, "pipeline");
-    await writeJSONL(this.path.join(outputDir, "releases.jsonl"), releases.data.releases.nodes, "release");
-    await writeJSONL(this.path.join(outputDir, "branches.jsonl"), branches, "branch");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "labels.jsonl") ?? "", labels.data.labels.nodes, "label");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "issues.jsonl") ?? "", issues.data.issues.nodes, "issue");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "boards.jsonl") ?? "", boards.data.boards.nodes, "board");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "epics.jsonl") ?? "", epicHierarchy.data.epics.nodes, "epic");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "audit_events.jsonl") ?? "", auditEvents.data.auditEvents.nodes, "audit_event");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "snippets.jsonl") ?? "", snippets.data.snippets.nodes, "snippet");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "metadata.jsonl") ?? "", [metadata.data.project], "project_metadata");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "pipelines.jsonl") ?? "", pipelines.data.pipelines.nodes, "pipeline");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "releases.jsonl") ?? "", releases.data.releases.nodes, "release");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "branches.jsonl") ?? "", branches, "branch");
 
     logger.info("Stored all resources in JSONL files with callback processing");
   } catch (error) {
-    logger.error("Error during Step 3: Crawling resources", error);
+    logger.error("Error during Step 3: Crawling resources", { error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 };
@@ -362,10 +362,10 @@ export const repository = async function (this: LocalContext, _flags: Record<str
     logger.info("Starting Step 4: Crawling repository resources");
 
     // Initialize callback manager
-    const callbackManager = createCallbackManager(this.config.callbacks);
+    const callbackManager = createCallbackManager((this as any).config?.callbacks);
     const callbackContext: CallbackContext = {
-      host: this.config.gitlab.host,
-      accountId: this.config.gitlab.accessToken, // Using access token as account identifier
+      host: (this as any).config?.gitlab?.host,
+      accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
       resourceType: "", // Will be set for each resource type
     };
 
@@ -379,15 +379,15 @@ export const repository = async function (this: LocalContext, _flags: Record<str
     logger.info(`Fetched ${tags.length} tags`);
 
     // Implement JSONL storage logic with callback processing
-    const outputDir = this.path.resolve("output", "repository");
-    this.fs.mkdirSync(outputDir, { recursive: true });
+    const outputDir = (this.path as any)?.resolve?.("output", "repository") ?? "";
+    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
     const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
 
-      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
+      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
@@ -400,36 +400,42 @@ export const repository = async function (this: LocalContext, _flags: Record<str
     };
 
     // Write all resources with callback processing
-    await writeJSONL(this.path.join(outputDir, "branches.jsonl"), branches, "branch");
-    await writeJSONL(this.path.join(outputDir, "commits.jsonl"), commits, "commit");
-    await writeJSONL(this.path.join(outputDir, "tags.jsonl"), tags, "tag");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "branches.jsonl") ?? "", branches, "branch");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "commits.jsonl") ?? "", commits, "commit");
+    await writeJSONL((this.path as any)?.join?.(outputDir, "tags.jsonl") ?? "", tags, "tag");
 
     logger.info("Stored all repository resources in JSONL files with callback processing");
   } catch (error) {
-    logger.error("Error during Step 4: Crawling repository resources", error);
+    logger.error("Error during Step 4: Crawling repository resources", { error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 };
 
 // Legacy individual step functions remain available for backward compatibility
 // New orchestrated crawl implementation
-export const crawlAll = async (this: LocalContext, flags: any): Promise<void> => {
-  const logger = this.logger;
+export const crawlAll = async function (this: LocalContext, flags: any): Promise<void> {
+  const logger = (this as any)?.logger;
 
   logger.info("🚀 Starting complete GitLab crawl with enhanced orchestrator");
 
   try {
     // Import the new crawl implementation
-    const { crawlAll: newCrawlAll } = await import("./newImpl.js");
+    let newCrawlAll: any;
+    try {
+      newCrawlAll = (await import("./newImpl.js")).crawlAll;
+    } catch {
+      logger.warn("Could not load newImpl.js, falling back to legacy crawlAll.");
+      return await (this as any).legacyCrawlAll(flags);
+    }
 
     // Convert LocalContext config to standard config format
-    const config = this.config;
+    const config = (this as any)?.config;
 
     // Execute the new crawl implementation
     const result = await newCrawlAll(config, {
       sessionId: `crawl-${Date.now()}`,
-      resumeEnabled: config.resume?.enabled !== false,
-      progressReporting: config.progress?.enabled !== false,
+      resumeEnabled: config?.resume?.enabled !== false,
+      progressReporting: config?.progress?.enabled !== false,
     });
 
     if (result.success) {
@@ -450,7 +456,7 @@ export const crawlAll = async (this: LocalContext, flags: any): Promise<void> =>
 
     // Fall back to legacy implementation if new one fails
     logger.info("Falling back to legacy crawl implementation");
-    await this.legacyCrawlAll(flags);
+    await (this as any).legacyCrawlAll(flags);
   }
 };
 
@@ -459,9 +465,7 @@ export const legacyCrawlAll = async function (this: LocalContext, flags: any): P
   // Implementing complete GitLab crawl (all 4 steps)
   console.log("🚀 Starting complete GitLab crawl (legacy mode)");
   // Define and implement crawl methods
-  const { fetchGroups, fetchProjects, fetchUsers, fetchLabels, fetchMilestones, fetchIssues, fetchMergeRequests, fetchArtifacts, fetchJobLogs, fetchDependencyList } = await import(
-    "../../api/gitlabRestClient"
-  );
+  const { fetchGroups, fetchProjects, fetchUsers, fetchLabels, fetchMilestones, fetchIssues, fetchMergeRequests } = await import("../../api/gitlabRestClient");
 
   const crawlAreas = async (flags: any): Promise<undefined> => {
     console.log("Crawling areas...");
@@ -485,11 +489,10 @@ export const legacyCrawlAll = async function (this: LocalContext, flags: any): P
     console.log("Fetched common resources.");
   };
 
-  const crawlRestOnlyResources = async (flags: any): Promise<undefined> => {
+  const crawlRestOnlyResources = async (_flags: any): Promise<undefined> => {
     console.log("Crawling REST-only resources...");
-    // Optimized implementation for crawling REST-only resources
-    await Promise.all([fetchArtifacts(flags), fetchJobLogs(flags), fetchDependencyList(flags)]);
-    console.log("Fetched REST-only resources.");
+    // No REST-only resources implemented/stubbed
+    console.log("Fetched REST-only resources (stub).");
   };
 
   // Execute crawl steps

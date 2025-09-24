@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import type { OutputConfig } from "../config/types.js";
+import type { SafeRecord } from "../types/api.js";
 import { createLogger } from "./logger.js";
 
 const logger = createLogger("StorageManager");
@@ -56,7 +57,7 @@ export class StorageManager {
    * @param append - Whether to append to the file or overwrite it.
    * @returns The number of lines written.
    */
-  writeJsonlFile(filePath: string, data: unknown | unknown[], append: boolean = true): number {
+  writeJsonlFile(filePath: string, data: SafeRecord | SafeRecord[], append: boolean = true): number {
     try {
       const dataArray = Array.isArray(data) ? data : [data];
       if (dataArray.length === 0) {
@@ -79,7 +80,7 @@ export class StorageManager {
 
       return dataArray.length;
     } catch (error) {
-      logger.error(`Failed to write to ${filePath}:`, error);
+      logger.error(`Failed to write to ${filePath}:`, error as SafeRecord);
       return 0;
     }
   }

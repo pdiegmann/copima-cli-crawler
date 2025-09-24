@@ -37,11 +37,11 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
     // Create hierarchical path and write to JSONL file
     // Users are stored at the root level since they're global resources
     const filePath = storageManager.createHierarchicalPath("users", []);
-    const writtenCount = storageManager.writeJsonlFile(filePath, processedUsers, false); // Overwrite existing file
+    const writtenCount = storageManager.writeJsonlFile(filePath, processedUsers as any, false); // Overwrite existing file
 
     logger.info(`Successfully wrote ${writtenCount} users to ${filePath}`);
   } catch (error) {
-    logger.error("Failed to fetch users:", error);
+    logger.error("Failed to fetch users:", { error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 };
