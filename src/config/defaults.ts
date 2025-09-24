@@ -47,4 +47,10 @@ export const defaultConfig: Config = {
     stateFile: './resume-state.yaml',
     autoSaveInterval: 5000, // 5 seconds
   },
+
+  callbacks: {
+    enabled: false,
+    modulePath: undefined,
+    inlineCallback: undefined,
+  },
 };

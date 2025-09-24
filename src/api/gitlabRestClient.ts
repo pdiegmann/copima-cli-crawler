@@ -56,57 +56,66 @@ async fetchTags(projectId: string): Promise<any> {
 async fetchFileBlob(projectId: string, sha: string): Promise<any> {
   return await this.request(`/projects/${projectId}/repository/blobs/${sha}`);
 }
+
+// Fetch repository tree
+async fetchRepositoryTree(projectId: string): Promise<any> {
+  return await this.request(`/projects/${projectId}/repository/tree`);
 }
 
-export async function fetchGroups(flags: any): Promise<any[]> {
-    return this.request('/groups', 'GET');
+// Fetch job artifacts
+async fetchArtifacts(projectId: string, jobId: string): Promise<any> {
+  return this.request(`/projects/${projectId}/jobs/${jobId}/artifacts`, 'GET');
 }
 
-export async function fetchProjects(flags: any): Promise<any[]> {
-    return this.request('/projects', 'GET');
-}
-
-export async function fetchUsers(flags: any): Promise<any[]> {
-    return this.request('/users', 'GET');
-}
-
-export async function fetchLabels(flags: any): Promise<any[]> {
-    return this.request('/labels', 'GET');
-}
-
-export async function fetchMilestones(flags: any): Promise<any[]> {
-    return this.request('/milestones', 'GET');
-}
-
-export async function fetchIssues(flags: any): Promise<any[]> {
-    return this.request('/issues', 'GET');
-}
-
-export async function fetchMergeRequests(flags: any): Promise<any[]> {
-    return this.request('/merge_requests', 'GET');
-}
-
-fetchArtifacts = async (projectId: string, jobId: string): Promise<any> => {
-    return this.request(`/projects/${projectId}/jobs/${jobId}/artifacts`, 'GET');
-};
-
+// Fetch job logs
 async fetchJobLogs(projectId: string, jobId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/jobs/${jobId}/trace`, 'GET');
+  return this.request(`/projects/${projectId}/jobs/${jobId}/trace`, 'GET');
 }
 
+// Fetch dependency list
 async fetchDependencyList(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/dependencies`, 'GET');
+  return this.request(`/projects/${projectId}/dependencies`, 'GET');
 }
-// Add methods for specialized REST-only domains crawling (security, compliance, package registries)
 
+// Add methods for specialized REST-only domains crawling (security, compliance, package registries)
 async fetchSecurityVulnerabilities(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/vulnerabilities`, 'GET');
+  return this.request(`/projects/${projectId}/vulnerabilities`, 'GET');
 }
 
 async fetchComplianceFrameworks(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/compliance_frameworks`, 'GET');
+  return this.request(`/projects/${projectId}/compliance_frameworks`, 'GET');
 }
 
 async fetchPackageRegistries(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/packages`, 'GET');
+  return this.request(`/projects/${projectId}/packages`, 'GET');
+}
+}
+
+// Standalone utility functions that don't require class instance
+export async function fetchGroups(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/groups', 'GET');
+}
+
+export async function fetchProjects(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/projects', 'GET');
+}
+
+export async function fetchUsers(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/users', 'GET');
+}
+
+export async function fetchLabels(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/labels', 'GET');
+}
+
+export async function fetchMilestones(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/milestones', 'GET');
+}
+
+export async function fetchIssues(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/issues', 'GET');
+}
+
+export async function fetchMergeRequests(client: GitLabRestClient): Promise<any[]> {
+    return client.request('/merge_requests', 'GET');
 }

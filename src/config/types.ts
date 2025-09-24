@@ -24,6 +24,32 @@ export type Config = {
   progress: ProgressConfig;
   /** Resume capabilities configuration */
   resume: ResumeConfig;
+  /** Data processing callback configuration */
+  callbacks: CallbackConfig;
+};
+
+/**
+ * Callback configuration for data processing hooks.
+ */
+export type CallbackConfig = {
+  /** Enable or disable the callback system */
+  enabled: boolean;
+  /** Path to the callback module or function */
+  modulePath?: string;
+  /** Inline callback function (overrides modulePath if provided) */
+  inlineCallback?: (context: CallbackContext, object: any) => any | false;
+};
+
+/**
+ * Context information passed to callbacks.
+ */
+export type CallbackContext = {
+  /** GitLab host URL */
+  host: string;
+  /** Account ID associated with the current operation */
+  accountId: string;
+  /** Resource type being processed (e.g., 'user', 'issue') */
+  resourceType: string;
 };
 
 /**
@@ -155,6 +181,9 @@ export type EnvMapping = {
   RESUME_ENABLED?: string;
   RESUME_STATE_FILE?: string;
   RESUME_AUTO_SAVE_INTERVAL?: string;
+
+  CALLBACK_ENABLED?: string;
+  CALLBACK_MODULE_PATH?: string;
 };
 
 /**
@@ -197,4 +226,8 @@ export type CliArgs = {
   resumeEnabled?: boolean;
   resumeStateFile?: string;
   resumeAutoSaveInterval?: number;
+
+  // Callback configuration
+  callbackEnabled?: boolean;
+  callbackModulePath?: string;
 };
