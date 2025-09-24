@@ -1,7 +1,8 @@
-import fetch from 'node-fetch';
-import { createLogger } from '../utils/logger';
+import fetch from "node-fetch";
+import type { GitLabProject, GitLabUser, GraphQLResponse, GroupNode, PageInfo, SafeRecord } from "../types/api.js";
+import { createLogger } from "../utils/logger.js";
 
-const logger = createLogger('GitLabGraphQLClient');
+const logger = createLogger("GitLabGraphQLClient");
 
 export class GitLabGraphQLClient {
   private baseUrl: string;
@@ -12,12 +13,12 @@ export class GitLabGraphQLClient {
     this.accessToken = accessToken;
   }
 
-  async query(query: string, variables: Record<string, any> = {}): Promise<any> {
+  async query<T = SafeRecord>(query: string, variables: SafeRecord = {}): Promise<T> {
     try {
       const response = await fetch(this.baseUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${this.accessToken}`,
         },
         body: JSON.stringify({ query, variables }),
@@ -29,15 +30,20 @@ export class GitLabGraphQLClient {
         throw new Error(`GraphQL request failed: ${response.status}`);
       }
 
-      const result = await response.json();
-      if (result.errors) {
-        logger.error('GraphQL errors:', result.errors);
-        throw new Error('GraphQL query returned errors');
+      const result = (await response.json()) as unknown as GraphQLResponse<T>;
+      if (!result || typeof result !== "object") {
+        throw new Error("Invalid GraphQL response format");
+      }
+      if (result.errors && result.errors.length > 0) {
+        logger.error("GraphQL errors:", { errors: result.errors });
+        throw new Error("GraphQL query returned errors");
       }
 
       return result.data;
     } catch (error) {
-      logger.error('GraphQL query failed:', error);
+      logger.error("GraphQL query failed:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   }
@@ -46,7 +52,7 @@ export class GitLabGraphQLClient {
    * Fetches all users from the GitLab GraphQL API.
    * Step 2 of the crawling workflow.
    */
-  async fetchUsers(): Promise<any[]> {
+  async fetchUsers(): Promise<GitLabUser[]> {
     const query = `
       query {
         users {
@@ -62,10 +68,12 @@ export class GitLabGraphQLClient {
     `;
 
     try {
-      const data = await this.query(query);
+      const data = await this.query<{ users: { nodes: GitLabUser[] } }>(query);
       return data.users.nodes;
     } catch (error) {
-      logger.error('Failed to fetch users:', error);
+      logger.error("Failed to fetch users:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   }
@@ -74,7 +82,7 @@ export class GitLabGraphQLClient {
    * Fetches all groups from the GitLab GraphQL API.
    * Step 1 of the crawling workflow.
    */
-  async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+  async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     const query = `
       query($first: Int, $after: String) {
         groups(first: $first, after: $after) {
@@ -104,9 +112,14 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { first, after });
-      return data.groups;
+      if (!data || typeof data !== "object" || !("groups" in data)) {
+        throw new Error("Invalid response format for groups");
+      }
+      return (data as { groups: { nodes: GroupNode[]; pageInfo: PageInfo } }).groups;
     } catch (error) {
-      logger.error('Failed to fetch groups:', error);
+      logger.error("Failed to fetch groups:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   }
@@ -115,7 +128,7 @@ export class GitLabGraphQLClient {
    * Fetches all projects from the GitLab GraphQL API.
    * Step 1 of the crawling workflow.
    */
-  async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+  async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
     const query = `
       query($first: Int, $after: String) {
         projects(first: $first, after: $after) {
@@ -156,9 +169,11 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { first, after });
-      return data.projects;
+      return data.projects as { nodes: GitLabProject[]; pageInfo: PageInfo };
     } catch (error) {
-      logger.error('Failed to fetch projects:', error);
+      logger.error("Failed to fetch projects:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   }
@@ -167,7 +182,7 @@ export class GitLabGraphQLClient {
    * Fetches projects within a specific group.
    * Part of Step 1 of the crawling workflow.
    */
-  async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+  async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
     const query = `
       query($id: ID!, $first: Int, $after: String) {
         group(id: $id) {
@@ -210,9 +225,20 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { id: groupId, first, after });
-      return data.group?.projects || { nodes: [], pageInfo: { hasNextPage: false } };
+      if (!data || typeof data !== "object" || !("group" in data)) {
+        throw new Error("Invalid response format for group projects");
+      }
+      return (
+        (
+          data as {
+            group: { projects: { nodes: GitLabProject[]; pageInfo: PageInfo } };
+          }
+        ).group?.["projects"] || { nodes: [], pageInfo: { hasNextPage: false } }
+      );
     } catch (error) {
-      logger.error(`Failed to fetch projects for group ${groupId}:`, error);
+      logger.error(`Failed to fetch projects for group ${groupId}:`, {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   }
@@ -221,7 +247,7 @@ export class GitLabGraphQLClient {
    * Fetches subgroups within a specific group.
    * Part of Step 1 of the crawling workflow.
    */
-  async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: any[]; pageInfo: any }> {
+  async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     const query = `
       query($id: ID!, $first: Int, $after: String) {
         group(id: $id) {
@@ -253,9 +279,20 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { id: groupId, first, after });
-      return data.group?.subgroups || { nodes: [], pageInfo: { hasNextPage: false } };
+      if (!data || typeof data !== "object" || !("group" in data)) {
+        throw new Error("Invalid response format for subgroups");
+      }
+      return (
+        (
+          data as {
+            group: { subgroups: { nodes: GroupNode[]; pageInfo: PageInfo } };
+          }
+        ).group?.subgroups || { nodes: [], pageInfo: { hasNextPage: false } }
+      );
     } catch (error) {
-      logger.error(`Failed to fetch subgroups for group ${groupId}:`, error);
+      logger.error(`Failed to fetch subgroups for group ${groupId}:`, {
+        error,
+      });
       throw error;
     }
   }
@@ -263,7 +300,7 @@ export class GitLabGraphQLClient {
   /**
    * Fetches a specific group by ID with detailed information.
    */
-  async fetchGroup(groupId: string): Promise<any> {
+  async fetchGroup(groupId: string): Promise<GroupNode> {
     const query = `
       query($id: ID!) {
         group(id: $id) {
@@ -301,9 +338,12 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { id: groupId });
-      return data.group;
+      if (!data || typeof data !== "object" || !("group" in data)) {
+        throw new Error("Invalid response format for group");
+      }
+      return (data as { group: GroupNode }).group;
     } catch (error) {
-      logger.error(`Failed to fetch group ${groupId}:`, error);
+      logger.error(`Failed to fetch group ${groupId}:`, { error });
       throw error;
     }
   }
@@ -311,7 +351,7 @@ export class GitLabGraphQLClient {
   /**
    * Fetches a specific project by ID with detailed information.
    */
-  async fetchProject(projectId: string): Promise<any> {
+  async fetchProject(projectId: string): Promise<GitLabProject> {
     const query = `
       query($id: ID!) {
         project(id: $id) {
@@ -361,9 +401,12 @@ export class GitLabGraphQLClient {
 
     try {
       const data = await this.query(query, { id: projectId });
-      return data.project;
+      if (!data || typeof data !== "object" || !("project" in data)) {
+        throw new Error("Invalid response format for project");
+      }
+      return (data as { project: GitLabProject }).project;
     } catch (error) {
-      logger.error(`Failed to fetch project ${projectId}:`, error);
+      logger.error(`Failed to fetch project ${projectId}:`, { error });
       throw error;
     }
   }

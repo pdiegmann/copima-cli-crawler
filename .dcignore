@@ -1,0 +1,6 @@
+node_modules/
+test/
+tests/
+*.test.*
+*_test*_*
+*_test*_*/

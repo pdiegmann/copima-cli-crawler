@@ -1,17 +1,17 @@
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import logger from '../utils/logger.js';
-import { getDatabase, initDatabase } from './connection.js';
-import type { DatabaseConfig } from './connection.js';
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import logger from "../utils/logger.js";
+import type { DatabaseConfig } from "./connection.js";
+import { getDatabase, initDatabase } from "./connection.js";
 
 export type MigrationConfig = {
   migrationsFolder?: string;
 } & DatabaseConfig;
 
-export async function runMigrations(config: MigrationConfig) {
-  const migrationsFolder = config.migrationsFolder || './drizzle';
+export const runMigrations = (config: MigrationConfig): undefined => {
+  const migrationsFolder = config.migrationsFolder || "./drizzle";
 
   try {
-    logger.info('Starting database migrations', {
+    logger.info("Starting database migrations", {
       path: config.path,
       migrationsFolder,
     });
@@ -20,28 +20,28 @@ export async function runMigrations(config: MigrationConfig) {
     const db = getDatabase() || initDatabase(config);
 
     // Run migrations
-    await migrate(db, { migrationsFolder });
+    migrate(db, { migrationsFolder });
 
-    logger.info('Database migrations completed successfully');
+    logger.info("Database migrations completed successfully");
   } catch (error) {
-    logger.error('Failed to run database migrations', { error });
+    logger.error("Failed to run database migrations", { error });
     throw error;
   }
-}
+};
 
-export async function initializeDatabase(config: MigrationConfig) {
+export const initializeDatabase = (config: MigrationConfig): undefined => {
   try {
-    logger.info('Initializing database with migrations');
+    logger.info("Initializing database with migrations");
 
     // Initialize the database connection
     initDatabase(config);
 
     // Run any pending migrations
-    await runMigrations(config);
+    runMigrations(config);
 
-    logger.info('Database initialization completed');
+    logger.info("Database initialization completed");
   } catch (error) {
-    logger.error('Failed to initialize database', { error });
+    logger.error("Failed to initialize database", { error });
     throw error;
   }
-}
+};

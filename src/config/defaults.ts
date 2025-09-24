@@ -1,4 +1,4 @@
-import type { Config } from './types.js';
+import type { Config } from "./types.js";
 
 /**
  * Built-time default configuration.
@@ -6,8 +6,8 @@ import type { Config } from './types.js';
  */
 export const defaultConfig: Config = {
   gitlab: {
-    host: '',
-    accessToken: '',
+    host: "",
+    accessToken: "",
     refreshToken: undefined,
     timeout: 30000, // 30 seconds
     maxConcurrency: 5,
@@ -15,21 +15,21 @@ export const defaultConfig: Config = {
   },
 
   database: {
-    path: './database.sqlite',
+    path: "./database.sqlite",
     walMode: true,
     timeout: 5000, // 5 seconds
   },
 
   output: {
-    rootDir: './output',
-    fileNaming: 'lowercase',
+    rootDir: "./output",
+    fileNaming: "lowercase",
     prettyPrint: false,
-    compression: 'none',
+    compression: "none",
   },
 
   logging: {
-    level: 'info',
-    format: 'combined',
+    level: "info",
+    format: "combined",
     file: undefined,
     console: true,
     colors: true,
@@ -37,14 +37,14 @@ export const defaultConfig: Config = {
 
   progress: {
     enabled: true,
-    file: './progress.yaml',
+    file: "./progress.yaml",
     interval: 1000, // 1 second
     detailed: false,
   },
 
   resume: {
     enabled: true,
-    stateFile: './resume-state.yaml',
+    stateFile: "./resume-state.yaml",
     autoSaveInterval: 5000, // 5 seconds
   },
 

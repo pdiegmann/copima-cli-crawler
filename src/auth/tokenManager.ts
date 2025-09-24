@@ -1,9 +1,9 @@
 // src/auth/tokenManager.ts
 
-import { Database } from '../db/connection';
-import { logger } from '../utils/logger';
-import { OAuth2TokenResponse } from '../types';
-import { addSeconds } from 'date-fns';
+import { addSeconds } from "date-fns";
+import { Database } from "../db/connection";
+import { OAuth2TokenResponse } from "../types";
+import { logger } from "../utils/logger";
 
 export class TokenManager {
   private db: Database;
@@ -40,7 +40,7 @@ export class TokenManager {
     }
 
     try {
-      const response = await this.fetchNewTokens(account.refreshToken);
+      const response = await this.fetchNewTokens();
       await this.updateTokens(accountId, response);
       return response.access_token;
     } catch (error) {
@@ -49,9 +49,9 @@ export class TokenManager {
     }
   }
 
-  private async fetchNewTokens(refreshToken: string): Promise<OAuth2TokenResponse> {
+  private async fetchNewTokens(): Promise<OAuth2TokenResponse> {
     // Replace with actual API call
-    throw new Error('fetchNewTokens not implemented');
+    throw new Error("fetchNewTokens not implemented");
   }
 
   private async updateTokens(accountId: string, tokenResponse: OAuth2TokenResponse): Promise<void> {

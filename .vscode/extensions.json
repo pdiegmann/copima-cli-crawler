@@ -6,6 +6,6 @@
     "lacroixdavid1.vscode-format-context-menu",
     "kisstkondoros.vscode-codemetrics",
     "snyk-security.snyk-vulnerability-scanner",
-    "sonarsource.sonarlint-vscode",
+    "sonarsource.sonarlint-vscode"
   ]
 }

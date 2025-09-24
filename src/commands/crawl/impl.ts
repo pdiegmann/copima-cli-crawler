@@ -1,20 +1,20 @@
-import type { LocalContext } from '../../context.js';
-import { CallbackManager, createCallbackManager } from '../../utils/callbackManager.js';
-import type { CallbackContext } from '../../config/types.js';
+import type { CallbackContext } from "../../config/types.js";
+import type { LocalContext } from "../../context.js";
+import { createCallbackManager } from "../../utils/callbackManager.js";
 
-export async function areas(this: LocalContext, flags: any): Promise<void> {
+export const areas = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { graphqlClient } = this;
 
   try {
-    logger.info('Starting Step 1: Crawling areas (groups and projects)');
+    logger.info("Starting Step 1: Crawling areas (groups and projects)");
 
     // Initialize callback manager
     const callbackManager = createCallbackManager(this.config.callbacks);
     const callbackContext: CallbackContext = {
       host: this.config.gitlab.host,
       accountId: this.config.gitlab.accessToken, // Using access token as account identifier
-      resourceType: '', // Will be set for each resource type
+      resourceType: "", // Will be set for each resource type
     };
 
     // Fetch groups and projects using GraphQL client
@@ -55,49 +55,49 @@ export async function areas(this: LocalContext, flags: any): Promise<void> {
     logger.info(`Fetched ${projects.length} projects`);
 
     // Implement JSONL storage logic with callback processing
-    const outputDir = this.path.resolve('output', 'areas');
+    const outputDir = this.path.resolve("output", "areas");
     this.fs.mkdirSync(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string) => {
+    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
-      
-      const stream = this.fs.createWriteStream(filePath, { flags: 'a' });
+
+      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
       stream.end();
-      
+
       // Log statistics
       if (processedData.length !== data.length) {
         logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
       }
     };
 
-    await writeJSONL(this.path.join(outputDir, 'groups.jsonl'), groups, 'group');
-    await writeJSONL(this.path.join(outputDir, 'projects.jsonl'), projects, 'project');
+    await writeJSONL(this.path.join(outputDir, "groups.jsonl"), groups, "group");
+    await writeJSONL(this.path.join(outputDir, "projects.jsonl"), projects, "project");
 
-    logger.info('Stored areas in JSONL files with callback processing');
+    logger.info("Stored areas in JSONL files with callback processing");
   } catch (error) {
-    logger.error('Error during Step 1: Crawling areas', error);
+    logger.error("Error during Step 1: Crawling areas", error);
     throw error;
   }
-}
+};
 
-export async function users(this: LocalContext, flags: any): Promise<void> {
+export const users = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { graphqlClient } = this;
 
   try {
-    logger.info('Starting Step 2: Crawling users');
+    logger.info("Starting Step 2: Crawling users");
 
     // Initialize callback manager
     const callbackManager = createCallbackManager(this.config.callbacks);
     const callbackContext: CallbackContext = {
       host: this.config.gitlab.host,
       accountId: this.config.gitlab.accessToken, // Using access token as account identifier
-      resourceType: 'user',
+      resourceType: "user",
     };
 
     // Fetch users using GraphQL client
@@ -119,48 +119,48 @@ export async function users(this: LocalContext, flags: any): Promise<void> {
     logger.info(`Fetched ${users.data.users.nodes.length} users`);
 
     // Implement JSONL storage logic with callback processing
-    const outputDir = this.path.resolve('output', 'users');
+    const outputDir = this.path.resolve("output", "users");
     this.fs.mkdirSync(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string) => {
+    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
-      
-      const stream = this.fs.createWriteStream(filePath, { flags: 'a' });
+
+      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
       stream.end();
-      
+
       // Log statistics
       if (processedData.length !== data.length) {
         logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
       }
     };
 
-    await writeJSONL(this.path.join(outputDir, 'users.jsonl'), users.data.users.nodes, 'user');
+    await writeJSONL(this.path.join(outputDir, "users.jsonl"), users.data.users.nodes, "user");
 
-    logger.info('Stored users in JSONL files with callback processing');
+    logger.info("Stored users in JSONL files with callback processing");
   } catch (error) {
-    logger.error('Error during Step 2: Crawling users', error);
+    logger.error("Error during Step 2: Crawling users", error);
     throw error;
   }
-}
+};
 
-export async function resources(this: LocalContext, flags: any): Promise<void> {
+export const resources = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { graphqlClient, restClient } = this;
 
   try {
-    logger.info('Starting Step 3: Crawling area-specific resources');
+    logger.info("Starting Step 3: Crawling area-specific resources");
 
     // Initialize callback manager
     const callbackManager = createCallbackManager(this.config.callbacks);
     const callbackContext: CallbackContext = {
       host: this.config.gitlab.host,
       accountId: this.config.gitlab.accessToken, // Using access token as account identifier
-      resourceType: '', // Will be set for each resource type
+      resourceType: "", // Will be set for each resource type
     };
 
     // Fetch common resources
@@ -311,24 +311,24 @@ export async function resources(this: LocalContext, flags: any): Promise<void> {
     logger.info(`Fetched ${releases.data.releases.nodes.length} releases`);
 
     // Fetch REST-only resources
-    const branches = await restClient.get('/projects/:id/repository/branches');
+    const branches = await restClient.get("/projects/:id/repository/branches");
     logger.info(`Fetched ${branches.length} branches`);
 
     // Implement JSONL storage logic for resources with callback processing
-    const outputDir = this.path.resolve('output', 'resources');
+    const outputDir = this.path.resolve("output", "resources");
     this.fs.mkdirSync(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string) => {
+    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
-      
-      const stream = this.fs.createWriteStream(filePath, { flags: 'a' });
+
+      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
       stream.end();
-      
+
       // Log statistics
       if (processedData.length !== data.length) {
         logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
@@ -336,63 +336,63 @@ export async function resources(this: LocalContext, flags: any): Promise<void> {
     };
 
     // Write all resources with callback processing
-    await writeJSONL(this.path.join(outputDir, 'labels.jsonl'), labels.data.labels.nodes, 'label');
-    await writeJSONL(this.path.join(outputDir, 'issues.jsonl'), issues.data.issues.nodes, 'issue');
-    await writeJSONL(this.path.join(outputDir, 'boards.jsonl'), boards.data.boards.nodes, 'board');
-    await writeJSONL(this.path.join(outputDir, 'epics.jsonl'), epicHierarchy.data.epics.nodes, 'epic');
-    await writeJSONL(this.path.join(outputDir, 'audit_events.jsonl'), auditEvents.data.auditEvents.nodes, 'audit_event');
-    await writeJSONL(this.path.join(outputDir, 'snippets.jsonl'), snippets.data.snippets.nodes, 'snippet');
-    await writeJSONL(this.path.join(outputDir, 'metadata.jsonl'), [metadata.data.project], 'project_metadata');
-    await writeJSONL(this.path.join(outputDir, 'pipelines.jsonl'), pipelines.data.pipelines.nodes, 'pipeline');
-    await writeJSONL(this.path.join(outputDir, 'releases.jsonl'), releases.data.releases.nodes, 'release');
-    await writeJSONL(this.path.join(outputDir, 'branches.jsonl'), branches, 'branch');
+    await writeJSONL(this.path.join(outputDir, "labels.jsonl"), labels.data.labels.nodes, "label");
+    await writeJSONL(this.path.join(outputDir, "issues.jsonl"), issues.data.issues.nodes, "issue");
+    await writeJSONL(this.path.join(outputDir, "boards.jsonl"), boards.data.boards.nodes, "board");
+    await writeJSONL(this.path.join(outputDir, "epics.jsonl"), epicHierarchy.data.epics.nodes, "epic");
+    await writeJSONL(this.path.join(outputDir, "audit_events.jsonl"), auditEvents.data.auditEvents.nodes, "audit_event");
+    await writeJSONL(this.path.join(outputDir, "snippets.jsonl"), snippets.data.snippets.nodes, "snippet");
+    await writeJSONL(this.path.join(outputDir, "metadata.jsonl"), [metadata.data.project], "project_metadata");
+    await writeJSONL(this.path.join(outputDir, "pipelines.jsonl"), pipelines.data.pipelines.nodes, "pipeline");
+    await writeJSONL(this.path.join(outputDir, "releases.jsonl"), releases.data.releases.nodes, "release");
+    await writeJSONL(this.path.join(outputDir, "branches.jsonl"), branches, "branch");
 
-    logger.info('Stored all resources in JSONL files with callback processing');
+    logger.info("Stored all resources in JSONL files with callback processing");
   } catch (error) {
-    logger.error('Error during Step 3: Crawling resources', error);
+    logger.error("Error during Step 3: Crawling resources", error);
     throw error;
   }
-}
+};
 
-export async function repository(this: LocalContext, flags: any): Promise<void> {
+export const repository = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { restClient } = this;
 
   try {
-    logger.info('Starting Step 4: Crawling repository resources');
+    logger.info("Starting Step 4: Crawling repository resources");
 
     // Initialize callback manager
     const callbackManager = createCallbackManager(this.config.callbacks);
     const callbackContext: CallbackContext = {
       host: this.config.gitlab.host,
       accountId: this.config.gitlab.accessToken, // Using access token as account identifier
-      resourceType: '', // Will be set for each resource type
+      resourceType: "", // Will be set for each resource type
     };
 
     // Fetch repository-level details using REST client
-    const branches = await restClient.get('/projects/:id/repository/branches');
-    const commits = await restClient.get('/projects/:id/repository/commits');
-    const tags = await restClient.get('/projects/:id/repository/tags');
+    const branches = await restClient.get("/projects/:id/repository/branches");
+    const commits = await restClient.get("/projects/:id/repository/commits");
+    const tags = await restClient.get("/projects/:id/repository/tags");
 
     logger.info(`Fetched ${branches.length} branches`);
     logger.info(`Fetched ${commits.length} commits`);
     logger.info(`Fetched ${tags.length} tags`);
 
     // Implement JSONL storage logic with callback processing
-    const outputDir = this.path.resolve('output', 'repository');
+    const outputDir = this.path.resolve("output", "repository");
     this.fs.mkdirSync(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string) => {
+    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
       // Process data through callback system
       callbackContext.resourceType = resourceType;
       const processedData = await callbackManager.processObjects(callbackContext, data);
-      
-      const stream = this.fs.createWriteStream(filePath, { flags: 'a' });
+
+      const stream = this.fs.createWriteStream(filePath, { flags: "a" });
       processedData.forEach((item) => {
         stream.write(`${JSON.stringify(item)}\n`);
       });
       stream.end();
-      
+
       // Log statistics
       if (processedData.length !== data.length) {
         logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
@@ -400,62 +400,52 @@ export async function repository(this: LocalContext, flags: any): Promise<void> 
     };
 
     // Write all resources with callback processing
-    await writeJSONL(this.path.join(outputDir, 'branches.jsonl'), branches, 'branch');
-    await writeJSONL(this.path.join(outputDir, 'commits.jsonl'), commits, 'commit');
-    await writeJSONL(this.path.join(outputDir, 'tags.jsonl'), tags, 'tag');
+    await writeJSONL(this.path.join(outputDir, "branches.jsonl"), branches, "branch");
+    await writeJSONL(this.path.join(outputDir, "commits.jsonl"), commits, "commit");
+    await writeJSONL(this.path.join(outputDir, "tags.jsonl"), tags, "tag");
 
-    logger.info('Stored all repository resources in JSONL files with callback processing');
+    logger.info("Stored all repository resources in JSONL files with callback processing");
   } catch (error) {
-    logger.error('Error during Step 4: Crawling repository resources', error);
+    logger.error("Error during Step 4: Crawling repository resources", error);
     throw error;
   }
-}
+};
 
-export async function crawlAll(this: LocalContext, flags: any): Promise<void> {
+export const crawlAll = async (this: LocalContext, flags: any): Promise<void> => {
   // Implementing complete GitLab crawl (all 4 steps)
-  console.log('🚀 Starting complete GitLab crawl');
+  console.log("🚀 Starting complete GitLab crawl");
   // Define and implement crawl methods
-  const { fetchGroups, fetchProjects, fetchUsers, fetchLabels, fetchMilestones, fetchIssues, fetchMergeRequests, fetchArtifacts, fetchJobLogs, fetchDependencyList } = await import('../../api/gitlabRestClient');
-  
-  const crawlAreas = async (flags: any) => {
-      console.log('Crawling areas...');
-      // Optimized implementation for crawling areas
-      // Fetch groups and projects concurrently using Promise.all
-      const [groups, projects] = await Promise.all([
-        fetchGroups(flags),
-        fetchProjects(flags),
-      ]);
-      console.log(`Fetched ${groups.length} groups and ${projects.length} projects.`);
+  const { fetchGroups, fetchProjects, fetchUsers, fetchLabels, fetchMilestones, fetchIssues, fetchMergeRequests, fetchArtifacts, fetchJobLogs, fetchDependencyList } = await import(
+    "../../api/gitlabRestClient"
+  );
+
+  const crawlAreas = async (flags: any): Promise<undefined> => {
+    console.log("Crawling areas...");
+    // Optimized implementation for crawling areas
+    // Fetch groups and projects concurrently using Promise.all
+    const [groups, projects] = await Promise.all([fetchGroups(flags), fetchProjects(flags)]);
+    console.log(`Fetched ${groups.length} groups and ${projects.length} projects.`);
   };
-  
-  const crawlUsers = async (flags: any) => {
-      console.log('Crawling users...');
-      // Optimized implementation for crawling users
-      const users = await fetchUsers(flags);
-      console.log(`Fetched ${users.length} users.`);
+
+  const crawlUsers = async (flags: any): Promise<undefined> => {
+    console.log("Crawling users...");
+    // Optimized implementation for crawling users
+    const users = await fetchUsers(flags);
+    console.log(`Fetched ${users.length} users.`);
   };
-  
-  const crawlCommonResources = async (flags: any) => {
-      console.log('Crawling common resources...');
-      // Optimized implementation for crawling common resources
-      await Promise.all([
-        fetchLabels(flags),
-        fetchMilestones(flags),
-        fetchIssues(flags),
-        fetchMergeRequests(flags),
-      ]);
-      console.log('Fetched common resources.');
+
+  const crawlCommonResources = async (flags: any): Promise<undefined> => {
+    console.log("Crawling common resources...");
+    // Optimized implementation for crawling common resources
+    await Promise.all([fetchLabels(flags), fetchMilestones(flags), fetchIssues(flags), fetchMergeRequests(flags)]);
+    console.log("Fetched common resources.");
   };
-  
-  const crawlRestOnlyResources = async (flags: any) => {
-      console.log('Crawling REST-only resources...');
-      // Optimized implementation for crawling REST-only resources
-      await Promise.all([
-        fetchArtifacts(flags),
-        fetchJobLogs(flags),
-        fetchDependencyList(flags),
-      ]);
-      console.log('Fetched REST-only resources.');
+
+  const crawlRestOnlyResources = async (flags: any): Promise<undefined> => {
+    console.log("Crawling REST-only resources...");
+    // Optimized implementation for crawling REST-only resources
+    await Promise.all([fetchArtifacts(flags), fetchJobLogs(flags), fetchDependencyList(flags)]);
+    console.log("Fetched REST-only resources.");
   };
 
   // Execute crawl steps
@@ -463,5 +453,5 @@ export async function crawlAll(this: LocalContext, flags: any): Promise<void> {
   await crawlUsers(flags);
   await crawlCommonResources(flags);
   await crawlRestOnlyResources(flags);
-  console.log('✅ GitLab crawl completed successfully');
-}
+  console.log("✅ GitLab crawl completed successfully");
+};

@@ -1,12 +1,13 @@
-import type { LocalContext } from '../../context.js';
-import logger from '../../utils/logger.js';
-import { loadConfig } from '../../config/index.js';
-import colors from 'picocolors';
-import treeify from 'treeify';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { homedir } from 'os';
-import * as yaml from 'js-yaml';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import * as yaml from "js-yaml";
+import { homedir } from "os";
+import { dirname, join } from "path";
+import colors from "picocolors";
+import treeify from "treeify";
+import { loadConfig } from "../../config/index.js";
+import { createLogger } from "../../utils/logger.js";
+
+const logger = createLogger("ConfigCommands");
 
 type ShowConfigFlags = {
   format?: string;
@@ -31,58 +32,58 @@ type ValidateConfigFlags = {
   strict?: boolean;
 };
 
-const GLOBAL_CONFIG_DIR = join(homedir(), '.config', 'copima');
-const GLOBAL_CONFIG_FILE = join(GLOBAL_CONFIG_DIR, 'config.yaml');
-const LOCAL_CONFIG_FILE = join(process.cwd(), 'copima.yaml');
+const GLOBAL_CONFIG_DIR = join(homedir(), ".config", "copima");
+const GLOBAL_CONFIG_FILE = join(GLOBAL_CONFIG_DIR, "config.yaml");
+const LOCAL_CONFIG_FILE = join(process.cwd(), "copima.yaml");
 
-export async function showConfig(this: LocalContext, flags: ShowConfigFlags, positionals?: any[]): Promise<void | Error> {
-  logger.info(colors.cyan('🔧 Loading configuration...'));
+export const showConfig = async (flags: ShowConfigFlags): Promise<void | Error> => {
+  logger.info(colors.cyan("🔧 Loading configuration..."));
 
   try {
     const config = await loadConfig();
-    const format = flags.format || 'table';
+    const format = flags.format || "table";
 
     let displayConfig = config;
     if (flags.section) {
-      // @ts-ignore - dynamic property access
+      // @ts-expect-error - dynamic property access
       displayConfig = { [flags.section]: config[flags.section] };
     }
 
-    if (format === 'json') {
+    if (format === "json") {
       console.log(JSON.stringify(displayConfig, null, 2));
-    } else if (format === 'yaml') {
+    } else if (format === "yaml") {
       console.log(yaml.dump(displayConfig, { indent: 2 }));
     } else {
       // Table format using treeify
-      console.log(colors.bold('\n🔧 Current Configuration:'));
+      console.log(colors.bold("\n🔧 Current Configuration:"));
       console.log(treeify.asTree(displayConfig as any, true, true));
 
       if (flags.source) {
-        console.log(colors.dim('\n📍 Configuration Sources:'));
-        console.log(colors.dim('  1. CLI arguments (highest priority)'));
-        console.log(colors.dim('  2. Environment variables'));
+        console.log(colors.dim("\n📍 Configuration Sources:"));
+        console.log(colors.dim("  1. CLI arguments (highest priority)"));
+        console.log(colors.dim("  2. Environment variables"));
         console.log(colors.dim(`  3. Global config: ${GLOBAL_CONFIG_FILE}`));
         console.log(colors.dim(`  4. Local config: ${LOCAL_CONFIG_FILE}`));
-        console.log(colors.dim('  5. Built-in defaults (lowest priority)'));
+        console.log(colors.dim("  5. Built-in defaults (lowest priority)"));
       }
     }
 
-    logger.info(colors.green('✅ Configuration loaded successfully'));
+    logger.info(colors.green("✅ Configuration loaded successfully"));
   } catch (error) {
-    logger.error(colors.red('❌ Failed to load configuration'));
+    logger.error(colors.red("❌ Failed to load configuration"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
-}
+};
 
-export async function setConfig(this: LocalContext, flags: SetConfigFlags, positionals?: any[]): Promise<void | Error> {
+export const setConfig = async (flags: SetConfigFlags): Promise<void | Error> => {
   if (!flags.key || !flags.value) {
-    logger.error(colors.red('❌ Key and value are required'));
-    return new Error('Key and value are required');
+    logger.error(colors.red("❌ Key and value are required"));
+    return new Error("Key and value are required");
   }
 
   const configFile = flags.global ? GLOBAL_CONFIG_FILE : LOCAL_CONFIG_FILE;
-  const configType = flags.global ? 'global' : 'local';
+  const configType = flags.global ? "global" : "local";
 
   logger.info(colors.cyan(`🔧 Setting ${configType} configuration: ${colors.bold(flags.key)}`));
 
@@ -94,9 +95,9 @@ export async function setConfig(this: LocalContext, flags: SetConfigFlags, posit
     }
 
     // Load existing config or create new one
-    let config: any = {};
+    let config: Record<string, unknown> = {} as Record<string, unknown>;
     if (existsSync(configFile)) {
-      const yamlContent = readFileSync(configFile, 'utf8');
+      const yamlContent = readFileSync(configFile, "utf8");
       config = yaml.load(yamlContent) || {};
     }
 
@@ -104,16 +105,16 @@ export async function setConfig(this: LocalContext, flags: SetConfigFlags, posit
     let parsedValue: any = flags.value;
     if (flags.type) {
       switch (flags.type) {
-        case 'number':
+        case "number":
           parsedValue = parseFloat(flags.value);
           if (isNaN(parsedValue)) {
             throw new Error(`Invalid number value: ${flags.value}`);
           }
           break;
-        case 'boolean':
-          parsedValue = flags.value.toLowerCase() === 'true';
+        case "boolean":
+          parsedValue = flags.value.toLowerCase() === "true";
           break;
-        case 'string':
+        case "string":
         default:
           parsedValue = flags.value;
           break;
@@ -125,27 +126,27 @@ export async function setConfig(this: LocalContext, flags: SetConfigFlags, posit
 
     // Write back to file
     const yamlContent = yaml.dump(config, { indent: 2 });
-    writeFileSync(configFile, yamlContent, 'utf8');
+    writeFileSync(configFile, yamlContent, "utf8");
 
-    logger.info(colors.green('✅ Configuration updated successfully'));
+    logger.info(colors.green("✅ Configuration updated successfully"));
     logger.info(`📁 File: ${colors.bold(configFile)}`);
     logger.info(`🔑 Key: ${colors.bold(flags.key)}`);
     logger.info(`💾 Value: ${colors.bold(String(parsedValue))}`);
   } catch (error) {
-    logger.error(colors.red('❌ Failed to set configuration'));
+    logger.error(colors.red("❌ Failed to set configuration"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
-}
+};
 
-export async function unsetConfig(this: LocalContext, flags: UnsetConfigFlags, positionals?: any[]): Promise<void | Error> {
+export const unsetConfig = async (flags: UnsetConfigFlags): Promise<void | Error> => {
   if (!flags.key) {
-    logger.error(colors.red('❌ Key is required'));
-    return new Error('Key is required');
+    logger.error(colors.red("❌ Key is required"));
+    return new Error("Key is required");
   }
 
   const configFile = flags.global ? GLOBAL_CONFIG_FILE : LOCAL_CONFIG_FILE;
-  const configType = flags.global ? 'global' : 'local';
+  const configType = flags.global ? "global" : "local";
 
   logger.info(colors.cyan(`🔧 Removing ${configType} configuration: ${colors.bold(flags.key)}`));
 
@@ -156,7 +157,7 @@ export async function unsetConfig(this: LocalContext, flags: UnsetConfigFlags, p
     }
 
     // Load existing config
-    const yamlContent = readFileSync(configFile, 'utf8');
+    const yamlContent = readFileSync(configFile, "utf8");
     const config = yaml.load(yamlContent) || {};
 
     // Remove nested property using dot notation
@@ -169,20 +170,20 @@ export async function unsetConfig(this: LocalContext, flags: UnsetConfigFlags, p
 
     // Write back to file
     const newYamlContent = yaml.dump(config, { indent: 2 });
-    writeFileSync(configFile, newYamlContent, 'utf8');
+    writeFileSync(configFile, newYamlContent, "utf8");
 
-    logger.info(colors.green('✅ Configuration key removed successfully'));
+    logger.info(colors.green("✅ Configuration key removed successfully"));
     logger.info(`📁 File: ${colors.bold(configFile)}`);
     logger.info(`🔑 Removed: ${colors.bold(flags.key)}`);
   } catch (error) {
-    logger.error(colors.red('❌ Failed to remove configuration'));
+    logger.error(colors.red("❌ Failed to remove configuration"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
-}
+};
 
-export async function validateConfig(this: LocalContext, flags: ValidateConfigFlags, positionals?: any[]): Promise<void | Error> {
-  logger.info(colors.cyan('🔍 Validating configuration...'));
+export const validateConfig = async (flags: ValidateConfigFlags): Promise<void | Error> => {
+  logger.info(colors.cyan("🔍 Validating configuration..."));
 
   try {
     const config = await loadConfig();
@@ -192,17 +193,17 @@ export async function validateConfig(this: LocalContext, flags: ValidateConfigFl
     // Validate GitLab configuration
     if (config.gitlab) {
       if (config.gitlab.host && !isValidUrl(config.gitlab.host)) {
-        errors.push('gitlab.host must be a valid URL');
+        errors.push("gitlab.host must be a valid URL");
       }
       if (config.gitlab.accessToken && config.gitlab.accessToken.length < 20) {
-        warnings.push('gitlab.accessToken appears to be too short (< 20 characters)');
+        warnings.push("gitlab.accessToken appears to be too short (< 20 characters)");
       }
     }
 
     // Validate database configuration
     if (config.database) {
-      if (config.database.path && !config.database.path.endsWith('.sqlite')) {
-        warnings.push('database.path should end with .sqlite extension');
+      if (config.database.path && !config.database.path.endsWith(".sqlite")) {
+        warnings.push("database.path should end with .sqlite extension");
       }
     }
 
@@ -215,15 +216,15 @@ export async function validateConfig(this: LocalContext, flags: ValidateConfigFl
 
     // Validate logging configuration
     if (config.logging) {
-      const validLevels = ['error', 'warn', 'info', 'debug'];
+      const validLevels = ["error", "warn", "info", "debug"];
       if (config.logging.level && !validLevels.includes(config.logging.level)) {
-        errors.push(`logging.level must be one of: ${validLevels.join(', ')}`);
+        errors.push(`logging.level must be one of: ${validLevels.join(", ")}`);
       }
     }
 
     // Report results
     if (errors.length === 0 && warnings.length === 0) {
-      logger.info(colors.green('✅ Configuration is valid'));
+      logger.info(colors.green("✅ Configuration is valid"));
     } else {
       if (errors.length > 0) {
         logger.error(colors.red(`❌ Found ${errors.length} error(s):`));
@@ -236,54 +237,54 @@ export async function validateConfig(this: LocalContext, flags: ValidateConfigFl
       }
 
       if (flags.strict && warnings.length > 0) {
-        const error = new Error('Validation failed: warnings treated as errors in strict mode');
-        logger.error(colors.red('❌ Failed to validate configuration'));
+        const error = new Error("Validation failed: warnings treated as errors in strict mode");
+        logger.error(colors.red("❌ Failed to validate configuration"));
         logger.error(error.message);
         return error;
       }
 
       if (errors.length > 0) {
-        const error = new Error('Validation failed: configuration has errors');
-        logger.error(colors.red('❌ Failed to validate configuration'));
+        const error = new Error("Validation failed: configuration has errors");
+        logger.error(colors.red("❌ Failed to validate configuration"));
         logger.error(error.message);
         return error;
       }
     }
 
     if (flags.fix) {
-      logger.warn(colors.yellow('⚠️  Auto-fix functionality not yet implemented'));
+      logger.warn(colors.yellow("⚠️  Auto-fix functionality not yet implemented"));
     }
   } catch (error) {
-    logger.error(colors.red('❌ Failed to validate configuration'));
+    logger.error(colors.red("❌ Failed to validate configuration"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
-}
+};
 
 // Helper functions
 
-function setNestedProperty(obj: any, path: string, value: any): void {
-  const keys = path.split('.');
+const setNestedProperty = (obj: Record<string, unknown>, path: string, value: unknown): void => {
+  const keys = path.split(".");
   const lastKey = keys.pop()!;
 
   let current = obj;
   for (const key of keys) {
-    if (!(key in current) || typeof current[key] !== 'object') {
+    if (!(key in current) || typeof current[key] !== "object") {
       current[key] = {};
     }
     current = current[key];
   }
 
   current[lastKey] = value;
-}
+};
 
-function unsetNestedProperty(obj: any, path: string): boolean {
-  const keys = path.split('.');
+const unsetNestedProperty = (obj: Record<string, unknown>, path: string): boolean => {
+  const keys = path.split(".");
   const lastKey = keys.pop()!;
 
   let current = obj;
   for (const key of keys) {
-    if (!(key in current) || typeof current[key] !== 'object') {
+    if (!(key in current) || typeof current[key] !== "object") {
       return false; // Path doesn't exist
     }
     current = current[key];
@@ -295,13 +296,13 @@ function unsetNestedProperty(obj: any, path: string): boolean {
   }
 
   return false; // Key doesn't exist
-}
+};
 
-function isValidUrl(string: string): boolean {
+const isValidUrl = (string: string): boolean => {
   try {
     new URL(string);
     return true;
   } catch {
     return false;
   }
-}
+};

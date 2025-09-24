@@ -81,23 +81,28 @@ This project is aimed at crawling all accessible resources (e.g., groups, projec
 ## Abstract Workflow
 
 The resources to be crawled are organized into four major steps.
+
 - Steps **1–3** are handled via **GraphQL** (preferred when available).
 - Step **4** covers **REST-only resources**.
 - The JSON schema mapping in the next (sub-)section ["API Schema Mapping"](#api-schema-mapping) gives the exact correspondence between steps and GitLab API resource types.
 
 **Step 1 – Gather available areas**
+
 - Groups (`groups`, `group`)
 - Projects (`projects`, `project`)
 
 **Step 2 – Gather all available users**
+
 - Users (`users`, `user`)
 
 **Step 3 – Iterate over all areas**
+
 - Common resources for groups/projects (members, labels, issues, MRs, etc.)
 - Group-specific resources (epic hierarchy, boards, audit events, etc.)
 - Project-specific resources (metadata, pipelines, releases, snippets, etc.)
 
 **Step 4 – REST-only resources**
+
 - Repository-level details (branches, commits, tags, file blobs, etc.)
 - Global REST-only data (artifacts, job logs, dependency lists, etc.)
 - Specialized REST-only domains (security, compliance, package registries, etc.)
@@ -245,12 +250,7 @@ This acts as the **canonical specification** for the implementation.
       "notes": "REST only."
     },
     "security_compliance_packages": {
-      "endpoints": [
-        "/projects/:id/vulnerabilities",
-        "/projects/:id/dependencies",
-        "/projects/:id/packages",
-        "/projects/:id/compliance_frameworks"
-      ],
+      "endpoints": ["/projects/:id/vulnerabilities", "/projects/:id/dependencies", "/projects/:id/packages", "/projects/:id/compliance_frameworks"],
       "notes": "REST only; GraphQL does not expose."
     }
   }
@@ -266,8 +266,8 @@ The application must implement the following **core responsibilities** in additi
 3. **Data Processing Callback**: For customized data cleaning the app should support a "hook" or "callback" that can be tapped into that is being called for each parsed object (and the contextual information such as host, account id of the authentication credentials, resource type etc.) which can control if an object is being stored at all or not (i.e., filtering and deduplication) and can modify the object (e.g., changing properties' values, adding or removing properties).
 4. **JSONL data storage**: All processed data should be stored in JSONL-files which enables lightweight write processes. The data should be stored in a folder structure that mirrors the hierarchical structure of the areas (i.e., GitLab's groups and projects) beneath a provided "root" directory. Within each such directory, each resource type must be stored in its own JSONL file (e.g., `users.jsonl`, `commits.jsonl`). File names must be deterministic and lowercase to avoid duplicates (e.g., `users.jsonl` not `Users.jsonl`).
 5. **Configuration**: The app should support three different ways of configuration in descending level of importance/weight:
-  1. Arguments passed to the app
-  2. Environment variables
-  3. YAML-based configuration file in the user's home configuration directory (e.g., ~/.config/copima)
-  4. YAML-based configuration file in the current working directory
-  5. Built-time defaults derived from a YAML-based configuration file in the project's root directory
+6. Arguments passed to the app
+7. Environment variables
+8. YAML-based configuration file in the user's home configuration directory (e.g., ~/.config/copima)
+9. YAML-based configuration file in the current working directory
+10. Built-time defaults derived from a YAML-based configuration file in the project's root directory

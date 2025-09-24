@@ -91,11 +91,11 @@ export type OutputConfig = {
   /** Current working directory for output operations */
   directory?: string;
   /** File naming convention (lowercase, kebab-case, etc.) */
-  fileNaming?: 'lowercase' | 'kebab-case' | 'snake_case';
+  fileNaming?: "lowercase" | "kebab-case" | "snake_case";
   /** Pretty print JSON (slower but readable) */
   prettyPrint?: boolean;
   /** Compression for output files */
-  compression?: 'none' | 'gzip' | 'brotli';
+  compression?: "none" | "gzip" | "brotli";
 };
 
 /**
@@ -103,9 +103,9 @@ export type OutputConfig = {
  */
 export type LoggingConfig = {
   /** Log level (error, warn, info, debug) */
-  level: 'error' | 'warn' | 'info' | 'debug';
+  level: "error" | "warn" | "info" | "debug";
   /** Log format (json, simple, combined) */
-  format?: 'json' | 'simple' | 'combined';
+  format?: "json" | "simple" | "combined";
   /** Log to file path (optional) */
   file?: string;
   /** Enable console logging */

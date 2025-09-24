@@ -1,8 +1,8 @@
-import { createLogger } from '../utils/logger';
+import fetch from "node-fetch";
+import type { HttpMethod, SafeRecord } from "../types/api.js";
+import { createLogger } from "../utils/logger.js";
 
-const logger = createLogger('GitLabRestClient');
-
-import fetch from 'node-fetch';
+const logger = createLogger("GitLabRestClient");
 
 export class GitLabRestClient {
   private baseUrl: string;
@@ -13,12 +13,12 @@ export class GitLabRestClient {
     this.accessToken = accessToken;
   }
 
-  async request(endpoint: string, method: string = 'GET', body: Record<string, any> | null = null): Promise<any> {
+  async request<T = SafeRecord>(endpoint: string, method: HttpMethod = "GET", body: SafeRecord | null = null): Promise<T> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${this.accessToken}`,
         },
         body: body ? JSON.stringify(body) : null,
@@ -32,7 +32,7 @@ export class GitLabRestClient {
 
       return await response.json();
     } catch (error) {
-      logger.error('REST request failed:', error);
+      logger.error("REST request failed:", error);
       throw error;
     }
   }
@@ -63,30 +63,30 @@ export class GitLabRestClient {
 
   // Fetch job artifacts
   async fetchArtifacts(projectId: string, jobId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/jobs/${jobId}/artifacts`, 'GET');
+    return this.request(`/projects/${projectId}/jobs/${jobId}/artifacts`, "GET");
   }
 
   // Fetch job logs
   async fetchJobLogs(projectId: string, jobId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/jobs/${jobId}/trace`, 'GET');
+    return this.request(`/projects/${projectId}/jobs/${jobId}/trace`, "GET");
   }
 
   // Fetch dependency list
   async fetchDependencyList(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/dependencies`, 'GET');
+    return this.request(`/projects/${projectId}/dependencies`, "GET");
   }
 
   // Add methods for specialized REST-only domains crawling (security, compliance, package registries)
   async fetchSecurityVulnerabilities(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/vulnerabilities`, 'GET');
+    return this.request(`/projects/${projectId}/vulnerabilities`, "GET");
   }
 
   async fetchComplianceFrameworks(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/compliance_frameworks`, 'GET');
+    return this.request(`/projects/${projectId}/compliance_frameworks`, "GET");
   }
 
   async fetchPackageRegistries(projectId: string): Promise<any> {
-    return this.request(`/projects/${projectId}/packages`, 'GET');
+    return this.request(`/projects/${projectId}/packages`, "GET");
   }
 
   // Additional methods for complete REST API coverage
@@ -100,29 +100,29 @@ export class GitLabRestClient {
 
   async getCommits(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/repository/commits${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `/projects/${projectId}/repository/commits${queryParams ? `?${queryParams}` : ""}`;
     return this.request(endpoint);
   }
 
   async getRepositoryTree(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/repository/tree${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `/projects/${projectId}/repository/tree${queryParams ? `?${queryParams}` : ""}`;
     return this.request(endpoint);
   }
 
   async getReleases(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/releases${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `/projects/${projectId}/releases${queryParams ? `?${queryParams}` : ""}`;
     return this.request(endpoint);
   }
 
   async getPipelines(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/pipelines${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `/projects/${projectId}/pipelines${queryParams ? `?${queryParams}` : ""}`;
     return this.request(endpoint);
   }
 
-  async getFileContent(projectId: string, filePath: string, ref: string = 'main'): Promise<any> {
+  async getFileContent(projectId: string, filePath: string, ref: string = "main"): Promise<any> {
     const encodedFilePath = encodeURIComponent(filePath);
     return this.request(`/projects/${projectId}/repository/files/${encodedFilePath}?ref=${ref}`);
   }
@@ -133,30 +133,30 @@ export class GitLabRestClient {
 }
 
 // Standalone utility functions that don't require class instance
-export async function fetchGroups(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/groups', 'GET');
-}
+export const fetchGroups = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/groups", "GET");
+};
 
-export async function fetchProjects(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/projects', 'GET');
-}
+export const fetchProjects = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/projects", "GET");
+};
 
-export async function fetchUsers(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/users', 'GET');
-}
+export const fetchUsers = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/users", "GET");
+};
 
-export async function fetchLabels(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/labels', 'GET');
-}
+export const fetchLabels = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/labels", "GET");
+};
 
-export async function fetchMilestones(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/milestones', 'GET');
-}
+export const fetchMilestones = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/milestones", "GET");
+};
 
-export async function fetchIssues(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/issues', 'GET');
-}
+export const fetchIssues = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/issues", "GET");
+};
 
-export async function fetchMergeRequests(client: GitLabRestClient): Promise<any[]> {
-  return client.request('/merge_requests', 'GET');
-}
+export const fetchMergeRequests = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
+  return client.request("/merge_requests", "GET");
+};

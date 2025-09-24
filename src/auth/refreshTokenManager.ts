@@ -1,9 +1,9 @@
 // src/auth/refreshTokenManager.ts
 
-import { Database } from '../db/connection';
-import { logger } from '../utils/logger';
-import { OAuth2TokenResponse } from '../types';
-import { addSeconds } from 'date-fns';
+import { Database } from "../db/connection";
+import { logger } from "../utils/logger";
+import { OAuth2TokenResponse } from "../types";
+import { addSeconds } from "date-fns";
 
 export class RefreshTokenManager {
   private db: Database;

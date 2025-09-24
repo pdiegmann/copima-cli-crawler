@@ -1,10 +1,10 @@
-import { GitLabGraphQLClient } from '../../api/gitlabGraphQLClient';
-import { loadConfig } from '../../config/loader';
-import type { CallbackContext } from '../../config/types';
-import { createLogger } from '../../utils/logger';
-import { StorageManager } from '../../utils/storageManager';
+import { GitLabGraphQLClient } from "../../api/gitlabGraphQLClient";
+import { loadConfig } from "../../config/loader";
+import type { CallbackContext } from "../../config/types";
+import { createLogger } from "../../utils/logger";
+import { StorageManager } from "../../utils/storageManager";
 
-const logger = createLogger('fetchUsers');
+const logger = createLogger("fetchUsers");
 
 /**
  * Fetches all users from the GitLab API, processes them using a callback, and writes them to a JSONL file.
@@ -16,13 +16,13 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
   const storageManager = new StorageManager(config.output);
 
   try {
-    logger.info('Fetching users from GitLab...');
+    logger.info("Fetching users from GitLab...");
     const users = await client.fetchUsers();
 
     const context: CallbackContext = {
       host: config.gitlab.host,
-      accountId: 'global', // Users are global resources, not tied to a specific account
-      resourceType: 'users',
+      accountId: "global", // Users are global resources, not tied to a specific account
+      resourceType: "users",
     };
 
     // Process users through callback
@@ -36,12 +36,12 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
 
     // Create hierarchical path and write to JSONL file
     // Users are stored at the root level since they're global resources
-    const filePath = storageManager.createHierarchicalPath('users', []);
+    const filePath = storageManager.createHierarchicalPath("users", []);
     const writtenCount = storageManager.writeJsonlFile(filePath, processedUsers, false); // Overwrite existing file
 
     logger.info(`Successfully wrote ${writtenCount} users to ${filePath}`);
   } catch (error) {
-    logger.error('Failed to fetch users:', error);
+    logger.error("Failed to fetch users:", error);
     throw error;
   }
 };

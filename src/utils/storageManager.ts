@@ -1,9 +1,9 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
-import type { OutputConfig } from '../config/types.js';
-import { createLogger } from './logger.js';
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { dirname, join } from "path";
+import type { OutputConfig } from "../config/types.js";
+import { createLogger } from "./logger.js";
 
-const logger = createLogger('StorageManager');
+const logger = createLogger("StorageManager");
 
 /**
  * Storage Manager
@@ -14,15 +14,15 @@ const logger = createLogger('StorageManager');
  */
 export class StorageManager {
   private rootDir: string;
-  private fileNaming: 'lowercase' | 'kebab-case' | 'snake_case';
+  private fileNaming: "lowercase" | "kebab-case" | "snake_case";
   private prettyPrint: boolean;
-  private compression: 'none' | 'gzip' | 'brotli';
+  private compression: "none" | "gzip" | "brotli";
 
   constructor(config: OutputConfig) {
     this.rootDir = config.rootDir;
-    this.fileNaming = config.fileNaming || 'lowercase';
+    this.fileNaming = config.fileNaming || "lowercase";
     this.prettyPrint = config.prettyPrint || false;
-    this.compression = config.compression || 'none';
+    this.compression = config.compression || "none";
   }
 
   /**
@@ -34,8 +34,8 @@ export class StorageManager {
    */
   createHierarchicalPath(resourceType: string, hierarchy: string[] = []): string {
     let fileName = this.formatFileName(resourceType);
-    if (!fileName.endsWith('.jsonl')) {
-      fileName += '.jsonl';
+    if (!fileName.endsWith(".jsonl")) {
+      fileName += ".jsonl";
     }
     const fullPath = join(this.rootDir, ...hierarchy, fileName);
     const dirPath = dirname(fullPath);
@@ -64,7 +64,7 @@ export class StorageManager {
         return 0;
       }
 
-      let content = '';
+      let content = "";
       for (const item of dataArray) {
         if (item) {
           const jsonString = this.prettyPrint ? JSON.stringify(item, null, 2) : JSON.stringify(item);
@@ -73,8 +73,8 @@ export class StorageManager {
       }
 
       if (content) {
-        writeFileSync(filePath, content, { flag: append ? 'a' : 'w' });
-        logger.debug(`Wrote ${dataArray.length} lines to ${filePath} (${append ? 'append' : 'overwrite'} mode)`);
+        writeFileSync(filePath, content, { flag: append ? "a" : "w" });
+        logger.debug(`Wrote ${dataArray.length} lines to ${filePath} (${append ? "append" : "overwrite"} mode)`);
       }
 
       return dataArray.length;
@@ -92,19 +92,19 @@ export class StorageManager {
    */
   private formatFileName(resourceType: string): string {
     switch (this.fileNaming) {
-      case 'kebab-case':
+      case "kebab-case":
         return resourceType
-          .replace(/([a-z])([A-Z])/g, '$1-$2')
+          .replace(/([a-z])([A-Z])/g, "$1-$2")
           .toLowerCase()
-          .replace(/\s+/g, '-');
-      case 'snake_case':
+          .replace(/\s+/g, "-");
+      case "snake_case":
         return resourceType
-          .replace(/([a-z])([A-Z])/g, '$1_$2')
+          .replace(/([a-z])([A-Z])/g, "$1_$2")
           .toLowerCase()
-          .replace(/\s+/g, '_');
-      case 'lowercase':
+          .replace(/\s+/g, "_");
+      case "lowercase":
       default:
-        return resourceType.toLowerCase().replace(/\s+/g, '');
+        return resourceType.toLowerCase().replace(/\s+/g, "");
     }
   }
 
@@ -124,10 +124,10 @@ export class StorageManager {
    */
   updateConfig(config: OutputConfig): void {
     this.rootDir = config.rootDir;
-    this.fileNaming = config.fileNaming || 'lowercase';
+    this.fileNaming = config.fileNaming || "lowercase";
     this.prettyPrint = config.prettyPrint || false;
-    this.compression = config.compression || 'none';
-    logger.debug('Updated StorageManager configuration');
+    this.compression = config.compression || "none";
+    logger.debug("Updated StorageManager configuration");
   }
 }
 

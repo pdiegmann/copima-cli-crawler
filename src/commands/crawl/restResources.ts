@@ -1,10 +1,10 @@
-import { GitLabRestClient } from '../../api/gitlabRestClient';
-import { loadConfig } from '../../config/loader';
-import type { CallbackContext } from '../../config/types';
-import { createLogger } from '../../utils/logger';
-import { StorageManager } from '../../utils/storageManager';
+import { GitLabRestClient } from "../../api/gitlabRestClient";
+import { loadConfig } from "../../config/loader";
+import type { CallbackContext } from "../../config/types";
+import { createLogger } from "../../utils/logger";
+import { StorageManager } from "../../utils/storageManager";
 
-const logger = createLogger('restResources');
+const logger = createLogger("restResources");
 
 /**
  * Fetches REST-only resources such as repository details, commits, and file contents
@@ -31,7 +31,7 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'branches',
+        resourceType: "branches",
       };
 
       // Process branches through callback
@@ -44,8 +44,8 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects', 'repository'];
-      const filePath = this.storageManager.createHierarchicalPath('branches', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository"];
+      const filePath = this.storageManager.createHierarchicalPath("branches", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBranches, false);
 
       logger.info(`Successfully wrote ${writtenCount} branches for ${projectPath} to ${filePath}`);
@@ -66,7 +66,7 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'tags',
+        resourceType: "tags",
       };
 
       // Process tags through callback
@@ -79,8 +79,8 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects', 'repository'];
-      const filePath = this.storageManager.createHierarchicalPath('tags', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository"];
+      const filePath = this.storageManager.createHierarchicalPath("tags", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTags, false);
 
       logger.info(`Successfully wrote ${writtenCount} tags for ${projectPath} to ${filePath}`);
@@ -96,7 +96,7 @@ export class RestResourcesFetcher {
   async fetchCommits(
     projectId: string,
     projectPath: string,
-    branchName: string = 'main',
+    branchName: string = "main",
     callback: (commit: unknown, context: CallbackContext) => unknown | null,
     maxCommits: number = 1000
   ): Promise<void> {
@@ -138,7 +138,7 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'commits',
+        resourceType: "commits",
       };
 
       // Process commits through callback
@@ -151,8 +151,8 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects', 'repository', 'branches', branchName];
-      const filePath = this.storageManager.createHierarchicalPath('commits', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "branches", branchName];
+      const filePath = this.storageManager.createHierarchicalPath("commits", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedCommits, false);
 
       logger.info(`Successfully wrote ${writtenCount} commits for ${projectPath}/${branchName} to ${filePath}`);
@@ -168,7 +168,7 @@ export class RestResourcesFetcher {
   async fetchRepositoryTree(
     projectId: string,
     projectPath: string,
-    branchName: string = 'main',
+    branchName: string = "main",
     callback: (treeItem: unknown, context: CallbackContext) => unknown | null,
     recursive: boolean = true
   ): Promise<void> {
@@ -183,7 +183,7 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'tree',
+        resourceType: "tree",
       };
 
       // Process tree items through callback
@@ -196,8 +196,8 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects', 'repository', 'branches', branchName];
-      const filePath = this.storageManager.createHierarchicalPath('tree', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "branches", branchName];
+      const filePath = this.storageManager.createHierarchicalPath("tree", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTreeItems, false);
 
       logger.info(`Successfully wrote ${writtenCount} tree items for ${projectPath}/${branchName} to ${filePath}`);
@@ -242,7 +242,7 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'releases',
+        resourceType: "releases",
       };
 
       // Process releases through callback
@@ -255,8 +255,8 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('releases', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("releases", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedReleases, false);
 
       logger.info(`Successfully wrote ${writtenCount} releases for ${projectPath} to ${filePath}`);
@@ -311,7 +311,7 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'pipelines',
+        resourceType: "pipelines",
       };
 
       // Process pipelines through callback
@@ -324,8 +324,8 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('pipelines', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("pipelines", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines, false);
 
       logger.info(`Successfully wrote ${writtenCount} pipelines for ${projectPath} to ${filePath}`);
@@ -342,7 +342,7 @@ export class RestResourcesFetcher {
     projectId: string,
     projectPath: string,
     filePath: string,
-    branchName: string = 'main',
+    branchName: string = "main",
     callback: (fileContent: unknown, context: CallbackContext) => unknown | null
   ): Promise<void> {
     try {
@@ -352,20 +352,20 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'fileContent',
+        resourceType: "fileContent",
       };
 
       // Process file content through callback
       const processedContent = callback(fileContent, context);
       if (processedContent) {
         // Store in hierarchical structure
-        const sanitizedFilePath = filePath.replace(/[/\\:*?"<>|]/g, '_');
-        const hierarchy = ['groups', ...projectPath.split('/'), 'projects', 'repository', 'files'];
+        const sanitizedFilePath = filePath.replace(/[/\\:*?"<>|]/g, "_");
+        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "files"];
         const fileName = `${sanitizedFilePath}_content`;
         const outputPath = this.storageManager.createHierarchicalPath(fileName, hierarchy);
         const writtenCount = this.storageManager.writeJsonlFile(outputPath, [processedContent], false);
 
-        logger.info(`Successfully wrote file content for ${filePath} to ${outputPath}`);
+        logger.info(`Successfully wrote ${writtenCount} file content for ${filePath} to ${outputPath}`);
       }
     } catch (error) {
       logger.error(`Failed to fetch file content for ${projectPath}/${filePath}:`, error);
@@ -384,16 +384,16 @@ export class RestResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'projectMetadata',
+        resourceType: "projectMetadata",
       };
 
       // Process project metadata through callback
       const processedMetadata = callback(project, context);
       if (processedMetadata) {
         // Store in hierarchical structure
-        const hierarchy = ['groups', ...projectPath.split('/'), 'projects'];
-        const filePath = this.storageManager.createHierarchicalPath('metadata', hierarchy);
-        const writtenCount = this.storageManager.writeJsonlFile(filePath, [processedMetadata], false);
+        const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+        const filePath = this.storageManager.createHierarchicalPath("metadata", hierarchy);
+        this.storageManager.writeJsonlFile(filePath, [processedMetadata], false);
 
         logger.info(`Successfully wrote project metadata for ${projectPath} to ${filePath}`);
       }

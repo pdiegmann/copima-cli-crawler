@@ -1,14 +1,14 @@
 // Database schema exports
-export { user, account } from './schema.js';
-export * from './schema.js';
+export { user, account } from "./schema.js";
+export * from "./schema.js";
 
 // Database connection exports
-export { getDatabase, initDatabase, closeDatabase, type DatabaseConfig } from './connection.js';
+export { getDatabase, initDatabase, closeDatabase, type DatabaseConfig } from "./connection.js";
 // Default database connection alias
-export { getDatabase as db } from './connection.js';
+export { getDatabase as db } from "./connection.js";
 
 // Migration exports
-export { runMigrations, initializeDatabase, type MigrationConfig } from './migrate.js';
+export { runMigrations, initializeDatabase, type MigrationConfig } from "./migrate.js";
 
 // Type exports
 export type {
@@ -24,4 +24,4 @@ export type {
   GitLabAccount,
   DatabaseResult,
   PaginatedResult,
-} from './types.js';
+} from "./types.js";

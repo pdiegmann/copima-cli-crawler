@@ -1,7 +1,7 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
-import logger from '../utils/logger.js';
-import * as schema from './schema.js';
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { createLogger } from "../utils/logger.js";
+import * as schema from "./schema.js";
 
 export type DatabaseConfig = {
   path: string;
@@ -9,11 +9,12 @@ export type DatabaseConfig = {
   timeout?: number;
 };
 
+const logger = createLogger("Database");
 let db: ReturnType<typeof drizzle> | null = null;
 
-export function initDatabase(config: DatabaseConfig) {
+export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle> => {
   if (db) {
-    logger.warn('Database already initialized');
+    logger.warn("Database already initialized. Returning existing instance.");
     return db;
   }
 
@@ -27,36 +28,40 @@ export function initDatabase(config: DatabaseConfig) {
 
     // Enable WAL mode for better concurrency if requested
     if (config.wal !== false) {
-      sqlite.pragma('journal_mode = WAL');
+      sqlite.pragma("journal_mode = WAL");
     }
 
     // Enable foreign keys
-    sqlite.pragma('foreign_keys = ON');
+    sqlite.pragma("foreign_keys = ON");
 
     db = drizzle(sqlite, { schema });
 
-    logger.info('Database initialized successfully');
+    logger.info("Database initialized successfully");
     return db;
   } catch (error) {
-    logger.error('Failed to initialize database', { error });
+    if (error instanceof Error) {
+      logger.error(`Failed to initialize database: ${error.message}`);
+    } else {
+      logger.error("Failed to initialize database: Unknown error");
+    }
     throw error;
   }
-}
+};
 
-export function getDatabase() {
+export const getDatabase = (): ReturnType<typeof drizzle> => {
   if (!db) {
-    throw new Error('Database not initialized. Call initDatabase() first.');
+    throw new Error("Database not initialized. Call initDatabase() first.");
   }
   return db;
-}
+};
 
-export function closeDatabase() {
+export const closeDatabase = (): void => {
   if (db) {
-    logger.info('Closing database connection');
+    logger.info("Closing database connection");
     // The better-sqlite3 database will be closed automatically when the process exits
     db = null;
   }
-}
+};
 
 // Export schema for external use
 export { schema };

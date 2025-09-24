@@ -1,170 +1,169 @@
-import { buildCommand } from '@stricli/core';
-import type { LocalContext } from '../../context';
+import { buildCommand } from "@stricli/core";
 
 export const addAccountCommand = buildCommand({
   loader: async () => {
-    const { addAccount } = await import('./impl.js');
+    const { addAccount } = await import("./impl.js");
     return addAccount;
   },
   parameters: {
     positional: {
-      kind: 'tuple',
+      kind: "tuple",
       parameters: [],
     },
     flags: {
       host: {
-        kind: 'parsed',
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'GitLab instance host (e.g., gitlab.com)',
+        brief: "GitLab instance host (e.g., gitlab.com)",
         optional: true,
       },
-      'access-token': {
-        kind: 'parsed',
+      "access-token": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'OAuth2 access token',
+        brief: "OAuth2 access token",
         optional: true,
       },
-      'refresh-token': {
-        kind: 'parsed',
+      "refresh-token": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'OAuth2 refresh token',
+        brief: "OAuth2 refresh token",
         optional: true,
       },
-      'account-id': {
-        kind: 'parsed',
+      "account-id": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'Account identifier (optional, will be generated if not provided)',
+        brief: "Account identifier (optional, will be generated if not provided)",
         optional: true,
       },
       name: {
-        kind: 'parsed',
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'Display name for the account',
+        brief: "Display name for the account",
         optional: true,
       },
       email: {
-        kind: 'parsed',
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'Email address associated with the account',
+        brief: "Email address associated with the account",
         optional: true,
       },
     },
   },
   docs: {
-    brief: 'Add a new GitLab account with OAuth2 credentials',
+    brief: "Add a new GitLab account with OAuth2 credentials",
   },
 });
 
 export const listAccountsCommand = buildCommand({
   loader: async () => {
-    const { listAccounts } = await import('./impl.js');
+    const { listAccounts } = await import("./impl.js");
     return listAccounts;
   },
   parameters: {
     positional: {
-      kind: 'tuple',
+      kind: "tuple",
       parameters: [],
     },
     flags: {
       format: {
-        kind: 'parsed',
+        kind: "parsed",
         parse: (input: string) => {
           const format = input.toLowerCase();
-          if (['table', 'json', 'yaml'].includes(format)) {
+          if (["table", "json", "yaml"].includes(format)) {
             return format;
           }
-          return 'table';
+          return "table";
         },
-        brief: 'Output format (table|json|yaml)',
+        brief: "Output format (table|json|yaml)",
         optional: true,
       },
-      'show-tokens': {
-        kind: 'parsed',
-        parse: (input: string) => input.toLowerCase() === 'true',
-        brief: 'Include access/refresh tokens in output (security risk)',
+      "show-tokens": {
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Include access/refresh tokens in output (security risk)",
         optional: true,
       },
     },
   },
   docs: {
-    brief: 'List all stored GitLab accounts',
+    brief: "List all stored GitLab accounts",
   },
 });
 
 export const removeAccountCommand = buildCommand({
   loader: async () => {
-    const { removeAccount } = await import('./impl.js');
+    const { removeAccount } = await import("./impl.js");
     return removeAccount;
   },
   parameters: {
     positional: {
-      kind: 'tuple',
+      kind: "tuple",
       parameters: [],
     },
     flags: {
       host: {
-        kind: 'parsed',
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'GitLab instance host',
+        brief: "GitLab instance host",
         optional: true,
       },
-      'account-id': {
-        kind: 'parsed',
+      "account-id": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'Account identifier',
+        brief: "Account identifier",
         optional: true,
       },
       force: {
-        kind: 'parsed',
-        parse: (input: string) => input.toLowerCase() === 'true',
-        brief: 'Skip confirmation prompt',
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Skip confirmation prompt",
         optional: true,
       },
     },
   },
   docs: {
-    brief: 'Remove a GitLab account',
+    brief: "Remove a GitLab account",
   },
 });
 
 export const refreshTokenCommand = buildCommand({
   loader: async () => {
-    const { refreshToken } = await import('./impl.js');
+    const { refreshToken } = await import("./impl.js");
     return refreshToken;
   },
   parameters: {
     positional: {
-      kind: 'tuple',
+      kind: "tuple",
       parameters: [],
     },
     flags: {
       host: {
-        kind: 'parsed',
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'GitLab instance host',
+        brief: "GitLab instance host",
         optional: true,
       },
-      'account-id': {
-        kind: 'parsed',
+      "account-id": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'Account identifier',
+        brief: "Account identifier",
         optional: true,
       },
-      'client-id': {
-        kind: 'parsed',
+      "client-id": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'OAuth2 client ID',
+        brief: "OAuth2 client ID",
         optional: true,
       },
-      'client-secret': {
-        kind: 'parsed',
+      "client-secret": {
+        kind: "parsed",
         parse: (input: string) => input,
-        brief: 'OAuth2 client secret',
+        brief: "OAuth2 client secret",
         optional: true,
       },
     },
   },
   docs: {
-    brief: 'Refresh OAuth2 tokens for an account',
+    brief: "Refresh OAuth2 tokens for an account",
   },
 });

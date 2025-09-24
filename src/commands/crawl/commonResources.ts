@@ -1,10 +1,10 @@
-import { GitLabGraphQLClient } from '../../api/gitlabGraphQLClient';
-import { loadConfig } from '../../config/loader';
-import type { CallbackContext } from '../../config/types';
-import { createLogger } from '../../utils/logger';
-import { StorageManager } from '../../utils/storageManager';
+import { GitLabGraphQLClient } from "../../api/gitlabGraphQLClient";
+import { loadConfig } from "../../config/loader";
+import type { CallbackContext } from "../../config/types";
+import { createLogger } from "../../utils/logger";
+import { StorageManager } from "../../utils/storageManager";
 
-const logger = createLogger('commonResources');
+const logger = createLogger("commonResources");
 
 /**
  * Fetches common resources that are available across groups and projects
@@ -23,7 +23,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetches members for a specific group or project
    */
-  async fetchMembers(areaType: 'group' | 'project', areaId: string, areaPath: string, callback: (member: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+  async fetchMembers(areaType: "group" | "project", areaId: string, areaPath: string, callback: (member: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($id: ID!) {
@@ -58,7 +58,7 @@ export class CommonResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: areaId,
-        resourceType: 'members',
+        resourceType: "members",
       };
 
       // Process members through callback
@@ -71,8 +71,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = areaType === 'group' ? ['groups', areaPath] : ['groups', ...areaPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('members', hierarchy);
+      const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("members", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMembers, false);
 
       logger.info(`Successfully wrote ${writtenCount} members for ${areaPath} to ${filePath}`);
@@ -85,7 +85,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetches labels for a specific group or project
    */
-  async fetchLabels(areaType: 'group' | 'project', areaId: string, areaPath: string, callback: (label: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+  async fetchLabels(areaType: "group" | "project", areaId: string, areaPath: string, callback: (label: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($id: ID!) {
@@ -112,7 +112,7 @@ export class CommonResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: areaId,
-        resourceType: 'labels',
+        resourceType: "labels",
       };
 
       // Process labels through callback
@@ -125,8 +125,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = areaType === 'group' ? ['groups', areaPath] : ['groups', ...areaPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('labels', hierarchy);
+      const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("labels", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedLabels, false);
 
       logger.info(`Successfully wrote ${writtenCount} labels for ${areaPath} to ${filePath}`);
@@ -140,7 +140,7 @@ export class CommonResourcesFetcher {
    * Fetches milestones for a specific group or project
    */
   async fetchMilestones(
-    areaType: 'group' | 'project',
+    areaType: "group" | "project",
     areaId: string,
     areaPath: string,
     callback: (milestone: unknown, context: CallbackContext) => unknown | null
@@ -173,7 +173,7 @@ export class CommonResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: areaId,
-        resourceType: 'milestones',
+        resourceType: "milestones",
       };
 
       // Process milestones through callback
@@ -186,8 +186,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = areaType === 'group' ? ['groups', areaPath] : ['groups', ...areaPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('milestones', hierarchy);
+      const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("milestones", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMilestones, false);
 
       logger.info(`Successfully wrote ${writtenCount} milestones for ${areaPath} to ${filePath}`);
@@ -276,7 +276,7 @@ export class CommonResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'issues',
+        resourceType: "issues",
       };
 
       // Process issues through callback
@@ -289,8 +289,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('issues', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("issues", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedIssues, false);
 
       logger.info(`Successfully wrote ${writtenCount} issues for ${projectPath} to ${filePath}`);
@@ -389,7 +389,7 @@ export class CommonResourcesFetcher {
       const context: CallbackContext = {
         host: this.config.gitlab.host,
         accountId: projectId,
-        resourceType: 'mergeRequests',
+        resourceType: "mergeRequests",
       };
 
       // Process merge requests through callback
@@ -402,8 +402,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ['groups', ...projectPath.split('/'), 'projects'];
-      const filePath = this.storageManager.createHierarchicalPath('mergerequests', hierarchy);
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("mergerequests", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMergeRequests, false);
 
       logger.info(`Successfully wrote ${writtenCount} merge requests for ${projectPath} to ${filePath}`);

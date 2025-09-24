@@ -1,10 +1,10 @@
 // Import required modules
-import fs from 'fs';
-import yaml from 'js-yaml';
-import pc from 'picocolors';
-import { createLogger } from './logger';
+import fs from "fs";
+import yaml from "js-yaml";
+import pc from "picocolors";
+import { createLogger } from "./logger";
 
-const logger = createLogger('ProgressReporter');
+const logger = createLogger("ProgressReporter");
 
 type ProgressState = {
   [key: string]: any;
@@ -38,7 +38,7 @@ class ProgressReporter {
   private stats: ProgressStats = {
     totalSteps: 0,
     completedSteps: 0,
-    currentStep: 'Initializing...',
+    currentStep: "Initializing...",
     startTime: new Date(),
     lastUpdate: new Date(),
     resourceCounts: {},
@@ -59,11 +59,11 @@ class ProgressReporter {
   // Start progress reporting
   start(): void {
     if (this.intervalId) {
-      logger.warn('Progress reporting is already running.');
+      logger.warn("Progress reporting is already running.");
       return;
     }
 
-    this.writeStream = fs.createWriteStream(this.filePath, { flags: 'w' });
+    this.writeStream = fs.createWriteStream(this.filePath, { flags: "w" });
     this.intervalId = setInterval(() => {
       this.writeProgress();
       if (this.enableTerminalOutput) {
@@ -71,7 +71,7 @@ class ProgressReporter {
       }
     }, 1000);
 
-    logger.info('Progress reporting started.');
+    logger.info("Progress reporting started.");
   }
 
   // Stop progress reporting
@@ -90,7 +90,7 @@ class ProgressReporter {
       this.displayFinalSummary();
     }
 
-    logger.info('Progress reporting stopped.');
+    logger.info("Progress reporting stopped.");
   }
 
   // Update the progress state
@@ -105,7 +105,15 @@ class ProgressReporter {
   }
 
   // Update resource count for a specific type
-  updateResourceCount(resourceType: string, updates: Partial<{ total: number; processed: number; filtered: number; errors: number }>): void {
+  updateResourceCount(
+    resourceType: string,
+    updates: Partial<{
+      total: number;
+      processed: number;
+      filtered: number;
+      errors: number;
+    }>
+  ): void {
     if (!this.stats.resourceCounts) {
       this.stats.resourceCounts = {};
     }
@@ -124,7 +132,7 @@ class ProgressReporter {
   // Write progress to the YAML file
   private writeProgress(): void {
     if (!this.writeStream) {
-      logger.error('Write stream is not initialized.');
+      logger.error("Write stream is not initialized.");
       return;
     }
 
@@ -137,7 +145,7 @@ class ProgressReporter {
       const yamlData = yaml.dump(combinedState);
 
       // Clear the file and write new content
-      this.writeStream.write('');
+      this.writeStream.write("");
       this.writeStream.write(yamlData);
     } catch (error) {
       logger.error(`Failed to write progress: ${(error as Error).message}`);
@@ -148,7 +156,7 @@ class ProgressReporter {
   private displayTerminalProgress(): void {
     try {
       // Clear previous lines and move cursor up
-      process.stdout.write('\x1b[2K\r'); // Clear current line
+      process.stdout.write("\x1b[2K\r"); // Clear current line
 
       const { completedSteps, totalSteps, currentStep } = this.stats;
       const percentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
@@ -157,7 +165,7 @@ class ProgressReporter {
       const barWidth = 30;
       const filledWidth = Math.round((percentage / 100) * barWidth);
       const emptyWidth = barWidth - filledWidth;
-      const progressBar = pc.green('█'.repeat(filledWidth)) + pc.gray('░'.repeat(emptyWidth));
+      const progressBar = pc.green("█".repeat(filledWidth)) + pc.gray("░".repeat(emptyWidth));
 
       // Format elapsed time
       const elapsed = Date.now() - this.stats.startTime.getTime();
@@ -169,9 +177,9 @@ class ProgressReporter {
       const remainingString = this.formatDuration(remaining);
 
       // Main progress line
-      const progressLine = `${pc.cyan('Progress:')} [${progressBar}] ${pc.bold(`${percentage}%`)} (${completedSteps}/${totalSteps})`;
-      const timeLine = `${pc.yellow('Time:')} ${elapsedString} elapsed, ~${remainingString} remaining`;
-      const stepLine = `${pc.magenta('Current:')} ${currentStep}`;
+      const progressLine = `${pc.cyan("Progress:")} [${progressBar}] ${pc.bold(`${percentage}%`)} (${completedSteps}/${totalSteps})`;
+      const timeLine = `${pc.yellow("Time:")} ${elapsedString} elapsed, ~${remainingString} remaining`;
+      const stepLine = `${pc.magenta("Current:")} ${currentStep}`;
 
       console.log(progressLine);
       console.log(timeLine);
@@ -179,7 +187,7 @@ class ProgressReporter {
 
       // Display resource counts if available
       if (this.stats.resourceCounts && Object.keys(this.stats.resourceCounts).length > 0) {
-        console.log(pc.blue('Resources:'));
+        console.log(pc.blue("Resources:"));
         Object.entries(this.stats.resourceCounts).forEach(([type, counts]) => {
           const resourcePercentage = counts.total > 0 ? Math.round((counts.processed / counts.total) * 100) : 0;
           const statusColor = counts.errors > 0 ? pc.red : pc.green;
@@ -196,7 +204,7 @@ class ProgressReporter {
       // Display performance metrics if available
       if (this.stats.performance && this.stats.performance.requestsPerSecond > 0) {
         const perfLine =
-          `${pc.green('Performance:')} ${this.stats.performance.requestsPerSecond.toFixed(1)} req/s, ` +
+          `${pc.green("Performance:")} ${this.stats.performance.requestsPerSecond.toFixed(1)} req/s, ` +
           `${this.stats.performance.avgResponseTime.toFixed(0)}ms avg, ` +
           `${(this.stats.performance.errorRate * 100).toFixed(1)}% errors`;
         console.log(perfLine);
@@ -206,7 +214,7 @@ class ProgressReporter {
       process.stdout.write(`\x1b[${this.getDisplayLineCount()}A`);
     } catch (error) {
       // If terminal display fails, don't crash the application
-      logger.debug('Terminal progress display failed:', error);
+      logger.debug("Terminal progress display failed:", error);
     }
   }
 
@@ -219,20 +227,20 @@ class ProgressReporter {
       const totalTime = Date.now() - this.stats.startTime.getTime();
       const totalTimeString = this.formatDuration(totalTime);
 
-      console.log(`\n${pc.bold(pc.green('═══ Crawling Summary ═══'))}`);
-      console.log(`${pc.cyan('Total Time:')} ${totalTimeString}`);
-      console.log(`${pc.cyan('Steps Completed:')} ${this.stats.completedSteps}/${this.stats.totalSteps}`);
+      console.log(`\n${pc.bold(pc.green("═══ Crawling Summary ═══"))}`);
+      console.log(`${pc.cyan("Total Time:")} ${totalTimeString}`);
+      console.log(`${pc.cyan("Steps Completed:")} ${this.stats.completedSteps}/${this.stats.totalSteps}`);
 
       if (this.stats.resourceCounts) {
-        console.log(`${pc.cyan('Resources Processed:')}`);
+        console.log(`${pc.cyan("Resources Processed:")}`);
         Object.entries(this.stats.resourceCounts).forEach(([type, counts]) => {
           console.log(`  ${type}: ${counts.processed} processed, ${counts.errors} errors, ${counts.filtered} filtered`);
         });
       }
 
-      console.log(pc.bold(pc.green('═══════════════════════')));
+      console.log(pc.bold(pc.green("═══════════════════════")));
     } catch (error) {
-      logger.debug('Final summary display failed:', error);
+      logger.debug("Final summary display failed:", error);
     }
   }
 

@@ -1,13 +1,14 @@
 // Import required modules
-import fs from 'fs';
-import yaml from 'js-yaml';
-import logger from './logger';
+import fs from "fs";
+import yaml from "js-yaml";
+import { createLogger } from "./logger";
 
 type ResumeState = {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 class ResumeManager {
+  private logger = createLogger("ResumeManager");
   private filePath: string;
 
   constructor(filePath: string) {
@@ -18,28 +19,28 @@ class ResumeManager {
   loadState(): ResumeState {
     try {
       if (fs.existsSync(this.filePath)) {
-        const fileContent = fs.readFileSync(this.filePath, 'utf8');
+        const fileContent = fs.readFileSync(this.filePath, "utf8");
         const state = yaml.load(fileContent) as ResumeState;
-        logger.info('Resume state loaded successfully.');
+        this.logger.info("Resume state loaded successfully.");
         return state;
       } else {
-        logger.warn('Resume file does not exist. Starting fresh.');
+        this.logger.warn("Resume file does not exist. Starting fresh.");
         return {};
       }
     } catch (error) {
-      logger.error(`Failed to load resume state: ${error.message}`);
+      this.logger.error(`Failed to load resume state: ${error instanceof Error ? error.message : "Unknown error"}`);
       return {};
     }
   }
 
   // Save the current state to the YAML file
-  saveState(state: ResumeState) {
+  saveState(state: ResumeState): void {
     try {
       const yamlData = yaml.dump(state);
-      fs.writeFileSync(this.filePath, yamlData, 'utf8');
-      logger.info('Resume state saved successfully.');
+      fs.writeFileSync(this.filePath, yamlData, "utf8");
+      this.logger.info("Resume state saved successfully.");
     } catch (error) {
-      logger.error(`Failed to save resume state: ${error.message}`);
+      this.logger.error(`Failed to save resume state: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 }

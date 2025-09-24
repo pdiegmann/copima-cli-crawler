@@ -113,3 +113,21 @@ flowchart TD
 Note: When triggered by **update memory bank**, I MUST review every memory bank file, even if some don't require updates. Focus particularly on activeContext.md and progress.md as they track current state.
 
 REMEMBER: After every memory reset, I begin completely fresh. The Memory Bank is my only link to previous work. It must be maintained with precision and clarity, as my effectiveness depends entirely on its accuracy.
+
+# IMPORTANT FINAL REMARKS
+
+The following rules MUST always be respected during design and implementation, as they are "Non-Negotiable Assumptions":
+
+- The project relies on TypeScript
+- Bun must be used as runtime and package manager — "bunx" is the replacement for "npx".
+- Libraries and Frameworks MUST be preferred over custom implementations. Before adding any complex code, make sure that no library or framework exists that could be used to simplify the implementation.
+- Code MUST NOT be duplicated.
+   - "Extended" or "fixed" file variants are forbidden.
+   - Existing files MUST be updated in place.
+   - Before adding new files, you MUST check if similar files already exist that could be used or extended.
+- Fixes MUST be tested and validated before they can be accepted.
+- Errors or incomplete work MUST trigger iterative improvement until validation succeeds.
+- Simplicity MUST be prioritized in all design and code decisions.
+- As long as there are open tasks or todos, you must continue your work. Do not finish until you are done with everything.
+
+More details can also be found within the memory bank folder.

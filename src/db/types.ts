@@ -1,15 +1,15 @@
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import type { user, account } from './schema.js';
+import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import type { user, account } from "./schema.js";
 
 // User types
 export type User = InferSelectModel<typeof user>;
 export type NewUser = InferInsertModel<typeof user>;
-export type UserUpdate = Partial<Omit<NewUser, 'id' | 'createdAt'>>;
+export type UserUpdate = Partial<Omit<NewUser, "id" | "createdAt">>;
 
 // Account types
 export type Account = InferSelectModel<typeof account>;
 export type NewAccount = InferInsertModel<typeof account>;
-export type AccountUpdate = Partial<Omit<NewAccount, 'id' | 'createdAt'>>;
+export type AccountUpdate = Partial<Omit<NewAccount, "id" | "createdAt">>;
 
 // Combined types for OAuth authentication
 export type UserWithAccounts = {
