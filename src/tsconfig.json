@@ -2,12 +2,17 @@
   "compilerOptions": {
     "noEmit": true,
     "rootDir": "..",
-    "types": ["node"],
+    "types": [
+      "node",
+      "jest"
+    ],
     "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "skipLibCheck": true,
     "strict": true,
     "isolatedModules": true,
@@ -17,6 +22,8 @@
     "noUncheckedIndexedAccess": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["**/*"],
+  "include": [
+    "**/*"
+  ],
   "exclude": []
 }

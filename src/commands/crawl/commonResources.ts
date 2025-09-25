@@ -1,6 +1,6 @@
 import { GitLabGraphQLClient } from "../../api/gitlabGraphQLClient";
 import { loadConfig } from "../../config/loader";
-import type { CallbackContext } from "../../config/types";
+import type { CallbackContext, Config } from "../../config/types";
 import { createLogger } from "../../logging/logger";
 import { StorageManager } from "../../storage/storageManager";
 
@@ -11,11 +11,12 @@ const logger = createLogger("commonResources");
  * This implements Step 3 of the GitLab crawling workflow
  */
 export class CommonResourcesFetcher {
-  private config = loadConfig();
+  private config: Config;
   private client: GitLabGraphQLClient;
   private storageManager: StorageManager;
 
-  constructor() {
+  constructor(config: Config) {
+    this.config = config;
     this.client = new GitLabGraphQLClient(this.config.gitlab.host, this.config.gitlab.accessToken);
     this.storageManager = new StorageManager(this.config.output);
   }
@@ -417,6 +418,7 @@ export class CommonResourcesFetcher {
 /**
  * Factory function to create a CommonResourcesFetcher instance
  */
-export const createCommonResourcesFetcher = (): CommonResourcesFetcher => {
-  return new CommonResourcesFetcher();
+export const createCommonResourcesFetcher = async (): Promise<CommonResourcesFetcher> => {
+  const config = await loadConfig();
+  return new CommonResourcesFetcher(config);
 };

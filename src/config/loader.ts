@@ -6,6 +6,13 @@ import { createLogger } from "../logging";
 import { defaultConfig } from "./defaults";
 import type { CliArgs, Config, EnvMapping } from "./types";
 
+// Import new modular components
+import { EnvironmentConfigLoader } from "./loaders/environmentLoader.js";
+import { FileConfigLoader } from "./loaders/fileLoader.js";
+import { ConfigMerger } from "./merging/configMerger.js";
+import { TemplateUtils } from "./utils/templateUtils.js";
+import { ConfigValidator } from "./validation/validator.js";
+
 /**
  * Configuration loader implementing 5-level hierarchy:
  * 1. CLI arguments (highest priority)
@@ -18,6 +25,12 @@ export class ConfigLoader {
   private config: Config;
   private readonly logger = createLogger("ConfigLoader");
 
+  // New modular components
+  private readonly validator = new ConfigValidator();
+  private readonly fileLoader = new FileConfigLoader();
+  private readonly envLoader = new EnvironmentConfigLoader();
+  private readonly merger = new ConfigMerger();
+
   constructor(logger: ReturnType<typeof createLogger> = createLogger("ConfigLoader")) {
     this.logger = logger;
     this.config = { ...defaultConfig };
@@ -26,31 +39,199 @@ export class ConfigLoader {
   /**
    * Load configuration from all sources in priority order
    */
-  load(args: CliArgs = {}): Config {
-    this.logger.debug("Loading configuration from all sources");
+  async load(args: CliArgs = {}): Promise<Config> {
+    this.logger.debug("Loading configuration from all sources using modular architecture");
 
-    // Start with defaults (level 5)
-    this.config = { ...defaultConfig };
-    this.logger.debug("Applied default configuration");
+    try {
+      // Prepare configuration array with priority order
+      const configs: Partial<Config>[] = [];
 
-    // Level 4: Local config file (./copima.yaml)
-    this.loadLocalConfigFile();
+      // Level 5: Start with defaults (lowest priority)
+      configs.push({ ...defaultConfig });
+      this.logger.debug("Applied default configuration");
 
-    // Level 3: User config file (~/.config/copima/config.yaml)
-    this.loadUserConfigFile();
+      // Level 4: Local config file (./copima.yaml)
+      const localConfig = await this.loadConfigFiles();
+      if (Object.keys(localConfig).length > 0) {
+        configs.push(localConfig);
+        this.logger.debug("Applied local configuration files");
+      }
 
-    // Level 2: Environment variables
-    this.loadEnvironmentVariables();
+      // Level 3: User config file (~/.config/copima/config.yaml)
+      const userConfig = await this.loadUserConfigFiles();
+      if (Object.keys(userConfig).length > 0) {
+        configs.push(userConfig);
+        this.logger.debug("Applied user configuration files");
+      }
 
-    // Level 1: CLI arguments (highest priority)
-    this.loadCliArguments(args);
+      // Level 2: Environment variables
+      const envConfig = this.envLoader.loadFromEnvironment();
+      if (Object.keys(envConfig).length > 0) {
+        configs.push(envConfig);
+        this.logger.debug("Applied environment variable configuration");
+      }
 
-    this.logger.info("Configuration loaded successfully");
-    return this.config;
+      // Level 1: CLI arguments (highest priority)
+      const argsConfig = this.convertCliArgsToConfig(args);
+      if (Object.keys(argsConfig).length > 0) {
+        configs.push(argsConfig);
+        this.logger.debug("Applied CLI argument configuration");
+      }
+
+      // Merge all configurations using new merger
+      const mergedConfig = this.merger.merge(configs);
+
+      // Apply template interpolation
+      const templateVars = TemplateUtils.getDefaultVariables();
+      const finalConfig = TemplateUtils.interpolateDeep(mergedConfig, templateVars) as Config;
+
+      this.config = finalConfig;
+      this.logger.info("Configuration loaded successfully using modular architecture");
+
+      return this.config;
+    } catch (error) {
+      this.logger.error("Failed to load configuration", { error });
+      throw new Error(`Configuration loading failed: ${error instanceof Error ? error.message : error}`);
+    }
   }
 
   /**
-   * Level 4: Load local configuration file (./copima.yaml)
+   * Load configuration files using new modular file loader
+   */
+  private async loadConfigFiles(): Promise<Partial<Config>> {
+    const localConfigPaths = ["./copima.yaml", "./copima.yml", "./.copima.yaml", "./copima.json"];
+
+    for (const configPath of localConfigPaths) {
+      if (existsSync(configPath)) {
+        try {
+          let config: Partial<Config>;
+          if (configPath.endsWith(".json")) {
+            config = await this.fileLoader.loadJsonFile(configPath);
+          } else {
+            config = await this.fileLoader.loadYamlFile(configPath);
+          }
+          this.logger.debug(`Loaded local config from ${configPath}`);
+          return config;
+        } catch (error) {
+          this.logger.warn(`Failed to load local config from ${configPath}:`, {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
+    }
+
+    return {};
+  }
+
+  /**
+   * Load user configuration files using new modular file loader
+   */
+  private async loadUserConfigFiles(): Promise<Partial<Config>> {
+    const userConfigDir = join(homedir(), ".config", "copima");
+    const userConfigPaths = [join(userConfigDir, "config.yaml"), join(userConfigDir, "config.yml"), join(userConfigDir, "config.json")];
+
+    for (const configPath of userConfigPaths) {
+      if (existsSync(configPath)) {
+        try {
+          let config: Partial<Config>;
+          if (configPath.endsWith(".json")) {
+            config = await this.fileLoader.loadJsonFile(configPath);
+          } else {
+            config = await this.fileLoader.loadYamlFile(configPath);
+          }
+          this.logger.debug(`Loaded user config from ${configPath}`);
+          return config;
+        } catch (error) {
+          this.logger.warn(`Failed to load user config from ${configPath}:`, {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
+    }
+
+    return {};
+  }
+
+  /**
+   * Convert CLI arguments to configuration object
+   */
+  private convertCliArgsToConfig(args: CliArgs): Partial<Config> {
+    const argsConfig: Partial<Config> = {};
+
+    // GitLab configuration - build dynamically
+    const gitlabConfig: any = {};
+    if (args.host) gitlabConfig.host = args.host;
+    if (args.accessToken) gitlabConfig.accessToken = args.accessToken;
+    if (args.refreshToken) gitlabConfig.refreshToken = args.refreshToken;
+    if (args.timeout) gitlabConfig.timeout = args.timeout;
+    if (args.maxConcurrency) gitlabConfig.maxConcurrency = args.maxConcurrency;
+    if (args.rateLimit) gitlabConfig.rateLimit = args.rateLimit;
+    if (Object.keys(gitlabConfig).length > 0) {
+      argsConfig.gitlab = gitlabConfig;
+    }
+
+    // Database configuration - build dynamically
+    const databaseConfig: any = {};
+    if (args.databasePath) databaseConfig.path = args.databasePath;
+    if (args.walMode !== undefined) databaseConfig.walMode = args.walMode;
+    if (args.databaseTimeout) databaseConfig.timeout = args.databaseTimeout;
+    if (Object.keys(databaseConfig).length > 0) {
+      argsConfig.database = databaseConfig;
+    }
+
+    // Output configuration - build dynamically
+    const outputConfig: any = {};
+    if (args.outputDir) outputConfig.rootDir = args.outputDir;
+    if (args.fileNaming) outputConfig.fileNaming = args.fileNaming;
+    if (args.prettyPrint !== undefined) outputConfig.prettyPrint = args.prettyPrint;
+    if (args.compression) outputConfig.compression = args.compression;
+    if (Object.keys(outputConfig).length > 0) {
+      argsConfig.output = outputConfig;
+    }
+
+    // Logging configuration - build dynamically
+    const loggingConfig: any = {};
+    if (args.logLevel) loggingConfig.level = args.logLevel;
+    if (args.logFormat) loggingConfig.format = args.logFormat;
+    if (args.logFile) loggingConfig.file = args.logFile;
+    if (args.console !== undefined) loggingConfig.console = args.console;
+    if (args.colors !== undefined) loggingConfig.colors = args.colors;
+    if (Object.keys(loggingConfig).length > 0) {
+      argsConfig.logging = loggingConfig;
+    }
+
+    // Progress configuration - build dynamically
+    const progressConfig: any = {};
+    if (args.progressEnabled !== undefined) progressConfig.enabled = args.progressEnabled;
+    if (args.progressFile) progressConfig.file = args.progressFile;
+    if (args.progressInterval) progressConfig.interval = args.progressInterval;
+    if (args.progressDetailed !== undefined) progressConfig.detailed = args.progressDetailed;
+    if (Object.keys(progressConfig).length > 0) {
+      argsConfig.progress = progressConfig;
+    }
+
+    // Resume configuration - build dynamically
+    const resumeConfig: any = {};
+    if (args.resumeEnabled !== undefined) resumeConfig.enabled = args.resumeEnabled;
+    if (args.resumeStateFile) resumeConfig.stateFile = args.resumeStateFile;
+    if (args.resumeAutoSaveInterval) resumeConfig.autoSaveInterval = args.resumeAutoSaveInterval;
+    if (Object.keys(resumeConfig).length > 0) {
+      argsConfig.resume = resumeConfig;
+    }
+
+    // Callback configuration - build dynamically
+    const callbackConfig: any = {};
+    if (args.callbackEnabled !== undefined) callbackConfig.enabled = args.callbackEnabled;
+    if (args.callbackModulePath) callbackConfig.modulePath = args.callbackModulePath;
+    if (Object.keys(callbackConfig).length > 0) {
+      argsConfig.callbacks = callbackConfig;
+    }
+
+    return argsConfig;
+  }
+
+  /**
+   * Level 4: Load local configuration file (./copima.yaml) - Legacy method for compatibility
    */
   private loadLocalConfigFile(): void {
     const localConfigPaths = ["./copima.yaml", "./copima.yml", "./.copima.yaml"];
@@ -398,9 +579,9 @@ export class ConfigLoader {
 /**
  * Create and load configuration
  */
-export const loadConfig = (args: CliArgs = {}): Config => {
+export const loadConfig = async (args: CliArgs = {}): Promise<Config> => {
   const loader = new ConfigLoader();
-  const config = loader.load(args);
+  const config = await loader.load(args);
   loader.validate();
   return config;
 };

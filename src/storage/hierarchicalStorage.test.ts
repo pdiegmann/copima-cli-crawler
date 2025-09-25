@@ -55,8 +55,8 @@ describe("HierarchicalStorageManager", () => {
 
     const lines = fs.readFileSync(filePath, "utf8").trim().split("\n");
     expect(lines.length).toBe(2);
-    expect(JSON.parse(lines[0]).name).toBe("A");
-    expect(JSON.parse(lines[1]).name).toBe("B");
+    expect(JSON.parse(lines[0]!).name).toBe("A");
+    expect(JSON.parse(lines[1]!).name).toBe("B");
   });
 
   it("should update config", () => {

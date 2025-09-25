@@ -414,7 +414,7 @@ export const repository = async function (this: LocalContext, _flags: Record<str
 // Legacy individual step functions remain available for backward compatibility
 // New orchestrated crawl implementation
 export const crawlAll = async function (this: LocalContext, flags: any): Promise<void> {
-  const logger = (this as any)?.logger;
+  const logger = this.logger;
 
   logger.info("🚀 Starting complete GitLab crawl with enhanced orchestrator");
 
@@ -423,13 +423,20 @@ export const crawlAll = async function (this: LocalContext, flags: any): Promise
     let newCrawlAll: any;
     try {
       newCrawlAll = (await import("./newImpl.js")).crawlAll;
-    } catch {
-      logger.warn("Could not load newImpl.js, falling back to legacy crawlAll.");
-      return await (this as any).legacyCrawlAll(flags);
+    } catch (importError) {
+      logger.warn("Could not load newImpl.js, falling back to legacy crawlAll.", {
+        error: importError instanceof Error ? importError.message : String(importError),
+      });
+      return await legacyCrawlAll.call(this, flags);
     }
 
-    // Convert LocalContext config to standard config format
-    const config = (this as any)?.config;
+    // Convert LocalContext config to standard config format and add required properties
+    const config = {
+      ...(this as any).config,
+      logger: this.logger,
+      graphqlClient: this.graphqlClient,
+      restClient: this.restClient,
+    };
 
     // Execute the new crawl implementation
     const result = await newCrawlAll(config, {
@@ -441,11 +448,14 @@ export const crawlAll = async function (this: LocalContext, flags: any): Promise
     if (result.success) {
       logger.info("✅ GitLab crawl completed successfully", {
         totalProcessingTime: `${result.totalProcessingTime}ms`,
+        resourcesCrawled: result.summary.resourcesCrawled,
         summary: result.summary,
       });
     } else {
       logger.warn("⚠️ GitLab crawl completed with errors", {
         errors: result.summary.errors,
+        warnings: result.summary.warnings,
+        resourcesCrawled: result.summary.resourcesCrawled,
         summary: result.summary,
       });
     }
@@ -456,7 +466,7 @@ export const crawlAll = async function (this: LocalContext, flags: any): Promise
 
     // Fall back to legacy implementation if new one fails
     logger.info("Falling back to legacy crawl implementation");
-    await (this as any).legacyCrawlAll(flags);
+    await legacyCrawlAll.call(this, flags);
   }
 };
 

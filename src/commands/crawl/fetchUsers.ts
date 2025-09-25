@@ -11,7 +11,7 @@ const logger = createLogger("fetchUsers");
  * @param callback - A function to process, filter, or modify each user object.
  */
 export const fetchUsers = async (callback: (user: unknown, context: CallbackContext) => unknown | null): Promise<void> => {
-  const config = loadConfig();
+  const config = await loadConfig();
   const client = new GitLabGraphQLClient(config.gitlab.host, config.gitlab.accessToken);
   const storageManager = new StorageManager(config.output);
 

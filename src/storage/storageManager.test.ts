@@ -46,8 +46,8 @@ describe("StorageManager", () => {
 
     const fileContent = fs.readFileSync(filePath, "utf8").trim().split("\n");
     expect(fileContent.length).toBe(2);
-    expect(JSON.parse(fileContent[0]).name).toBe("Alice");
-    expect(JSON.parse(fileContent[1]).name).toBe("Bob");
+    expect(JSON.parse(fileContent[0]!).name).toBe("Alice");
+    expect(JSON.parse(fileContent[1]!).name).toBe("Bob");
   });
 
   it("should append to JSONL file", () => {
@@ -60,8 +60,8 @@ describe("StorageManager", () => {
 
     const fileContent = fs.readFileSync(filePath, "utf8").trim().split("\n");
     expect(fileContent.length).toBe(2);
-    expect(JSON.parse(fileContent[0]).name).toBe("Charlie");
-    expect(JSON.parse(fileContent[1]).name).toBe("Dana");
+    expect(JSON.parse(fileContent[0]!).name).toBe("Charlie");
+    expect(JSON.parse(fileContent[1]!).name).toBe("Dana");
   });
 
   it("should handle empty data gracefully", () => {

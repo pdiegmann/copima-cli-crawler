@@ -1,6 +1,6 @@
 import { GitLabRestClient } from "../../api/gitlabRestClient";
 import { loadConfig } from "../../config/loader";
-import type { CallbackContext } from "../../config/types";
+import type { CallbackContext, Config } from "../../config/types";
 import { createLogger } from "../../logging/logger";
 import { StorageManager } from "../../storage/storageManager";
 
@@ -11,11 +11,12 @@ const logger = createLogger("restResources");
  * This implements Step 4 of the GitLab crawling workflow
  */
 export class RestResourcesFetcher {
-  private config = loadConfig();
+  private config: Config;
   private client: GitLabRestClient;
   private storageManager: StorageManager;
 
-  constructor() {
+  constructor(config: Config) {
+    this.config = config;
     this.client = new GitLabRestClient(this.config.gitlab.host, this.config.gitlab.accessToken);
     this.storageManager = new StorageManager(this.config.output);
   }
@@ -407,6 +408,7 @@ export class RestResourcesFetcher {
 /**
  * Factory function to create a RestResourcesFetcher instance
  */
-export const createRestResourcesFetcher = (): RestResourcesFetcher => {
-  return new RestResourcesFetcher();
+export const createRestResourcesFetcher = async (): Promise<RestResourcesFetcher> => {
+  const config = await loadConfig();
+  return new RestResourcesFetcher(config);
 };
