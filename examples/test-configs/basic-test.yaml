@@ -1,0 +1,63 @@
+metadata:
+  name: "Basic GitLab Crawler Test"
+  description: "Tests basic functionality of the GitLab crawler with minimal configuration"
+  version: "1.0.0"
+  author: "Test Suite"
+  tags: ["basic", "smoke-test"]
+  timeout: 300000 # 5 minutes
+
+gitlab:
+  host: "https://gitlab.example.com"
+  accessToken: "${GITLAB_ACCESS_TOKEN}"
+  refreshToken: "${GITLAB_REFRESH_TOKEN}"
+  timeout: 30000
+  maxConcurrency: 5
+
+execution:
+  workingDir: "/tmp/crawler-test-basic"
+  outputDir: "/tmp/crawler-test-basic/output"
+  databasePath: "/tmp/crawler-test-basic/test.db"
+  steps: ["areas", "users"]
+  testResume: false
+  testCallbacks: false
+
+validation:
+  expectedFiles:
+    - path: "areas/groups.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      requiredFields: ["id", "name", "fullPath"]
+    - path: "areas/projects.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      requiredFields: ["id", "name", "fullPath"]
+    - path: "users/users.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      requiredFields: ["id", "username", "name"]
+
+  logs:
+    expectedLevels: ["info"]
+    requiredMessages:
+      - "Starting Step 1.*Crawling areas"
+      - "Starting Step 2.*Crawling users"
+      - "GitLab crawl completed successfully"
+    forbiddenMessages:
+      - "FATAL"
+      - "CRITICAL"
+    maxErrors: 0
+    maxWarnings: 5
+
+  performance:
+    maxExecutionTime: 120000 # 2 minutes
+
+  dataQuality:
+    validateJsonStructure: true
+    checkDuplicates: false
+    validateRequiredFields: true
+
+cleanup:
+  cleanOutputDir: true
+  cleanDatabase: true
+  cleanLogs: true
+  keepOnFailure: false
