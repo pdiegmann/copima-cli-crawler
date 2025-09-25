@@ -7,11 +7,11 @@ import { defaultConfig } from "./defaults";
 import type { CliArgs, Config, EnvMapping } from "./types";
 
 // Import new modular components
-import { EnvironmentConfigLoader } from "./loaders/environmentLoader.js";
-import { FileConfigLoader } from "./loaders/fileLoader.js";
-import { ConfigMerger } from "./merging/configMerger.js";
-import { TemplateUtils } from "./utils/templateUtils.js";
-import { ConfigValidator } from "./validation/validator.js";
+import { EnvironmentConfigLoader } from "./loaders/environmentLoader";
+import { FileConfigLoader } from "./loaders/fileLoader";
+import { ConfigMerger } from "./merging/configMerger";
+import { TemplateUtils } from "./utils/templateUtils";
+import { ConfigValidator } from "./validation/validator";
 
 /**
  * Configuration loader implementing 5-level hierarchy:
