@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
-import { createLogger } from "../utils/logger.js";
-import * as schema from "./schema.js";
+import { createLogger } from "../logging";
+import * as schema from "./schema";
 
 export type DatabaseConfig = {
   path: string;

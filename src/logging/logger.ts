@@ -1,7 +1,7 @@
 import { join } from "path";
 import * as pc from "picocolors";
 import { format, transports, createLogger as winstonCreateLogger } from "winston";
-import type { Logger } from "../types/utilities.js";
+import type { Logger } from "./index.js";
 
 const logFilePath = join(process.cwd(), "logs", "app.log");
 

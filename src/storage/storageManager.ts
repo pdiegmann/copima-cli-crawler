@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import type { OutputConfig } from "../config/types.js";
+import { createLogger } from "../logging";
 import type { SafeRecord } from "../types/api.js";
-import { createLogger } from "./logger.js";
 
 const logger = createLogger("StorageManager");
 

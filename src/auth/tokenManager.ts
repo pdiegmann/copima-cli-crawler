@@ -1,8 +1,8 @@
 // src/auth/tokenManager.ts
 
 import { addSeconds } from "date-fns";
+import { createLogger } from "../logging";
 import type { OAuth2TokenResponse } from "../types/api";
-import { createLogger } from "../utils/logger";
 
 const logger = createLogger("TokenManager");
 

@@ -16,65 +16,6 @@ export type SafeFileOperation<T = void> = (path: string, options?: FileOperation
 
 export type SafeFileOperationSync<T = void> = (path: string, options?: FileOperationOptions) => T;
 
-// Logger function types
-export type LogLevel = "error" | "warn" | "info" | "debug";
-
-export type LoggerFunction = (message: string, meta?: SafeRecord) => void;
-
-export type Logger = {
-  error: LoggerFunction;
-  warn: LoggerFunction;
-  info: LoggerFunction;
-  debug: LoggerFunction;
-  log: LoggerFunction;
-};
-
-export type LoggerConfig = {
-  level?: LogLevel;
-  format?: "json" | "simple" | "combined";
-  transports?: string[];
-  filename?: string;
-  maxSize?: number;
-  maxFiles?: number;
-};
-
-// Progress reporting types
-export type ProgressState = SafeRecord<unknown>;
-
-export type ResourceCount = {
-  total: number;
-  processed: number;
-  filtered: number;
-  errors: number;
-};
-
-export type PerformanceMetrics = {
-  requestsPerSecond: number;
-  avgResponseTime: number;
-  errorRate: number;
-};
-
-export type ProgressStats = {
-  totalSteps: number;
-  completedSteps: number;
-  currentStep: string;
-  startTime: Date;
-  lastUpdate: Date;
-  resourceCounts?: Record<string, ResourceCount>;
-  performance?: PerformanceMetrics;
-};
-
-// Callback management types
-export type CallbackFunction<T = SafeRecord, R = SafeRecord> = (context: SafeRecord, data: T) => Promise<R> | R;
-
-export type CallbackConfig = {
-  name: string;
-  enabled: boolean;
-  priority?: number;
-  filters?: SafeRecord;
-  options?: SafeRecord;
-};
-
 // Configuration types
 export type ConfigLevel = "system" | "global" | "local" | "environment" | "runtime";
 
@@ -114,23 +55,6 @@ export type AsyncResult<T, E = Error> = {
   success: boolean;
   data?: T;
   error?: E;
-};
-
-// Storage and serialization types
-export type SerializationFormat = "json" | "jsonl" | "yaml" | "csv";
-
-export type StorageOptions = {
-  format: SerializationFormat;
-  encoding: BufferEncoding;
-  compression?: boolean;
-  backup?: boolean;
-  maxSize?: number;
-};
-
-export type HierarchicalPath = {
-  segments: string[];
-  full: string;
-  relative: string;
 };
 
 // Network and HTTP types

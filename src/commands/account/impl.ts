@@ -2,10 +2,10 @@ import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import colors from "picocolors";
 import treeify from "treeify";
-import { db } from "../../db/index.js";
-import { account, user } from "../../db/schema.js";
+import { db } from "../../db/index";
+import { account, user } from "../../db/schema";
+import { createLogger } from "../../logging";
 import type { SafeRecord } from "../../types/api.js";
-import { createLogger } from "../../utils/logger.js";
 
 const logger = createLogger("AccountCommands");
 

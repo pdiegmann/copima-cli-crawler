@@ -1,5 +1,5 @@
 import type { CallbackConfig, CallbackContext } from "../config/types.js";
-import { createLogger } from "./logger.js";
+import { createLogger } from "../logging";
 
 /**
  * Data Processing Callback Manager

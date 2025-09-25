@@ -1,7 +1,8 @@
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import logger from "../utils/logger.js";
-import type { DatabaseConfig } from "./connection.js";
-import { getDatabase, initDatabase } from "./connection.js";
+import { createLogger } from "../logging";
+import type { DatabaseConfig } from "./connection";
+import { getDatabase, initDatabase } from "./connection";
+const logger = createLogger("DatabaseMigrate");
 
 export type MigrationConfig = {
   migrationsFolder?: string;

@@ -2,8 +2,9 @@
 
 import { addSeconds } from "date-fns";
 import type { Database } from "../db/connection";
+import { createLogger } from "../logging/logger";
 import type { OAuth2TokenResponse } from "../types/api";
-import { logger } from "../utils/logger";
+const logger = createLogger("RefreshTokenManager");
 
 export class RefreshTokenManager {
   private readonly db: Database;

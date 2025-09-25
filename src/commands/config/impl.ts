@@ -4,8 +4,8 @@ import { homedir } from "os";
 import { dirname, join } from "path";
 import colors from "picocolors";
 import treeify from "treeify";
-import { loadConfig } from "../../config/index.js";
-import { createLogger } from "../../utils/logger.js";
+import { loadConfig } from "../../config/index";
+import { createLogger } from "../../logging";
 
 const logger = createLogger("ConfigCommands");
 

@@ -1,5 +1,5 @@
+import { createLogger } from "../logging/logger";
 import type { OAuth2RefreshRequest, OAuth2RefreshResponse, OAuth2TokenResponse } from "../types/api.js";
-import { createLogger } from "../utils/logger.js";
 
 const logger = createLogger("OAuth2Manager");
 

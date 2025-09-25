@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { run } from "@stricli/core";
-import { app } from "../app.js";
-import { RefreshTokenManager } from "../auth/refreshTokenManager.js";
-import { TokenManager } from "../auth/tokenManager.js";
-import { buildContext } from "../context.js";
-import { getDatabase } from "../db/connection.js";
-import { createLogger } from "../utils/logger.js";
+import { app } from "../app";
+import { RefreshTokenManager } from "../auth/refreshTokenManager";
+import { TokenManager } from "../auth/tokenManager";
+import { buildContext } from "../context";
+import { getDatabase } from "../db/connection";
+import { createLogger } from "../logging";
 
 const logger = createLogger("CLI");
 

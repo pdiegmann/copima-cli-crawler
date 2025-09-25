@@ -1,8 +1,8 @@
 import { GitLabRestClient } from "../../api/gitlabRestClient";
 import { loadConfig } from "../../config/loader";
 import type { CallbackContext } from "../../config/types";
-import { createLogger } from "../../utils/logger";
-import { StorageManager } from "../../utils/storageManager";
+import { createLogger } from "../../logging/logger";
+import { StorageManager } from "../../storage/storageManager";
 
 const logger = createLogger("restResources");
 

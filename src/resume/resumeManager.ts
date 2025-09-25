@@ -1,7 +1,7 @@
 // Import required modules
 import fs from "fs";
 import yaml from "js-yaml";
-import { createLogger } from "./logger";
+import { createLogger } from "../logging";
 
 type ResumeState = {
   [key: string]: unknown;

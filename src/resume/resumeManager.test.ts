@@ -1,33 +1,41 @@
 // Import required modules
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import fs from "fs";
-import yaml from "js-yaml";
-import ResumeManager from "./resumeManager";
 
-// Mock external dependencies
-jest.mock("fs", () => ({
-  existsSync: jest.fn(),
-  readFileSync: jest.fn(),
-  writeFileSync: jest.fn(),
-}));
-jest.mock("js-yaml", () => ({
-  load: jest.fn(),
-  dump: jest.fn(),
-}));
+// Create mock functions
+const mockExistsSync = jest.fn();
+const mockReadFileSync = jest.fn();
+const mockWriteFileSync = jest.fn();
+const mockYamlLoad = jest.fn();
+const mockYamlDump = jest.fn();
+
 // Mock logger functions
 const mockLoggerInfo = jest.fn();
 const mockLoggerError = jest.fn();
 const mockLoggerWarn = jest.fn();
 const mockLoggerDebug = jest.fn();
 
-jest.mock("./logger", () => ({
-  __esModule: true,
+// Mock external dependencies before importing - using both named and default exports to cover all import styles
+jest.mock("fs", () => ({
+  existsSync: mockExistsSync,
+  readFileSync: mockReadFileSync,
+  writeFileSync: mockWriteFileSync,
   default: {
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
+    existsSync: mockExistsSync,
+    readFileSync: mockReadFileSync,
+    writeFileSync: mockWriteFileSync,
   },
+}));
+
+jest.mock("js-yaml", () => ({
+  load: mockYamlLoad,
+  dump: mockYamlDump,
+  default: {
+    load: mockYamlLoad,
+    dump: mockYamlDump,
+  },
+}));
+
+jest.mock("../logging", () => ({
   createLogger: jest.fn(() => ({
     info: mockLoggerInfo,
     error: mockLoggerError,
@@ -35,6 +43,9 @@ jest.mock("./logger", () => ({
     debug: mockLoggerDebug,
   })),
 }));
+
+// Import after mocking
+import ResumeManager from "./resumeManager";
 
 describe("ResumeManager", () => {
   const mockFilePath = "/path/to/resume.yaml";
@@ -50,32 +61,32 @@ describe("ResumeManager", () => {
       const mockFileContent = "key: value";
       const mockState = { key: "value" };
 
-      (fs.existsSync as jest.Mock).mockReturnValue(true);
-      (fs.readFileSync as jest.Mock).mockReturnValue(mockFileContent);
-      (yaml.load as jest.Mock).mockReturnValue(mockState);
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue(mockFileContent);
+      mockYamlLoad.mockReturnValue(mockState);
 
       const state = resumeManager.loadState();
 
-      expect(fs.existsSync).toHaveBeenCalledWith(mockFilePath);
-      expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, "utf8");
-      expect(yaml.load).toHaveBeenCalledWith(mockFileContent);
+      expect(mockExistsSync).toHaveBeenCalledWith(mockFilePath);
+      expect(mockReadFileSync).toHaveBeenCalledWith(mockFilePath, "utf8");
+      expect(mockYamlLoad).toHaveBeenCalledWith(mockFileContent);
       expect(mockLoggerInfo).toHaveBeenCalledWith("Resume state loaded successfully.");
       expect(state).toEqual(mockState);
     });
 
     it("should return an empty object if file does not exist", () => {
-      (fs.existsSync as jest.Mock).mockReturnValue(false);
+      mockExistsSync.mockReturnValue(false);
 
       const state = resumeManager.loadState();
 
-      expect(fs.existsSync).toHaveBeenCalledWith(mockFilePath);
+      expect(mockExistsSync).toHaveBeenCalledWith(mockFilePath);
       expect(mockLoggerWarn).toHaveBeenCalledWith("Resume file does not exist. Starting fresh.");
       expect(state).toEqual({});
     });
 
     it("should handle errors gracefully and return an empty object", () => {
-      (fs.existsSync as jest.Mock).mockReturnValue(true);
-      (fs.readFileSync as jest.Mock).mockImplementation(() => {
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockImplementation(() => {
         throw new Error("Read error");
       });
 
@@ -91,19 +102,19 @@ describe("ResumeManager", () => {
       const mockState = { key: "value" };
       const mockYamlData = "key: value";
 
-      (yaml.dump as jest.Mock).mockReturnValue(mockYamlData);
+      mockYamlDump.mockReturnValue(mockYamlData);
 
       resumeManager.saveState(mockState);
 
-      expect(yaml.dump).toHaveBeenCalledWith(mockState);
-      expect(fs.writeFileSync).toHaveBeenCalledWith(mockFilePath, mockYamlData, "utf8");
+      expect(mockYamlDump).toHaveBeenCalledWith(mockState);
+      expect(mockWriteFileSync).toHaveBeenCalledWith(mockFilePath, mockYamlData, "utf8");
       expect(mockLoggerInfo).toHaveBeenCalledWith("Resume state saved successfully.");
     });
 
     it("should handle errors gracefully when saving state", () => {
       const mockState = { key: "value" };
 
-      (yaml.dump as jest.Mock).mockImplementation(() => {
+      mockYamlDump.mockImplementation(() => {
         throw new Error("YAML error");
       });
 

@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import { readFile, unlink, writeFile } from "fs/promises";
-import { createLogger } from "./logger.js";
+import { createLogger } from "../logging";
 
 const logger = createLogger("FileLocker");
 

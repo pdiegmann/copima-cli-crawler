@@ -1,6 +1,6 @@
+import { createCallbackManager } from "../../callback";
 import type { CallbackContext } from "../../config/types.js";
 import type { LocalContext } from "../../context.js";
-import { createCallbackManager } from "../../utils/callbackManager.js";
 
 export const areas = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;

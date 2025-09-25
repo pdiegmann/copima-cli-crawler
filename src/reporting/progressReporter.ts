@@ -2,7 +2,7 @@
 import fs from "fs";
 import yaml from "js-yaml";
 import pc from "picocolors";
-import { createLogger } from "./logger";
+import { createLogger } from "../logging/logger";
 
 const logger = createLogger("ProgressReporter");
 

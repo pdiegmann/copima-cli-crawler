@@ -15,7 +15,7 @@ const mockLogger = {
 const mockCreateLogger = jest.fn((context: string) => mockLogger);
 
 // Mock the logger module before importing GitLabRestClient
-jest.mock("../utils/logger", () => ({
+jest.mock("../logging", () => ({
   createLogger: mockCreateLogger,
 }));
 

@@ -1,8 +1,8 @@
 import { createWriteStream } from "fs";
 import { access, mkdir, writeFile } from "fs/promises";
 import { join } from "path";
+import { createLogger } from "../logging";
 import type { GitLabGroup, GitLabProject } from "../types/api.js";
-import { createLogger } from "./logger.js";
 
 const logger = createLogger("HierarchicalStorage");
 

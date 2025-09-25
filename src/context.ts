@@ -14,7 +14,7 @@ export type LocalContext = {
   StricliAutoCompleteContext;
 
 import { createGraphQLClient, createRestClient } from "./api";
-import { createLogger } from "./utils/logger";
+import { createLogger } from "./logging/logger";
 
 export const buildContext = (process: NodeJS.Process): LocalContext => {
   return {

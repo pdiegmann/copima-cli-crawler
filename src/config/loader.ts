@@ -2,9 +2,9 @@ import { existsSync, readFileSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
 import { parse as yamlParse } from "yaml";
-import { createLogger } from "../utils/logger.js";
-import { defaultConfig } from "./defaults.js";
-import type { CliArgs, Config, EnvMapping } from "./types.js";
+import { createLogger } from "../logging";
+import { defaultConfig } from "./defaults";
+import type { CliArgs, Config, EnvMapping } from "./types";
 
 /**
  * Configuration loader implementing 5-level hierarchy:

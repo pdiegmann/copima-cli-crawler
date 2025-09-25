@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
+import { createLogger } from "../logging";
 import type { GitLabProject, GitLabUser, GraphQLResponse, GroupNode, PageInfo, SafeRecord } from "../types/api.js";
-import { createLogger } from "../utils/logger.js";
 
 const logger = createLogger("GitLabGraphQLClient");
 

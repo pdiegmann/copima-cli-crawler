@@ -1,8 +1,8 @@
 import { writeFile } from "fs/promises";
 import { dump } from "js-yaml";
+import { createLogger } from "../logging/logger";
+import { FileLocker } from "../storage/fileLocker";
 import type { PerformanceMetrics, ResourceCount, YAMLProgressReport } from "../types/api.js";
-import { FileLocker } from "./fileLocker.js";
-import { createLogger } from "./logger.js";
 
 const logger = createLogger("YAMLProgressReporter");
 
