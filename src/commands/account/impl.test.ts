@@ -6,6 +6,17 @@ import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 jest.mock("../../db/index", () => ({
   __esModule: true,
   default: {},
+  getDatabase: jest.fn(() => ({
+    insert: jest.fn(() => ({ values: jest.fn() })),
+    select: jest.fn(() => ({
+      from: jest.fn(() => ({
+        innerJoin: jest.fn(() => ({
+          where: jest.fn(() => ({ limit: jest.fn(() => []) })),
+        })),
+      })),
+    })),
+    delete: jest.fn(() => ({ where: jest.fn() })),
+  })),
   db: jest.fn(() => ({
     insert: jest.fn(() => ({ values: jest.fn() })),
     select: jest.fn(() => ({
@@ -17,6 +28,8 @@ jest.mock("../../db/index", () => ({
     })),
     delete: jest.fn(() => ({ where: jest.fn() })),
   })),
+  initDatabase: jest.fn(),
+  closeDatabase: jest.fn(),
   account: { accountId: "test", userId: "test" },
   user: { id: "test", name: "test", email: "test" },
 }));

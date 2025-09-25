@@ -11,9 +11,9 @@ export type FileLock = {
 };
 
 export class FileLocker {
-  private static readonly LOCK_TIMEOUT = 30000; // 30 seconds
-  private static readonly RETRY_DELAY = 100; // 100ms
-  private static readonly MAX_RETRIES = 50; // 5 seconds total
+  private static LOCK_TIMEOUT = 30000; // 30 seconds
+  private static RETRY_DELAY = 100; // 100ms
+  private static MAX_RETRIES = 50; // 5 seconds total
 
   /**
    * Acquire a file lock
@@ -166,6 +166,11 @@ export class FileLocker {
         logger.debug("Lock file force removed", { lockFilePath });
       }
     } catch (error) {
+      // Ignore ENOENT errors - file already doesn't exist
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        logger.debug("Lock file already removed", { lockFilePath });
+        return;
+      }
       logger.error("Failed to force release lock", {
         lockFilePath,
         error: error instanceof Error ? error.message : String(error),

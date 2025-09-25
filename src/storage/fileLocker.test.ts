@@ -13,15 +13,12 @@ jest.mock("../logging", () => ({
   })),
 }));
 
-const TEST_FILE = path.join(__dirname, "__test_lockfile__");
+const TEST_FILE = path.join(__dirname, `__test_lockfile_${process.pid}_${Date.now()}__`);
 
 describe("FileLocker", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
-  });
-
-  afterEach(async () => {
-    // Clean up lock files
+    // Clean up any existing files before each test
     try {
       if (fs.existsSync(TEST_FILE + ".lock")) {
         await fs.promises.unlink(TEST_FILE + ".lock");
@@ -29,6 +26,24 @@ describe("FileLocker", () => {
       if (fs.existsSync(TEST_FILE)) {
         await fs.promises.unlink(TEST_FILE);
       }
+    } catch (error) {
+      // Ignore cleanup errors
+    }
+  });
+
+  afterEach(async () => {
+    // Clean up lock files and restore original values
+    try {
+      if (fs.existsSync(TEST_FILE + ".lock")) {
+        await fs.promises.unlink(TEST_FILE + ".lock");
+      }
+      if (fs.existsSync(TEST_FILE)) {
+        await fs.promises.unlink(TEST_FILE);
+      }
+      // Reset FileLocker static properties to defaults
+      (FileLocker as any).LOCK_TIMEOUT = 30000;
+      (FileLocker as any).RETRY_DELAY = 100;
+      (FileLocker as any).MAX_RETRIES = 50;
     } catch (error) {
       // Ignore cleanup errors
     }
