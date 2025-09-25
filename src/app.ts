@@ -11,6 +11,9 @@ import { addAccountCommand, listAccountsCommand, refreshTokenCommand, removeAcco
 // Import config commands
 import { setConfigCommand, showConfigCommand, unsetConfigCommand, validateConfigCommand } from "./commands/config/command";
 
+// Import test commands
+import { testCommand } from "./commands/test/command";
+
 const routes = buildRouteMap({
   routes: {
     // Crawl commands - implementing the 4-step GitLab crawling workflow
@@ -31,6 +34,9 @@ const routes = buildRouteMap({
     "config:set": setConfigCommand,
     "config:unset": unsetConfigCommand,
     "config:validate": validateConfigCommand,
+
+    // Testing commands - End-to-end test runner
+    test: testCommand,
 
     // Auto-completion commands
     install: buildInstallCommand("copima-cli-crawler", {

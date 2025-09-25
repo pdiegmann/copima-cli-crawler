@@ -30,6 +30,9 @@
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --watchAll=false",
     "test:bun": "bun test",
+    "test:e2e": "bun run src/bin/cli.ts test",
+    "test:e2e:basic": "bun run test:e2e examples/test-configs/basic-test.yaml",
+    "test:e2e:suite": "bun run test:e2e examples/test-configs/test-suite.yaml",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
