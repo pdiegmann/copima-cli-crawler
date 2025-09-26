@@ -13,24 +13,24 @@ const logger = createLogger("TestCommand");
  * Test command implementation.
  */
 export const testImpl = async (
-  configPath: string | undefined,
-  options: {
+  flags: {
     verbose?: boolean;
-    dryRun?: boolean;
+    "dry-run"?: boolean;
     suite?: boolean;
-    cliPath?: string;
+    "cli-path"?: string;
     parallel?: boolean;
-    maxParallel?: string;
-    stopOnFailure?: boolean;
-    reportFormat?: string;
-    generateReport?: boolean;
-    forceCleanup?: boolean;
-    listExamples?: boolean;
-  }
+    "max-parallel"?: string;
+    "stop-on-failure"?: boolean;
+    "report-format"?: string;
+    "generate-report"?: boolean;
+    "force-cleanup"?: boolean;
+    "list-examples"?: boolean;
+  },
+  configPath: string
 ): Promise<void> => {
   try {
     // Handle --list-examples option
-    if (options.listExamples) {
+    if (flags["list-examples"]) {
       listExampleConfigurations();
       return;
     }
@@ -64,36 +64,36 @@ export const testImpl = async (
 
     // Prepare execution options
     const executionOptions = {
-      verbose: options.verbose || false,
-      dryRun: options.dryRun || false,
-      forceCleanup: options.forceCleanup || false,
-      cliPath: options.cliPath || "bun run src/bin/cli.ts",
+      verbose: flags.verbose || false,
+      dryRun: flags["dry-run"] || false,
+      forceCleanup: flags["force-cleanup"] || false,
+      cliPath: flags["cli-path"] || `bun ${process.cwd()}/src/bin/cli.ts`,
       env: process.env as Record<string, string>,
     };
 
     logger.info(`Loading test configuration: ${configPath}`);
 
-    if (options.suite) {
+    if (flags.suite) {
       // Run as test suite
       logger.info("Running as test suite");
 
       const suite = testRunner.loadTestSuite(configPath);
 
       // Override suite settings with CLI options if provided
-      if (options.parallel !== undefined) {
-        suite.settings.parallel = options.parallel;
+      if (flags.parallel !== undefined) {
+        suite.settings.parallel = flags.parallel;
       }
-      if (options.maxParallel) {
-        suite.settings.maxParallel = parseInt(options.maxParallel, 10);
+      if (flags["max-parallel"]) {
+        suite.settings.maxParallel = parseInt(flags["max-parallel"], 10);
       }
-      if (options.stopOnFailure !== undefined) {
-        suite.settings.stopOnFailure = options.stopOnFailure;
+      if (flags["stop-on-failure"] !== undefined) {
+        suite.settings.stopOnFailure = flags["stop-on-failure"];
       }
-      if (options.generateReport !== undefined) {
-        suite.settings.generateReport = options.generateReport;
+      if (flags["generate-report"] !== undefined) {
+        suite.settings.generateReport = flags["generate-report"];
       }
-      if (options.reportFormat) {
-        suite.settings.reportFormat = options.reportFormat as "json" | "yaml" | "html";
+      if (flags["report-format"]) {
+        suite.settings.reportFormat = flags["report-format"] as "json" | "yaml" | "html";
       }
 
       const result = await testRunner.runTestSuite(suite, executionOptions);

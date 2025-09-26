@@ -14,6 +14,9 @@ import { setConfigCommand, showConfigCommand, unsetConfigCommand, validateConfig
 // Import test commands
 import { testCommand } from "./commands/test/command";
 
+// Import auth commands
+import { authCommand } from "./commands/auth/command";
+
 const routes = buildRouteMap({
   routes: {
     // Crawl commands - implementing the 4-step GitLab crawling workflow
@@ -34,6 +37,9 @@ const routes = buildRouteMap({
     "config:set": setConfigCommand,
     "config:unset": unsetConfigCommand,
     "config:validate": validateConfigCommand,
+
+    // Authentication commands - OAuth2 browser flow
+    auth: authCommand,
 
     // Testing commands - End-to-end test runner
     test: testCommand,

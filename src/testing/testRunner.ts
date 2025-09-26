@@ -654,29 +654,24 @@ export class TestRunner {
    * Builds crawler command arguments from test configuration.
    */
   private buildCrawlerArgs(config: TestConfig): string[] {
-    const args: string[] = ["crawl"];
+    const steps = config.execution.steps || ["areas", "users"];
 
-    // Add basic arguments
+    // For testing, we'll run each step individually since that's how the CLI is structured
+    // We'll start with the first step and run them sequentially
+    const firstStep = steps[0] || "areas";
+    const args: string[] = [firstStep];
+
+    // Add authentication arguments
     args.push("--host", config.gitlab.host);
     args.push("--access-token", config.gitlab.accessToken);
-    args.push("--output-dir", config.execution.outputDir);
-    args.push("--database-path", config.execution.databasePath);
 
     // Add optional arguments
     if (config.gitlab.refreshToken) {
       args.push("--refresh-token", config.gitlab.refreshToken);
     }
-    if (config.gitlab.timeout) {
-      args.push("--timeout", config.gitlab.timeout.toString());
-    }
-    if (config.gitlab.maxConcurrency) {
-      args.push("--max-concurrency", config.gitlab.maxConcurrency.toString());
-    }
 
-    // Add steps if specified
-    if (config.execution.steps) {
-      args.push("--steps", config.execution.steps.join(","));
-    }
+    // Set output directory via environment variable since it's not a direct flag
+    args.push("--output", config.execution.outputDir);
 
     return args;
   }
@@ -688,17 +683,17 @@ export class TestRunner {
     const env: Record<string, string> = {};
 
     // GitLab configuration
-    env.GITLAB_HOST = config.gitlab.host;
-    env.GITLAB_ACCESS_TOKEN = config.gitlab.accessToken;
+    env["GITLAB_HOST"] = config.gitlab.host;
+    env["GITLAB_ACCESS_TOKEN"] = config.gitlab.accessToken;
     if (config.gitlab.refreshToken) {
-      env.GITLAB_REFRESH_TOKEN = config.gitlab.refreshToken;
+      env["GITLAB_REFRESH_TOKEN"] = config.gitlab.refreshToken;
     }
 
     // Database configuration
-    env.DATABASE_PATH = config.execution.databasePath;
+    env["DATABASE_PATH"] = config.execution.databasePath;
 
     // Output configuration
-    env.OUTPUT_ROOT_DIR = config.execution.outputDir;
+    env["OUTPUT_ROOT_DIR"] = config.execution.outputDir;
 
     return env;
   }

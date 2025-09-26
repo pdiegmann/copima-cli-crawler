@@ -19,6 +19,7 @@
     "bun": ">=1.2.8"
   },
   "scripts": {
+    "dev": "bun run src/bin/cli.ts",
     "prebuild": "tsc -p src/tsconfig.json",
     "build": "tsup",
     "prepublishOnly": "bun run build",
@@ -33,6 +34,8 @@
     "test:e2e": "bun run src/bin/cli.ts test",
     "test:e2e:basic": "bun run test:e2e examples/test-configs/basic-test.yaml",
     "test:e2e:suite": "bun run test:e2e examples/test-configs/test-suite.yaml",
+    "test:e2e:template": "bun run test:e2e examples/test-configs/template-test.yaml",
+    "test:e2e:dry-run": "bun run test:e2e examples/test-configs/dry-run-test.yaml --dry-run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
@@ -75,12 +78,14 @@
     "better-sqlite3": "^11.5.0",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.36.1",
+    "get-port": "^6.1.2",
     "graphql": "^16.9.0",
     "graphql-request": "^7.1.2",
     "jest-fetch-mock": "^3.0.3",
     "jiti": "^2.6.0",
     "js-yaml": "^4.1.0",
     "lockfile": "^1.0.4",
+    "open": "^9.1.0",
     "picocolors": "^1.1.1",
     "treeify": "^1.1.0",
     "winston": "^3.17.0"

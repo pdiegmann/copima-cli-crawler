@@ -1,9 +1,9 @@
 metadata:
-  name: "Basic GitLab Crawler Test"
-  description: "Tests basic functionality of the GitLab crawler with minimal configuration"
+  name: "Debug GitLab Crawler Test"
+  description: "Debug test with cleanup disabled to verify file creation"
   version: "1.0.0"
   author: "Test Suite"
-  tags: ["basic", "smoke-test"]
+  tags: ["debug", "no-cleanup"]
   timeout: 300000 # 5 minutes
 
 gitlab:
@@ -13,22 +13,10 @@ gitlab:
   timeout: 30000
   maxConcurrency: 1
 
-  # OAuth2 Configuration (optional - only if using OAuth2 flow)
-  oauth2:
-    clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24" # Your OAuth2 client ID
-    clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32" # Your OAuth2 client secret
-    redirectUri: "" # Your OAuth2 redirect URI
-    scopes:
-      - read_api
-      - read_repository
-      - read_user
-      - openid
-    type: oidc
-
 execution:
-  workingDir: "./tmp/crawler-test-basic"
-  outputDir: "./tmp/crawler-test-basic/output"
-  databasePath: "./tmp/crawler-test-basic/test.db"
+  workingDir: "./tmp/crawler-test-debug"
+  outputDir: "./tmp/crawler-test-debug/output"
+  databasePath: "./tmp/crawler-test-debug/test.db"
   steps: ["areas", "users"]
   testResume: false
   testCallbacks: false
@@ -69,7 +57,7 @@ validation:
     validateRequiredFields: true
 
 cleanup:
-  cleanOutputDir: true
-  cleanDatabase: true
-  cleanLogs: true
+  cleanOutputDir: false # Disable cleanup to see what files are actually created
+  cleanDatabase: false
+  cleanLogs: false
   keepOnFailure: false

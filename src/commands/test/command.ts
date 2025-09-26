@@ -19,7 +19,7 @@ export const testCommand = buildCommand({
         {
           brief: "Path to test configuration or test suite file",
           parse: String,
-          optional: true,
+          optional: false,
         },
       ],
     },

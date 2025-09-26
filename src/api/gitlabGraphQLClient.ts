@@ -1,4 +1,6 @@
+import https from "https";
 import fetch from "node-fetch";
+import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { GitLabProject, GitLabUser, GraphQLResponse, GroupNode, PageInfo, SafeRecord } from "../types/api.js";
 
@@ -7,25 +9,118 @@ const logger = createLogger("GitLabGraphQLClient");
 export class GitLabGraphQLClient {
   private baseUrl: string;
   private accessToken: string;
+  private refreshToken?: string;
+  private oauth2Config?: {
+    clientId: string;
+    clientSecret: string;
+    tokenEndpoint: string;
+  };
 
-  constructor(baseUrl: string, accessToken: string) {
+  constructor(
+    baseUrl: string,
+    accessToken: string,
+    options?: {
+      refreshToken?: string;
+      oauth2?: {
+        clientId: string;
+        clientSecret: string;
+        tokenEndpoint?: string;
+      };
+    }
+  ) {
     this.baseUrl = `${baseUrl}/api/graphql`;
     this.accessToken = accessToken;
+    this.refreshToken = options?.refreshToken;
+
+    if (options?.oauth2) {
+      this.oauth2Config = {
+        ...options.oauth2,
+        tokenEndpoint: options.oauth2.tokenEndpoint || `${baseUrl}/oauth/token`,
+      };
+    }
+  }
+
+  private async refreshAccessToken(): Promise<void> {
+    if (!this.refreshToken || !this.oauth2Config) {
+      throw new Error("Cannot refresh token: missing refresh token or OAuth2 configuration");
+    }
+
+    logger.info("Attempting to refresh expired access token");
+
+    const oauth2Manager = createOAuth2Manager({
+      enabled: true,
+      clientId: this.oauth2Config.clientId,
+      clientSecret: this.oauth2Config.clientSecret,
+      tokenEndpoint: this.oauth2Config.tokenEndpoint,
+      refreshThreshold: 300,
+      maxRetries: 3,
+    });
+
+    try {
+      const refreshedTokens = await oauth2Manager.refreshAccessToken({
+        refreshToken: this.refreshToken,
+        clientId: this.oauth2Config.clientId,
+        clientSecret: this.oauth2Config.clientSecret,
+      });
+
+      // Update tokens
+      this.accessToken = refreshedTokens.access_token;
+      if (refreshedTokens.refresh_token) {
+        this.refreshToken = refreshedTokens.refresh_token;
+      }
+
+      logger.info("Access token refreshed successfully");
+    } catch (error) {
+      logger.error("Failed to refresh access token:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
+    }
   }
 
   async query<T = SafeRecord>(query: string, variables: SafeRecord = {}): Promise<T> {
-    try {
-      const response = await fetch(this.baseUrl, {
+    const makeRequest = async (token: string): Promise<Response> => {
+      // Create HTTPS agent that ignores SSL certificate issues for development/testing
+      const agent = new https.Agent({
+        rejectUnauthorized: false, // Allow self-signed certificates
+      });
+
+      return await fetch(this.baseUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${this.accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ query, variables }),
+        agent: agent,
       });
+    };
+
+    try {
+      let response = await makeRequest(this.accessToken);
+
+      // If we get a 401 and have refresh capability, try refreshing the token
+      if (response.status === 401 && this.refreshToken && this.oauth2Config) {
+        logger.info("Access token appears to be expired, attempting refresh");
+
+        try {
+          await this.refreshAccessToken();
+          // Retry with new token
+          response = await makeRequest(this.accessToken);
+        } catch (refreshError) {
+          logger.error("Failed to refresh token, proceeding with original error");
+          // Continue with original 401 response
+        }
+      }
 
       if (!response.ok) {
         const errorText = await response.text();
+
+        // Check if the error indicates an invalid or expired token
+        if (response.status === 401 && (errorText.includes("invalid_token") || errorText.includes("Invalid token"))) {
+          throw new Error(`Authentication failed: ${errorText}. The access token may be expired or invalid.`);
+        }
+
         logger.error(`GraphQL request failed: ${response.status} - ${errorText}`);
         throw new Error(`GraphQL request failed: ${response.status}`);
       }

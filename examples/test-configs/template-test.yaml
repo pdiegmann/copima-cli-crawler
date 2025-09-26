@@ -1,15 +1,15 @@
 metadata:
-  name: "Basic GitLab Crawler Test"
-  description: "Tests basic functionality of the GitLab crawler with minimal configuration"
+  name: "GitLab Crawler Test Template"
+  description: "Template for creating custom GitLab crawler tests - fill in your actual values"
   version: "1.0.0"
-  author: "Test Suite"
-  tags: ["basic", "smoke-test"]
+  author: "Your Name"
+  tags: ["template", "custom"]
   timeout: 300000 # 5 minutes
 
 gitlab:
-  host: "https://git.hnnl.eu"
-  accessToken: "6ddd12445d257e18b7358f37c29a1a8a7efb17accd4b5fa726efa7b038748587"
-  refreshToken: "145d5213c5bdcee8c4dda7c3e9587efdf2b861334506ac7dc9d111b1a5d36438"
+  host: "https://git.hnnl.eu" # e.g., "https://gitlab.com" or "https://your-gitlab-instance.com"
+  accessToken: "" # Your GitLab personal access token
+  refreshToken: "" # Your GitLab refresh token (optional)
   timeout: 30000
   maxConcurrency: 1
 
@@ -26,12 +26,12 @@ gitlab:
     type: oidc
 
 execution:
-  workingDir: "./tmp/crawler-test-basic"
-  outputDir: "./tmp/crawler-test-basic/output"
-  databasePath: "./tmp/crawler-test-basic/test.db"
-  steps: ["areas", "users"]
-  testResume: false
-  testCallbacks: false
+  workingDir: "./tmp/crawler-test-custom" # Directory for test execution
+  outputDir: "./tmp/crawler-test-custom/output" # Where output files will be stored
+  databasePath: "./tmp/crawler-test-custom/test.db" # SQLite database path
+  steps: ["areas", "users", "resources", "repository"] # Which crawler steps to run: areas, users, resources, repository
+  testResume: false # Test resume functionality
+  testCallbacks: false # Test callback functionality
 
 validation:
   expectedFiles:
@@ -61,7 +61,7 @@ validation:
     maxWarnings: 5
 
   performance:
-    maxExecutionTime: 120000 # 2 minutes
+    maxExecutionTime: 120000 # 2 minutes maximum execution time
 
   dataQuality:
     validateJsonStructure: true
@@ -69,7 +69,7 @@ validation:
     validateRequiredFields: true
 
 cleanup:
-  cleanOutputDir: true
-  cleanDatabase: true
-  cleanLogs: true
-  keepOnFailure: false
+  cleanOutputDir: true # Clean up output directory after test
+  cleanDatabase: true # Clean up database after test
+  cleanLogs: true # Clean up log files after test
+  keepOnFailure: false # Keep files if test fails (for debugging)

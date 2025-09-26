@@ -1,300 +1,223 @@
 # Implementation Plan
 
-## Overview
-Refactor five complex TypeScript files to reduce complexity, improve maintainability, and enhance testability by splitting monolithic files into focused, single-responsibility modules.
+## [Overview]
+Add a new CLI command that creates a temporary local HTTP server to handle OAuth2 authentication flow and opens a browser for user authorization.
 
-This refactoring addresses critical complexity issues in the GitLab API data crawler application. The current files mix multiple responsibilities including configuration management, API client operations, data processing, file I/O, and validation. The refactoring will separate these concerns into focused modules following SOLID principles, reduce code duplication through shared utilities, and improve testability through better dependency injection patterns.
+This implementation will add a new `auth` command to the existing CLI application that temporarily starts a local HTTP server on an available port, constructs the appropriate OAuth2 authorization URL, opens the user's default browser to that URL, handles the callback with the authorization code, exchanges it for access tokens, and stores the credentials for use by the application. The command will integrate with the existing authentication infrastructure (OAuth2Manager, TokenManager, CallbackManager) and follow the established command patterns using the @stricli/core framework. The implementation will support configurable OAuth2 providers with GitLab as the primary focus, and will store credentials in the existing SQLite database alongside other account data.
 
-## Types
-Define new interfaces and types to support the refactored architecture.
+## [Types]
+Define OAuth2 flow configuration and response types for the authentication process.
 
-**New Type Definitions:**
-- `ConfigValidationError`: Error type with validation context and field information
-- `ValidationResult`: Result type for validation operations with errors/warnings
-- `CrawlStrategy`: Interface for different crawling approaches (GraphQL/REST)
-- `ResourceFetcher`: Generic interface for data fetching operations
-- `DataProcessor`: Interface for callback processing and data transformation
-- `StorageHandler`: Interface for hierarchical data storage operations
-- `ConfigSection`: Union type for different configuration sections
-- `ValidationRule`: Interface for individual validation rules
-- `FetchResult<T>`: Generic result type for fetching operations with metadata
+**New Type Definitions in `src/auth/types.ts`:**
+```typescript
+export interface OAuth2Config {
+  clientId: string;
+  clientSecret: string;
+  authorizationUrl: string;
+  tokenUrl: string;
+  scopes: string[];
+  redirectUri: string;
+}
 
-## Files
-Comprehensive breakdown of file modifications and new file creation.
+export interface OAuth2CallbackParams {
+  code?: string;
+  state?: string;
+  error?: string;
+  error_description?: string;
+}
 
-**New files to be created:**
+export interface OAuth2TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in?: number;
+  refresh_token?: string;
+  scope?: string;
+}
 
-**Configuration Module Refactoring:**
-- `src/config/validation/index.ts` - Validation module exports
-- `src/config/validation/validator.ts` - Main validation orchestrator
-- `src/config/validation/rules/gitlabValidator.ts` - GitLab-specific validation
-- `src/config/validation/rules/databaseValidator.ts` - Database configuration validation
-- `src/config/validation/rules/outputValidator.ts` - Output configuration validation
-- `src/config/validation/rules/loggingValidator.ts` - Logging configuration validation
-- `src/config/validation/types.ts` - Validation-specific types
-- `src/config/loaders/index.ts` - Loader module exports
-- `src/config/loaders/fileLoader.ts` - File loading logic
-- `src/config/loaders/environmentLoader.ts` - Environment variable loading
-- `src/config/loaders/argumentLoader.ts` - CLI argument processing
-- `src/config/merging/configMerger.ts` - Configuration merging logic
-- `src/config/utils/pathUtils.ts` - Configuration path utilities
+export interface AuthServerConfig {
+  port: number;
+  timeout: number;
+  callbackPath: string;
+}
 
-**Config Command Refactoring:**
-- `src/commands/config/operations/index.ts` - Operations module exports
-- `src/commands/config/operations/showConfig.ts` - Configuration display logic
-- `src/commands/config/operations/setConfig.ts` - Configuration setting logic
-- `src/commands/config/operations/unsetConfig.ts` - Configuration removal logic
-- `src/commands/config/operations/validateConfig.ts` - Configuration validation command
-- `src/commands/config/formatters/index.ts` - Formatters module exports
-- `src/commands/config/formatters/jsonFormatter.ts` - JSON output formatting
-- `src/commands/config/formatters/yamlFormatter.ts` - YAML output formatting
-- `src/commands/config/formatters/tableFormatter.ts` - Table/tree output formatting
-- `src/commands/config/utils/propertyUtils.ts` - Property manipulation utilities
-- `src/commands/config/utils/fileUtils.ts` - File operation utilities
+export interface OAuth2Provider {
+  name: string;
+  authorizationUrl: string;
+  tokenUrl: string;
+  defaultScopes: string[];
+}
+```
 
-**Crawl Command Refactoring:**
-- `src/commands/crawl/strategies/index.ts` - Strategy module exports
-- `src/commands/crawl/strategies/baseCrawlStrategy.ts` - Abstract base strategy
-- `src/commands/crawl/strategies/graphqlCrawlStrategy.ts` - GraphQL-based crawling
-- `src/commands/crawl/strategies/restCrawlStrategy.ts` - REST-based crawling
-- `src/commands/crawl/strategies/hybridCrawlStrategy.ts` - Mixed approach strategy
-- `src/commands/crawl/steps/index.ts` - Step module exports
-- `src/commands/crawl/steps/areasStep.ts` - Step 1: Areas crawling
-- `src/commands/crawl/steps/usersStep.ts` - Step 2: Users crawling
-- `src/commands/crawl/steps/resourcesStep.ts` - Step 3: Common resources
-- `src/commands/crawl/steps/repositoryStep.ts` - Step 4: Repository resources
-- `src/commands/crawl/orchestrator/crawlOrchestrator.ts` - Main orchestration logic
+**Updated Type Definitions in `src/types/commands.ts`:**
+```typescript
+export interface AuthCommandOptions {
+  provider?: string;           // OAuth2 provider (gitlab, github, etc.)
+  scopes?: string[];          // OAuth2 scopes to request
+  port?: number;              // Preferred port for callback server
+  clientId?: string;          // OAuth2 client ID
+  clientSecret?: string;      // OAuth2 client secret
+  redirectUri?: string;       // Custom redirect URI
+  timeout?: number;           // Timeout in seconds for auth flow
+  accountId?: string;         // Account identifier for storage
+  name?: string;              // Display name for account
+}
 
-**Shared Utilities:**
-- `src/commands/crawl/fetchers/index.ts` - Fetchers module exports
-- `src/commands/crawl/fetchers/baseFetcher.ts` - Base fetcher with common patterns
-- `src/commands/crawl/fetchers/graphqlFetcher.ts` - GraphQL-specific fetching
-- `src/commands/crawl/fetchers/restFetcher.ts` - REST-specific fetching
-- `src/commands/crawl/processors/index.ts` - Processors module exports
-- `src/commands/crawl/processors/callbackProcessor.ts` - Callback processing logic
-- `src/commands/crawl/processors/dataProcessor.ts` - Data transformation logic
-- `src/commands/crawl/processors/storageProcessor.ts` - Storage handling logic
-- `src/commands/crawl/utils/index.ts` - Utilities module exports
-- `src/commands/crawl/utils/queryBuilder.ts` - GraphQL query construction
-- `src/commands/crawl/utils/paginationUtils.ts` - Pagination handling
-- `src/commands/crawl/utils/errorHandling.ts` - Standardized error handling
+export type AuthFlowHandler = (flags: AuthCommandOptions) => Promise<void>;
+```
 
-**Existing files to be modified:**
-- `src/commands/config/impl.ts` - Refactored to use new operations modules
-- `src/commands/crawl/impl.ts` - Refactored to use strategy pattern and orchestrator
-- `src/commands/crawl/commonResources.ts` - Refactored to use shared fetchers/processors
-- `src/commands/crawl/restResources.ts` - Refactored to use shared fetchers/processors
-- `src/config/loader.ts` - Refactored to use separate loaders and validation
-- `src/commands/config/impl.test.ts` - Updated for new structure
-- `src/commands/crawl/impl.test.ts` - Updated for new structure
-- `src/commands/crawl/commonResources.test.ts` - Updated for new structure
-- `src/commands/crawl/restResources.test.ts` - Updated for new structure
+## [Files]
+Create new files for OAuth2 flow handling and modify existing command structure.
 
-**Configuration file updates:**
-- `tsconfig.json` - Updated path mappings for new module structure
-- `jest.config.ts` - Updated test patterns and module resolution
+**New Files:**
+- `src/commands/auth/command.ts` - Auth command definition using @stricli/core patterns
+- `src/commands/auth/impl.ts` - OAuth2 flow implementation with local server and browser integration
+- `src/auth/oauth2Server.ts` - Local HTTP server class for handling OAuth2 callbacks
+- `src/auth/oauth2Providers.ts` - Provider-specific OAuth2 configurations (GitLab, GitHub, etc.)
+- `src/auth/types.ts` - OAuth2-specific type definitions
+- `src/commands/auth/impl.test.ts` - Comprehensive test coverage for auth command
 
-## Functions
-Breakdown of function modifications and new function creation.
+**Modified Files:**
+- `src/app.ts` - Register the new auth command in the route map
+- `src/types/commands.ts` - Add AuthCommandOptions and AuthFlowHandler interfaces
+- `package.json` - Add dependencies for HTTP server (`get-port`) and browser opening (`open`)
+- `src/bin/cli.ts` - Add "auth" to localCommands array since it handles its own authentication
 
-**New functions to be created:**
+**Integration Points:**
+- Uses existing `OAuth2Manager` for token management and refresh scheduling
+- Integrates with existing `TokenManager` and database schema for credential storage
+- Follows existing command patterns from account commands
+- Uses existing logging infrastructure with `createLogger`
 
-**Configuration Validation:**
-- `validateGitlabConfig(config: GitlabConfig): ValidationResult`
-- `validateDatabaseConfig(config: DatabaseConfig): ValidationResult`
-- `validateOutputConfig(config: OutputConfig): ValidationResult`
-- `validateLoggingConfig(config: LoggingConfig): ValidationResult`
-- `createValidationError(field: string, message: string, value?: any): ConfigValidationError`
+## [Functions]
+Implement OAuth2 authentication flow with local server and browser integration.
 
-**Configuration Loading:**
-- `loadLocalConfigFile(paths: string[]): Partial<Config>`
-- `loadUserConfigFile(paths: string[]): Partial<Config>`
-- `loadEnvironmentVariables(): Partial<Config>`
-- `loadCliArguments(args: CliArgs): Partial<Config>`
-- `mergeConfigurations(configs: Partial<Config>[]): Config`
+**New Functions in `src/commands/auth/command.ts`:**
+- `authCommand` - @stricli/core command definition with parameter validation
 
-**Config Command Operations:**
-- `formatAsJson(config: Config, section?: string): string`
-- `formatAsYaml(config: Config, section?: string): string`
-- `formatAsTable(config: Config, section?: string): string`
-- `setNestedProperty(obj: Record<string, unknown>, path: string, value: unknown): void`
-- `unsetNestedProperty(obj: Record<string, unknown>, path: string): boolean`
-- `parseValueByType(value: string, type?: string): unknown`
+**New Functions in `src/commands/auth/impl.ts`:**
+- `executeAuthFlow(options: AuthCommandOptions)` - Main authentication flow orchestration
+- `generateAuthUrl(config: OAuth2Config, state: string)` - Generate OAuth2 authorization URL with state parameter
+- `exchangeCodeForTokens(code: string, config: OAuth2Config)` - Exchange authorization code for access/refresh tokens
+- `openBrowser(url: string)` - Open default browser to authorization URL using `open` library
+- `generateState()` - Generate secure random state parameter for CSRF protection
+- `waitForCallback(server: OAuth2Server, timeout: number)` - Promise-based callback waiting
 
-**Crawl Strategy Functions:**
-- `createCrawlStrategy(type: 'graphql' | 'rest' | 'hybrid'): CrawlStrategy`
-- `executeStep(stepName: string, context: CrawlContext): Promise<StepResult>`
-- `orchestrateCrawl(strategy: CrawlStrategy, context: CrawlContext): Promise<CrawlResult>`
+**New Functions in `src/auth/oauth2Server.ts`:**
+- `OAuth2Server.start()` - Start HTTP server on available port
+- `OAuth2Server.stop()` - Gracefully stop HTTP server
+- `OAuth2Server.handleCallback(req, res)` - Process OAuth2 callback and extract parameters
+- `OAuth2Server.waitForCallback()` - Promise that resolves when callback is received
+- `OAuth2Server.findAvailablePort(preferredPort?: number)` - Find available port using `get-port`
 
-**Fetcher Functions:**
-- `fetchWithPagination<T>(fetcher: ResourceFetcher<T>, options: PaginationOptions): Promise<T[]>`
-- `buildGraphQLQuery(resourceType: string, fields: string[]): string`
-- `handleApiError(error: Error, context: FetchContext): ProcessedError`
+**New Functions in `src/auth/oauth2Providers.ts`:**
+- `getProviderConfig(provider: string)` - Get provider-specific OAuth2 configuration
+- `getSupportedProviders()` - List all supported OAuth2 providers
+- `validateProviderConfig(config: OAuth2Config)` - Validate provider configuration completeness
 
-**Processor Functions:**
-- `processWithCallback<T>(data: T[], callback: ProcessorCallback, context: CallbackContext): Promise<T[]>`
-- `transformDataForStorage<T>(data: T[], transformer: DataTransformer<T>): T[]`
-- `writeToHierarchicalStorage<T>(data: T[], path: HierarchicalPath, options: StorageOptions): number`
+**Integration Functions:**
+- Modified app registration in `src/app.ts` to include auth command
+- Uses existing database schema and TokenManager for credential persistence
 
-**Modified functions:**
-- `showConfig()` - Refactored to use formatters and validation
-- `setConfig()` - Refactored to use property utilities and validation
-- `unsetConfig()` - Refactored to use property utilities
-- `validateConfig()` - Refactored to use validation modules
-- `areas()`, `users()`, `resources()`, `repository()` - Refactored to use strategies
-- `crawlAll()` - Refactored to use orchestrator
-- `CommonResourcesFetcher` methods - Refactored to use shared patterns
-- `RestResourcesFetcher` methods - Refactored to use shared patterns
-- `ConfigLoader.load()` - Refactored to use separate loaders
+## [Classes]
+Create OAuth2Server class for managing temporary HTTP server lifecycle.
 
-**Removed functions:**
-- Internal helper functions now moved to utility modules
-- Duplicated validation logic consolidated into validators
-- Repeated fetching patterns consolidated into base fetchers
+**New Classes:**
 
-## Classes
-Class structure modifications and new class creation.
+**`OAuth2Server` in `src/auth/oauth2Server.ts`:**
+- **Properties:**
+  - `server: http.Server | null` - Node.js HTTP server instance
+  - `port: number` - Server port number
+  - `timeout: number` - Authentication timeout in milliseconds
+  - `callbackPath: string` - OAuth2 callback endpoint path
+  - `callbackPromise: Promise<OAuth2CallbackParams> | null` - Promise for callback resolution
+  - `callbackResolve: ((params: OAuth2CallbackParams) => void) | null` - Promise resolver
+- **Methods:**
+  - `constructor(config: AuthServerConfig)` - Initialize server configuration
+  - `start(): Promise<void>` - Start server and bind to available port
+  - `stop(): Promise<void>` - Gracefully stop server and cleanup resources
+  - `handleCallback(req: IncomingMessage, res: ServerResponse): void` - Process OAuth2 callback
+  - `waitForCallback(): Promise<OAuth2CallbackParams>` - Wait for OAuth2 callback with timeout
+  - `findAvailablePort(preferredPort?: number): Promise<number>` - Find available port
+  - `sendCallbackResponse(res: ServerResponse, success: boolean, message: string)` - Send HTML response
 
-**New classes to be created:**
+**Integration with Existing Classes:**
+- Integrates with existing `OAuth2Manager` for token refresh scheduling
+- Uses existing `TokenManager` for database storage
+- Follows existing error handling patterns with Winston logging
 
-**Configuration Module:**
-- `ConfigValidator` - Main validation orchestrator with pluggable rules
-- `GitlabConfigValidator` - GitLab-specific validation logic
-- `DatabaseConfigValidator` - Database configuration validation
-- `OutputConfigValidator` - Output configuration validation
-- `LoggingConfigValidator` - Logging configuration validation
-- `FileConfigLoader` - Handles YAML file loading with error handling
-- `EnvironmentConfigLoader` - Processes environment variables
-- `ArgumentConfigLoader` - Processes CLI arguments
-- `ConfigMerger` - Handles deep merging of configuration objects
+## [Dependencies]
+Add HTTP server and browser launching capabilities to package.json.
 
-**Config Command Module:**
-- `ConfigOperationHandler` - Base class for config operations
-- `ShowConfigOperation` - Configuration display with multiple formats
-- `SetConfigOperation` - Configuration setting with validation
-- `UnsetConfigOperation` - Configuration removal with validation
-- `ValidateConfigOperation` - Configuration validation with reporting
-- `JsonConfigFormatter` - JSON output formatting
-- `YamlConfigFormatter` - YAML output formatting
-- `TableConfigFormatter` - Table/tree output formatting
+**New Dependencies:**
+```json
+{
+  "dependencies": {
+    "open": "^9.1.0",           // Cross-platform browser opening
+    "get-port": "^6.1.2"        // Find available ports
+  }
+}
+```
 
-**Crawl Command Module:**
-- `BaseCrawlStrategy` - Abstract strategy with common functionality
-- `GraphQLCrawlStrategy` - GraphQL-based crawling implementation
-- `RestCrawlStrategy` - REST-based crawling implementation
-- `HybridCrawlStrategy` - Mixed approach strategy
-- `CrawlOrchestrator` - Main orchestration and step coordination
-- `AreasStep`, `UsersStep`, `ResourcesStep`, `RepositoryStep` - Individual step implementations
+**Existing Dependencies Used:**
+- `@stricli/core` - Command definition and parameter parsing
+- `winston` - Logging infrastructure via existing createLogger
+- `better-sqlite3` - Database storage via existing TokenManager
+- `picocolors` - Terminal colors for user feedback
+- Node.js built-in `http` module - HTTP server for OAuth2 callbacks
+- Node.js built-in `url` and `querystring` modules - URL parsing and parameter extraction
 
-**Shared Utility Classes:**
-- `BaseFetcher<T>` - Base class for resource fetching with common patterns
-- `GraphQLFetcher<T>` - GraphQL-specific fetching with query building
-- `RestFetcher<T>` - REST-specific fetching with pagination
-- `CallbackProcessor` - Handles callback processing and filtering
-- `DataProcessor<T>` - Data transformation and validation
-- `StorageProcessor` - Hierarchical storage handling
-- `QueryBuilder` - GraphQL query construction utilities
-- `PaginationHandler` - Pagination logic for API calls
-- `ErrorHandler` - Standardized error handling and reporting
+**Integration Requirements:**
+- Compatible with existing Bun runtime and package manager
+- Follows existing TypeScript configuration in src/tsconfig.json
+- Integrates with existing database schema and migrations
+- Uses existing configuration hierarchy and validation systems
 
-**Modified classes:**
-- `ConfigLoader` - Refactored to use separate loaders and validators
-- `CommonResourcesFetcher` - Refactored to use shared base classes and patterns
-- `RestResourcesFetcher` - Refactored to use shared base classes and patterns
+## [Testing]
+Create comprehensive tests for OAuth2 flow components with proper mocking.
 
-**Removed classes:**
-- Monolithic implementations replaced by focused, single-responsibility classes
+**New Test Files:**
+- `src/commands/auth/impl.test.ts` - Test OAuth2 flow implementation
+  - Mock HTTP server lifecycle
+  - Test authorization URL generation with proper parameters
+  - Test token exchange process with success/error scenarios
+  - Mock browser opening functionality
+  - Test integration with existing TokenManager and database
+- `src/auth/oauth2Server.test.ts` - Test local server functionality
+  - Test server start/stop lifecycle
+  - Test callback handling with various parameter combinations
+  - Test port selection and conflict resolution
+  - Test timeout handling and cleanup
+- `src/auth/oauth2Providers.test.ts` - Test provider configurations
+  - Validate provider configuration completeness
+  - Test configuration retrieval for supported providers
 
-## Dependencies
-Package and version requirements for the refactored implementation.
+**Test Coverage Areas:**
+- OAuth2 server start/stop lifecycle with proper cleanup
+- Authorization URL generation with state parameter and CSRF protection
+- Callback handling with success scenarios (valid code) and error scenarios (invalid code, error parameters)
+- Token exchange process with network error handling
+- Browser opening (mocked to prevent actual browser launches during testing)
+- Port selection with preferred ports and automatic fallback
+- Timeout handling for authentication flow
+- Database integration with existing account storage
+- Error scenarios: network failures, invalid responses, server startup failures
 
-**No new external dependencies required** - All refactoring uses existing project dependencies:
-- `js-yaml` - Already used for YAML parsing
-- `picocolors` - Already used for terminal colors
-- `treeify` - Already used for tree formatting
-- `winston` - Already used for logging
-- TypeScript - Already configured for the project
+**Existing Test Integration:**
+- Follow existing Jest configuration and test patterns
+- Use existing test utilities and mocks where applicable
+- Ensure integration tests work with existing authentication system
+- Maintain compatibility with existing test command and CI pipeline
 
-**Internal dependency changes:**
-- New internal modules will be imported using relative paths
-- Existing imports will be updated to point to new module locations
-- Barrel exports (`index.ts` files) will be added for cleaner imports
+## [Implementation Order]
+Implement components in dependency order to minimize conflicts and ensure successful integration.
 
-## Testing
-Testing approach and test file updates.
-
-**New test files to be created:**
-- `src/config/validation/validator.test.ts` - Validation orchestrator tests
-- `src/config/validation/rules/gitlabValidator.test.ts` - GitLab validation tests
-- `src/config/validation/rules/databaseValidator.test.ts` - Database validation tests
-- `src/config/loaders/fileLoader.test.ts` - File loader tests
-- `src/config/loaders/environmentLoader.test.ts` - Environment loader tests
-- `src/config/merging/configMerger.test.ts` - Config merging tests
-- `src/commands/config/operations/showConfig.test.ts` - Show config operation tests
-- `src/commands/config/operations/setConfig.test.ts` - Set config operation tests
-- `src/commands/config/formatters/tableFormatter.test.ts` - Formatter tests
-- `src/commands/crawl/strategies/graphqlCrawlStrategy.test.ts` - GraphQL strategy tests
-- `src/commands/crawl/strategies/restCrawlStrategy.test.ts` - REST strategy tests
-- `src/commands/crawl/steps/areasStep.test.ts` - Areas step tests
-- `src/commands/crawl/fetchers/baseFetcher.test.ts` - Base fetcher tests
-- `src/commands/crawl/processors/callbackProcessor.test.ts` - Callback processor tests
-
-**Existing test files to be modified:**
-- `src/commands/config/impl.test.ts` - Updated for new operation structure
-- `src/commands/crawl/impl.test.ts` - Updated for strategy pattern usage
-- `src/commands/crawl/commonResources.test.ts` - Updated for shared utilities
-- `src/commands/crawl/restResources.test.ts` - Updated for shared utilities
-
-**Testing strategy:**
-- Unit tests for individual validators, loaders, and processors
-- Integration tests for strategy implementations
-- Mock-based testing for API interactions
-- Property-based testing for configuration merging
-- Error scenario testing for all major operations
-
-## Implementation Order
-Sequential steps to minimize conflicts and ensure successful integration.
-
-**Phase 1: Configuration Module Refactoring**
-1. Create type definitions in `src/config/validation/types.ts`
-2. Implement individual validators (`gitlabValidator.ts`, `databaseValidator.ts`, etc.)
-3. Create validation orchestrator in `src/config/validation/validator.ts`
-4. Implement configuration loaders (`fileLoader.ts`, `environmentLoader.ts`, `argumentLoader.ts`)
-5. Create configuration merger in `src/config/merging/configMerger.ts`
-6. Update `src/config/loader.ts` to use new components
-7. Create comprehensive tests for validation and loading
-
-**Phase 2: Config Command Operations**
-8. Create formatters (`jsonFormatter.ts`, `yamlFormatter.ts`, `tableFormatter.ts`)
-9. Implement operation handlers (`showConfig.ts`, `setConfig.ts`, `unsetConfig.ts`, `validateConfig.ts`)
-10. Create utility modules (`propertyUtils.ts`, `fileUtils.ts`)
-11. Update `src/commands/config/impl.ts` to use new operations
-12. Update and extend `src/commands/config/impl.test.ts`
-
-**Phase 3: Shared Crawl Utilities**
-13. Create base fetcher and processor classes
-14. Implement GraphQL and REST specific fetchers
-15. Create callback and storage processors
-16. Implement utility modules (query builder, pagination, error handling)
-17. Create comprehensive tests for shared utilities
-
-**Phase 4: Crawl Strategy Implementation**
-18. Create base strategy interface and abstract class
-19. Implement GraphQL, REST, and hybrid strategies
-20. Create step implementations (`areasStep.ts`, `usersStep.ts`, etc.)
-21. Implement crawl orchestrator
-22. Create tests for strategies and steps
-
-**Phase 5: Integration and Legacy Update**
-23. Update `src/commands/crawl/impl.ts` to use strategies and orchestrator
-24. Refactor `src/commands/crawl/commonResources.ts` to use shared utilities
-25. Refactor `src/commands/crawl/restResources.ts` to use shared utilities
-26. Update all existing test files
-27. Update configuration files (tsconfig.json, jest.config.ts)
-
-**Phase 6: Validation and Cleanup**
-28. Run comprehensive test suite
-29. Perform integration testing with real GitLab API
-30. Update documentation and type definitions
-31. Remove deprecated code and clean up imports
-32. Final validation of all functionality
+1. **Create OAuth2 type definitions** (`src/auth/types.ts`) and update command types (`src/types/commands.ts`)
+2. **Implement OAuth2 provider configurations** (`src/auth/oauth2Providers.ts`) with GitLab, GitHub support
+3. **Create OAuth2Server class** (`src/auth/oauth2Server.ts`) with HTTP server lifecycle management
+4. **Add required dependencies** (`package.json`) for `open` and `get-port` libraries
+5. **Implement auth command structure** (`src/commands/auth/command.ts`) using @stricli/core patterns
+6. **Develop OAuth2 flow implementation** (`src/commands/auth/impl.ts`) with browser integration and token exchange
+7. **Register auth command in app** (`src/app.ts`) and update CLI local commands list (`src/bin/cli.ts`)
+8. **Create comprehensive test files** with proper mocking and error scenario coverage
+9. **Integration testing** with existing authentication system (OAuth2Manager, TokenManager, database)
+10. **End-to-end validation** of complete OAuth2 flow from browser opening to credential storage

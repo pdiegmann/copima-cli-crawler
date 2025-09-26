@@ -70,3 +70,18 @@ export type ConfigGetHandler = (flags: ConfigCommandFlags) => Promise<void>;
 export type ConfigSetHandler = (flags: ConfigCommandFlags) => Promise<void>;
 export type ConfigListHandler = (flags: ConfigCommandFlags) => Promise<void>;
 export type ConfigEditHandler = (flags: ConfigCommandFlags) => Promise<void>;
+
+// Auth command types
+export type AuthCommandFlags = {
+  provider?: string; // OAuth2 provider (gitlab, github, etc.)
+  scopes?: string[]; // OAuth2 scopes to request
+  port?: number; // Preferred port for callback server
+  "client-id"?: string; // OAuth2 client ID
+  "client-secret"?: string; // OAuth2 client secret
+  "redirect-uri"?: string; // Custom redirect URI
+  timeout?: number; // Timeout in seconds for auth flow
+  "account-id"?: string; // Account identifier for storage
+  name?: string; // Display name for account
+} & SafeRecord;
+
+export type AuthFlowHandler = (flags: AuthCommandFlags) => Promise<void>;
