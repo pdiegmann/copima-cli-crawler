@@ -1,5 +1,3 @@
-import https from "https";
-import fetch from "node-fetch";
 import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { GitLabProject, GitLabUser, GraphQLResponse, GroupNode, PageInfo, SafeRecord } from "../types/api.js";
@@ -80,11 +78,8 @@ export class GitLabGraphQLClient {
 
   async query<T = SafeRecord>(query: string, variables: SafeRecord = {}): Promise<T> {
     const makeRequest = async (token: string): Promise<Response> => {
-      // Create HTTPS agent that ignores SSL certificate issues for development/testing
-      const agent = new https.Agent({
-        rejectUnauthorized: false, // Allow self-signed certificates
-      });
-
+      // For development environments with self-signed certificates, we need to disable TLS verification
+      // This is handled by setting NODE_TLS_REJECT_UNAUTHORIZED=0 in the environment if needed
       return await fetch(this.baseUrl, {
         method: "POST",
         headers: {
@@ -92,7 +87,6 @@ export class GitLabGraphQLClient {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ query, variables }),
-        agent: agent,
       });
     };
 
@@ -107,8 +101,10 @@ export class GitLabGraphQLClient {
           await this.refreshAccessToken();
           // Retry with new token
           response = await makeRequest(this.accessToken);
-        } catch (refreshError) {
-          logger.error("Failed to refresh token, proceeding with original error");
+        } catch (error) {
+          logger.error("Failed to refresh token, proceeding with original error", {
+            error: error instanceof Error ? error.message : String(error),
+          });
           // Continue with original 401 response
         }
       }

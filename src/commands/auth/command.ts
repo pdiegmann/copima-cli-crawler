@@ -31,7 +31,7 @@ export const authCommand = buildCommand({
       },
       scopes: {
         kind: "parsed",
-        parse: (input: string) => input.split(",").map((s) => s.trim()),
+        parse: (input: string) => input,
         brief: "Comma-separated OAuth2 scopes to request",
         optional: true,
       },
@@ -75,6 +75,12 @@ export const authCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "Display name for account",
+        optional: true,
+      },
+      config: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Path to YAML configuration file",
         optional: true,
       },
     },

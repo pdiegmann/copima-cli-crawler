@@ -74,7 +74,7 @@ export type ConfigEditHandler = (flags: ConfigCommandFlags) => Promise<void>;
 // Auth command types
 export type AuthCommandFlags = {
   provider?: string; // OAuth2 provider (gitlab, github, etc.)
-  scopes?: string[]; // OAuth2 scopes to request
+  scopes?: string; // Comma-separated OAuth2 scopes to request
   port?: number; // Preferred port for callback server
   "client-id"?: string; // OAuth2 client ID
   "client-secret"?: string; // OAuth2 client secret
@@ -82,6 +82,7 @@ export type AuthCommandFlags = {
   timeout?: number; // Timeout in seconds for auth flow
   "account-id"?: string; // Account identifier for storage
   name?: string; // Display name for account
+  config?: string; // Path to YAML configuration file
 } & SafeRecord;
 
 export type AuthFlowHandler = (flags: AuthCommandFlags) => Promise<void>;

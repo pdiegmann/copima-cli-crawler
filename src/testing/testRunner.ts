@@ -281,13 +281,14 @@ export class TestRunner {
     const cliPath = options.cliPath || "bun run src/bin/cli.ts";
 
     // Build command arguments
-    const args = this.buildCrawlerArgs(config);
+    const args = await this.buildCrawlerArgs(config);
 
     // Setup environment variables
+    const testEnv = await this.buildEnvironmentVariables(config);
     const env = {
       ...process.env,
       ...options.env,
-      ...this.buildEnvironmentVariables(config),
+      ...testEnv,
     };
 
     this.logger.debug("Executing crawler", { cliPath, args, workingDir: config.execution.workingDir });
@@ -653,25 +654,97 @@ export class TestRunner {
   /**
    * Builds crawler command arguments from test configuration.
    */
-  private buildCrawlerArgs(config: TestConfig): string[] {
+  private async buildCrawlerArgs(config: TestConfig): Promise<string[]> {
     const steps = config.execution.steps || ["areas", "users"];
 
-    // For testing, we'll run each step individually since that's how the CLI is structured
-    // We'll start with the first step and run them sequentially
+    // Use the individual step commands directly (areas, users, etc.)
     const firstStep = steps[0] || "areas";
     const args: string[] = [firstStep];
 
     // Add authentication arguments
     args.push("--host", config.gitlab.host);
-    args.push("--access-token", config.gitlab.accessToken);
+
+    // Add account ID if provided
+    if (config.gitlab.accountId) {
+      args.push("--account-id", config.gitlab.accountId);
+    }
+
+    // Get access token from database or config
+    let accessToken = config.gitlab.accessToken;
+
+    // Try to retrieve access token from database first
+    if (!accessToken) {
+      try {
+        const { initDatabase } = await import("../db/connection.js");
+        const { TokenManager } = await import("../auth/tokenManager.js");
+        const { eq } = await import("drizzle-orm");
+        const { account } = await import("../db/schema.js");
+
+        const db = initDatabase({ path: "./database.sqlite", wal: true });
+        const tokenManager = new TokenManager(db);
+
+        let storedToken = null;
+
+        // Check if we have account ID or email specified in config
+        if (config.gitlab.accountId) {
+          storedToken = await tokenManager.getAccessToken(config.gitlab.accountId);
+          if (storedToken) {
+            console.log(`Test runner: Using access token for account ID: ${config.gitlab.accountId}`);
+          }
+        } else if (config.gitlab.email) {
+          // Look up account by email - need to join user and account tables
+          const { user } = await import("../db/schema.js");
+
+          const [userRecord] = await db
+            .select({
+              accountId: account.accountId,
+              userId: user.id,
+              email: user.email,
+            })
+            .from(user)
+            .innerJoin(account, eq(account.userId, user.id))
+            .where(eq(user.email, config.gitlab.email))
+            .limit(1);
+
+          if (userRecord) {
+            storedToken = await tokenManager.getAccessToken(userRecord.accountId);
+            if (storedToken) {
+              console.log(`Test runner: Using access token for email: ${config.gitlab.email} (account: ${userRecord.accountId})`);
+            }
+          } else {
+            console.warn(`Test runner: No account found for email: ${config.gitlab.email}`);
+          }
+        } else {
+          // Fallback to default account
+          storedToken = await tokenManager.getAccessToken("default");
+          if (storedToken) {
+            console.log("Test runner: Using access token for default account");
+          }
+        }
+
+        if (storedToken) {
+          accessToken = storedToken;
+        }
+      } catch (error) {
+        console.warn("Test runner: Failed to retrieve stored token:", error);
+      }
+    }
+
+    // Add access token if available
+    if (accessToken) {
+      args.push("--access-token", accessToken);
+    }
 
     // Add optional arguments
     if (config.gitlab.refreshToken) {
       args.push("--refresh-token", config.gitlab.refreshToken);
     }
 
-    // Set output directory via environment variable since it's not a direct flag
+    // Set output directory
     args.push("--output", config.execution.outputDir);
+
+    // Set database path to match test configuration
+    args.push("--database", config.execution.databasePath);
 
     return args;
   }
@@ -679,21 +752,89 @@ export class TestRunner {
   /**
    * Builds environment variables from configuration.
    */
-  private buildEnvironmentVariables(config: TestConfig): Record<string, string> {
-    const env: Record<string, string> = {};
+  private async buildEnvironmentVariables(config: TestConfig): Promise<Record<string, string>> {
+    const env: Record<string, string> = {
+      NODE_ENV: "test",
+      LOG_LEVEL: "info",
+    };
 
-    // GitLab configuration
-    env["GITLAB_HOST"] = config.gitlab.host;
-    env["GITLAB_ACCESS_TOKEN"] = config.gitlab.accessToken;
-    if (config.gitlab.refreshToken) {
-      env["GITLAB_REFRESH_TOKEN"] = config.gitlab.refreshToken;
+    // Disable TLS certificate validation for test environments
+    env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+
+    // Add GitLab configuration
+    if (config.gitlab) {
+      if (config.gitlab.host) {
+        env["GITLAB_HOST"] = config.gitlab.host;
+      }
+
+      // Try to get access token from database first, fallback to config
+      let accessToken = config.gitlab.accessToken;
+
+      try {
+        const { initDatabase } = await import("../db/connection.js");
+        const { TokenManager } = await import("../auth/tokenManager.js");
+        const { eq } = await import("drizzle-orm");
+        const { account } = await import("../db/schema.js");
+
+        try {
+          const db = initDatabase({ path: "./database.sqlite", wal: true });
+          const tokenManager = new TokenManager(db);
+
+          let storedToken = null;
+
+          // Check if we have account ID or email specified in config
+          if (config.gitlab.accountId) {
+            storedToken = await tokenManager.getAccessToken(config.gitlab.accountId);
+            if (storedToken) {
+              console.log(`Test runner: Using access token for account ID: ${config.gitlab.accountId}`);
+            }
+          } else if (config.gitlab.email) {
+            // Look up account by email - need to join user and account tables
+            const { user } = await import("../db/schema.js");
+
+            const [userRecord] = await db
+              .select({
+                accountId: account.accountId,
+                userId: user.id,
+                email: user.email,
+              })
+              .from(user)
+              .innerJoin(account, eq(account.userId, user.id))
+              .where(eq(user.email, config.gitlab.email))
+              .limit(1);
+
+            if (userRecord) {
+              storedToken = await tokenManager.getAccessToken(userRecord.accountId);
+              if (storedToken) {
+                console.log(`Test runner: Using access token for email: ${config.gitlab.email} (account: ${userRecord.accountId})`);
+              }
+            } else {
+              console.warn(`Test runner: No account found for email: ${config.gitlab.email}`);
+            }
+          } else {
+            // Fallback to default account
+            storedToken = await tokenManager.getAccessToken("default");
+            if (storedToken) {
+              console.log("Test runner: Using access token for default account");
+            }
+          }
+
+          if (storedToken) {
+            accessToken = storedToken;
+          } else if (!accessToken) {
+            console.warn("Test runner: No stored access token found and none in config. Please run 'copima auth' first.");
+          }
+        } catch {
+          console.warn("Test runner: Database not available, using config token");
+        }
+      } catch (error) {
+        console.warn("Test runner: Failed to retrieve stored token, using config token:", error);
+      }
+
+      if (accessToken) {
+        env["GITLAB_ACCESS_TOKEN"] = accessToken;
+      }
     }
-
-    // Database configuration
-    env["DATABASE_PATH"] = config.execution.databasePath;
-
-    // Output configuration
-    env["OUTPUT_ROOT_DIR"] = config.execution.outputDir;
 
     return env;
   }

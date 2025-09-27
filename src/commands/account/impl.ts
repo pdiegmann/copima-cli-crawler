@@ -2,12 +2,23 @@ import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import colors from "picocolors";
 import treeify from "treeify";
-import { db } from "../../db/index";
+import { getDatabase, initializeDatabase } from "../../db/index";
 import { account, user } from "../../db/schema";
 import { createLogger } from "../../logging";
 import type { SafeRecord } from "../../types/api.js";
 
 const logger = createLogger("AccountCommands");
+
+// Helper function to ensure database is initialized
+const ensureDatabase = () => {
+  try {
+    return getDatabase();
+  } catch (error) {
+    // Initialize database if not already done
+    initializeDatabase({ path: "./database.sqlite", wal: true });
+    return getDatabase();
+  }
+};
 
 type AddAccountFlags = {
   host?: string;
@@ -49,8 +60,10 @@ export const addAccount = async (flags: AddAccountFlags): Promise<void | Error> 
     const accountId = flags["account-id"] || randomUUID();
     const now = new Date();
 
+    const database = ensureDatabase();
+
     // Create user record
-    await db().insert(user).values({
+    await database.insert(user).values({
       id: userId,
       name: flags.name,
       email: flags.email,
@@ -60,7 +73,7 @@ export const addAccount = async (flags: AddAccountFlags): Promise<void | Error> 
     });
 
     // Create account record
-    await db().insert(account).values({
+    await database.insert(account).values({
       id: randomUUID(),
       accountId: accountId,
       providerId: "gitlab",
@@ -87,7 +100,8 @@ export const listAccounts = async (flags: ListAccountsFlags): Promise<void | Err
   logger.info(colors.cyan("📋 Listing GitLab accounts..."));
 
   try {
-    const accounts = await db()
+    const database = ensureDatabase();
+    const accounts = await database
       .select({
         accountId: account.accountId,
         name: user.name,
@@ -171,8 +185,10 @@ export const removeAccount = async (flags: RemoveAccountFlags): Promise<void | E
   logger.info(colors.cyan("🗑️  Removing GitLab account..."));
 
   try {
+    const database = ensureDatabase();
+
     // Find the account to remove
-    const accountToRemove = await db()
+    const accountToRemove = await database
       .select({
         id: account.id,
         accountId: account.accountId,
@@ -209,7 +225,7 @@ export const removeAccount = async (flags: RemoveAccountFlags): Promise<void | E
 
     // Remove account (cascade will remove related records)
     if (acc?.userId) {
-      await db().delete(user).where(eq(user.id, acc.userId));
+      await database.delete(user).where(eq(user.id, acc.userId));
     }
 
     logger.info(colors.green("✅ Account removed successfully"));
@@ -235,8 +251,10 @@ export const refreshToken = async (flags: RefreshTokenFlags, _positionals?: stri
   logger.info(colors.cyan("🔄 Refreshing OAuth2 tokens..."));
 
   try {
+    const database = ensureDatabase();
+
     // Find the account
-    const accountToRefresh = await db()
+    const accountToRefresh = await database
       .select({
         id: account.id,
         accountId: account.accountId,

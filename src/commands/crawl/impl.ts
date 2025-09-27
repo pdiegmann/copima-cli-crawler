@@ -1,6 +1,47 @@
+import { TokenManager } from "../../auth/tokenManager.js";
 import { createCallbackManager } from "../../callback";
 import type { CallbackContext } from "../../config/types.js";
 import type { LocalContext } from "../../context.js";
+import { getDatabase } from "../../db/connection.js";
+import { initializeDatabase as initializeDatabaseWithMigrations } from "../../db/migrate.js";
+import { createLogger } from "../../logging/index.js";
+
+const logger = createLogger("CLI");
+
+export const crawlCommand = async (options: any): Promise<void> => {
+  try {
+    // Initialize the database and run migrations
+    await initializeDatabaseWithMigrations({ path: "./database.sqlite", wal: true });
+
+    // Get a valid access token
+    const db = getDatabase();
+    const tokenManager = new TokenManager(db);
+    const accountId = options.accountId || "default";
+    const token = await tokenManager.getValidToken(accountId);
+
+    if (!token) {
+      logger.warn(`No valid access token found for account '${accountId}'. Please run 'copima auth' to authenticate.`);
+      return;
+    }
+
+    logger.info("Starting Step 1: Crawling areas (groups and projects)");
+
+    // For now, delegate to crawlAll since it provides the complete functionality
+    // We can create a mock context to call the existing crawlAll function
+    const mockContext: Partial<LocalContext> = {
+      logger,
+      // Add other required context properties as needed
+    };
+
+    // Call the existing crawlAll implementation
+    await crawlAll.call(mockContext as LocalContext, options);
+
+    logger.info("GitLab crawl completed successfully");
+  } catch (error) {
+    logger.error("Crawl command failed", { error: error instanceof Error ? error.message : String(error) });
+    throw error;
+  }
+};
 
 export const areas = async function (this: LocalContext, flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
@@ -12,12 +53,44 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     // Debug: Log all available flags to understand the structure
     logger.info("Debug - Available flags:", { flags, configToken: (this as any).config?.gitlab?.accessToken });
 
-    // Check if this is test mode - only enable mock mode for tokens that explicitly start with "test_" or "mock_"
-    // StriCLI converts kebab-case to camelCase, so try both formats
-    const accessToken = (flags as any)?.accessToken || (flags as any)?.["access-token"] || (this as any).config?.gitlab?.accessToken;
-    const isTestMode = accessToken && (accessToken.startsWith("test_") || accessToken.startsWith("mock_"));
+    // Get account ID from flags - StriCLI converts kebab-case to camelCase
+    const flagsAny = flags as any;
+    const accountId = flagsAny?.accountId || flagsAny?.["account-id"] || "default";
+    const accessToken = flagsAny?.accessToken || flagsAny?.["access-token"];
 
-    logger.info("Debug - Test mode check:", { accessToken, isTestMode });
+    // Get database path from flags, fallback to default
+    const databasePath = flagsAny?.database || "./database.sqlite";
+
+    // Ensure database directory exists
+    const { dirname } = await import("path");
+    const { mkdirSync } = await import("fs");
+    const dbDir = dirname(databasePath);
+    mkdirSync(dbDir, { recursive: true });
+
+    // Initialize database
+    await initializeDatabaseWithMigrations({ path: databasePath, wal: true });
+
+    // Use passed access token if available, otherwise try to get from database
+    let token: string | null = null;
+
+    if (accessToken) {
+      logger.info(`Using access token passed via parameter for account '${accountId}'`);
+      token = accessToken;
+    } else {
+      const db = getDatabase();
+      const tokenManager = new TokenManager(db);
+      token = await tokenManager.getValidToken(accountId);
+    }
+
+    if (!token) {
+      logger.warn(`No valid access token found for account '${accountId}'. Please run 'copima auth' to authenticate.`);
+      return;
+    }
+
+    // Check if this is test mode - only enable mock mode for tokens that explicitly start with "test_" or "mock_"
+    const isTestMode = token && (token.startsWith("test_") || token.startsWith("mock_"));
+
+    logger.info("Debug - Test mode check:", { token, isTestMode });
 
     if (isTestMode) {
       logger.info("Test mode detected - creating mock data");

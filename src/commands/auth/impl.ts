@@ -72,39 +72,82 @@ export const executeAuthFlow = async (flags: AuthCommandFlags): Promise<void> =>
 };
 
 const prepareOAuth2Config = async (flags: AuthCommandFlags): Promise<OAuth2Config> => {
-  const provider = getProviderConfig(flags.provider || "gitlab");
-  if (!provider) {
-    throw new Error(`Unsupported OAuth2 provider: ${flags.provider}`);
+  // Check if YAML configuration is provided
+  if (flags.config) {
+    logger.info(`Loading OAuth2 configuration from ${flags.config}`);
+
+    // Load YAML configuration loader dynamically to avoid import ordering issues
+    const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
+    const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config);
+
+    let config = oauth2YamlConfigLoader.getProviderFromYaml(yamlConfig, flags.provider);
+
+    // Override YAML config with command-line flags (flags take precedence)
+    config = {
+      ...config,
+      ...(flags["client-id"] && { clientId: flags["client-id"] }),
+      ...(flags["client-secret"] && { clientSecret: flags["client-secret"] }),
+      ...(flags.scopes && { scopes: flags.scopes.split(",").map((s) => s.trim()) }),
+      ...(flags["redirect-uri"] && { redirectUri: flags["redirect-uri"] }),
+    };
+
+    if (!validateProviderConfig(config)) {
+      throw new Error("Invalid OAuth2 configuration from YAML file");
+    }
+
+    return config;
+  } else {
+    // Use command-line flags only (existing behavior)
+    const provider = getProviderConfig(flags.provider || "gitlab");
+    if (!provider) {
+      throw new Error(`Unsupported OAuth2 provider: ${flags.provider}`);
+    }
+
+    // Get client credentials from flags or environment
+    const clientId = flags["client-id"] || process.env["OAUTH2_CLIENT_ID"];
+    const clientSecret = flags["client-secret"] || process.env["OAUTH2_CLIENT_SECRET"];
+
+    if (!clientId || !clientSecret) {
+      throw new Error(
+        "OAuth2 client credentials required. Provide via --client-id and --client-secret flags, OAUTH2_CLIENT_ID and OAUTH2_CLIENT_SECRET environment variables, or use --config to specify a YAML configuration file"
+      );
+    }
+
+    const config = buildOAuth2Config(provider, {
+      clientId,
+      clientSecret,
+      redirectUri: "http://localhost:3000/callback", // Temporary, will be updated
+      scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : undefined,
+    });
+
+    if (!validateProviderConfig(config)) {
+      throw new Error("Invalid OAuth2 configuration");
+    }
+
+    return config;
   }
-
-  // Get client credentials from flags or environment
-  const clientId = flags["client-id"] || process.env["OAUTH2_CLIENT_ID"];
-  const clientSecret = flags["client-secret"] || process.env["OAUTH2_CLIENT_SECRET"];
-
-  if (!clientId || !clientSecret) {
-    throw new Error("OAuth2 client credentials required. Provide via --client-id and --client-secret flags or OAUTH2_CLIENT_ID and OAUTH2_CLIENT_SECRET environment variables");
-  }
-
-  const config = buildOAuth2Config(provider, {
-    clientId,
-    clientSecret,
-    redirectUri: "http://localhost:3000/callback", // Temporary, will be updated
-    scopes: flags.scopes,
-  });
-
-  if (!validateProviderConfig(config)) {
-    throw new Error("Invalid OAuth2 configuration");
-  }
-
-  return config;
 };
 
 const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Server> => {
-  const serverConfig: AuthServerConfig = {
+  let serverConfig: AuthServerConfig = {
     port: flags.port || 3000,
     timeout: (flags.timeout || 300) * 1000,
     callbackPath: "/callback",
   };
+
+  // Check if YAML configuration is provided and load server config
+  if (flags.config) {
+    const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
+    const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config);
+    const yamlServerConfig = oauth2YamlConfigLoader.getServerConfigFromYaml(yamlConfig);
+
+    // Merge YAML config with command-line flags (flags take precedence)
+    serverConfig = {
+      port: flags.port || yamlServerConfig.port || 3000,
+      timeout: (flags.timeout || (yamlServerConfig.timeout ? yamlServerConfig.timeout / 1000 : 300)) * 1000,
+      callbackPath: yamlServerConfig.callbackPath || "/callback",
+    };
+  }
 
   const server = new OAuth2Server(serverConfig);
   await server.start();
@@ -183,26 +226,141 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
   try {
     console.log(pc.blue("💾 Storing credentials..."));
 
-    // Calculate expiration time
-    const expiresAt = tokens.expires_in ? new Date(Date.now() + tokens.expires_in * 1000) : null;
+    // Import database modules
+    const { db, initDatabase, initializeDatabase } = await import("../../db/index.js");
+    const { user, account } = await import("../../db/schema.js");
+    const { randomUUID } = await import("node:crypto");
 
-    // Store the account with tokens
-    const accountId = flags["account-id"] || `${flags.provider}-${Date.now()}`;
-    const accountName = flags.name || `${flags.provider} Account`;
+    // Initialize database if not already initialized
+    const databaseConfig = {
+      path: "./database.sqlite",
+      wal: true,
+      timeout: 5000,
+    };
+
+    let databaseAvailable = false;
+    try {
+      initDatabase(databaseConfig);
+      initializeDatabase({ ...databaseConfig, migrationsFolder: "./drizzle" });
+      databaseAvailable = true;
+    } catch (error) {
+      logger.error("Database initialization failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      console.log(pc.yellow("⚠️  Database unavailable - showing credentials without storing:"));
+    }
+
+    // Calculate expiration times
+    const accessTokenExpiresAt = tokens.expires_in ? new Date(Date.now() + tokens.expires_in * 1000) : null;
+    const refreshTokenExpiresAt = null; // GitLab refresh tokens typically don't expire
+
+    // Generate IDs and extract info
+    const userId = randomUUID();
+    const accountId = flags["account-id"] || randomUUID();
     const providerId = flags.provider || "gitlab";
+    const now = new Date();
 
-    // Log what we would store (simplified for now)
-    logger.info("OAuth2 authentication successful", {
-      accountId,
-      providerId,
-      hasAccessToken: !!tokens.access_token,
-      hasRefreshToken: !!tokens.refresh_token,
-      expiresAt: expiresAt?.toISOString(),
-      scopes: config.scopes,
-    });
+    // Get user info from OAuth token (we'll need to make an API call to get user details)
+    let userInfo: { name: string; email: string } | null = null;
+
+    try {
+      // Make a request to get user info using the access token
+      const userResponse = await fetch(`${config.tokenUrl.replace("/oauth/token", "/api/v4/user")}`, {
+        headers: {
+          Authorization: `Bearer ${tokens.access_token}`,
+          Accept: "application/json",
+        },
+      });
+
+      if (userResponse.ok) {
+        const userData = (await userResponse.json()) as any;
+        userInfo = {
+          name: userData.name || userData.username || "Unknown User",
+          email: userData["email"] || `${userData.username || userId}@gitlab.local`,
+        };
+      }
+    } catch (error) {
+      logger.warn("Failed to fetch user info, using defaults", { error: error instanceof Error ? error.message : String(error) });
+    }
+
+    // Use provided name/email or fallback to OAuth user info or defaults
+    const userName = flags.name || userInfo?.name || `${providerId} User`;
+    const userEmail = flags.email || userInfo?.email || `${userId}@${providerId}.local`;
+
+    if (databaseAvailable) {
+      // Store user in database
+      await db()
+        .insert(user)
+        .values({
+          id: userId,
+          name: userName,
+          email: userEmail,
+          emailVerified: false,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .onConflictDoUpdate({
+          target: user.email,
+          set: {
+            name: userName,
+            updatedAt: now,
+          },
+        });
+
+      // Get the actual user ID (in case of conflict resolution)
+      const { eq } = await import("drizzle-orm");
+      const [existingUser] = await db().select({ id: user.id }).from(user).where(eq(user.email, userEmail)).limit(1);
+      const finalUserId = existingUser?.id || userId;
+
+      // Store account credentials in database
+      await db()
+        .insert(account)
+        .values({
+          id: randomUUID(),
+          accountId,
+          providerId,
+          userId: finalUserId,
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token || null,
+          accessTokenExpiresAt,
+          refreshTokenExpiresAt,
+          scope: config.scopes.join(" "),
+          createdAt: now,
+          updatedAt: now,
+        });
+
+      logger.info("OAuth2 authentication successful - credentials stored in database", {
+        accountId,
+        providerId,
+        userName,
+        userEmail,
+        hasAccessToken: !!tokens.access_token,
+        hasRefreshToken: !!tokens.refresh_token,
+        expiresAt: accessTokenExpiresAt?.toISOString(),
+        scopes: config.scopes,
+      });
+    } else {
+      logger.info("OAuth2 authentication successful - database unavailable, credentials not stored", {
+        accountId,
+        providerId,
+        userName,
+        userEmail,
+        hasAccessToken: !!tokens.access_token,
+        hasRefreshToken: !!tokens.refresh_token,
+        expiresAt: accessTokenExpiresAt?.toISOString(),
+        scopes: config.scopes,
+      });
+
+      // Display credentials for manual storage/use
+      console.log(pc.yellow("📋 OAuth2 Credentials (DATABASE UNAVAILABLE):"));
+      console.log(pc.dim(`   Access Token: ${tokens.access_token.substring(0, 20)}...`));
+      if (tokens.refresh_token) {
+        console.log(pc.dim(`   Refresh Token: ${tokens.refresh_token.substring(0, 20)}...`));
+      }
+    }
 
     // Create OAuth2Manager for token refresh scheduling
-    if (tokens.refresh_token && expiresAt && tokens.expires_in) {
+    if (tokens.refresh_token && accessTokenExpiresAt && tokens.expires_in) {
       const oauth2Manager = new OAuth2Manager({
         enabled: true,
         refreshThreshold: 300, // 5 minutes
@@ -223,21 +381,22 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
         },
         async (_newTokens) => {
           logger.info("Token refreshed automatically", { accountId });
-          // Update stored tokens would happen here
+          // Update stored tokens in database would happen here
         }
       );
     }
 
-    console.log(pc.green(`✅ Credentials stored for account: ${pc.bold(accountName)}`));
+    console.log(pc.green(`✅ Credentials stored in database for: ${pc.bold(userName)}`));
     console.log(pc.dim(`   Account ID: ${accountId}`));
-    console.log(pc.dim(`   Provider: ${flags.provider}`));
+    console.log(pc.dim(`   Provider: ${providerId}`));
+    console.log(pc.dim(`   Email: ${userEmail}`));
     console.log(pc.dim(`   Scopes: ${config.scopes.join(", ")}`));
 
-    if (expiresAt) {
-      console.log(pc.dim(`   Expires: ${expiresAt.toLocaleString()}`));
+    if (accessTokenExpiresAt) {
+      console.log(pc.dim(`   Expires: ${accessTokenExpiresAt.toLocaleString()}`));
     }
   } catch (error) {
-    logger.error("Failed to store credentials", { error: error instanceof Error ? error.message : String(error) });
+    logger.error("Failed to store credentials in database", { error: error instanceof Error ? error.message : String(error) });
     throw new Error(`Failed to store credentials: ${error instanceof Error ? error.message : String(error)}`);
   }
 };

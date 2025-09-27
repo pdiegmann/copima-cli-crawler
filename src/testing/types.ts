@@ -47,16 +47,28 @@ export type TestMetadata = {
 export type TestGitLabConfig = {
   /** GitLab host URL */
   host: string;
-  /** OAuth2 access token */
-  accessToken: string;
+  /** OAuth2 access token (optional if using account lookup) */
+  accessToken?: string;
   /** OAuth2 refresh token (optional) */
   refreshToken?: string;
+  /** Account ID to lookup stored credentials */
+  accountId?: string;
+  /** Email address to lookup stored credentials */
+  email?: string;
   /** API timeout in milliseconds */
   timeout?: number;
   /** Maximum concurrent requests */
   maxConcurrency?: number;
   /** Rate limit (requests per minute) */
   rateLimit?: number;
+  /** OAuth2 Configuration for token refresh */
+  oauth2?: {
+    clientId: string;
+    clientSecret: string;
+    redirectUri: string;
+    scopes: string[];
+    type: string;
+  };
 };
 
 /**

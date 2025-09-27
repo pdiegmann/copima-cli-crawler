@@ -29,6 +29,12 @@ export const areasCommand = buildCommand({
         brief: "OAuth2 refresh token",
         optional: true,
       },
+      "account-id": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Account ID to use for authentication",
+        optional: true,
+      },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
@@ -39,6 +45,12 @@ export const areasCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input.toLowerCase(),
         brief: "Resume from previous crawl state",
+        optional: true,
+      },
+      database: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Database file path",
         optional: true,
       },
     },
@@ -246,12 +258,79 @@ export const crawlAllCommand = buildCommand({
   },
 });
 
+export const crawlCommand = buildCommand({
+  loader: async () => {
+    const { crawlCommand } = await import("./impl.js");
+    return crawlCommand;
+  },
+  parameters: {
+    positional: {
+      kind: "tuple",
+      parameters: [],
+    },
+    flags: {
+      "dry-run": {
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Run in dry-run mode (no data will be written)",
+        optional: true,
+      },
+      "output-dir": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Output directory for crawled data",
+        optional: true,
+      },
+      resume: {
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Resume from last successful step",
+        optional: true,
+      },
+      step: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Start from specific step (areas, users, projects)",
+        optional: true,
+      },
+      "gitlab-url": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "GitLab instance URL",
+        optional: true,
+      },
+      "access-token": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "GitLab access token",
+        optional: true,
+      },
+      "account-id": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Account ID to use for authentication",
+        optional: true,
+      },
+      verbose: {
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Enable verbose logging",
+        optional: true,
+      },
+    },
+  },
+  docs: {
+    brief: "Run GitLab crawl operation",
+  },
+});
+
 export const crawlRoutes = buildRouteMap({
   routes: {
     areas: areasCommand,
     users: usersCommand,
     resources: resourcesCommand,
     repository: repositoryCommand,
+    crawl: crawlCommand,
   },
   docs: {
     brief: "GitLab crawling commands",

@@ -8,16 +8,18 @@ metadata:
 
 gitlab:
   host: "https://git.hnnl.eu"
-  accessToken: "6ddd12445d257e18b7358f37c29a1a8a7efb17accd4b5fa726efa7b038748587"
-  refreshToken: "145d5213c5bdcee8c4dda7c3e9587efdf2b861334506ac7dc9d111b1a5d36438"
+  # Use account ID lookup instead of hardcoded tokens
+  accountId: "a274ca76-0af3-4048-a30d-ca95caf8944c"
+  # Alternative: email lookup
+  # email: "phl@hnnl.eu"
   timeout: 30000
   maxConcurrency: 1
 
-  # OAuth2 Configuration (optional - only if using OAuth2 flow)
+  # OAuth2 Configuration for token refresh
   oauth2:
-    clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24" # Your OAuth2 client ID
-    clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32" # Your OAuth2 client secret
-    redirectUri: "" # Your OAuth2 redirect URI
+    clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24"
+    clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32"
+    redirectUri: ""
     scopes:
       - read_api
       - read_repository

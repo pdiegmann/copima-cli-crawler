@@ -142,11 +142,33 @@ export class TestConfigValidator {
       return;
     }
 
-    const required = ["host", "accessToken"];
-    for (const field of required) {
-      if (!gitlab[field] || typeof gitlab[field] !== "string") {
-        this.errors.push(`GitLab.${field} is required and must be a string`);
-      }
+    // Host is always required
+    if (!gitlab.host || typeof gitlab.host !== "string") {
+      this.errors.push("GitLab.host is required and must be a string");
+    }
+
+    // Either accessToken OR accountId OR email must be provided
+    const hasAccessToken = gitlab.accessToken && typeof gitlab.accessToken === "string";
+    const hasAccountId = gitlab.accountId && typeof gitlab.accountId === "string";
+    const hasEmail = gitlab.email && typeof gitlab.email === "string";
+
+    if (!hasAccessToken && !hasAccountId && !hasEmail) {
+      this.errors.push("GitLab configuration must provide either accessToken, accountId, or email for authentication");
+    }
+
+    // Validate accessToken if provided
+    if (gitlab.accessToken !== undefined && typeof gitlab.accessToken !== "string") {
+      this.errors.push("GitLab.accessToken must be a string");
+    }
+
+    // Validate accountId if provided
+    if (gitlab.accountId !== undefined && typeof gitlab.accountId !== "string") {
+      this.errors.push("GitLab.accountId must be a string");
+    }
+
+    // Validate email if provided
+    if (gitlab.email !== undefined && typeof gitlab.email !== "string") {
+      this.errors.push("GitLab.email must be a string");
     }
 
     // Validate host URL format

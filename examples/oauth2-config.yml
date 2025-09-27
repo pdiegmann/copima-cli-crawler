@@ -1,0 +1,40 @@
+# OAuth2 Configuration Example
+# This file demonstrates how to configure OAuth2 providers using YAML
+
+auth:
+  oauth2:
+    # Default provider to use when none is specified
+    defaultProvider: gitlab
+
+    # Server configuration for the temporary OAuth2 callback server
+    server:
+      port: 3000 # Port for callback server (default: 3000)
+      timeout: 300 # Timeout in seconds (default: 300)
+      callbackPath: /api/auth/oauth2/callback/gitlab # Callback path (default: /callback)
+
+    # OAuth2 provider configurations
+    providers:
+      # GitLab provider configuration
+      - name: gitlab
+        clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24" # Your OAuth2 client ID
+        clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32" # Your OAuth2 client secret
+        authorizationUrl: https://git.hnnl.eu/oauth/authorize
+        tokenUrl: https://git.hnnl.eu/oauth/token
+        scopes:
+          - read_api
+          - read_repository
+          - read_user
+          - openid
+# Usage Examples:
+#
+# Use default provider (gitlab) from config:
+#   bun run cli auth --config oauth2-config.yml
+#
+# Use specific provider from config:
+#   bun run cli auth --config oauth2-config.yml --provider github
+#
+# Override client credentials from command line:
+#   bun run cli auth --config oauth2-config.yml --client-id override-id --client-secret override-secret
+#
+# Override server port:
+#   bun run cli auth --config oauth2-config.yml --port 8080

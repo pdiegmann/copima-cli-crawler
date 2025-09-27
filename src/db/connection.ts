@@ -1,5 +1,5 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { Database } from "bun:sqlite";
+import { drizzle } from "drizzle-orm/bun-sqlite";
 import { createLogger } from "../logging";
 import * as schema from "./schema";
 
@@ -14,7 +14,7 @@ let db: ReturnType<typeof drizzle> | null = null;
 
 export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle> => {
   if (db) {
-    logger.warn("Database already initialized. Returning existing instance.");
+    // Return existing instance without warning to reduce log noise
     return db;
   }
 
@@ -22,17 +22,16 @@ export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle>
     logger.info(`Initializing database at ${config.path}`);
 
     const sqlite = new Database(config.path, {
-      fileMustExist: false,
-      timeout: config.timeout || 5000, // Default 5 second timeout
+      create: true,
     });
 
     // Enable WAL mode for better concurrency if requested
     if (config.wal !== false) {
-      sqlite.pragma("journal_mode = WAL");
+      sqlite.exec("PRAGMA journal_mode = WAL");
     }
 
     // Enable foreign keys
-    sqlite.pragma("foreign_keys = ON");
+    sqlite.exec("PRAGMA foreign_keys = ON");
 
     db = drizzle(sqlite, { schema });
 
