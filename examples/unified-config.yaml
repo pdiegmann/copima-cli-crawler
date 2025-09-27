@@ -1,0 +1,76 @@
+# Unified Configuration for Copima CLI Crawler
+# This file can be used by both auth and test commands
+
+# GitLab API Configuration
+gitlab:
+  host: "https://git.hnnl.eu"
+  accessToken: "${GITLAB_TOKEN}"
+  timeout: 30000
+  rateLimit: 10
+
+# Database Configuration
+database:
+  path: "./database.sqlite"
+  walMode: true
+  timeout: 5000
+
+# Logging Configuration
+logging:
+  level: "info"
+  format: "json"
+  console: true
+
+# Output Configuration
+output:
+  rootDir: "./output"
+  fileNaming: "lowercase"
+  prettyPrint: false
+  compression: "none"
+
+# Progress Configuration
+progress:
+  enabled: true
+  file: "./progress.yaml"
+  interval: 1000
+  detailed: true
+
+# Resume Configuration
+resume:
+  enabled: true
+  stateFile: "./resume-state.json"
+  autoSaveInterval: 5000
+
+# Callback Configuration
+callbacks:
+  enabled: false
+
+# OAuth2 Configuration for Authentication
+oauth2:
+  providers:
+    gitlab:
+      clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24"
+      clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32"
+      redirectUri: "http://localhost:3000/callback"
+      authorizationUrl: "https://git.hnnl.eu/oauth/authorize"
+      tokenUrl: "https://git.hnnl.eu/oauth/token"
+      scopes:
+        - "read_api"
+        - "read_repository"
+        - "read_user"
+        - "openid"
+
+    gitlab-dev:
+      clientId: "${GITLAB_DEV_CLIENT_ID}"
+      clientSecret: "${GITLAB_DEV_CLIENT_SECRET}"
+      redirectUri: "http://localhost:3000/callback"
+      authorizationUrl: "https://gitlab-dev.example.com/oauth/authorize"
+      tokenUrl: "https://gitlab-dev.example.com/oauth/token"
+      scopes:
+        - "read_api"
+        - "read_user"
+
+  server:
+    port: 3000
+    host: "localhost"
+    callbackPath: "/callback"
+    timeout: 300

@@ -664,13 +664,9 @@ export class TestRunner {
     // Add authentication arguments
     args.push("--host", config.gitlab.host);
 
-    // Add account ID if provided
-    if (config.gitlab.accountId) {
-      args.push("--account-id", config.gitlab.accountId);
-    }
-
-    // Get access token from database or config
+    // Get access token from database or config and resolve account ID
     let accessToken = config.gitlab.accessToken;
+    let resolvedAccountId = config.gitlab.accountId;
 
     // Try to retrieve access token from database first
     if (!accessToken) {
@@ -690,6 +686,7 @@ export class TestRunner {
           storedToken = await tokenManager.getAccessToken(config.gitlab.accountId);
           if (storedToken) {
             console.log(`Test runner: Using access token for account ID: ${config.gitlab.accountId}`);
+            resolvedAccountId = config.gitlab.accountId;
           }
         } else if (config.gitlab.email) {
           // Look up account by email - need to join user and account tables
@@ -710,6 +707,7 @@ export class TestRunner {
             storedToken = await tokenManager.getAccessToken(userRecord.accountId);
             if (storedToken) {
               console.log(`Test runner: Using access token for email: ${config.gitlab.email} (account: ${userRecord.accountId})`);
+              resolvedAccountId = userRecord.accountId; // Store the resolved account ID
             }
           } else {
             console.warn(`Test runner: No account found for email: ${config.gitlab.email}`);
@@ -719,6 +717,7 @@ export class TestRunner {
           storedToken = await tokenManager.getAccessToken("default");
           if (storedToken) {
             console.log("Test runner: Using access token for default account");
+            resolvedAccountId = "default";
           }
         }
 
@@ -728,6 +727,11 @@ export class TestRunner {
       } catch (error) {
         console.warn("Test runner: Failed to retrieve stored token:", error);
       }
+    }
+
+    // Add account ID (resolved or from config)
+    if (resolvedAccountId) {
+      args.push("--account-id", resolvedAccountId);
     }
 
     // Add access token if available

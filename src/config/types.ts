@@ -26,6 +26,50 @@ export type Config = {
   resume: ResumeConfig;
   /** Data processing callback configuration */
   callbacks: CallbackConfig;
+  /** OAuth2 authentication configuration */
+  oauth2?: OAuth2Config;
+};
+
+/**
+ * OAuth2 configuration for authentication providers.
+ */
+export type OAuth2Config = {
+  /** OAuth2 provider configurations */
+  providers: Record<string, OAuth2ProviderConfig>;
+  /** OAuth2 server configuration for callback handling */
+  server?: OAuth2ServerConfig;
+};
+
+/**
+ * OAuth2 provider configuration.
+ */
+export type OAuth2ProviderConfig = {
+  /** OAuth2 client ID */
+  clientId: string;
+  /** OAuth2 client secret */
+  clientSecret: string;
+  /** Redirect URI for OAuth2 callback */
+  redirectUri: string;
+  /** Authorization URL for the provider */
+  authorizationUrl: string;
+  /** Token URL for the provider */
+  tokenUrl: string;
+  /** OAuth2 scopes to request */
+  scopes?: string[];
+};
+
+/**
+ * OAuth2 server configuration for handling callbacks.
+ */
+export type OAuth2ServerConfig = {
+  /** Port for the callback server */
+  port?: number;
+  /** Host for the callback server */
+  host?: string;
+  /** Callback path */
+  callbackPath?: string;
+  /** Timeout for the OAuth2 flow in seconds */
+  timeout?: number;
 };
 
 /**
@@ -192,6 +236,9 @@ export type EnvMapping = {
  * CLI argument mapping for configuration.
  */
 export type CliArgs = {
+  // Configuration file
+  config?: string;
+
   // GitLab configuration
   host?: string;
   accessToken?: string;

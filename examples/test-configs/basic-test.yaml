@@ -1,3 +1,4 @@
+# Test metadata for the testing framework
 metadata:
   name: "Basic GitLab Crawler Test"
   description: "Tests basic functionality of the GitLab crawler with minimal configuration"
@@ -6,26 +7,72 @@ metadata:
   tags: ["basic", "smoke-test"]
   timeout: 300000 # 5 minutes
 
+# GitLab API Configuration (unified format)
 gitlab:
   host: "https://git.hnnl.eu"
-  # Use account ID lookup instead of hardcoded tokens
-  accountId: "a274ca76-0af3-4048-a30d-ca95caf8944c"
-  # Alternative: email lookup
-  # email: "phl@hnnl.eu"
+  # Use email lookup instead of hardcoded account ID to work with auth command
+  email: "phl@hnnl.eu"
+  # Alternative: use account ID lookup if you have a specific account ID
+  # accountId: "a274ca76-0af3-4048-a30d-ca95caf8944c"
   timeout: 30000
   maxConcurrency: 1
 
-  # OAuth2 Configuration for token refresh
-  oauth2:
-    clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24"
-    clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32"
-    redirectUri: ""
-    scopes:
-      - read_api
-      - read_repository
-      - read_user
-      - openid
-    type: oidc
+# Database Configuration (unified format)
+database:
+  path: "./database.sqlite"
+  walMode: true
+  timeout: 5000
+
+# Logging Configuration (unified format)
+logging:
+  level: "debug"
+  format: "json"
+  console: true
+
+# Output Configuration (unified format)
+output:
+  rootDir: "./tmp/crawler-test-basic/output"
+  fileNaming: "lowercase"
+  prettyPrint: false
+  compression: "none"
+
+# Progress Configuration (unified format)
+progress:
+  enabled: true
+  file: "./tmp/crawler-test-basic/progress.yaml"
+  interval: 1000
+  detailed: true
+
+# Resume Configuration (unified format)
+resume:
+  enabled: false
+  stateFile: "./tmp/crawler-test-basic/resume-state.json"
+  autoSaveInterval: 5000
+
+# Callback Configuration (unified format)
+callbacks:
+  enabled: false
+
+# OAuth2 Configuration for Authentication (unified format)
+oauth2:
+  providers:
+    gitlab-test:
+      clientId: "bf90360b99376cc65da265e302f74de8dd85dd2ed59f1f86b869643fb7a05b24"
+      clientSecret: "gloas-fc04990df4a5fcfaf69a732a5161e9d9bc9b553f0862a3b373599399b7a2ba32"
+      redirectUri: "http://localhost:3000/callback"
+      authorizationUrl: "https://git.hnnl.eu/oauth/authorize"
+      tokenUrl: "https://git.hnnl.eu/oauth/token"
+      scopes:
+        - "read_api"
+        - "read_repository"
+        - "read_user"
+        - "openid"
+
+  server:
+    port: 3000
+    host: "localhost"
+    callbackPath: "/callback"
+    timeout: 300
 
 execution:
   workingDir: "./tmp/crawler-test-basic"

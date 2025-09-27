@@ -16,7 +16,7 @@ gitlab:
 execution:
   workingDir: "./tmp/crawler-test-debug"
   outputDir: "./tmp/crawler-test-debug/output"
-  databasePath: "./tmp/crawler-test-debug/test.db"
+  databasePath: "./database.sqlite"
   steps: ["areas", "users"]
   testResume: false
   testCallbacks: false

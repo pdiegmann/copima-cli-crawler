@@ -16,14 +16,18 @@ export type LocalContext = {
 import { createGraphQLClient, createRestClient } from "./api";
 import { createLogger } from "./logging/logger";
 
-export const buildContext = (process: NodeJS.Process): LocalContext => {
+export const buildContext = (process: NodeJS.Process, config?: any): LocalContext => {
+  // Use actual config values if provided, otherwise fall back to defaults
+  const gitlabHost = config?.gitlab?.host || "https://gitlab.example.com";
+  const accessToken = config?.gitlab?.accessToken || "your-token";
+
   return {
     process,
     os,
     fs,
     path,
     logger: createLogger("Context"),
-    graphqlClient: createGraphQLClient("https://gitlab.example.com", "your-token"),
-    restClient: createRestClient("https://gitlab.example.com", "your-token"),
+    graphqlClient: createGraphQLClient(gitlabHost, accessToken),
+    restClient: createRestClient(gitlabHost, accessToken),
   };
 };

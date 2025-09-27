@@ -78,19 +78,68 @@ export class GitLabGraphQLClient {
 
   async query<T = SafeRecord>(query: string, variables: SafeRecord = {}): Promise<T> {
     const makeRequest = async (token: string): Promise<Response> => {
-      // For development environments with self-signed certificates, we need to disable TLS verification
-      // This is handled by setting NODE_TLS_REJECT_UNAUTHORIZED=0 in the environment if needed
-      return await fetch(this.baseUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ query, variables }),
-      });
+      // Create abort controller for timeout handling
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+      try {
+        logger.debug(`Making fetch request to: ${this.baseUrl}`);
+        logger.debug(`Using token: ${token.substring(0, 10)}...`);
+
+        // For development environments with self-signed certificates, we need to disable TLS verification
+        // This is handled by setting NODE_TLS_REJECT_UNAUTHORIZED=0 in the environment if needed
+        console.log("FETCH REQUEST DETAILS:", {
+          url: this.baseUrl,
+          token: `${token.substring(0, 20)}...`,
+          queryLength: query.length,
+        });
+
+        const response = await fetch(this.baseUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ query, variables }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+        logger.debug(`Fetch response status: ${response.status}`);
+        console.log("FETCH RESPONSE DETAILS:", {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+          ok: response.ok,
+        });
+        return response;
+      } catch (error) {
+        clearTimeout(timeoutId);
+        logger.error("Fetch request failed with error:", {
+          error: error instanceof Error ? error.message : String(error),
+          errorName: error instanceof Error ? error.name : "Unknown",
+          errorStack: error instanceof Error ? error.stack : "No stack",
+        });
+        console.log(
+          "DETAILED FETCH ERROR:",
+          JSON.stringify(
+            {
+              message: error instanceof Error ? error.message : String(error),
+              name: error instanceof Error ? error.name : "Unknown",
+              stack: error instanceof Error ? error.stack : "No stack",
+              cause: error instanceof Error ? error.cause : undefined,
+            },
+            null,
+            2
+          )
+        );
+        throw error;
+      }
     };
 
     try {
+      logger.debug(`Making GraphQL request to: ${this.baseUrl}`);
+
       let response = await makeRequest(this.accessToken);
 
       // If we get a 401 and have refresh capability, try refreshing the token
@@ -110,15 +159,18 @@ export class GitLabGraphQLClient {
       }
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorText = await response.text().catch(() => "Unable to read response body");
+        logger.error(`Response not OK - Status: ${response.status}, Text: ${errorText}`);
 
         // Check if the error indicates an invalid or expired token
-        if (response.status === 401 && (errorText.includes("invalid_token") || errorText.includes("Invalid token"))) {
-          throw new Error(`Authentication failed: ${errorText}. The access token may be expired or invalid.`);
+        if (response.status === 401) {
+          const message = "Authentication failed: Invalid or expired access token. Please run 'copima auth' to re-authenticate.";
+          logger.error(message, { status: response.status, response: errorText });
+          throw new Error(message);
         }
 
         logger.error(`GraphQL request failed: ${response.status} - ${errorText}`);
-        throw new Error(`GraphQL request failed: ${response.status}`);
+        throw new Error(`GraphQL request failed: ${response.status} - ${errorText}`);
       }
 
       const result = (await response.json()) as unknown as GraphQLResponse<T>;
@@ -132,7 +184,40 @@ export class GitLabGraphQLClient {
 
       return result.data;
     } catch (error) {
-      logger.error("GraphQL query failed:", {
+      logger.error("Caught error in query method:", {
+        error: error instanceof Error ? error.message : String(error),
+        errorName: error instanceof Error ? error.name : "Unknown",
+        errorType: typeof error,
+      });
+
+      // Handle specific connection errors
+      if (error instanceof Error) {
+        // Don't transform authentication errors into connection errors
+        if (error.message.includes("Authentication failed")) {
+          logger.error("Re-throwing authentication error as-is");
+          throw error;
+        }
+
+        if (error.name === "AbortError") {
+          const message = "Request timeout - unable to connect. Is the computer able to access the url?";
+          logger.error(`Creating timeout error message: ${message}`);
+          throw new Error(message);
+        }
+
+        if (
+          error.message.includes("fetch failed") ||
+          error.message.includes("ECONNREFUSED") ||
+          error.message.includes("ENOTFOUND") ||
+          error.message.includes("EHOSTUNREACH") ||
+          error.message.includes("ENETUNREACH")
+        ) {
+          const message = "Unable to connect. Is the computer able to access the url?";
+          logger.error(`Creating connection error message: ${message} (original: ${error.message})`);
+          throw new Error(message);
+        }
+      }
+
+      logger.error("Re-throwing original error:", {
         error: error instanceof Error ? error.message : String(error),
       });
       throw error;

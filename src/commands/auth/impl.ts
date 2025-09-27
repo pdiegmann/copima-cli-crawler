@@ -5,6 +5,7 @@ import { OAuth2Manager } from "../../auth/oauth2Manager.js";
 import { buildOAuth2Config, getProviderConfig, validateProviderConfig } from "../../auth/oauth2Providers.js";
 import { OAuth2Server } from "../../auth/oauth2Server.js";
 import type { AuthServerConfig, OAuth2CallbackParams, OAuth2Config, OAuth2TokenResponse } from "../../auth/types.js";
+import { loadConfig } from "../../config/loader.js";
 import { createLogger } from "../../logging/logger.js";
 import type { AuthCommandFlags } from "../../types/commands.js";
 
@@ -72,7 +73,103 @@ export const executeAuthFlow = async (flags: AuthCommandFlags): Promise<void> =>
 };
 
 const prepareOAuth2Config = async (flags: AuthCommandFlags): Promise<OAuth2Config> => {
-  // Check if YAML configuration is provided
+  // Enhanced fallback logic - try main config first, then OAuth2-specific configs
+  if (!flags.config) {
+    logger.info("No config file specified, trying intelligent fallback...");
+
+    // First, try to use the main application config if it has OAuth2 settings
+    try {
+      const mainConfig = await loadConfig({ config: undefined });
+      if (mainConfig.oauth2?.providers && Object.keys(mainConfig.oauth2.providers).length > 0) {
+        logger.info("Using OAuth2 configuration from main application config");
+
+        const provider = flags.provider || "gitlab";
+        const providerConfig = mainConfig.oauth2.providers[provider];
+
+        if (!providerConfig) {
+          // List available providers
+          const availableProviders = Object.keys(mainConfig.oauth2.providers);
+          throw new Error(`Provider '${provider}' not found in config. Available providers: ${availableProviders.join(", ")}`);
+        }
+
+        // Convert main config format to OAuth2 config format
+        const config: OAuth2Config = {
+          clientId: flags["client-id"] || providerConfig.clientId,
+          clientSecret: flags["client-secret"] || providerConfig.clientSecret,
+          redirectUri: flags["redirect-uri"] || providerConfig.redirectUri || "http://localhost:3000/callback",
+          authorizationUrl: providerConfig.authorizationUrl,
+          tokenUrl: providerConfig.tokenUrl,
+          scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : providerConfig.scopes || [],
+        };
+
+        if (!validateProviderConfig(config)) {
+          throw new Error("Invalid OAuth2 configuration from main config");
+        }
+
+        return config;
+      }
+    } catch (error) {
+      logger.debug("Main config does not contain valid OAuth2 settings, trying OAuth2-specific configs...", { error: error instanceof Error ? error.message : String(error) });
+    }
+
+    // Fallback to OAuth2-specific config files
+    const { existsSync } = await import("fs");
+    const commonPaths = [
+      "./oauth2-config.yml",
+      "./config/oauth2-config.yml",
+      "./examples/oauth2-config.yml",
+      "./examples/test-configs/basic-test.yaml", // Include test config as fallback
+    ];
+
+    for (const path of commonPaths) {
+      if (existsSync(path)) {
+        logger.info(`Found OAuth2 config at: ${path}, trying to load as unified config first...`);
+
+        // Try to load as unified config first
+        try {
+          const mainConfig = await loadConfig({ config: path });
+          if (mainConfig.oauth2?.providers && Object.keys(mainConfig.oauth2.providers).length > 0) {
+            logger.info(`Using unified config from ${path}`);
+
+            const provider = flags.provider || "gitlab";
+            const providerConfig = mainConfig.oauth2.providers[provider];
+
+            if (!providerConfig) {
+              const availableProviders = Object.keys(mainConfig.oauth2.providers);
+              throw new Error(`Provider '${provider}' not found in unified config from ${path}. Available providers: ${availableProviders.join(", ")}`);
+            }
+
+            const config: OAuth2Config = {
+              clientId: flags["client-id"] || providerConfig.clientId,
+              clientSecret: flags["client-secret"] || providerConfig.clientSecret,
+              redirectUri: flags["redirect-uri"] || providerConfig.redirectUri || "http://localhost:3000/callback",
+              authorizationUrl: providerConfig.authorizationUrl,
+              tokenUrl: providerConfig.tokenUrl,
+              scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : providerConfig.scopes || [],
+            };
+
+            if (!validateProviderConfig(config)) {
+              throw new Error("Invalid OAuth2 configuration from unified config");
+            }
+
+            return config;
+          }
+        } catch (error) {
+          logger.debug(`Failed to load ${path} as unified config, trying legacy format...`, { error: error instanceof Error ? error.message : String(error) });
+        }
+
+        // Fall back to legacy OAuth2 config format
+        flags.config = path;
+        break;
+      }
+    }
+
+    if (!flags.config) {
+      logger.info("No OAuth2 config found, using command-line flags and environment variables only");
+    }
+  }
+
+  // Handle explicit config file or legacy format fallback
   if (flags.config) {
     logger.info(`Loading OAuth2 configuration from ${flags.config}`);
 
@@ -135,18 +232,53 @@ const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Serve
     callbackPath: "/callback",
   };
 
+  // Try to get server config from unified config first
+  if (!flags.config) {
+    try {
+      const mainConfig = await loadConfig({ config: undefined });
+      if (mainConfig.oauth2?.server) {
+        const oauth2Server = mainConfig.oauth2.server;
+        serverConfig = {
+          port: flags.port || oauth2Server.port || 3000,
+          timeout: (flags.timeout || oauth2Server.timeout || 300) * 1000,
+          callbackPath: oauth2Server.callbackPath || "/callback",
+        };
+        logger.debug("Using OAuth2 server config from main application config");
+      }
+    } catch (error) {
+      logger.debug("No OAuth2 server config found in main config, using defaults");
+    }
+  }
+
   // Check if YAML configuration is provided and load server config
   if (flags.config) {
-    const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
-    const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config);
-    const yamlServerConfig = oauth2YamlConfigLoader.getServerConfigFromYaml(yamlConfig);
+    try {
+      // Try unified config format first
+      const mainConfig = await loadConfig({ config: flags.config });
+      if (mainConfig.oauth2?.server) {
+        const oauth2Server = mainConfig.oauth2.server;
+        serverConfig = {
+          port: flags.port || oauth2Server.port || 3000,
+          timeout: (flags.timeout || oauth2Server.timeout || 300) * 1000,
+          callbackPath: oauth2Server.callbackPath || "/callback",
+        };
+        logger.debug("Using OAuth2 server config from unified config file");
+      }
+    } catch (error) {
+      logger.debug("Failed to load unified config, trying legacy OAuth2 config format");
 
-    // Merge YAML config with command-line flags (flags take precedence)
-    serverConfig = {
-      port: flags.port || yamlServerConfig.port || 3000,
-      timeout: (flags.timeout || (yamlServerConfig.timeout ? yamlServerConfig.timeout / 1000 : 300)) * 1000,
-      callbackPath: yamlServerConfig.callbackPath || "/callback",
-    };
+      // Fall back to legacy format
+      const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
+      const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config);
+      const yamlServerConfig = oauth2YamlConfigLoader.getServerConfigFromYaml(yamlConfig);
+
+      // Merge YAML config with command-line flags (flags take precedence)
+      serverConfig = {
+        port: flags.port || yamlServerConfig.port || 3000,
+        timeout: (flags.timeout || (yamlServerConfig.timeout ? yamlServerConfig.timeout / 1000 : 300)) * 1000,
+        callbackPath: yamlServerConfig.callbackPath || "/callback",
+      };
+    }
   }
 
   const server = new OAuth2Server(serverConfig);
@@ -276,7 +408,7 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
         const userData = (await userResponse.json()) as any;
         userInfo = {
           name: userData.name || userData.username || "Unknown User",
-          email: userData["email"] || `${userData.username || userId}@gitlab.local`,
+          email: userData.email || `${userData.username || userId}@gitlab.local`,
         };
       }
     } catch (error) {
