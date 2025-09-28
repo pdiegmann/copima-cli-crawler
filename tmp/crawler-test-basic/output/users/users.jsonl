@@ -1,5 +1,0 @@
-{"id":"1","username":"test-user-1","name":"Test User 1","publicEmail":"test1@example.com","createdAt":"2023-01-01T00:00:00Z"}
-{"id":"2","username":"test-user-2","name":"Test User 2","publicEmail":"test2@example.com","createdAt":"2023-01-01T00:00:00Z"}{"id":"gid://gitlab/User/4","username":"support-bot","name":"GitLab Support Bot","publicEmail":null,"createdAt":"2025-07-07T09:44:14Z"}
-{"id":"gid://gitlab/User/3","username":"alert-bot","name":"GitLab Alert Bot","publicEmail":null,"createdAt":"2025-07-07T09:44:14Z"}
-{"id":"gid://gitlab/User/2","username":"phil","name":"Phil","publicEmail":null,"createdAt":"2025-06-30T16:41:27Z"}
-{"id":"gid://gitlab/User/1","username":"root","name":"Administrator","publicEmail":null,"createdAt":"2025-06-30T16:30:39Z"}
