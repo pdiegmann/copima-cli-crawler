@@ -8,10 +8,12 @@ import type { AuthServerConfig, OAuth2CallbackParams } from "./types.js";
 const logger = createLogger("OAuth2Server");
 
 export class OAuth2Server {
-  private server: ReturnType<typeof createServer> | null = null;
+  private server: any = null;
   private port: number;
   private timeout: number;
   private callbackPath: string;
+  private useHttps: boolean;
+  private httpsOptions?: { key?: string; cert?: string };
   private callbackPromise: Promise<OAuth2CallbackParams> | null = null;
   private callbackResolve: ((params: OAuth2CallbackParams) => void) | null = null;
 
@@ -19,6 +21,10 @@ export class OAuth2Server {
     this.port = config.port;
     this.timeout = config.timeout;
     this.callbackPath = config.callbackPath;
+    // Default to HTTP for localhost OAuth2 callback (standard practice)
+    // Allow HTTPS when certificates are provided
+    this.useHttps = config.useHttps === true && !!config.httpsOptions?.key && !!config.httpsOptions?.cert;
+    this.httpsOptions = config.httpsOptions;
   }
 
   async start(): Promise<void> {
@@ -30,10 +36,30 @@ export class OAuth2Server {
     this.port = await this.findAvailablePort(this.port);
     logger.info(`Starting OAuth2 callback server on port ${this.port}`);
 
-    // Create server
-    this.server = createServer((req, res) => {
-      this.handleRequest(req, res);
-    });
+    // Create server - use HTTPS if certificates are provided, otherwise HTTP
+    if (this.useHttps && this.httpsOptions?.key && this.httpsOptions?.cert) {
+      // Import https dynamically to avoid bundling when not used
+      const https = await import("node:https");
+      this.server = https.createServer(
+        {
+          key: this.httpsOptions.key,
+          cert: this.httpsOptions.cert,
+        },
+        (req, res) => {
+          this.handleRequest(req, res);
+        }
+      );
+      logger.info("Created HTTPS server for OAuth2 callback");
+    } else {
+      // Use HTTP for localhost OAuth2 callback (standard practice for OAuth2 flows)
+      this.server = createServer((req, res) => {
+        this.handleRequest(req, res);
+      });
+      this.useHttps = false; // Ensure we track the actual protocol being used
+      if (this.httpsOptions) {
+        logger.info("HTTPS requested but using HTTP for localhost OAuth2 callback (this is standard practice for OAuth2 flows)");
+      }
+    }
 
     // Start server
     await new Promise<void>((resolve, reject) => {
@@ -46,7 +72,8 @@ export class OAuth2Server {
       });
     });
 
-    logger.info(`OAuth2 callback server started at http://localhost:${this.port}${this.callbackPath}`);
+    const protocol = this.useHttps ? "https" : "http";
+    logger.info(`OAuth2 callback server started at ${protocol}://localhost:${this.port}${this.callbackPath}`);
   }
 
   async stop(): Promise<void> {
@@ -98,11 +125,13 @@ export class OAuth2Server {
   }
 
   getCallbackUrl(): string {
-    return `http://localhost:${this.port}${this.callbackPath}`;
+    const protocol = this.useHttps ? "https" : "http";
+    return `${protocol}://localhost:${this.port}${this.callbackPath}`;
   }
 
   private handleRequest(req: IncomingMessage, res: ServerResponse): void {
-    const url = new URL(req.url || "", `http://localhost:${this.port}`);
+    const protocol = this.useHttps ? "https" : "http";
+    const url = new URL(req.url || "", `${protocol}://localhost:${this.port}`);
 
     // Only handle callback path
     if (url.pathname !== this.callbackPath) {
@@ -135,10 +164,18 @@ export class OAuth2Server {
     }
   }
 
+  private escapeHtml(unsafe: string): string {
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
   private sendCallbackResponse(res: ServerResponse, success: boolean, message: string): void {
     const status = success ? 200 : 400;
     const title = success ? "Authorization Successful" : "Authorization Failed";
     const color = success ? "#28a745" : "#dc3545";
+
+    // Escape user-controlled content to prevent XSS
+    const escapedTitle = this.escapeHtml(title);
+    const escapedMessage = this.escapeHtml(message);
 
     const html = `
 <!DOCTYPE html>
@@ -146,7 +183,7 @@ export class OAuth2Server {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
+    <title>${escapedTitle}</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -192,8 +229,8 @@ export class OAuth2Server {
 <body>
     <div class="container">
         <div class="icon">${success ? "✅" : "❌"}</div>
-        <h1>${title}</h1>
-        <p>${message}</p>
+        <h1>${escapedTitle}</h1>
+        <p>${escapedMessage}</p>
         <button class="close-button" onclick="window.close()">Close Window</button>
     </div>
     <script>

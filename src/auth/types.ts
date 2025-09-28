@@ -26,6 +26,11 @@ export type AuthServerConfig = {
   port: number;
   timeout: number;
   callbackPath: string;
+  useHttps?: boolean;
+  httpsOptions?: {
+    key?: string;
+    cert?: string;
+  };
 };
 
 export type OAuth2Provider = {
