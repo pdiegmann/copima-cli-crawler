@@ -22,10 +22,12 @@ describe("TokenManager", () => {
 
   beforeEach(() => {
     mockDb = {
-      account: {
-        findUnique: jest.fn(),
-        update: jest.fn(),
-      },
+      select: jest.fn().mockReturnThis(),
+      from: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      update: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
     };
 
     // Clear all mock calls and create fresh instance
@@ -44,43 +46,47 @@ describe("TokenManager", () => {
       const validAccessToken = "valid-token";
       const futureDate = new Date(Date.now() + 10000);
 
-      mockDb.account.findUnique.mockResolvedValue({
+      // Mock the chain for the successful query
+      mockDb.limit.mockResolvedValue([{
         accessToken: validAccessToken,
         accessTokenExpiresAt: futureDate,
-      });
+      }]);
 
       const token = await tokenManager.getAccessToken(accountId);
 
       expect(token).toBe(validAccessToken);
-      expect(mockDb.account.findUnique).toHaveBeenCalledWith({
-        where: { accountId },
-      });
+      expect(mockDb.select).toHaveBeenCalled();
+      expect(mockDb.from).toHaveBeenCalled();
+      expect(mockDb.where).toHaveBeenCalled();
+      expect(mockDb.limit).toHaveBeenCalledWith(1);
     });
 
     it("should refresh the token if the access token is expired", async () => {
       const accountId = "test-account";
       const expiredDate = new Date(Date.now() - 10000);
 
-      mockDb.account.findUnique.mockResolvedValue({
+      // Mock the chain for the expired token query
+      mockDb.limit.mockResolvedValue([{
         accessToken: "expired-token",
         accessTokenExpiresAt: expiredDate,
         refreshToken: "valid-refresh-token",
-      });
+      }]);
 
       jest.spyOn(tokenManager as any, "refreshAccessToken").mockResolvedValue("new-access-token");
 
       const token = await tokenManager.getAccessToken(accountId);
 
       expect(token).toBe("new-access-token");
-      expect(mockDb.account.findUnique).toHaveBeenCalledWith({
-        where: { accountId },
-      });
+      expect(mockDb.select).toHaveBeenCalled();
+      expect(mockDb.from).toHaveBeenCalled();
+      expect(mockDb.where).toHaveBeenCalled();
+      expect(mockDb.limit).toHaveBeenCalledWith(1);
     });
 
     it("should return null if no account is found", async () => {
       const accountId = "non-existent-account";
 
-      mockDb.account.findUnique.mockResolvedValue(null);
+      mockDb.limit.mockResolvedValue([]);
 
       const token = await tokenManager.getAccessToken(accountId);
 
@@ -94,9 +100,9 @@ describe("TokenManager", () => {
     it("should log an error if no refresh token is available", async () => {
       const accountId = "test-account";
 
-      mockDb.account.findUnique.mockResolvedValue({
+      mockDb.limit.mockResolvedValue([{
         refreshToken: null,
-      });
+      }]);
 
       const token = await (tokenManager as any).refreshAccessToken(accountId);
 

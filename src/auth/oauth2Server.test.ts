@@ -8,7 +8,7 @@ jest.mock("get-port", () => ({
 }));
 
 // Mock createLogger
-jest.mock("../logging/logger.js", () => ({
+jest.mock("../logging/logger", () => ({
   createLogger: () => ({
     info: jest.fn(),
     warn: jest.fn(),

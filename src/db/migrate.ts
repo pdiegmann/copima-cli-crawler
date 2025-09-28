@@ -28,6 +28,10 @@ export const runMigrations = (_config: MigrationConfig): undefined => {
     // Create the tables using SQL directly
     const sqlite = (db as any).$client;
 
+    if (!sqlite) {
+      throw new Error("Unable to access SQLite client from Drizzle instance");
+    }
+
     // Create user table
     sqlite.exec(`
       CREATE TABLE IF NOT EXISTS user (

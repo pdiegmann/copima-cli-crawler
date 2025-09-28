@@ -1,4 +1,4 @@
-import { Database } from "bun:sqlite";
+import { Database as BunDatabase } from "bun:sqlite";
 import { drizzle } from "drizzle-orm/bun-sqlite";
 import { createLogger } from "../logging";
 import * as schema from "./schema";
@@ -21,7 +21,7 @@ export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle>
   try {
     logger.info(`Initializing database at ${config.path}`);
 
-    const sqlite = new Database(config.path, {
+    const sqlite = new BunDatabase(config.path, {
       create: true,
     });
 

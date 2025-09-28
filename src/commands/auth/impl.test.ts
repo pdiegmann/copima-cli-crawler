@@ -99,7 +99,7 @@ describe("Auth Command Implementation", () => {
       clientSecret: "test_client_secret",
       authorizationUrl: "https://gitlab.com/oauth/authorize",
       tokenUrl: "https://gitlab.com/oauth/token",
-      scopes: ["api", "read_user"],
+      scopes: "api,read_user",
       redirectUri: "http://localhost:3001/callback",
     });
 
@@ -165,7 +165,7 @@ describe("Auth Command Implementation", () => {
         provider: "gitlab",
         "client-id": "test_client_id",
         "client-secret": "test_client_secret",
-        scopes: ["read_user", "read_repository"],
+        scopes: "read_user,read_repository",
       };
 
       mockServer.waitForCallback.mockResolvedValue({
@@ -186,7 +186,7 @@ describe("Auth Command Implementation", () => {
       expect(buildOAuth2Config).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({
-          scopes: ["read_user", "read_repository"],
+          scopes: "read_user,read_repository",
         })
       );
     });
@@ -580,7 +580,7 @@ describe("Auth Command Implementation", () => {
         provider: "gitlab",
         "client-id": "test_client_id",
         "client-secret": "test_client_secret",
-        scopes: ["read_user", "api"],
+        scopes: "read_user,api",
       };
 
       await executeAuthFlow(flags);

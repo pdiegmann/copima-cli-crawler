@@ -14,6 +14,9 @@ module.exports = {
   extensionsToTreatAsEsm: [".ts"],
   transformIgnorePatterns: ["<rootDir>/node_modules/"],
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
 
   // Coverage configuration for SonarQube
   collectCoverage: true,
@@ -26,14 +29,14 @@ module.exports = {
     "!src/setupTests.ts",
     "!src/bin/**", // Exclude CLI entry points
     "!**/node_modules/**",
-    "!**/dist/**"
+    "!**/dist/**",
   ],
   coverageThreshold: {
     global: {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
-    }
-  }
+      statements: 80,
+    },
+  },
 };
