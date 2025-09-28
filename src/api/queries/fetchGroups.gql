@@ -16,7 +16,10 @@ query FetchGroups($first: Int, $after: String) {
       updatedAt
       webUrl
       avatarUrl
-      parentId
+      parent {
+        id
+        fullPath
+      }
       subgroupCreationLevel
       projectCreationLevel
     }

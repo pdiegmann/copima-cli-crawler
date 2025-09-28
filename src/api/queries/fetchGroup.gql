@@ -1,5 +1,5 @@
-query FetchGroup($id: ID!) {
-  group(id: $id) {
+query FetchGroup($fullPath: ID!) {
+  group(fullPath: $fullPath) {
     id
     name
     path
@@ -11,14 +11,15 @@ query FetchGroup($id: ID!) {
     updatedAt
     webUrl
     avatarUrl
-    parentId
+    parent {
+      id
+      fullPath
+    }
     subgroupCreationLevel
     projectCreationLevel
-    repositorySizeLimit
+    actualRepositorySizeLimit
     lfsEnabled
     requestAccessEnabled
-    fullName
-    fullPath
     rootStorageStatistics {
       storageSize
       repositorySize

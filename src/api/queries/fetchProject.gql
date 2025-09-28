@@ -1,5 +1,5 @@
-query FetchProject($id: ID!) {
-  project(id: $id) {
+query FetchProject($fullPath: ID!) {
+  project(fullPath: $fullPath) {
     id
     name
     path
@@ -11,7 +11,6 @@ query FetchProject($id: ID!) {
     lastActivityAt
     webUrl
     avatarUrl
-    defaultBranch
     archived
     forksCount
     starCount
@@ -23,7 +22,6 @@ query FetchProject($id: ID!) {
     lfsEnabled
     requestAccessEnabled
     nameWithNamespace
-    pathWithNamespace
     topics
     repository {
       exists

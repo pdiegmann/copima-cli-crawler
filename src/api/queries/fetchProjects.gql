@@ -16,7 +16,6 @@ query FetchProjects($first: Int, $after: String) {
       lastActivityAt
       webUrl
       avatarUrl
-      defaultBranch
       archived
       forksCount
       starCount
@@ -28,7 +27,6 @@ query FetchProjects($first: Int, $after: String) {
       lfsEnabled
       requestAccessEnabled
       nameWithNamespace
-      pathWithNamespace
       topics
     }
   }
