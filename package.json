@@ -23,6 +23,9 @@
     "dev:auth": "NODE_TLS_REJECT_UNAUTHORIZED=0 bun run src/bin/cli.ts auth --config examples/unified-config.yaml",
     "prebuild": "tsc -p src/tsconfig.json",
     "build": "tsup",
+    "build:executables": "bun run scripts/build.ts",
+    "build:clean": "rm -rf dist && bun run build:executables",
+    "build:test": "bun run scripts/test-executables.ts",
     "prepublishOnly": "bun run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix && prettier --write .",
@@ -37,6 +40,8 @@
     "test:e2e:suite": "bun run test:e2e examples/test-configs/test-suite.yaml",
     "test:e2e:template": "bun run test:e2e examples/test-configs/template-test.yaml",
     "test:e2e:dry-run": "bun run test:e2e examples/test-configs/dry-run-test.yaml --dry-run",
+    "release": "bun run scripts/release.ts",
+    "release:local": "bun run scripts/release.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"

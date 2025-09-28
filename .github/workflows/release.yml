@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run tests
+        run: bun test
+
+      - name: Build executables
+        run: bun run scripts/build.ts
+
+      - name: Get version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create checksums
+        run: |
+          cd dist
+          sha256sum * > checksums.txt
+          cat checksums.txt
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            ## What's Changed
+
+            Release ${{ steps.version.outputs.VERSION }} of Copima CLI Crawler
+
+            ### Downloads
+
+            | Platform | Architecture | Download |
+            |----------|--------------|----------|
+            | Windows | x64 | [copima-cli-windows.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/copima-cli-windows.exe) |
+            | macOS | Intel (x64) | [copima-cli-macos-x64](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/copima-cli-macos-x64) |
+            | macOS | Apple Silicon (ARM64) | [copima-cli-macos-arm64](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/copima-cli-macos-arm64) |
+
+            ### Installation
+
+            #### Windows
+            ```bash
+            # Download and run
+            curl -L -o copima-cli.exe https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/copima-cli-windows.exe
+            ./copima-cli.exe --help
+            ```
+
+            #### macOS
+            ```bash
+            # Intel Macs
+            curl -L -o copima-cli https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/copima-cli-macos-x64
+            chmod +x copima-cli
+            ./copima-cli --help
+
+            # Apple Silicon Macs
+            curl -L -o copima-cli https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/copima-cli-macos-arm64
+            chmod +x copima-cli
+            ./copima-cli --help
+            ```
+
+            ### Verification
+
+            You can verify the integrity of the downloads using the checksums provided in the `checksums.txt` file.
+
+      - name: Upload Windows Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/copima-cli-windows.exe
+          asset_name: copima-cli-windows.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS x64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/copima-cli-macos-x64
+          asset_name: copima-cli-macos-x64
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS ARM64 Executable
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/copima-cli-macos-arm64
+          asset_name: copima-cli-macos-arm64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Checksums
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/checksums.txt
+          asset_name: checksums.txt
+          asset_content_type: text/plain
