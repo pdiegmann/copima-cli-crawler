@@ -184,12 +184,11 @@ describe("OAuth2Server", () => {
         end: jest.fn(),
       } as any;
 
-      (server as any).sendCallbackResponse(mockResponse, true, "Success message");
+      (server as any).sendSuccessResponse(mockResponse);
 
       expect(mockResponse.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
         "Content-Type": "text/html; charset=utf-8",
       }));
-      expect(mockResponse.end).toHaveBeenCalledWith(expect.stringContaining("Success message"));
       expect(mockResponse.end).toHaveBeenCalledWith(expect.stringContaining("Authorization Successful"));
     });
 
@@ -199,13 +198,12 @@ describe("OAuth2Server", () => {
         end: jest.fn(),
       } as any;
 
-      (server as any).sendCallbackResponse(mockResponse, false, "Error message");
+      (server as any).sendErrorResponse(mockResponse, 400, "Error message");
 
       expect(mockResponse.writeHead).toHaveBeenCalledWith(400, expect.objectContaining({
-        "Content-Type": "text/html; charset=utf-8",
+        "Content-Type": "text/plain",
       }));
-      expect(mockResponse.end).toHaveBeenCalledWith(expect.stringContaining("Error message"));
-      expect(mockResponse.end).toHaveBeenCalledWith(expect.stringContaining("Authorization Failed"));
+      expect(mockResponse.end).toHaveBeenCalledWith("Error message");
     });
   });
 });

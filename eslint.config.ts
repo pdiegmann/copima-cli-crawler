@@ -1,24 +1,30 @@
-import pluginJs from "@eslint/js";
+import eslint from "@eslint/js";
 import prettier from "eslint-plugin-prettier";
 //import securityPlugin from 'eslint-plugin-security';
 import stylistic from "@stylistic/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import sonarjs from "eslint-plugin-sonarjs";
 import unicorn from "eslint-plugin-unicorn";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
-import tsPlugin from "typescript-eslint";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
   {
     ignores: ["**/dist/**", "**/node_modules/**", "**/*.spec.ts", "**/*.test.ts", "**/__tests__/**", "**/tests/**"],
   },
-  pluginJs.configs.recommended,
-  tsPlugin.configs.recommended,
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
   //securityPlugin.configs.recommended,
+  sonarjs.configs.recommended,
 
   {
     files: ["**/*.ts"],
 
-    languageOptions: { globals: globals.node },
+    languageOptions: {
+      globals: globals.node,
+      parser: tsParser,
+    },
 
     plugins: {
       prettier,

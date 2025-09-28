@@ -151,11 +151,12 @@ export class OAuth2Server {
 
     // Send response to browser
     if (params.error) {
-      this.sendCallbackResponse(res, false, `Authorization failed: ${params.error_description || params.error}`);
+      // Send plain text error response to prevent XSS
+      this.sendErrorResponse(res, 400, "Authorization failed");
     } else if (params.code) {
-      this.sendCallbackResponse(res, true, "Authorization successful! You can close this window.");
+      this.sendSuccessResponse(res);
     } else {
-      this.sendCallbackResponse(res, false, "Invalid callback - missing authorization code");
+      this.sendErrorResponse(res, 400, "Invalid callback - missing authorization code");
     }
 
     // Resolve the promise
@@ -164,26 +165,14 @@ export class OAuth2Server {
     }
   }
 
-  private escapeHtml(unsafe: string): string {
-    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
-
-  private sendCallbackResponse(res: ServerResponse, success: boolean, message: string): void {
-    const status = success ? 200 : 400;
-    const title = success ? "Authorization Successful" : "Authorization Failed";
-    const color = success ? "#28a745" : "#dc3545";
-
-    // Escape user-controlled content to prevent XSS
-    const escapedTitle = this.escapeHtml(title);
-    const escapedMessage = this.escapeHtml(message);
-
-    const html = `
-<!DOCTYPE html>
+  private sendSuccessResponse(res: ServerResponse): void {
+    // Static HTML response with no user input to prevent XSS
+    const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapedTitle}</title>
+    <title>Authorization Successful</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -205,10 +194,10 @@ export class OAuth2Server {
         .icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: ${color};
+            color: #28a745;
         }
         h1 {
-            color: ${color};
+            color: #28a745;
             margin-bottom: 1rem;
         }
         p {
@@ -218,7 +207,7 @@ export class OAuth2Server {
         .close-button {
             margin-top: 1rem;
             padding: 0.5rem 1rem;
-            background: ${color};
+            background: #28a745;
             color: white;
             border: none;
             border-radius: 4px;
@@ -228,19 +217,18 @@ export class OAuth2Server {
 </head>
 <body>
     <div class="container">
-        <div class="icon">${success ? "✅" : "❌"}</div>
-        <h1>${escapedTitle}</h1>
-        <p>${escapedMessage}</p>
+        <div class="icon">✅</div>
+        <h1>Authorization Successful</h1>
+        <p>Authorization successful! You can close this window.</p>
         <button class="close-button" onclick="window.close()">Close Window</button>
     </div>
     <script>
-        // Auto-close after 3 seconds if successful
-        ${success ? "setTimeout(() => window.close(), 3000);" : ""}
+        setTimeout(() => window.close(), 3000);
     </script>
 </body>
 </html>`;
 
-    res.writeHead(status, {
+    res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8",
       "Content-Length": Buffer.byteLength(html),
     });

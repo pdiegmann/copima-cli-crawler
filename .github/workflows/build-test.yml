@@ -25,8 +25,8 @@ jobs:
       - name: Run linting
         run: bun run lint || echo "Linting not configured"
 
-      - name: Run tests
-        run: bun test
+      - name: Run tests with coverage
+        run: bun run test:coverage
 
       - name: Test build process
         run: bun run scripts/build.ts
@@ -58,9 +58,37 @@ jobs:
             exit 1
           fi
 
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: executables
           path: dist/
+          retention-days: 7
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
           retention-days: 7
