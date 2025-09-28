@@ -118,7 +118,7 @@ validation:
     validateRequiredFields: true
 
 cleanup:
-  cleanOutputDir: true
-  cleanDatabase: true
-  cleanLogs: true
-  keepOnFailure: false
+  cleanOutputDir: false
+  cleanDatabase: false
+  cleanLogs: false
+  keepOnFailure: true

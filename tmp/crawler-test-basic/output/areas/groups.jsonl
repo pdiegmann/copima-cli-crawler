@@ -1,0 +1,4 @@
+{"id":"1","fullPath":"test-group-1","name":"Test Group 1","visibility":"private","description":"Test group 1","createdAt":"2023-01-01T00:00:00Z","updatedAt":"2023-01-01T00:00:00Z"}
+{"id":"2","fullPath":"test-group-2","name":"Test Group 2","visibility":"internal","description":"Test group 2","createdAt":"2023-01-01T00:00:00Z","updatedAt":"2023-01-01T00:00:00Z"}{"id":"gid://gitlab/Group/3","fullPath":"group-01","name":"Group-01","visibility":"internal","description":"","createdAt":"2025-06-30T16:46:01Z","updatedAt":"2025-08-23T04:45:32Z"}
+{"id":"gid://gitlab/Group/4","fullPath":"group-01/group-02","name":"Group-02","visibility":"internal","description":"","createdAt":"2025-06-30T16:46:11Z","updatedAt":"2025-08-23T04:45:33Z"}
+{"id":"gid://gitlab/Group/5","fullPath":"group-01/group-03","name":"Group-03","visibility":"private","description":"","createdAt":"2025-06-30T16:46:24Z","updatedAt":"2025-08-23T04:45:35Z"}

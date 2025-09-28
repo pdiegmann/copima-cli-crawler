@@ -3,7 +3,7 @@ import { buildApplication, buildRouteMap } from "@stricli/core";
 import { name, version } from "../package.json";
 
 // Import crawl commands
-import { areasCommand, crawlAllCommand, repositoryCommand, resourcesCommand, usersCommand } from "./commands/crawl/commands";
+import { areasCommand, crawlCommand, repositoryCommand, resourcesCommand, usersCommand } from "./commands/crawl/commands";
 
 // Import account commands
 import { addAccountCommand, listAccountsCommand, refreshTokenCommand, removeAccountCommand } from "./commands/account/command";
@@ -24,7 +24,7 @@ const routes = buildRouteMap({
     users: usersCommand,
     resources: resourcesCommand,
     repository: repositoryCommand,
-    crawl: crawlAllCommand,
+    crawl: crawlCommand,
 
     // Account management commands - OAuth2 credential storage
     "account:add": addAccountCommand,

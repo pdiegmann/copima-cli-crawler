@@ -657,9 +657,18 @@ export class TestRunner {
   private async buildCrawlerArgs(config: TestConfig): Promise<string[]> {
     const steps = config.execution.steps || ["areas", "users"];
 
-    // Use the individual step commands directly (areas, users, etc.)
-    const firstStep = steps[0] || "areas";
-    const args: string[] = [firstStep];
+    // Execute all configured steps sequentially
+    const allSteps = steps.length > 0 ? steps : ["areas"];
+    const args: string[] = [];
+
+    // For multiple steps, use the crawl command with steps parameter
+    if (allSteps.length > 1) {
+      args.push("crawl");
+      args.push("--steps", allSteps.join(","));
+    } else {
+      // For single step, use the step command directly
+      args.push(allSteps[0]);
+    }
 
     // Add authentication arguments
     args.push("--host", config.gitlab.host);
@@ -673,7 +682,7 @@ export class TestRunner {
       try {
         const { initDatabase } = await import("../db/connection.js");
         const { TokenManager } = await import("../auth/tokenManager.js");
-        const { eq } = await import("drizzle-orm");
+        const { eq, desc } = await import("drizzle-orm");
         const { account } = await import("../db/schema.js");
 
         const db = initDatabase({ path: "./database.sqlite", wal: true });
@@ -701,6 +710,7 @@ export class TestRunner {
             .from(user)
             .innerJoin(account, eq(account.userId, user.id))
             .where(eq(user.email, config.gitlab.email))
+            .orderBy(desc(account.createdAt))
             .limit(1);
 
           if (userRecord) {
@@ -734,8 +744,8 @@ export class TestRunner {
       args.push("--account-id", resolvedAccountId);
     }
 
-    // Add access token if available
-    if (accessToken) {
+    // Add access token if available (only if we have a valid non-empty token)
+    if (accessToken && accessToken.trim()) {
       args.push("--access-token", accessToken);
     }
 
@@ -777,7 +787,7 @@ export class TestRunner {
       try {
         const { initDatabase } = await import("../db/connection.js");
         const { TokenManager } = await import("../auth/tokenManager.js");
-        const { eq } = await import("drizzle-orm");
+        const { eq, desc } = await import("drizzle-orm");
         const { account } = await import("../db/schema.js");
 
         try {
@@ -805,6 +815,7 @@ export class TestRunner {
               .from(user)
               .innerJoin(account, eq(account.userId, user.id))
               .where(eq(user.email, config.gitlab.email))
+              .orderBy(desc(account.createdAt))
               .limit(1);
 
             if (userRecord) {
@@ -837,6 +848,8 @@ export class TestRunner {
 
       if (accessToken) {
         env["GITLAB_ACCESS_TOKEN"] = accessToken;
+        // Set global token for test mode
+        (global as any).testAccessToken = accessToken;
       }
     }
 

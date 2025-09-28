@@ -179,7 +179,16 @@ export class GitLabGraphQLClient {
       }
       if (result.errors && result.errors.length > 0) {
         logger.error("GraphQL errors:", { errors: result.errors });
-        throw new Error("GraphQL query returned errors");
+        // Log the specific error details for debugging
+        result.errors.forEach((error, index) => {
+          logger.error(`GraphQL Error ${index + 1}:`, {
+            message: error.message,
+            locations: error.locations,
+            path: error.path,
+            extensions: (error as any).extensions,
+          });
+        });
+        throw new Error(`GraphQL query returned errors: ${result.errors.map((e) => e.message).join(", ")}`);
       }
 
       return result.data;

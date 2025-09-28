@@ -89,6 +89,12 @@ export const usersCommand = buildCommand({
         brief: "OAuth2 refresh token",
         optional: true,
       },
+      "account-id": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Account ID to use for authentication",
+        optional: true,
+      },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
@@ -135,6 +141,12 @@ export const resourcesCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "OAuth2 refresh token",
+        optional: true,
+      },
+      "account-id": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Account ID to use for authentication",
         optional: true,
       },
       output: {
@@ -185,6 +197,12 @@ export const repositoryCommand = buildCommand({
         brief: "OAuth2 refresh token",
         optional: true,
       },
+      "account-id": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Account ID to use for authentication",
+        optional: true,
+      },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
@@ -233,10 +251,22 @@ export const crawlAllCommand = buildCommand({
         brief: "OAuth2 refresh token",
         optional: true,
       },
+      "account-id": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Account ID to use for authentication",
+        optional: true,
+      },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
         brief: "Output directory for JSONL files",
+        optional: true,
+      },
+      database: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Database file path",
         optional: true,
       },
       resume: {
@@ -249,6 +279,12 @@ export const crawlAllCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "Comma-separated list of steps to run (areas,users,resources,repository)",
+        optional: true,
+      },
+      verbose: {
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Enable verbose logging",
         optional: true,
       },
     },
@@ -311,6 +347,30 @@ export const crawlCommand = buildCommand({
         brief: "Account ID to use for authentication",
         optional: true,
       },
+      steps: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Comma-separated list of steps to run (areas,users,resources,repository)",
+        optional: true,
+      },
+      host: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "GitLab instance host",
+        optional: true,
+      },
+      output: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Output directory for JSONL files",
+        optional: true,
+      },
+      database: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Database file path",
+        optional: true,
+      },
       verbose: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase() === "true",
@@ -331,6 +391,7 @@ export const crawlRoutes = buildRouteMap({
     resources: resourcesCommand,
     repository: repositoryCommand,
     crawl: crawlCommand,
+    crawlAll: crawlAllCommand,
   },
   docs: {
     brief: "GitLab crawling commands",

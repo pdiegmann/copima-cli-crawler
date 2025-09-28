@@ -1,0 +1,5 @@
+{"id":"1","fullPath":"test-project-1","name":"Test Project 1","visibility":"private","description":"Test project 1","createdAt":"2023-01-01T00:00:00Z","updatedAt":"2023-01-01T00:00:00Z"}
+{"id":"2","fullPath":"test-project-2","name":"Test Project 2","visibility":"internal","description":"Test project 2","createdAt":"2023-01-01T00:00:00Z","updatedAt":"2023-01-01T00:00:00Z"}
+{"id":"3","fullPath":"test-project-3","name":"Test Project 3","visibility":"public","description":"Test project 3","createdAt":"2023-01-01T00:00:00Z","updatedAt":"2023-01-01T00:00:00Z"}{"id":"gid://gitlab/Project/3","fullPath":"group-01/test","name":"test","visibility":"internal","description":null,"createdAt":"2025-07-22T14:23:59Z","updatedAt":"2025-08-20T17:02:59Z"}
+{"id":"gid://gitlab/Project/2","fullPath":"group-01/group-02/project-02","name":"Project-02","visibility":"private","description":null,"createdAt":"2025-06-30T16:47:11Z","updatedAt":"2025-06-30T16:47:11Z"}
+{"id":"gid://gitlab/Project/1","fullPath":"group-01/project-01","name":"Project-01","visibility":"internal","description":null,"createdAt":"2025-06-30T16:46:50Z","updatedAt":"2025-06-30T16:46:51Z"}
