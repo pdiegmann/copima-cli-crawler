@@ -1,0 +1,44 @@
+query FetchProject($id: ID!) {
+  project(id: $id) {
+    id
+    name
+    path
+    fullPath
+    description
+    visibility
+    createdAt
+    updatedAt
+    lastActivityAt
+    webUrl
+    avatarUrl
+    defaultBranch
+    archived
+    forksCount
+    starCount
+    issuesEnabled
+    mergeRequestsEnabled
+    wikiEnabled
+    snippetsEnabled
+    containerRegistryEnabled
+    lfsEnabled
+    requestAccessEnabled
+    nameWithNamespace
+    pathWithNamespace
+    topics
+    repository {
+      exists
+      empty
+      rootRef
+    }
+    statistics {
+      commitCount
+      storageSize
+      repositorySize
+      lfsObjectsSize
+      buildArtifactsSize
+      packagesSize
+      snippetsSize
+      uploadsSize
+    }
+  }
+}

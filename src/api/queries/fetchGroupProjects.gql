@@ -1,0 +1,37 @@
+query FetchGroupProjects($id: ID!, $first: Int, $after: String) {
+  group(id: $id) {
+    projects(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        path
+        fullPath
+        description
+        visibility
+        createdAt
+        updatedAt
+        lastActivityAt
+        webUrl
+        avatarUrl
+        defaultBranch
+        archived
+        forksCount
+        starCount
+        issuesEnabled
+        mergeRequestsEnabled
+        wikiEnabled
+        snippetsEnabled
+        containerRegistryEnabled
+        lfsEnabled
+        requestAccessEnabled
+        nameWithNamespace
+        pathWithNamespace
+        topics
+      }
+    }
+  }
+}

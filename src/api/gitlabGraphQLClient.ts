@@ -1,8 +1,24 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { GitLabProject, GitLabUser, GraphQLResponse, GroupNode, PageInfo, SafeRecord } from "../types/api.js";
 
 const logger = createLogger("GitLabGraphQLClient");
+
+// Load GraphQL queries
+const loadQuery = (filename: string): string => {
+  const queryPath = join(__dirname, "queries", filename);
+  return readFileSync(queryPath, "utf-8").trim();
+};
+
+const FETCH_USERS_QUERY = loadQuery("fetchUsers.gql");
+const FETCH_GROUPS_QUERY = loadQuery("fetchGroups.gql");
+const FETCH_PROJECTS_QUERY = loadQuery("fetchProjects.gql");
+const FETCH_GROUP_PROJECTS_QUERY = loadQuery("fetchGroupProjects.gql");
+const FETCH_SUBGROUPS_QUERY = loadQuery("fetchSubgroups.gql");
+const FETCH_GROUP_QUERY = loadQuery("fetchGroup.gql");
+const FETCH_PROJECT_QUERY = loadQuery("fetchProject.gql");
 
 export class GitLabGraphQLClient {
   private baseUrl: string;
@@ -238,22 +254,8 @@ export class GitLabGraphQLClient {
    * Step 2 of the crawling workflow.
    */
   async fetchUsers(): Promise<GitLabUser[]> {
-    const query = `
-      query {
-        users {
-          nodes {
-            id
-            username
-            name
-            publicEmail
-            createdAt
-          }
-        }
-      }
-    `;
-
     try {
-      const data = await this.query<{ users: { nodes: GitLabUser[] } }>(query);
+      const data = await this.query<{ users: { nodes: GitLabUser[] } }>(FETCH_USERS_QUERY);
       return data.users.nodes;
     } catch (error) {
       logger.error("Failed to fetch users:", {
@@ -268,35 +270,8 @@ export class GitLabGraphQLClient {
    * Step 1 of the crawling workflow.
    */
   async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
-    const query = `
-      query($first: Int, $after: String) {
-        groups(first: $first, after: $after) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          nodes {
-            id
-            name
-            path
-            fullName
-            fullPath
-            description
-            visibility
-            createdAt
-            updatedAt
-            webUrl
-            avatarUrl
-            parentId
-            subgroupCreationLevel
-            projectCreationLevel
-          }
-        }
-      }
-    `;
-
     try {
-      const data = await this.query(query, { first, after });
+      const data = await this.query(FETCH_GROUPS_QUERY, { first, after });
       if (!data || typeof data !== "object" || !("groups" in data)) {
         throw new Error("Invalid response format for groups");
       }
@@ -314,46 +289,8 @@ export class GitLabGraphQLClient {
    * Step 1 of the crawling workflow.
    */
   async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
-    const query = `
-      query($first: Int, $after: String) {
-        projects(first: $first, after: $after) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          nodes {
-            id
-            name
-            path
-            fullPath
-            description
-            visibility
-            createdAt
-            updatedAt
-            lastActivityAt
-            webUrl
-            avatarUrl
-            defaultBranch
-            archived
-            forksCount
-            starCount
-            issuesEnabled
-            mergeRequestsEnabled
-            wikiEnabled
-            snippetsEnabled
-            containerRegistryEnabled
-            lfsEnabled
-            requestAccessEnabled
-            nameWithNamespace
-            pathWithNamespace
-            topics
-          }
-        }
-      }
-    `;
-
     try {
-      const data = await this.query(query, { first, after });
+      const data = await this.query(FETCH_PROJECTS_QUERY, { first, after });
       return data["projects"] as { nodes: GitLabProject[]; pageInfo: PageInfo };
     } catch (error) {
       logger.error("Failed to fetch projects:", {
@@ -368,45 +305,7 @@ export class GitLabGraphQLClient {
    * Part of Step 1 of the crawling workflow.
    */
   async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
-    const query = `
-      query($id: ID!, $first: Int, $after: String) {
-        group(id: $id) {
-          projects(first: $first, after: $after) {
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-            nodes {
-              id
-              name
-              path
-              fullPath
-              description
-              visibility
-              createdAt
-              updatedAt
-              lastActivityAt
-              webUrl
-              avatarUrl
-              defaultBranch
-              archived
-              forksCount
-              starCount
-              issuesEnabled
-              mergeRequestsEnabled
-              wikiEnabled
-              snippetsEnabled
-              containerRegistryEnabled
-              lfsEnabled
-              requestAccessEnabled
-              nameWithNamespace
-              pathWithNamespace
-              topics
-            }
-          }
-        }
-      }
-    `;
+    const query = FETCH_GROUP_PROJECTS_QUERY;
 
     try {
       const data = await this.query(query, { id: groupId, first, after });
@@ -433,34 +332,7 @@ export class GitLabGraphQLClient {
    * Part of Step 1 of the crawling workflow.
    */
   async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
-    const query = `
-      query($id: ID!, $first: Int, $after: String) {
-        group(id: $id) {
-          subgroups(first: $first, after: $after) {
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-            nodes {
-              id
-              name
-              path
-              fullName
-              fullPath
-              description
-              visibility
-              createdAt
-              updatedAt
-              webUrl
-              avatarUrl
-              parentId
-              subgroupCreationLevel
-              projectCreationLevel
-            }
-          }
-        }
-      }
-    `;
+    const query = FETCH_SUBGROUPS_QUERY;
 
     try {
       const data = await this.query(query, { id: groupId, first, after });
@@ -486,40 +358,7 @@ export class GitLabGraphQLClient {
    * Fetches a specific group by ID with detailed information.
    */
   async fetchGroup(groupId: string): Promise<GroupNode> {
-    const query = `
-      query($id: ID!) {
-        group(id: $id) {
-          id
-          name
-          path
-          fullName
-          fullPath
-          description
-          visibility
-          createdAt
-          updatedAt
-          webUrl
-          avatarUrl
-          parentId
-          subgroupCreationLevel
-          projectCreationLevel
-          repositorySizeLimit
-          lfsEnabled
-          requestAccessEnabled
-          fullName
-          fullPath
-          rootStorageStatistics {
-            storageSize
-            repositorySize
-            lfsObjectsSize
-            buildArtifactsSize
-            packagesSize
-            snippetsSize
-            uploadsSize
-          }
-        }
-      }
-    `;
+    const query = FETCH_GROUP_QUERY;
 
     try {
       const data = await this.query(query, { id: groupId });
@@ -537,52 +376,7 @@ export class GitLabGraphQLClient {
    * Fetches a specific project by ID with detailed information.
    */
   async fetchProject(projectId: string): Promise<GitLabProject> {
-    const query = `
-      query($id: ID!) {
-        project(id: $id) {
-          id
-          name
-          path
-          fullPath
-          description
-          visibility
-          createdAt
-          updatedAt
-          lastActivityAt
-          webUrl
-          avatarUrl
-          defaultBranch
-          archived
-          forksCount
-          starCount
-          issuesEnabled
-          mergeRequestsEnabled
-          wikiEnabled
-          snippetsEnabled
-          containerRegistryEnabled
-          lfsEnabled
-          requestAccessEnabled
-          nameWithNamespace
-          pathWithNamespace
-          topics
-          repository {
-            exists
-            empty
-            rootRef
-          }
-          statistics {
-            commitCount
-            storageSize
-            repositorySize
-            lfsObjectsSize
-            buildArtifactsSize
-            packagesSize
-            snippetsSize
-            uploadsSize
-          }
-        }
-      }
-    `;
+    const query = FETCH_PROJECT_QUERY;
 
     try {
       const data = await this.query(query, { id: projectId });

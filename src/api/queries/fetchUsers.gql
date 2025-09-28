@@ -1,0 +1,11 @@
+query FetchUsers {
+  users {
+    nodes {
+      id
+      username
+      name
+      publicEmail
+      createdAt
+    }
+  }
+}

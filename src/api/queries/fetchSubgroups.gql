@@ -1,0 +1,26 @@
+query FetchSubgroups($id: ID!, $first: Int, $after: String) {
+  group(id: $id) {
+    subgroups(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        path
+        fullName
+        fullPath
+        description
+        visibility
+        createdAt
+        updatedAt
+        webUrl
+        avatarUrl
+        parentId
+        subgroupCreationLevel
+        projectCreationLevel
+      }
+    }
+  }
+}
