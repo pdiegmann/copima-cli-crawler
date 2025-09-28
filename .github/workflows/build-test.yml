@@ -144,9 +144,31 @@ jobs:
           echo "**Note:** This pipeline continues on test/build failures to provide complete analysis data for debugging." >> $GITHUB_STEP_SUMMARY
           echo "::endgroup::"
 
+      - name: Verify coverage files for SonarQube
+        id: coverage-check
+        if: always()
+        run: |
+          echo "::group::Coverage File Verification"
+          echo "Checking for coverage files..."
+
+          if [ -f "coverage/lcov.info" ]; then
+            echo "✅ lcov.info found"
+            echo "📊 File size: $(du -h coverage/lcov.info | cut -f1)"
+            echo "📝 First 10 lines of lcov.info:"
+            head -10 coverage/lcov.info
+            echo "COVERAGE_EXISTS=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ lcov.info not found"
+            echo "COVERAGE_EXISTS=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "📁 Coverage directory contents:"
+          ls -la coverage/ || echo "Coverage directory does not exist"
+          echo "::endgroup::"
+
       - name: SonarQube Scan
         id: sonar-scan
-        if: always()
+        if: always() && steps.coverage-check.outputs.COVERAGE_EXISTS == 'true'
         uses: sonarsource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -156,7 +178,7 @@ jobs:
 
       - name: SonarQube Quality Gate check
         id: sonar-quality-gate
-        if: always() && steps.sonar-scan.outcome != 'failure'
+        if: always() && steps.sonar-scan.outcome == 'success'
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5
         env:
@@ -214,14 +236,23 @@ jobs:
           echo "## 🔍 Analysis & Artifacts Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # SonarQube Status
-          if [ "${{ steps.sonar-scan.outcome }}" = "success" ]; then
-            echo "✅ **SonarQube Scan:** Completed successfully" >> $GITHUB_STEP_SUMMARY
+          # Coverage Generation Status
+          if [ "${{ steps.coverage-check.outputs.COVERAGE_EXISTS }}" = "true" ]; then
+            echo "✅ **Coverage Generation:** lcov.info created successfully" >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ **SonarQube Scan:** Failed or skipped" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Coverage Generation:** Failed to create lcov.info" >> $GITHUB_STEP_SUMMARY
           fi
 
-          # Coverage Status
+          # SonarQube Status
+          if [ "${{ steps.sonar-scan.outcome }}" = "success" ]; then
+            echo "✅ **SonarQube Scan:** Completed successfully with coverage" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.coverage-check.outputs.COVERAGE_EXISTS }}" = "false" ]; then
+            echo "⚠️ **SonarQube Scan:** Skipped due to missing coverage file" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **SonarQube Scan:** Failed or encountered errors" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Coverage Upload Status
           if [ "${{ steps.codecov.outcome }}" = "success" ]; then
             echo "✅ **Coverage Upload:** Sent to Codecov" >> $GITHUB_STEP_SUMMARY
           else
