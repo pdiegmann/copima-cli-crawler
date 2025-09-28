@@ -34,5 +34,9 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "pdiegmann",
+    "projectKey": "pdiegmann_copima-cli-crawler"
   }
 }
