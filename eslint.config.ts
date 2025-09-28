@@ -1,8 +1,7 @@
 import eslint from "@eslint/js";
-import prettier from "eslint-plugin-prettier";
-//import securityPlugin from 'eslint-plugin-security';
 import stylistic from "@stylistic/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
+import prettier from "eslint-plugin-prettier";
 import sonarjs from "eslint-plugin-sonarjs";
 import unicorn from "eslint-plugin-unicorn";
 import { defineConfig } from "eslint/config";
@@ -15,7 +14,6 @@ export default defineConfig([
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,
-  //securityPlugin.configs.recommended,
   sonarjs.configs.recommended,
 
   {

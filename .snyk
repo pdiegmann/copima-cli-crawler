@@ -4,7 +4,9 @@ version: v1.25.1
 ignore:
   64b68c87-ed8f-438a-87df-add261ef5a86:
     - '*':
-        reason: None Given
-        expires: 2025-10-28T07:41:08.992Z
-        created: 2025-09-28T07:41:08.995Z
+        reason: >-
+          Only used as local callback for oAuth2 credentials – no cert
+          available.
+        expires: 2035-12-31T00:00:00.000Z
+        created: 2025-09-28T08:05:22.281Z
 patch: {}
