@@ -414,7 +414,7 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
 
     // Simplified resources query that focuses on available data
     // Get current user information (safe and always available)
-    const _currentUser = await graphqlClient.query(`
+    await graphqlClient.query(`
             query {
                 currentUser {
                     id

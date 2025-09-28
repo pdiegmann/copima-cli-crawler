@@ -16,6 +16,9 @@ const OAUTH2_PROVIDERS: Record<string, OAuth2Provider> = {
 };
 
 export const getProviderConfig = (provider: string): OAuth2Provider | null => {
+  if (!provider) {
+    return null;
+  }
   return OAUTH2_PROVIDERS[provider.toLowerCase()] || null;
 };
 

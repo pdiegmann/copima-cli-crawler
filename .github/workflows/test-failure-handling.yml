@@ -1,0 +1,37 @@
+name: Test Failure Handling
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-failure-behavior:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test step that fails
+        id: failing-step
+        run: |
+          echo "::group::Simulating Test Failure"
+          echo "⚠️ This step will fail intentionally"
+          exit 1
+          echo "::endgroup::"
+        continue-on-error: true
+
+      - name: Step that runs after failure
+        if: always()
+        run: |
+          echo "✅ This step runs even after the previous step failed"
+          echo "Previous step status: ${{ steps.failing-step.outcome }}"
+
+      - name: Test Results Summary
+        if: always()
+        run: |
+          echo "## 📊 Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.failing-step.outcome }}" = "failure" ]; then
+            echo "✅ **Failure Handling:** Working correctly - step failed but workflow continued" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Failure Handling:** Not working - step should have failed" >> $GITHUB_STEP_SUMMARY
+          fi

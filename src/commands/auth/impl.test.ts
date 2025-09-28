@@ -58,7 +58,7 @@ const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {
 });
 
 describe("Auth Command Implementation", () => {
-  const mockFetch = jest.fn();
+  const mockFetch = jest.fn() as any;
   const mockOpen = require("open") as jest.Mock;
   const mockCrypto = crypto as jest.Mocked<typeof crypto>;
 

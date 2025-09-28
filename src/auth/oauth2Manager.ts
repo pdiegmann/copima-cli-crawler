@@ -196,7 +196,7 @@ export class OAuth2Manager {
    * Get current configuration (without sensitive data)
    */
   getConfig(): Omit<OAuth2Config, "clientSecret"> {
-    const { clientSecret: _clientSecret, ...safeConfig } = this.config;
+    const { clientSecret: _, ...safeConfig } = this.config;
     return safeConfig;
   }
 
