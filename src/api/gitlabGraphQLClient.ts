@@ -1,9 +1,21 @@
 import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
-import type { GitLabProject, GitLabUser, GroupNode, PageInfo, SafeRecord } from "../types/api.js";
+import type { PageInfo as CustomPageInfo, GitLabProject, GitLabUser, GroupNode, SafeRecord } from "../types/api.js";
 import { graphql } from "./gql";
+import type { FetchGroupProjectsQuery, FetchGroupQuery, FetchGroupsQuery, FetchProjectQuery, FetchProjectsQuery, FetchSubgroupsQuery, FetchUsersQuery } from "./gql/graphql";
+import {
+  FetchGroupDocument,
+  FetchGroupProjectsDocument,
+  FetchGroupsDocument,
+  FetchProjectDocument,
+  FetchProjectsDocument,
+  FetchSubgroupsDocument,
+  FetchUsersDocument,
+} from "./gql/graphql";
 
 const logger = createLogger("GitLabGraphQLClient");
+
+type PageInfo = Omit<CustomPageInfo, "endCursor"> & { endCursor?: string | null };
 
 export class GitLabGraphQLClient {
   private baseUrl: string;
@@ -78,7 +90,7 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async query<T = SafeRecord>(query: string | any, variables: SafeRecord = {}): Promise<T> {
+  async query<T>(query: any, variables: SafeRecord = {}): Promise<T> {
     const makeRequest = async (token: string, queryString: string): Promise<Response> => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -105,11 +117,9 @@ export class GitLabGraphQLClient {
     try {
       logger.debug(`Making GraphQL request to: ${this.baseUrl}`);
 
-      // Extract query string from TypedDocumentNode or use string directly
-      const queryString = typeof query === "string" ? query : query.loc.source.body;
+      const queryString = query.loc.source.body;
       let response = await makeRequest(this.accessToken, queryString);
 
-      // If we get a 401 and have refresh capability, try refreshing the token
       if (response.status === 401 && this.refreshToken && this.oauth2Config) {
         logger.info("Access token appears to be expired, attempting refresh");
 
@@ -127,17 +137,13 @@ export class GitLabGraphQLClient {
         const errorText = await response.text().catch(() => "Unable to read response body");
 
         if (response.status === 401) {
-          const message = "Authentication failed: Invalid or expired access token. Please run 'copima auth' to re-authenticate.";
-          throw new Error(message);
+          throw new Error("Authentication failed: Invalid or expired access token.");
         }
 
         throw new Error(`GraphQL request failed: ${response.status} - ${errorText}`);
       }
 
-      const result = (await response.json()) as unknown as { data: T; errors?: Array<{ message: string }> };
-      if (!result || typeof result !== "object") {
-        throw new Error("Invalid GraphQL response format");
-      }
+      const result = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
       if (result.errors && result.errors.length > 0) {
         throw new Error(`GraphQL query returned errors: ${result.errors.map((e) => e.message).join(", ")}`);
       }
@@ -148,365 +154,93 @@ export class GitLabGraphQLClient {
         error: error instanceof Error ? error.message : String(error),
       });
 
-      if (error instanceof Error) {
-        if (error.message.includes("Authentication failed")) {
-          throw error;
-        }
-
-        if (error.name === "AbortError") {
-          throw new Error("Request timeout - unable to connect. Is the computer able to access the url?");
-        }
-
-        if (
-          error.message.includes("fetch failed") ||
-          error.message.includes("ECONNREFUSED") ||
-          error.message.includes("ENOTFOUND") ||
-          error.message.includes("EHOSTUNREACH") ||
-          error.message.includes("ENETUNREACH")
-        ) {
-          throw new Error("Unable to connect. Is the computer able to access the url?");
-        }
-      }
-
       throw error;
     }
   }
 
-  /**
-   * Fetches all users from the GitLab GraphQL API.
-   * Step 2 of the crawling workflow.
-   */
   async fetchUsers(): Promise<GitLabUser[]> {
     try {
-      const data = await this.query(graphql`
-        query FetchUsers {
-          users {
-            nodes {
-              id
-              username
-              name
-              publicEmail
-              createdAt
-            }
-          }
-        }
-      `);
-      return data.users.nodes;
+      const data = await this.query<FetchUsersQuery>(FetchUsersDocument);
+      if (!data.users?.nodes) throw new Error("Invalid data format");
+      return data.users.nodes as GitLabUser[];
     } catch (error) {
-      logger.error("Failed to fetch users:", {
-        error: error instanceof Error ? error.message : String(error),
-      });
+      logger.error("Failed to fetch users:", { error });
       throw error;
     }
   }
 
-  /**
-   * Fetches all groups from the GitLab GraphQL API.
-   * Step 1 of the crawling workflow.
-   */
   async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query(
-        graphql`
-          query FetchGroups($first: Int, $after: String) {
-            groups(first: $first, after: $after) {
-              pageInfo {
-                hasNextPage
-                endCursor
-              }
-              nodes {
-                id
-                name
-                path
-                fullName
-                fullPath
-                description
-                visibility
-                createdAt
-                updatedAt
-                webUrl
-                avatarUrl
-                parent {
-                  id
-                  fullPath
-                }
-                subgroupCreationLevel
-                projectCreationLevel
-              }
-            }
-          }
-        `,
-        { first, after }
-      );
-      return data.groups;
+      const data = await this.query<FetchGroupsQuery>(FetchGroupsDocument, { first, after });
+      if (!data.groups?.nodes || !data.groups.pageInfo) throw new Error("Invalid data format");
+      return {
+        nodes: data.groups.nodes as GroupNode[],
+        pageInfo: { ...data.groups.pageInfo, endCursor: data.groups.pageInfo.endCursor || undefined },
+      };
     } catch (error) {
-      logger.error("Failed to fetch groups:", {
-        error: error instanceof Error ? error.message : String(error),
-      });
+      logger.error("Failed to fetch groups:", { error });
       throw error;
     }
   }
 
-  /**
-   * Fetches all projects from the GitLab GraphQL API.
-   * Step 1 of the crawling workflow.
-   */
   async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query(
-        graphql`
-          query FetchProjects($first: Int, $after: String) {
-            projects(first: $first, after: $after) {
-              pageInfo {
-                hasNextPage
-                endCursor
-              }
-              nodes {
-                id
-                name
-                path
-                fullPath
-                description
-                visibility
-                createdAt
-                updatedAt
-                lastActivityAt
-                webUrl
-                avatarUrl
-                archived
-                forksCount
-                starCount
-                issuesEnabled
-                mergeRequestsEnabled
-                wikiEnabled
-                snippetsEnabled
-                containerRegistryEnabled
-                lfsEnabled
-                requestAccessEnabled
-                nameWithNamespace
-                topics
-              }
-            }
-          }
-        `,
-        { first, after }
-      );
-      return data.projects;
+      const data = await this.query<FetchProjectsQuery>(FetchProjectsDocument, { first, after });
+      if (!data.projects?.nodes || !data.projects.pageInfo) throw new Error("Invalid data format");
+      return {
+        nodes: data.projects.nodes as GitLabProject[],
+        pageInfo: { ...data.projects.pageInfo, endCursor: data.projects.pageInfo.endCursor || undefined },
+      };
     } catch (error) {
-      logger.error("Failed to fetch projects:", {
-        error: error instanceof Error ? error.message : String(error),
-      });
+      logger.error("Failed to fetch projects:", { error });
       throw error;
     }
   }
 
-  /**
-   * Fetches projects within a specific group.
-   * Part of Step 1 of the crawling workflow.
-   */
   async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query(
-        graphql`
-          query FetchGroupProjects($fullPath: ID!, $first: Int, $after: String) {
-            group(fullPath: $fullPath) {
-              projects(first: $first, after: $after) {
-                pageInfo {
-                  hasNextPage
-                  endCursor
-                }
-                nodes {
-                  id
-                  name
-                  path
-                  fullPath
-                  description
-                  visibility
-                  createdAt
-                  updatedAt
-                  lastActivityAt
-                  webUrl
-                  avatarUrl
-                  archived
-                  forksCount
-                  starCount
-                  issuesEnabled
-                  mergeRequestsEnabled
-                  wikiEnabled
-                  snippetsEnabled
-                  containerRegistryEnabled
-                  lfsEnabled
-                  requestAccessEnabled
-                  nameWithNamespace
-                  topics
-                }
-              }
-            }
-          }
-        `,
-        { fullPath: groupId, first, after }
-      );
-      return data.group.projects;
+      const data = await this.query<FetchGroupProjectsQuery>(FetchGroupProjectsDocument, { fullPath: groupId, first, after });
+      if (!data.group?.projects?.nodes || !data.group.projects.pageInfo) throw new Error("Invalid data format");
+      return {
+        nodes: data.group.projects.nodes as GitLabProject[],
+        pageInfo: { ...data.group.projects.pageInfo, endCursor: data.group.projects.pageInfo.endCursor || undefined },
+      };
     } catch (error) {
-      logger.error(`Failed to fetch projects for group ${groupId}:`, {
-        error: error instanceof Error ? error.message : String(error),
-      });
+      logger.error(`Failed to fetch projects for group ${groupId}:`, { error });
       throw error;
     }
   }
 
-  /**
-   * Fetches subgroups within a specific group.
-   * Part of Step 1 of the crawling workflow.
-   */
   async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query(
-        graphql`
-          query FetchSubgroups($fullPath: ID!, $first: Int, $after: String) {
-            group(fullPath: $fullPath) {
-              descendantGroups(first: $first, after: $after) {
-                pageInfo {
-                  hasNextPage
-                  endCursor
-                }
-                nodes {
-                  id
-                  name
-                  path
-                  fullName
-                  fullPath
-                  description
-                  visibility
-                  createdAt
-                  updatedAt
-                  webUrl
-                  avatarUrl
-                  parent {
-                    id
-                    fullPath
-                  }
-                  subgroupCreationLevel
-                  projectCreationLevel
-                }
-              }
-            }
-          }
-        `,
-        { fullPath: groupId, first, after }
-      );
-      return data.group.descendantGroups;
+      const data = await this.query<FetchSubgroupsQuery>(FetchSubgroupsDocument, { fullPath: groupId, first, after });
+      if (!data.group?.descendantGroups?.nodes || !data.group.descendantGroups.pageInfo) throw new Error("Invalid data format");
+      return {
+        nodes: data.group.descendantGroups.nodes as GroupNode[],
+        pageInfo: { ...data.group.descendantGroups.pageInfo, endCursor: data.group.descendantGroups.pageInfo.endCursor || undefined },
+      };
     } catch (error) {
-      logger.error(`Failed to fetch subgroups for group ${groupId}:`, {
-        error,
-      });
+      logger.error(`Failed to fetch subgroups for group ${groupId}:`, { error });
       throw error;
     }
   }
 
-  /**
-   * Fetches a specific group by ID with detailed information.
-   */
   async fetchGroup(groupId: string): Promise<GroupNode> {
     try {
-      const data = await this.query(
-        graphql`
-          query FetchGroup($fullPath: ID!) {
-            group(fullPath: $fullPath) {
-              id
-              name
-              path
-              fullName
-              fullPath
-              description
-              visibility
-              createdAt
-              updatedAt
-              webUrl
-              avatarUrl
-              parent {
-                id
-                fullPath
-              }
-              subgroupCreationLevel
-              projectCreationLevel
-              actualRepositorySizeLimit
-              lfsEnabled
-              requestAccessEnabled
-              rootStorageStatistics {
-                storageSize
-                repositorySize
-                lfsObjectsSize
-                buildArtifactsSize
-                packagesSize
-                snippetsSize
-                uploadsSize
-              }
-            }
-          }
-        `,
-        { fullPath: groupId }
-      );
-      return data.group;
+      const data = await this.query<FetchGroupQuery>(FetchGroupDocument, { fullPath: groupId });
+      if (!data.group) throw new Error("Invalid data format");
+      return data.group as GroupNode;
     } catch (error) {
       logger.error(`Failed to fetch group ${groupId}:`, { error });
       throw error;
     }
   }
 
-  /**
-   * Fetches a specific project by ID with detailed information.
-   */
   async fetchProject(projectId: string): Promise<GitLabProject> {
     try {
-      const data = await this.query(
-        graphql`
-          query FetchProject($fullPath: ID!) {
-            project(fullPath: $fullPath) {
-              id
-              name
-              path
-              fullPath
-              description
-              visibility
-              createdAt
-              updatedAt
-              lastActivityAt
-              webUrl
-              avatarUrl
-              archived
-              forksCount
-              starCount
-              issuesEnabled
-              mergeRequestsEnabled
-              wikiEnabled
-              snippetsEnabled
-              containerRegistryEnabled
-              lfsEnabled
-              requestAccessEnabled
-              nameWithNamespace
-              topics
-              repository {
-                exists
-                empty
-                rootRef
-              }
-              statistics {
-                commitCount
-                storageSize
-                repositorySize
-                lfsObjectsSize
-                buildArtifactsSize
-                packagesSize
-                snippetsSize
-                uploadsSize
-              }
-            }
-          }
-        `,
-        { fullPath: projectId }
-      );
-      return data.project;
+      const data = await this.query<FetchProjectQuery>(FetchProjectDocument, { fullPath: projectId });
+      if (!data.project) throw new Error("Invalid data format");
+      return data.project as GitLabProject;
     } catch (error) {
       logger.error(`Failed to fetch project ${projectId}:`, { error });
       throw error;

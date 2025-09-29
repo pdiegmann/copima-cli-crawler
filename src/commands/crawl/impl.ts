@@ -250,38 +250,12 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       resourceType: "", // Will be set for each resource type
     };
 
-    // Fetch groups and projects using GraphQL client
-    const query = `
-      query {
-        groups {
-          nodes {
-            id
-            fullPath
-            name
-            visibility
-            description
-            createdAt
-            updatedAt
-          }
-        }
-        projects {
-          nodes {
-            id
-            fullPath
-            name
-            visibility
-            description
-            createdAt
-            updatedAt
-          }
-        }
-      }
-    `;
+    // Fetch groups and projects using generated GraphQL operations
+    const groupsData = await graphqlClient.fetchGroups(100);
+    const projectsData = await graphqlClient.fetchProjects(100);
 
-    const data = (await graphqlClient.query(query)) as any;
-
-    const groups = data["groups"].nodes;
-    const projects = data["projects"].nodes;
+    const groups = groupsData.nodes;
+    const projects = projectsData.nodes;
 
     // Log and store results
     logger.info(`Fetched ${groups.length} groups`);
@@ -347,22 +321,8 @@ export const users = async function (this: LocalContext, flags: Record<string, u
       resourceType: "user",
     };
 
-    // Fetch users using GraphQL client
-    const data = (await graphqlClient.query(`
-            query {
-                users {
-                    nodes {
-                        id
-                        username
-                        name
-                        publicEmail
-                        createdAt
-                    }
-                }
-            }
-        `)) as any;
-
-    const users = data["users"].nodes;
+    // Fetch users using generated GraphQL operations
+    const users = await graphqlClient.fetchUsers();
 
     // Log and store results
     logger.info(`Fetched ${users.length} users`);
@@ -412,39 +372,11 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
       resourceType: "", // Will be set for each resource type
     };
 
-    // Simplified resources query that focuses on available data
-    // Get current user information (safe and always available)
-    await graphqlClient.query(`
-            query {
-                currentUser {
-                    id
-                    username
-                    name
-                    publicEmail
-                    createdAt
-                }
-            }
-        `);
+    // Get available projects with their basic info using generated operations
+    const _projects = await graphqlClient.fetchProjects(10);
 
-    // Get available projects with their basic info
-    const _projects = await graphqlClient.query(`
-            query {
-                projects(first: 10) {
-                    nodes {
-                        id
-                        name
-                        fullPath
-                        description
-                        visibility
-                        createdAt
-                        updatedAt
-                    }
-                }
-            }
-        `);
-
-    logger.info("Fetched current user and available projects");
-    logger.info(`Found ${_projects.projects.nodes.length} accessible projects`);
+    logger.info("Fetched available projects");
+    logger.info(`Found ${_projects.nodes.length} accessible projects`);
 
     // Implement JSONL storage logic for resources with callback processing
     const outputDir = (this.path as any)?.resolve?.("output", "resources") ?? "";
@@ -504,22 +436,10 @@ export const repository = async function (this: LocalContext, _flags: Record<str
       resourceType: "", // Will be set for each resource type
     };
 
-    // Get available projects with basic repository information
-    const projects = await graphqlClient.query(`
-            query {
-                projects(first: 5) {
-                    nodes {
-                        id
-                        name
-                        fullPath
-                        createdAt
-                        updatedAt
-                    }
-                }
-            }
-        `);
+    // Get available projects with basic repository information using generated operations
+    const projects = await graphqlClient.fetchProjects(5);
 
-    logger.info(`Found ${projects.projects.nodes.length} projects with repository information`);
+    logger.info(`Found ${projects.nodes.length} projects with repository information`);
 
     // Implement JSONL storage logic with callback processing
     const outputDir = (this.path as any)?.resolve?.("output", "repository") ?? "";

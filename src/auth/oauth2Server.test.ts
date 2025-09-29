@@ -1,10 +1,11 @@
 import { OAuth2Server } from "./oauth2Server.js";
 import type { AuthServerConfig, OAuth2CallbackParams } from "./types.js";
 
-// Mock get-port
+// Mock get-port with unique ports
+let mockPortCounter = 3001;
 jest.mock("get-port", () => ({
   __esModule: true,
-  default: jest.fn(() => Promise.resolve(3001)),
+  default: jest.fn(() => Promise.resolve(mockPortCounter++)),
 }));
 
 // Mock createLogger

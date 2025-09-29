@@ -53,8 +53,8 @@ export class CommonResourcesFetcher {
       `;
 
       logger.info(`Fetching members for ${areaType}: ${areaPath}`);
-      const data = await this.client.query(query, { id: areaId });
-      const members = (data[areaType] && (data[areaType] as any).groupMembers?.nodes) || [];
+      const data = (await this.client.query(query, { id: areaId })) as any;
+      const members = (data[areaType] && data[areaType].groupMembers?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
@@ -107,8 +107,8 @@ export class CommonResourcesFetcher {
       `;
 
       logger.info(`Fetching labels for ${areaType}: ${areaPath}`);
-      const data = await this.client.query(query, { id: areaId });
-      const labels = (data[areaType] && (data[areaType] as any).labels?.nodes) || [];
+      const data = (await this.client.query(query, { id: areaId })) as any;
+      const labels = (data[areaType] && data[areaType].labels?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
@@ -168,8 +168,8 @@ export class CommonResourcesFetcher {
       `;
 
       logger.info(`Fetching milestones for ${areaType}: ${areaPath}`);
-      const data = await this.client.query(query, { id: areaId });
-      const milestones = (data[areaType] && (data[areaType] as any).milestones?.nodes) || [];
+      const data = (await this.client.query(query, { id: areaId })) as any;
+      const milestones = (data[areaType] && data[areaType].milestones?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
