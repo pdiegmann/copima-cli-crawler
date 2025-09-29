@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import { existsSync } from "fs";
 import { readFile, unlink, writeFile } from "fs/promises";
 import { createLogger } from "../logging";
@@ -20,7 +21,7 @@ export class FileLocker {
    */
   static async acquireLock(filePath: string): Promise<FileLock> {
     const lockFilePath = `${filePath}.lock`;
-    const lockId = `${Date.now()}-${Math.random().toString(36).substring(2)}`;
+    const lockId = `${Date.now()}-${randomBytes(8).toString("hex")}`;
 
     let retries = 0;
 

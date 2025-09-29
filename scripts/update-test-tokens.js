@@ -1,4 +1,6 @@
 #!/usr/bin/env bun
+/* eslint-env node */
+/* global console, process */
 
 /**
  * Script to update test configuration with fresh OAuth2 tokens
@@ -14,10 +16,12 @@ async function updateTestTokens() {
 
   try {
     // Run OAuth flow to get fresh tokens
+    /* eslint-disable sonarjs/no-os-command-from-path */
     const authOutput = execSync(
       'NODE_TLS_REJECT_UNAUTHORIZED=0 timeout 60 bun run src/bin/cli.ts auth --config examples/oauth2-config.yml --provider gitlab --timeout 50',
       { encoding: 'utf8', stdio: 'pipe' }
     )
+    /* eslint-enable sonarjs/no-os-command-from-path */
 
     // Extract tokens from output
     const accessTokenMatch = authOutput.match(/Access Token: ([a-f0-9]+)\.\.\./)

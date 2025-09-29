@@ -8,6 +8,26 @@ import { createLogger } from "../../logging/index.js";
 
 const logger = createLogger("CLI");
 
+// Shared writeJSONL utility function to avoid duplication
+const createWriteJSONL = (context: LocalContext, callbackManager: any, callbackContext: any) => {
+  return async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
+    // Process data through callback system
+    callbackContext.resourceType = resourceType;
+    const processedData = await callbackManager.processObjects(callbackContext, data);
+
+    const stream = (context.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
+    processedData.forEach((item) => {
+      stream.write(`${JSON.stringify(item)}\n`);
+    });
+    stream.end();
+
+    // Log statistics
+    if (processedData.length !== data.length) {
+      context.logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
+    }
+  };
+};
+
 export const crawlCommand = async (options: any): Promise<void> => {
   try {
     logger.info("🚀 Starting complete GitLab crawl with enhanced orchestrator");
@@ -265,22 +285,7 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const outputDir = (this.path as any)?.resolve?.("output", "areas") ?? "";
     (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
-      // Process data through callback system
-      callbackContext.resourceType = resourceType;
-      const processedData = await callbackManager.processObjects(callbackContext, data);
-
-      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
-      processedData.forEach((item) => {
-        stream.write(`${JSON.stringify(item)}\n`);
-      });
-      stream.end();
-
-      // Log statistics
-      if (processedData.length !== data.length) {
-        logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
-      }
-    };
+    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
 
     await writeJSONL((this.path as any)?.join?.(outputDir, "groups.jsonl") ?? "", groups, "group");
     await writeJSONL((this.path as any)?.join?.(outputDir, "projects.jsonl") ?? "", projects, "project");
@@ -331,22 +336,7 @@ export const users = async function (this: LocalContext, flags: Record<string, u
     const outputDir = (this.path as any)?.resolve?.("output", "users") ?? "";
     (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
-      // Process data through callback system
-      callbackContext.resourceType = resourceType;
-      const processedData = await callbackManager.processObjects(callbackContext, data);
-
-      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
-      processedData.forEach((item) => {
-        stream.write(`${JSON.stringify(item)}\n`);
-      });
-      stream.end();
-
-      // Log statistics
-      if (processedData.length !== data.length) {
-        logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
-      }
-    };
+    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
 
     await writeJSONL((this.path as any)?.join?.(outputDir, "users.jsonl") ?? "", users, "user");
 
@@ -382,22 +372,7 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
     const outputDir = (this.path as any)?.resolve?.("output", "resources") ?? "";
     (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
-      // Process data through callback system
-      callbackContext.resourceType = resourceType;
-      const processedData = await callbackManager.processObjects(callbackContext, data);
-
-      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
-      processedData.forEach((item) => {
-        stream.write(`${JSON.stringify(item)}\n`);
-      });
-      stream.end();
-
-      // Log statistics
-      if (processedData.length !== data.length) {
-        logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
-      }
-    };
+    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
 
     // Create all expected resource files as required by the test configuration
     // Use empty arrays for resources that don't exist or can't be safely queried
@@ -445,22 +420,7 @@ export const repository = async function (this: LocalContext, _flags: Record<str
     const outputDir = (this.path as any)?.resolve?.("output", "repository") ?? "";
     (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
 
-    const writeJSONL = async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
-      // Process data through callback system
-      callbackContext.resourceType = resourceType;
-      const processedData = await callbackManager.processObjects(callbackContext, data);
-
-      const stream = (this.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
-      processedData.forEach((item) => {
-        stream.write(`${JSON.stringify(item)}\n`);
-      });
-      stream.end();
-
-      // Log statistics
-      if (processedData.length !== data.length) {
-        logger.info(`${resourceType}: ${data.length} original → ${processedData.length} processed (${data.length - processedData.length} filtered)`);
-      }
-    };
+    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
 
     // Create all expected repository files as required by the test configuration
     // Use empty arrays for resources that don't exist or can't be safely queried
@@ -579,225 +539,102 @@ export const legacyCrawlAll = async function (this: LocalContext, flags: any): P
   console.log("✅ GitLab crawl completed successfully");
 };
 
-// Mock data creation function for test mode
-const createMockAreasData = async function (this: LocalContext, flags: Record<string, unknown>, logger: any): Promise<void> {
-  // Use absolute path or relative to working directory to avoid double nesting
-  let outputDir = (flags as any).output || "./output";
+// Shared utility function for mock data creation
+const createMockDataUtility = async (outputOptions: any, dataType: "areas" | "users", logger: any): Promise<void> => {
+  const { existsSync, mkdirSync, writeFileSync } = await import("fs");
 
-  // If outputDir is a relative path that doesn't exist, it might be nested incorrectly
-  // Let's use the actual path resolution to make it work correctly
-  const { existsSync } = await import("fs");
+  let outputDir = outputOptions.output || "./output";
 
-  // If the output directory doesn't exist at the specified path,
-  // it might be because we need to use the working directory correctly
   if (!existsSync(outputDir)) {
-    // The working directory is already ./tmp/crawler-test-basic,
-    // so we just need output/areas and output/users
     outputDir = "output";
   }
 
-  const areasDir = `${outputDir}/areas`;
+  const targetDir = `${outputDir}/${dataType}`;
+  mkdirSync(targetDir, { recursive: true });
 
-  // Create directories
-  const { mkdirSync, writeFileSync } = await import("fs");
-  mkdirSync(areasDir, { recursive: true });
+  if (dataType === "areas") {
+    // Mock groups data
+    const mockGroups = [
+      {
+        id: "1",
+        fullPath: "test-group-1",
+        name: "Test Group 1",
+        visibility: "private",
+        description: "Test group 1",
+        createdAt: "2023-01-01T00:00:00Z",
+        updatedAt: "2023-01-01T00:00:00Z",
+      },
+      {
+        id: "2",
+        fullPath: "test-group-2",
+        name: "Test Group 2",
+        visibility: "internal",
+        description: "Test group 2",
+        createdAt: "2023-01-01T00:00:00Z",
+        updatedAt: "2023-01-01T00:00:00Z",
+      },
+    ];
+    writeFileSync(`${targetDir}/groups.jsonl`, mockGroups.map((g) => JSON.stringify(g)).join("\n"));
+    logger.info(`Created mock groups.jsonl with ${mockGroups.length} entries`);
 
-  // Mock groups data
-  const mockGroups = [
-    {
-      id: "1",
-      fullPath: "test-group-1",
-      name: "Test Group 1",
-      visibility: "private",
-      description: "Test group 1",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-    {
-      id: "2",
-      fullPath: "test-group-2",
-      name: "Test Group 2",
-      visibility: "internal",
-      description: "Test group 2",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-  ];
-  writeFileSync(`${areasDir}/groups.jsonl`, mockGroups.map((g) => JSON.stringify(g)).join("\n"));
-  logger.info(`Created mock groups.jsonl with ${mockGroups.length} entries`);
+    // Mock projects data
+    const mockProjects = [
+      {
+        id: "1",
+        fullPath: "test-project-1",
+        name: "Test Project 1",
+        visibility: "private",
+        description: "Test project 1",
+        createdAt: "2023-01-01T00:00:00Z",
+        updatedAt: "2023-01-01T00:00:00Z",
+      },
+      {
+        id: "2",
+        fullPath: "test-project-2",
+        name: "Test Project 2",
+        visibility: "internal",
+        description: "Test project 2",
+        createdAt: "2023-01-01T00:00:00Z",
+        updatedAt: "2023-01-01T00:00:00Z",
+      },
+      {
+        id: "3",
+        fullPath: "test-project-3",
+        name: "Test Project 3",
+        visibility: "public",
+        description: "Test project 3",
+        createdAt: "2023-01-01T00:00:00Z",
+        updatedAt: "2023-01-01T00:00:00Z",
+      },
+    ];
+    writeFileSync(`${targetDir}/projects.jsonl`, mockProjects.map((p) => JSON.stringify(p)).join("\n"));
+    logger.info(`Created mock projects.jsonl with ${mockProjects.length} entries`);
+  } else if (dataType === "users") {
+    // Mock users data
+    const mockUsers = [
+      { id: "1", username: "test-user-1", name: "Test User 1", publicEmail: "test1@example.com", createdAt: "2023-01-01T00:00:00Z" },
+      { id: "2", username: "test-user-2", name: "Test User 2", publicEmail: "test2@example.com", createdAt: "2023-01-01T00:00:00Z" },
+    ];
+    writeFileSync(`${targetDir}/users.jsonl`, mockUsers.map((u) => JSON.stringify(u)).join("\n"));
+    logger.info(`Created mock users.jsonl with ${mockUsers.length} entries`);
+  }
+};
 
-  // Mock projects data
-  const mockProjects = [
-    {
-      id: "1",
-      fullPath: "test-project-1",
-      name: "Test Project 1",
-      visibility: "private",
-      description: "Test project 1",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-    {
-      id: "2",
-      fullPath: "test-project-2",
-      name: "Test Project 2",
-      visibility: "internal",
-      description: "Test project 2",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-    {
-      id: "3",
-      fullPath: "test-project-3",
-      name: "Test Project 3",
-      visibility: "public",
-      description: "Test project 3",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-  ];
-  writeFileSync(`${areasDir}/projects.jsonl`, mockProjects.map((p) => JSON.stringify(p)).join("\n"));
-  logger.info(`Created mock projects.jsonl with ${mockProjects.length} entries`);
+// Mock data creation function for test mode
+const createMockAreasData = async function (this: LocalContext, flags: Record<string, unknown>, logger: any): Promise<void> {
+  await createMockDataUtility(flags, "areas", logger);
 };
 
 // Mock users data creation function for test mode
 const createMockUsersData = async function (this: LocalContext, flags: Record<string, unknown>, logger: any): Promise<void> {
-  // Use absolute path or relative to working directory to avoid double nesting
-  let outputDir = (flags as any).output || "./output";
-
-  // If outputDir is a relative path that doesn't exist, it might be nested incorrectly
-  // Let's use the actual path resolution to make it work correctly
-  const { existsSync } = await import("fs");
-
-  // If the output directory doesn't exist at the specified path,
-  // it might be because we need to use the working directory correctly
-  if (!existsSync(outputDir)) {
-    // The working directory is already ./tmp/crawler-test-basic,
-    // so we just need output/areas and output/users
-    outputDir = "output";
-  }
-
-  const usersDir = `${outputDir}/users`;
-
-  // Create directories
-  const { mkdirSync, writeFileSync } = await import("fs");
-  mkdirSync(usersDir, { recursive: true });
-
-  // Mock users data
-  const mockUsers = [
-    { id: "1", username: "test-user-1", name: "Test User 1", publicEmail: "test1@example.com", createdAt: "2023-01-01T00:00:00Z" },
-    { id: "2", username: "test-user-2", name: "Test User 2", publicEmail: "test2@example.com", createdAt: "2023-01-01T00:00:00Z" },
-  ];
-  writeFileSync(`${usersDir}/users.jsonl`, mockUsers.map((u) => JSON.stringify(u)).join("\n"));
-  logger.info(`Created mock users.jsonl with ${mockUsers.length} entries`);
+  await createMockDataUtility(flags, "users", logger);
 };
 
 // Standalone mock data creation functions (not requiring LocalContext)
 const createMockAreasDataStandalone = async (options: any, logger: any): Promise<void> => {
-  // Use absolute path or relative to working directory to avoid double nesting
-  let outputDir = options.output || "./output";
-
-  // If outputDir is a relative path that doesn't exist, it might be nested incorrectly
-  const { existsSync } = await import("fs");
-
-  // If the output directory doesn't exist at the specified path,
-  // it might be because we need to use the working directory correctly
-  if (!existsSync(outputDir)) {
-    // The working directory is already ./tmp/crawler-test-basic,
-    // so we just need output/areas and output/users
-    outputDir = "output";
-  }
-
-  const areasDir = `${outputDir}/areas`;
-
-  // Create directories
-  const { mkdirSync, writeFileSync } = await import("fs");
-  mkdirSync(areasDir, { recursive: true });
-
-  // Mock groups data
-  const mockGroups = [
-    {
-      id: "1",
-      fullPath: "test-group-1",
-      name: "Test Group 1",
-      visibility: "private",
-      description: "Test group 1",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-    {
-      id: "2",
-      fullPath: "test-group-2",
-      name: "Test Group 2",
-      visibility: "internal",
-      description: "Test group 2",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-  ];
-  writeFileSync(`${areasDir}/groups.jsonl`, mockGroups.map((g) => JSON.stringify(g)).join("\n"));
-  logger.info(`Created mock groups.jsonl with ${mockGroups.length} entries`);
-
-  // Mock projects data
-  const mockProjects = [
-    {
-      id: "1",
-      fullPath: "test-project-1",
-      name: "Test Project 1",
-      visibility: "private",
-      description: "Test project 1",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-    {
-      id: "2",
-      fullPath: "test-project-2",
-      name: "Test Project 2",
-      visibility: "internal",
-      description: "Test project 2",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-    {
-      id: "3",
-      fullPath: "test-project-3",
-      name: "Test Project 3",
-      visibility: "public",
-      description: "Test project 3",
-      createdAt: "2023-01-01T00:00:00Z",
-      updatedAt: "2023-01-01T00:00:00Z",
-    },
-  ];
-  writeFileSync(`${areasDir}/projects.jsonl`, mockProjects.map((p) => JSON.stringify(p)).join("\n"));
-  logger.info(`Created mock projects.jsonl with ${mockProjects.length} entries`);
+  await createMockDataUtility(options, "areas", logger);
 };
 
 const createMockUsersDataStandalone = async (options: any, logger: any): Promise<void> => {
-  // Use absolute path or relative to working directory to avoid double nesting
-  let outputDir = options.output || "./output";
-
-  // If outputDir is a relative path that doesn't exist, it might be nested incorrectly
-  const { existsSync } = await import("fs");
-
-  // If the output directory doesn't exist at the specified path,
-  // it might be because we need to use the working directory correctly
-  if (!existsSync(outputDir)) {
-    // The working directory is already ./tmp/crawler-test-basic,
-    // so we just need output/areas and output/users
-    outputDir = "output";
-  }
-
-  const usersDir = `${outputDir}/users`;
-
-  // Create directories
-  const { mkdirSync, writeFileSync } = await import("fs");
-  mkdirSync(usersDir, { recursive: true });
-
-  // Mock users data
-  const mockUsers = [
-    { id: "1", username: "test-user-1", name: "Test User 1", publicEmail: "test1@example.com", createdAt: "2023-01-01T00:00:00Z" },
-    { id: "2", username: "test-user-2", name: "Test User 2", publicEmail: "test2@example.com", createdAt: "2023-01-01T00:00:00Z" },
-  ];
-  writeFileSync(`${usersDir}/users.jsonl`, mockUsers.map((u) => JSON.stringify(u)).join("\n"));
-  logger.info(`Created mock users.jsonl with ${mockUsers.length} entries`);
+  await createMockDataUtility(options, "users", logger);
 };

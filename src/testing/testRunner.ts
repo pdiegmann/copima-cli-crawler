@@ -298,11 +298,13 @@ export class TestRunner {
       let stderr = "";
       const generatedFiles: string[] = [];
 
+      /* eslint-disable sonarjs/no-os-command-from-path */
       const child = spawn("bash", ["-c", `${cliPath} ${args.join(" ")}`], {
         cwd: config.execution.workingDir,
         env,
         stdio: ["pipe", "pipe", "pipe"],
       });
+      /* eslint-enable sonarjs/no-os-command-from-path */
 
       this.activeProcesses.push(child);
 
@@ -480,7 +482,7 @@ export class TestRunner {
     const logLevelRegex = /\[(error|warn|info|debug)\]/gi;
     const levelMatches = allOutput.match(logLevelRegex) || [];
     levelMatches.forEach((match) => {
-      const level = match.replace(/[\[\]]/g, "").toLowerCase();
+      const level = match.replace(/[[\]]/g, "").toLowerCase();
       if (!foundLevels.includes(level)) {
         foundLevels.push(level);
       }

@@ -12,7 +12,7 @@ type Executable = {
   testable: boolean;
 };
 
-function getExecutables(): Executable[] {
+const getExecutables = (): Executable[] => {
   const distDir = resolve("./dist");
 
   return [
@@ -38,9 +38,9 @@ function getExecutables(): Executable[] {
       testable: process.platform === "darwin",
     },
   ];
-}
+};
 
-function testExecutable(executable: Executable): boolean {
+const testExecutable = async (executable: Executable): Promise<boolean> => {
   console.log(`\n🧪 Testing ${executable.name}...`);
 
   if (!existsSync(executable.path)) {
@@ -50,7 +50,8 @@ function testExecutable(executable: Executable): boolean {
 
   // Check file info
   try {
-    const stats = require("fs").statSync(executable.path);
+    const { statSync } = await import("fs");
+    const stats = statSync(executable.path);
     console.log(`📊 Size: ${(stats.size / 1024 / 1024).toFixed(2)} MB`);
   } catch (error) {
     console.log(`⚠️  Could not get file stats: ${error}`);
@@ -64,7 +65,9 @@ function testExecutable(executable: Executable): boolean {
   // Make executable on Unix systems
   if (process.platform !== "win32") {
     try {
+      /* eslint-disable sonarjs/os-command */
       execSync(`chmod +x "${executable.path}"`);
+      /* eslint-enable sonarjs/os-command */
     } catch (error) {
       console.log(`⚠️  Could not make file executable: ${error}`);
     }
@@ -80,13 +83,15 @@ function testExecutable(executable: Executable): boolean {
   for (const test of tests) {
     try {
       console.log(`  🔍 Testing: ${test.desc}...`);
+      /* eslint-disable sonarjs/os-command */
       const output = execSync(`"${executable.path}" ${test.cmd}`, {
         encoding: "utf-8",
         timeout: 10000,
       });
+      /* eslint-enable sonarjs/os-command */
 
       if (output.trim()) {
-        console.log(`    ✅ Success (${output.split("\n").length} lines output)`);
+        console.log(`    ✅ Success (${output.split("\\n").length} lines output)`);
       } else {
         console.log("    ⚠️  No output returned");
       }
@@ -98,9 +103,9 @@ function testExecutable(executable: Executable): boolean {
 
   console.log(`✅ All tests passed for ${executable.name}`);
   return true;
-}
+};
 
-async function main(): Promise<void> {
+const main = async (): Promise<void> => {
   console.log("🚀 Testing built executables...\n");
 
   const executables = getExecutables();
@@ -109,7 +114,7 @@ async function main(): Promise<void> {
 
   for (const executable of executables) {
     totalTests++;
-    if (testExecutable(executable)) {
+    if (await testExecutable(executable)) {
       passedTests++;
     }
   }
@@ -126,7 +131,7 @@ async function main(): Promise<void> {
     console.log("\n❌ Some tests failed. Check the output above.");
     process.exit(1);
   }
-}
+};
 
 if (import.meta.main) {
   main().catch((error) => {

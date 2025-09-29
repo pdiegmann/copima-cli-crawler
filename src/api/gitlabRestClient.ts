@@ -99,25 +99,29 @@ export class GitLabRestClient {
 
   async getCommits(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/repository/commits${queryParams ? `?${queryParams}` : ""}`;
+    const queryString = queryParams ? `?${queryParams}` : "";
+    const endpoint = `/projects/${projectId}/repository/commits${queryString}`;
     return this.request(endpoint);
   }
 
   async getRepositoryTree(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/repository/tree${queryParams ? `?${queryParams}` : ""}`;
+    const queryString = queryParams ? `?${queryParams}` : "";
+    const endpoint = `/projects/${projectId}/repository/tree${queryString}`;
     return this.request(endpoint);
   }
 
   async getReleases(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/releases${queryParams ? `?${queryParams}` : ""}`;
+    const queryString = queryParams ? `?${queryParams}` : "";
+    const endpoint = `/projects/${projectId}/releases${queryString}`;
     return this.request(endpoint);
   }
 
   async getPipelines(projectId: string, options: any = {}): Promise<any> {
     const queryParams = new URLSearchParams(options).toString();
-    const endpoint = `/projects/${projectId}/pipelines${queryParams ? `?${queryParams}` : ""}`;
+    const queryString = queryParams ? `?${queryParams}` : "";
+    const endpoint = `/projects/${projectId}/pipelines${queryString}`;
     return this.request(endpoint);
   }
 

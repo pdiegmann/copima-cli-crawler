@@ -2,16 +2,14 @@ import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { PageInfo as CustomPageInfo, GitLabProject, GitLabUser, GroupNode, SafeRecord } from "../types/api.js";
 import { graphql } from "./gql";
-import type { FetchGroupProjectsQuery, FetchGroupQuery, FetchGroupsQuery, FetchProjectQuery, FetchProjectsQuery, FetchSubgroupsQuery, FetchUsersQuery } from "./gql/graphql";
+import type { FetchProjectQuery, FetchProjectsQuery, FetchUsersQuery } from "./gql/graphql";
+import { FetchProjectDocument, FetchProjectsDocument, FetchUsersDocument } from "./gql/graphql";
 import {
-  FetchGroupDocument,
-  FetchGroupProjectsDocument,
-  FetchGroupsDocument,
-  FetchProjectDocument,
-  FetchProjectsDocument,
-  FetchSubgroupsDocument,
-  FetchUsersDocument,
-} from "./gql/graphql";
+  FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY,
+  FETCH_COMPREHENSIVE_GROUP_QUERY,
+  FETCH_COMPREHENSIVE_GROUPS_QUERY,
+  FETCH_COMPREHENSIVE_SUBGROUPS_QUERY,
+} from "./queries/groupQueries";
 
 const logger = createLogger("GitLabGraphQLClient");
 
@@ -171,7 +169,7 @@ export class GitLabGraphQLClient {
 
   async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query<FetchGroupsQuery>(FetchGroupsDocument, { first, after });
+      const data = await this.query<any>(FETCH_COMPREHENSIVE_GROUPS_QUERY, { first, after });
       if (!data.groups?.nodes || !data.groups.pageInfo) throw new Error("Invalid data format");
       return {
         nodes: data.groups.nodes as GroupNode[],
@@ -199,7 +197,7 @@ export class GitLabGraphQLClient {
 
   async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query<FetchGroupProjectsQuery>(FetchGroupProjectsDocument, { fullPath: groupId, first, after });
+      const data = await this.query<any>(FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY, { fullPath: groupId, first, after });
       if (!data.group?.projects?.nodes || !data.group.projects.pageInfo) throw new Error("Invalid data format");
       return {
         nodes: data.group.projects.nodes as GitLabProject[],
@@ -213,7 +211,7 @@ export class GitLabGraphQLClient {
 
   async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query<FetchSubgroupsQuery>(FetchSubgroupsDocument, { fullPath: groupId, first, after });
+      const data = await this.query<any>(FETCH_COMPREHENSIVE_SUBGROUPS_QUERY, { fullPath: groupId, first, after });
       if (!data.group?.descendantGroups?.nodes || !data.group.descendantGroups.pageInfo) throw new Error("Invalid data format");
       return {
         nodes: data.group.descendantGroups.nodes as GroupNode[],
@@ -227,7 +225,7 @@ export class GitLabGraphQLClient {
 
   async fetchGroup(groupId: string): Promise<GroupNode> {
     try {
-      const data = await this.query<FetchGroupQuery>(FetchGroupDocument, { fullPath: groupId });
+      const data = await this.query<any>(FETCH_COMPREHENSIVE_GROUP_QUERY, { fullPath: groupId });
       if (!data.group) throw new Error("Invalid data format");
       return data.group as GroupNode;
     } catch (error) {

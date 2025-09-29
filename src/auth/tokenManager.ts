@@ -46,6 +46,7 @@ export class TokenManager {
     }
   }
 
+  // eslint-disable-next-line sonarjs/no-invariant-returns
   async refreshAccessToken(accountId: string): Promise<string | null> {
     try {
       const [accountRecord] = await this.db.select().from(account).where(eq(account.accountId, accountId)).limit(1);

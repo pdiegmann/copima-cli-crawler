@@ -4,7 +4,6 @@
 
 // Base types
 export type GitLabId = string | number;
-export type ISODateString = string;
 export type VisibilityLevel = "private" | "internal" | "public";
 
 // GitLab API Response Types
@@ -14,8 +13,8 @@ export type GitLabUser = {
   name: string;
   email?: string;
   publicEmail?: string;
-  createdAt: ISODateString;
-  updatedAt?: ISODateString;
+  createdAt: string;
+  updatedAt?: string;
   avatarUrl?: string;
   webUrl?: string;
 };
@@ -28,8 +27,8 @@ export type GitLabGroup = {
   fullPath: string;
   description?: string;
   visibility: VisibilityLevel;
-  createdAt: ISODateString;
-  updatedAt?: ISODateString;
+  createdAt: string;
+  updatedAt?: string;
   webUrl: string;
   avatarUrl?: string;
   parentId?: GitLabId;
@@ -105,7 +104,7 @@ export type GitLabBranch = {
     author_email: string;
     committer_name: string;
     committer_email: string;
-    created_at: ISODateString;
+    created_at: string;
   };
   protected: boolean;
   developers_can_push?: boolean;
@@ -121,7 +120,7 @@ export type GitLabCommit = {
   author_email: string;
   committer_name: string;
   committer_email: string;
-  created_at: ISODateString;
+  created_at: string;
   parent_ids: string[];
   web_url: string;
 };
@@ -145,9 +144,9 @@ export type GitLabIssue = {
   title: string;
   description?: string;
   state: "opened" | "closed";
-  created_at: ISODateString;
-  updated_at?: ISODateString;
-  closed_at?: ISODateString;
+  created_at: string;
+  updated_at?: string;
+  closed_at?: string;
   author: GitLabUser;
   assignees?: GitLabUser[];
   labels?: string[];
@@ -167,10 +166,10 @@ export type GitLabMergeRequest = {
   title: string;
   description?: string;
   state: "opened" | "closed" | "merged";
-  created_at: ISODateString;
-  updated_at?: ISODateString;
-  merged_at?: ISODateString;
-  closed_at?: ISODateString;
+  created_at: string;
+  updated_at?: string;
+  merged_at?: string;
+  closed_at?: string;
   author: GitLabUser;
   assignees?: GitLabUser[];
   reviewers?: GitLabUser[];
@@ -182,7 +181,6 @@ export type GitLabMergeRequest = {
 
 // Generic API utility types
 export type SafeRecord<T = unknown> = Record<string, T | string | undefined>;
-export type ApiEndpoint = string;
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 // OAuth2 types

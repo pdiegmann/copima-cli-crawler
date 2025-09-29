@@ -4,7 +4,7 @@ import { existsSync, rmSync } from "fs";
 import { resolve } from "path";
 import { buildExecutables } from "../build.config";
 
-async function main(): Promise<void> {
+const main = async (): Promise<void> => {
   console.log("🧹 Cleaning previous builds...");
   const distDir = resolve("./dist");
 
@@ -14,7 +14,7 @@ async function main(): Promise<void> {
   }
 
   await buildExecutables();
-}
+};
 
 main().catch((error) => {
   console.error("Build failed:", error);

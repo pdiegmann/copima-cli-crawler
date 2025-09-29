@@ -10,10 +10,10 @@ import type { SafeRecord } from "../../types/api.js";
 const logger = createLogger("AccountCommands");
 
 // Helper function to ensure database is initialized
-const ensureDatabase = () => {
+const ensureDatabase = (): ReturnType<typeof getDatabase> => {
   try {
     return getDatabase();
-  } catch (error) {
+  } catch {
     // Initialize database if not already done
     initializeDatabase({ path: "./database.sqlite", wal: true });
     return getDatabase();

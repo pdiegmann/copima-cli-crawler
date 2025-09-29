@@ -8,7 +8,7 @@ const platforms = [
   { target: "bun-darwin-arm64", extension: "", name: "macos-arm64" },
 ] as const;
 
-export async function buildExecutables(): Promise<void> {
+export const buildExecutables = async (): Promise<void> => {
   const distDir = resolve("./dist");
 
   // Ensure dist directory exists
@@ -39,7 +39,7 @@ export async function buildExecutables(): Promise<void> {
   console.log("- dist/copima-cli-windows.exe");
   console.log("- dist/copima-cli-macos-x64");
   console.log("- dist/copima-cli-macos-arm64");
-}
+};
 
 if (import.meta.main) {
   buildExecutables().catch(console.error);

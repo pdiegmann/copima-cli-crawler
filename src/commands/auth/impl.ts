@@ -245,7 +245,7 @@ const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Serve
         };
         logger.debug("Using OAuth2 server config from main application config");
       }
-    } catch (error) {
+    } catch {
       logger.debug("No OAuth2 server config found in main config, using defaults");
     }
   }
@@ -264,7 +264,7 @@ const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Serve
         };
         logger.debug("Using OAuth2 server config from unified config file");
       }
-    } catch (error) {
+    } catch {
       logger.debug("Failed to load unified config, trying legacy OAuth2 config format");
 
       // Fall back to legacy format

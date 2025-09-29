@@ -175,7 +175,8 @@ class ProgressReporter {
       const remainingString = this.formatDuration(remaining);
 
       // Main progress line
-      const progressLine = `${pc.cyan("Progress:")} [${progressBar}] ${pc.bold(`${percentage}%`)} (${completedSteps}/${totalSteps})`;
+      const percentageText = `${percentage}%`;
+      const progressLine = `${pc.cyan("Progress:")} [${progressBar}] ${pc.bold(percentageText)} (${completedSteps}/${totalSteps})`;
       const timeLine = `${pc.yellow("Time:")} ${elapsedString} elapsed, ~${remainingString} remaining`;
       const stepLine = `${pc.magenta("Current:")} ${currentStep}`;
 
@@ -189,12 +190,15 @@ class ProgressReporter {
         Object.entries(this.stats.resourceCounts).forEach(([type, counts]) => {
           const resourcePercentage = counts.total > 0 ? Math.round((counts.processed / counts.total) * 100) : 0;
           const statusColor = counts.errors > 0 ? pc.red : pc.green;
-          console.log(`  ${type}: ${statusColor(`${counts.processed}/${counts.total}`)} (${resourcePercentage}%)`);
+          const statusText = `${counts.processed}/${counts.total}`;
+          console.log(`  ${type}: ${statusColor(statusText)} (${resourcePercentage}%)`);
           if (counts.errors > 0) {
-            console.log(`    ${pc.red(`Errors: ${counts.errors}`)}`);
+            const errorText = `Errors: ${counts.errors}`;
+            console.log(`    ${pc.red(errorText)}`);
           }
           if (counts.filtered > 0) {
-            console.log(`    ${pc.yellow(`Filtered: ${counts.filtered}`)}`);
+            const filteredText = `Filtered: ${counts.filtered}`;
+            console.log(`    ${pc.yellow(filteredText)}`);
           }
         });
       }

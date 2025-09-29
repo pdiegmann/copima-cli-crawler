@@ -5,7 +5,7 @@ import { existsSync, readFileSync, rmSync } from "fs";
 import { resolve } from "path";
 import { buildExecutables } from "../build.config";
 
-async function createRelease(): Promise<void> {
+const createRelease = async (): Promise<void> => {
   console.log("🚀 Starting release process...\n");
 
   // Clean and build
@@ -33,7 +33,9 @@ async function createRelease(): Promise<void> {
 
   // Check if we're in a git repository and have changes
   try {
+    /* eslint-disable sonarjs/no-os-command-from-path */
     const gitStatus = execSync("git status --porcelain", { encoding: "utf-8" });
+    /* eslint-enable sonarjs/no-os-command-from-path */
     if (gitStatus.trim()) {
       console.log("\n⚠️  Warning: You have uncommitted changes.");
       console.log("Consider committing changes before creating a release.");
@@ -41,14 +43,16 @@ async function createRelease(): Promise<void> {
 
     // Check if tag already exists
     try {
+      /* eslint-disable sonarjs/os-command */
       execSync(`git rev-parse v${version}`, { stdio: "ignore" });
+      /* eslint-enable sonarjs/os-command */
       console.log(`\n⚠️  Tag v${version} already exists.`);
       console.log("Consider updating the version in package.json before releasing.");
     } catch {
       // Tag doesn't exist, which is good
       console.log(`\n✅ Tag v${version} is available.`);
     }
-  } catch (error) {
+  } catch {
     console.log("\n⚠️  Not in a git repository or git not available.");
   }
 
@@ -59,7 +63,7 @@ async function createRelease(): Promise<void> {
   console.log("3. Create a git tag and push it to trigger GitHub Actions");
   console.log(`   git tag v${version} && git push origin v${version}`);
   console.log("4. Or manually upload the files to GitHub releases");
-}
+};
 
 createRelease().catch((error) => {
   console.error("Release failed:", error);

@@ -149,11 +149,17 @@ export class HierarchicalStorageManager {
    */
   private sanitizePathPart(part: string): string {
     // Replace invalid file system characters
-    return part
+    let sanitized = part
       .replace(/[<>:"/\\|?*]/g, "_") // Replace invalid characters
       .replace(/\s+/g, "_") // Replace spaces with underscores
-      .replace(/\.+$/, "") // Remove trailing dots
       .toLowerCase(); // Convert to lowercase for consistency
+
+    // Remove trailing dots safely without regex
+    while (sanitized.endsWith(".")) {
+      sanitized = sanitized.slice(0, -1);
+    }
+
+    return sanitized;
   }
 
   /**

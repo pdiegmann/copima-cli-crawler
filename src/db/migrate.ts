@@ -18,7 +18,7 @@ export const runMigrations = (_config: MigrationConfig): undefined => {
       .all();
     logger.info("Database schema already exists, skipping migrations");
     return;
-  } catch (error) {
+  } catch {
     // Schema doesn't exist, we need to create it
     logger.info("Schema not found, creating database schema");
 
