@@ -75,11 +75,11 @@ export type ConfigEditHandler = (flags: ConfigCommandFlags) => Promise<void>;
 export type AuthCommandFlags = {
   provider?: string; // OAuth2 provider (gitlab, github, etc.)
   scopes?: string; // Comma-separated OAuth2 scopes to request
-  port?: number; // Preferred port for callback server
+  port?: string; // Preferred port for callback server (parsed as string)
   "client-id"?: string; // OAuth2 client ID
   "client-secret"?: string; // OAuth2 client secret
   "redirect-uri"?: string; // Custom redirect URI
-  timeout?: number; // Timeout in seconds for auth flow
+  timeout?: string; // Timeout in seconds for auth flow (parsed as string)
   "account-id"?: string; // Account identifier for storage
   name?: string; // Display name for account
   config?: string; // Path to YAML configuration file

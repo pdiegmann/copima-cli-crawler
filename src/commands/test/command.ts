@@ -27,15 +27,17 @@ export const testCommand = buildCommand({
       verbose: {
         kind: "boolean",
         brief: "Enable verbose logging",
-        short: "v",
+        optional: true,
       },
       "dry-run": {
         kind: "boolean",
         brief: "Validate configuration only, don't execute crawler",
+        optional: true,
       },
       suite: {
         kind: "boolean",
         brief: "Run as test suite (multiple test configurations)",
+        optional: true,
       },
       "cli-path": {
         kind: "parsed",
@@ -46,6 +48,7 @@ export const testCommand = buildCommand({
       parallel: {
         kind: "boolean",
         brief: "Run tests in parallel (for test suites)",
+        optional: true,
       },
       "max-parallel": {
         kind: "parsed",
@@ -56,6 +59,7 @@ export const testCommand = buildCommand({
       "stop-on-failure": {
         kind: "boolean",
         brief: "Stop execution on first test failure",
+        optional: true,
       },
       "report-format": {
         kind: "parsed",
@@ -66,14 +70,17 @@ export const testCommand = buildCommand({
       "generate-report": {
         kind: "boolean",
         brief: "Generate test report",
+        optional: true,
       },
       "force-cleanup": {
         kind: "boolean",
         brief: "Force cleanup even on success",
+        optional: true,
       },
       "list-examples": {
         kind: "boolean",
         brief: "List example test configurations",
+        optional: true,
       },
     },
   },

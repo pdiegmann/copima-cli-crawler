@@ -42,7 +42,7 @@ export const authCommand = buildCommand({
           if (isNaN(port) || port < 1 || port > 65535) {
             throw new Error("Port must be a number between 1 and 65535");
           }
-          return port;
+          return input;
         },
         brief: "Preferred port for callback server",
         optional: true,
@@ -60,7 +60,7 @@ export const authCommand = buildCommand({
           if (isNaN(timeout) || timeout < 10 || timeout > 1800) {
             throw new Error("Timeout must be between 10 and 1800 seconds");
           }
-          return timeout;
+          return input;
         },
         brief: "Timeout in seconds for auth flow",
         optional: true,

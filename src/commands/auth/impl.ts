@@ -225,8 +225,8 @@ const buildConfigFromFlags = async (flags: AuthCommandFlags): Promise<OAuth2Conf
 
 const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Server> => {
   let serverConfig: AuthServerConfig = {
-    port: flags.port || 3000,
-    timeout: (flags.timeout || 300) * 1000,
+    port: flags.port ? parseInt(flags.port, 10) : 3000,
+    timeout: (flags.timeout ? parseInt(flags.timeout, 10) : 300) * 1000,
     callbackPath: "/callback",
   };
 
@@ -237,8 +237,8 @@ const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Serve
       if (mainConfig.oauth2?.server) {
         const oauth2Server = mainConfig.oauth2.server;
         serverConfig = {
-          port: flags.port || oauth2Server.port || 3000,
-          timeout: (flags.timeout || oauth2Server.timeout || 300) * 1000,
+          port: flags.port ? parseInt(flags.port, 10) : oauth2Server.port || 3000,
+          timeout: (flags.timeout ? parseInt(flags.timeout, 10) : oauth2Server.timeout || 300) * 1000,
           callbackPath: oauth2Server.callbackPath || "/callback",
         };
         logger.debug("Using OAuth2 server config from main application config");
@@ -256,8 +256,8 @@ const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Serve
       if (mainConfig.oauth2?.server) {
         const oauth2Server = mainConfig.oauth2.server;
         serverConfig = {
-          port: flags.port || oauth2Server.port || 3000,
-          timeout: (flags.timeout || oauth2Server.timeout || 300) * 1000,
+          port: flags.port ? parseInt(flags.port, 10) : oauth2Server.port || 3000,
+          timeout: (flags.timeout ? parseInt(flags.timeout, 10) : oauth2Server.timeout || 300) * 1000,
           callbackPath: oauth2Server.callbackPath || "/callback",
         };
         logger.debug("Using OAuth2 server config from unified config file");
@@ -272,8 +272,8 @@ const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Serve
 
       // Merge YAML config with command-line flags (flags take precedence)
       serverConfig = {
-        port: flags.port || yamlServerConfig.port || 3000,
-        timeout: (flags.timeout || (yamlServerConfig.timeout ? yamlServerConfig.timeout / 1000 : 300)) * 1000,
+        port: flags.port ? parseInt(flags.port, 10) : yamlServerConfig.port || 3000,
+        timeout: (flags.timeout ? parseInt(flags.timeout, 10) : yamlServerConfig.timeout ? yamlServerConfig.timeout / 1000 : 300) * 1000,
         callbackPath: yamlServerConfig.callbackPath || "/callback",
       };
     }
