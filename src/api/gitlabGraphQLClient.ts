@@ -2,14 +2,15 @@ import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { PageInfo as CustomPageInfo, GitLabProject, GitLabUser, GroupNode, SafeRecord } from "../types/api.js";
 import { graphql } from "./gql";
-import type { FetchProjectQuery, FetchProjectsQuery, FetchUsersQuery } from "./gql/graphql";
-import { FetchProjectDocument, FetchProjectsDocument, FetchUsersDocument } from "./gql/graphql";
+import type { FetchProjectQuery, FetchProjectsQuery } from "./gql/graphql";
+import { FetchProjectDocument, FetchProjectsDocument } from "./gql/graphql";
 import {
   FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY,
   FETCH_COMPREHENSIVE_GROUP_QUERY,
   FETCH_COMPREHENSIVE_GROUPS_QUERY,
   FETCH_COMPREHENSIVE_SUBGROUPS_QUERY,
 } from "./queries/groupQueries";
+import { FETCH_COMPREHENSIVE_USERS_QUERY } from "./queries/userQueries";
 
 const logger = createLogger("GitLabGraphQLClient");
 
@@ -156,11 +157,14 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchUsers(): Promise<GitLabUser[]> {
+  async fetchUsers(first: number = 100, after?: string): Promise<{ nodes: GitLabUser[]; pageInfo: PageInfo }> {
     try {
-      const data = await this.query<FetchUsersQuery>(FetchUsersDocument);
-      if (!data.users?.nodes) throw new Error("Invalid data format");
-      return data.users.nodes as GitLabUser[];
+      const data = await this.query<any>(FETCH_COMPREHENSIVE_USERS_QUERY, { first, after });
+      if (!data.users?.nodes || !data.users.pageInfo) throw new Error("Invalid data format");
+      return {
+        nodes: data.users.nodes as GitLabUser[],
+        pageInfo: { ...data.users.pageInfo, endCursor: data.users.pageInfo.endCursor || undefined },
+      };
     } catch (error) {
       logger.error("Failed to fetch users:", { error });
       throw error;

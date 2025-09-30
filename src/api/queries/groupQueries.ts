@@ -1,5 +1,8 @@
 import { graphql } from "../gql";
 
+// Import the comprehensive project query fragments
+// Note: These will be used in the group project queries
+
 // Comprehensive Group Query with all available fields and sub-resources
 export const FETCH_COMPREHENSIVE_GROUP_QUERY = graphql(`
   query FetchComprehensiveGroup($fullPath: ID!) {
@@ -323,42 +326,147 @@ export const FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY = graphql(`
           startCursor
         }
         nodes {
+          # Basic project information
           id
           name
           path
           fullPath
+          fullName
+          nameWithNamespace
+          pathWithNamespace
           description
+          defaultBranch
           visibility
           createdAt
           updatedAt
           lastActivityAt
           webUrl
+          readmeUrl
           avatarUrl
+
+          # Project status and settings
           archived
+          emptyRepo
+
+          # Counts and statistics
           forksCount
           starCount
+          openIssuesCount
+
+          # Feature enablement flags
           issuesEnabled
           mergeRequestsEnabled
           wikiEnabled
           snippetsEnabled
           containerRegistryEnabled
+          packagesEnabled
           lfsEnabled
           requestAccessEnabled
-          nameWithNamespace
-          topics
-          tagList
-          sshUrlToRepo
-          httpUrlToRepo
-          serviceDeskEnabled
-          serviceDeskAddress
-          autocloseReferencedIssues
           publicJobs
           sharedRunnersEnabled
+          groupRunnersEnabled
+
+          # Access level settings
+          issuesAccessLevel
+          repositoryAccessLevel
+          mergeRequestsAccessLevel
+          forksAccessLevel
+          wikiAccessLevel
+          snippetsAccessLevel
+          pagesAccessLevel
+          analyticsAccessLevel
+          requirementsAccessLevel
+          securityAndComplianceAccessLevel
+          operationsAccessLevel
+          featuresAccessLevel
+          infrastructureAccessLevel
+          monitorAccessLevel
+          environmentsAccessLevel
+          releasesAccessLevel
+          modelExperimentsAccessLevel
+          packageRegistryAccessLevel
+
+          # Repository and Git settings
+          sshUrlToRepo
+          httpUrlToRepo
+
+          # CI/CD settings
+          ciConfigPath
+          ciDefaultGitDepth
+          ciForwardDeploymentEnabled
+          ciJobTokenScopeEnabled
+          ciSeparateCaches
+          buildGitStrategy
+          buildTimeout
+          autoCancelPendingPipelines
+          keepLatestArtifact
+
+          # Merge request settings
           onlyAllowMergeIfPipelineSucceeds
           onlyAllowMergeIfAllDiscussionsAreResolved
           removeSourceBranchAfterMerge
           printingMergeRequestLinkEnabled
           allowMergeOnSkippedPipeline
+          squashOption
+          mergeMethod
+          suggestionCommitMessage
+          mergeRequestsAuthorApproval
+          mergeRequestsDisableCommittersApproval
+          resolveOutdatedDiffDiscussions
+
+          # Auto DevOps settings
+          autoDevopsEnabled
+          autoDevopsDeployStrategy
+
+          # Service desk settings
+          serviceDeskEnabled
+          serviceDeskAddress
+
+          # Pages settings
+          pagesUrl
+
+          # Topic and tagging
+          topics
+          tagList
+
+          # Import/Export information
+          importUrl
+          importStatus
+          importError
+
+          # External authorization
+          externalAuthorizationClassificationLabel
+
+          # Container registry settings
+          containerRegistryImagePrefix
+          containerRegistryTokenExpireDelay
+          containerExpirationPolicy {
+            cadence
+            keepN
+            olderThan
+            nameRegex
+            nameRegexKeep
+            enabled
+            nextRunAt
+          }
+
+          # Group and namespace
+          group {
+            id
+            name
+            path
+            fullPath
+            webUrl
+          }
+          namespace {
+            id
+            name
+            path
+            fullPath
+            kind
+          }
+
+          # Compliance frameworks
           complianceFrameworks {
             nodes {
               id
@@ -368,7 +476,13 @@ export const FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY = graphql(`
               pipelineConfigurationFullPath
             }
           }
-          projectMembers {
+
+          # Project members with comprehensive user data
+          projectMembers(first: 50) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
             nodes {
               id
               accessLevel {
@@ -386,27 +500,44 @@ export const FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY = graphql(`
                 state
                 webUrl
                 avatarUrl
+                bio
+                location
+                workInformation
+                localTime
+                lastActivityOn
+                createdAt
               }
             }
           }
+
+          # Repository information
           repository {
             exists
             empty
             rootRef
+            diskPath
             tree {
               lastCommit {
                 id
                 sha
+                shortId
                 title
+                fullTitle
                 message
                 authorName
                 authorEmail
+                authorGravatar
+                committerName
+                committerEmail
                 authoredDate
                 committedDate
+                createdAt
                 webUrl
               }
             }
           }
+
+          # Comprehensive statistics
           statistics {
             commitCount
             storageSize
@@ -417,7 +548,210 @@ export const FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY = graphql(`
             snippetsSize
             uploadsSize
             wikiSize
+            containerRegistrySize
           }
+
+          # Labels (limited sample)
+          labels(first: 20) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              id
+              title
+              description
+              color
+              textColor
+              createdAt
+              updatedAt
+            }
+          }
+
+          # Milestones (limited sample)
+          milestones(first: 20) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              id
+              title
+              description
+              state
+              dueDate
+              startDate
+              createdAt
+              updatedAt
+              webUrl
+              expired
+              upcoming
+            }
+          }
+
+          # Issues (limited sample for performance)
+          issues(first: 10, sort: UPDATED_DESC) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            count
+            nodes {
+              id
+              iid
+              title
+              state
+              createdAt
+              updatedAt
+              author {
+                id
+                username
+                name
+              }
+              assignees {
+                nodes {
+                  id
+                  username
+                  name
+                }
+              }
+            }
+          }
+
+          # Merge Requests (limited sample for performance)
+          mergeRequests(first: 10, sort: UPDATED_DESC) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            count
+            nodes {
+              id
+              iid
+              title
+              state
+              createdAt
+              updatedAt
+              sourceBranch
+              targetBranch
+              author {
+                id
+                username
+                name
+              }
+              assignees {
+                nodes {
+                  id
+                  username
+                  name
+                }
+              }
+            }
+          }
+
+          # Environments (limited sample)
+          environments(first: 10) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              id
+              name
+              slug
+              state
+              externalUrl
+              environmentType
+              createdAt
+              updatedAt
+            }
+          }
+
+          # Releases (limited sample)
+          releases(first: 5, sort: RELEASED_AT_DESC) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              name
+              tagName
+              description
+              releasedAt
+              createdAt
+              author {
+                id
+                username
+                name
+              }
+            }
+          }
+
+          # CI/CD Variables
+          ciVariables {
+            nodes {
+              id
+              key
+              variableType
+              protected
+              masked
+              environmentScope
+            }
+          }
+
+          # Runners (limited sample)
+          runners(first: 10) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            nodes {
+              id
+              runnerType
+              description
+              active
+              status
+              tagList
+            }
+          }
+
+          # Push Rules
+          pushRule {
+            id
+            rejectUnsignedCommits
+            commitCommitterCheck
+            denyDeleteTag
+            memberCheck
+            preventSecrets
+          }
+
+          # Wiki information
+          wiki {
+            webUrl
+          }
+
+          # Error tracking settings
+          errorTrackingEnabled
+
+          # Requirements (if enabled)
+          requirementsEnabled
+
+          # Security and compliance
+          securityDashboardPath
+
+          # Mirror settings
+          mirror
+          mirrorTriggerBuilds
+
+          # License information
+          licenseUrl
+          licenseName
+
+          # Merge trains
+          mergeTrainsEnabled
+
+          # Autoclose referenced issues
+          autocloseReferencedIssues
         }
       }
     }

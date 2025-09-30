@@ -6,6 +6,7 @@ const config: CodegenConfig = {
   documents: "src/api/**/*",
   hooks: { afterOneFileWrite: ["eslint --fix", "prettier --write"] },
   emitLegacyCommonJSImports: false,
+  allowPartialOutputs: true,
   generates: {
     "src/api/gql/": {
       preset: "client",
