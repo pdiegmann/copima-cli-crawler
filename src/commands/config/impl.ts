@@ -77,10 +77,8 @@ export const showConfig = async (flags: ShowConfigFlags): Promise<void | Error> 
 };
 
 export const setConfig = async (flags: SetConfigFlags): Promise<void | Error> => {
-  if (!flags.key || !flags.value) {
-    logger.error(colors.red("❌ Key and value are required"));
-    return new Error("Key and value are required");
-  }
+  const validationError = validateSetConfigFlags(flags);
+  if (validationError) return validationError;
 
   const configFile = flags.global ? GLOBAL_CONFIG_FILE : LOCAL_CONFIG_FILE;
   const configType = flags.global ? "global" : "local";
@@ -88,55 +86,74 @@ export const setConfig = async (flags: SetConfigFlags): Promise<void | Error> =>
   logger.info(colors.cyan(`🔧 Setting ${configType} configuration: ${colors.bold(flags.key)}`));
 
   try {
-    // Ensure config directory exists
-    const configDir = dirname(configFile);
-    if (!existsSync(configDir)) {
-      mkdirSync(configDir, { recursive: true });
-    }
+    ensureConfigDirectory(configFile);
+    const config = loadExistingConfig(configFile);
+    const parsedValue = parseConfigValue(flags.value, flags.type);
 
-    // Load existing config or create new one
-    let config: Record<string, unknown> = {} as Record<string, unknown>;
-    if (existsSync(configFile)) {
-      const yamlContent = readFileSync(configFile, "utf8");
-      config = (yaml.load(yamlContent) as Record<string, unknown>) || {};
-    }
-
-    // Parse value based on type
-    let parsedValue: any = flags.value;
-    if (flags.type) {
-      switch (flags.type) {
-        case "number":
-          parsedValue = parseFloat(flags.value);
-          if (isNaN(parsedValue)) {
-            throw new Error(`Invalid number value: ${flags.value}`);
-          }
-          break;
-        case "boolean":
-          parsedValue = flags.value.toLowerCase() === "true";
-          break;
-        case "string":
-        default:
-          parsedValue = flags.value;
-          break;
-      }
-    }
-
-    // Set nested property using dot notation
     setNestedProperty(config, flags.key, parsedValue);
+    saveConfigFile(configFile, config);
 
-    // Write back to file
-    const yamlContent = yaml.dump(config, { indent: 2 });
-    writeFileSync(configFile, yamlContent, "utf8");
-
-    logger.info(colors.green("✅ Configuration updated successfully"));
-    logger.info(`📁 File: ${colors.bold(configFile)}`);
-    logger.info(`🔑 Key: ${colors.bold(flags.key)}`);
-    logger.info(`💾 Value: ${colors.bold(String(parsedValue))}`);
+    logConfigUpdateSuccess(configFile, flags.key, parsedValue);
   } catch (error) {
     logger.error(colors.red("❌ Failed to set configuration"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
+};
+
+const validateSetConfigFlags = (flags: SetConfigFlags): Error | null => {
+  if (!flags.key || !flags.value) {
+    logger.error(colors.red("❌ Key and value are required"));
+    return new Error("Key and value are required");
+  }
+  return null;
+};
+
+const ensureConfigDirectory = (configFile: string): void => {
+  const configDir = dirname(configFile);
+  if (!existsSync(configDir)) {
+    mkdirSync(configDir, { recursive: true });
+  }
+};
+
+const loadExistingConfig = (configFile: string): Record<string, unknown> => {
+  if (!existsSync(configFile)) {
+    return {};
+  }
+
+  const yamlContent = readFileSync(configFile, "utf8");
+  return (yaml.load(yamlContent) as Record<string, unknown>) || {};
+};
+
+const parseConfigValue = (value: string, type?: string): any => {
+  if (!type) return value;
+
+  switch (type) {
+    case "number": {
+      const parsedNumber = parseFloat(value);
+      if (isNaN(parsedNumber)) {
+        throw new Error(`Invalid number value: ${value}`);
+      }
+      return parsedNumber;
+    }
+    case "boolean":
+      return value.toLowerCase() === "true";
+    case "string":
+    default:
+      return value;
+  }
+};
+
+const saveConfigFile = (configFile: string, config: Record<string, unknown>): void => {
+  const yamlContent = yaml.dump(config, { indent: 2 });
+  writeFileSync(configFile, yamlContent, "utf8");
+};
+
+const logConfigUpdateSuccess = (configFile: string, key: string, value: any): void => {
+  logger.info(colors.green("✅ Configuration updated successfully"));
+  logger.info(`📁 File: ${colors.bold(configFile)}`);
+  logger.info(`🔑 Key: ${colors.bold(key)}`);
+  logger.info(`💾 Value: ${colors.bold(String(value))}`);
 };
 
 export const unsetConfig = async (flags: UnsetConfigFlags): Promise<void | Error> => {
@@ -190,74 +207,108 @@ export const validateConfig = async (flags: ValidateConfigFlags): Promise<void |
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    // Validate GitLab configuration
-    if (config.gitlab) {
-      if (config.gitlab.host && !isValidUrl(config.gitlab.host)) {
-        errors.push("gitlab.host must be a valid URL");
-      }
-      if (config.gitlab.accessToken && config.gitlab.accessToken.length < 20) {
-        warnings.push("gitlab.accessToken appears to be too short (< 20 characters)");
-      }
-    }
+    // Run all validation checks
+    validateGitlabConfig(config, errors, warnings);
+    validateDatabaseConfig(config, errors, warnings);
+    validateOutputConfig(config, errors, warnings);
+    validateLoggingConfig(config, errors, warnings);
 
-    // Validate database configuration
-    if (config.database) {
-      if (config.database.path && !config.database.path.endsWith(".sqlite")) {
-        warnings.push("database.path should end with .sqlite extension");
-      }
-    }
+    // Handle validation results
+    const validationError = handleValidationResults(errors, warnings, flags);
+    if (validationError) return validationError;
 
-    // Validate output configuration
-    if (config.output) {
-      if (config.output.directory && !existsSync(dirname(config.output.directory))) {
-        errors.push(`output.directory parent does not exist: ${dirname(config.output.directory)}`);
-      }
-    }
-
-    // Validate logging configuration
-    if (config.logging) {
-      const validLevels = ["error", "warn", "info", "debug"];
-      if (config.logging.level && !validLevels.includes(config.logging.level)) {
-        errors.push(`logging.level must be one of: ${validLevels.join(", ")}`);
-      }
-    }
-
-    // Report results
-    if (errors.length === 0 && warnings.length === 0) {
-      logger.info(colors.green("✅ Configuration is valid"));
-    } else {
-      if (errors.length > 0) {
-        logger.error(colors.red(`❌ Found ${errors.length} error(s):`));
-        errors.forEach((error) => logger.error(colors.red(`  • ${error}`)));
-      }
-
-      if (warnings.length > 0) {
-        logger.warn(colors.yellow(`⚠️  Found ${warnings.length} warning(s):`));
-        warnings.forEach((warning) => logger.warn(colors.yellow(`  • ${warning}`)));
-      }
-
-      if (flags.strict && warnings.length > 0) {
-        const error = new Error("Validation failed: warnings treated as errors in strict mode");
-        logger.error(colors.red("❌ Failed to validate configuration"));
-        logger.error(error.message);
-        return error;
-      }
-
-      if (errors.length > 0) {
-        const error = new Error("Validation failed: configuration has errors");
-        logger.error(colors.red("❌ Failed to validate configuration"));
-        logger.error(error.message);
-        return error;
-      }
-    }
-
-    if (flags.fix) {
-      logger.warn(colors.yellow("⚠️  Auto-fix functionality not yet implemented"));
-    }
+    handleAutoFix(flags);
   } catch (error) {
     logger.error(colors.red("❌ Failed to validate configuration"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
+  }
+};
+
+const validateGitlabConfig = (config: any, errors: string[], warnings: string[]): void => {
+  if (!config.gitlab) return;
+
+  if (config.gitlab.host && !isValidUrl(config.gitlab.host)) {
+    errors.push("gitlab.host must be a valid URL");
+  }
+  if (config.gitlab.accessToken && config.gitlab.accessToken.length < 20) {
+    warnings.push("gitlab.accessToken appears to be too short (< 20 characters)");
+  }
+};
+
+const validateDatabaseConfig = (config: any, errors: string[], warnings: string[]): void => {
+  if (!config.database) return;
+
+  if (config.database.path && !config.database.path.endsWith(".sqlite")) {
+    warnings.push("database.path should end with .sqlite extension");
+  }
+};
+
+const validateOutputConfig = (config: any, errors: string[], warnings: string[]): void => {
+  if (!config.output) return;
+
+  if (config.output.directory && !existsSync(dirname(config.output.directory))) {
+    errors.push(`output.directory parent does not exist: ${dirname(config.output.directory)}`);
+  }
+
+  // Add potential warnings for output configuration
+  if (config.output.format && !["json", "jsonl", "yaml"].includes(config.output.format)) {
+    warnings.push(`output.format '${config.output.format}' is not a standard format (json, jsonl, yaml)`);
+  }
+};
+
+const validateLoggingConfig = (config: any, errors: string[], _warnings: string[]): void => {
+  if (!config.logging) return;
+
+  const validLevels = ["error", "warn", "info", "debug"];
+  if (config.logging.level && !validLevels.includes(config.logging.level)) {
+    errors.push(`logging.level must be one of: ${validLevels.join(", ")}`);
+  }
+};
+
+const handleValidationResults = (errors: string[], warnings: string[], flags: ValidateConfigFlags): Error | null => {
+  if (errors.length === 0 && warnings.length === 0) {
+    logger.info(colors.green("✅ Configuration is valid"));
+    return null;
+  }
+
+  reportValidationIssues(errors, warnings);
+  return checkValidationFailures(errors, warnings, flags);
+};
+
+const reportValidationIssues = (errors: string[], warnings: string[]): void => {
+  if (errors.length > 0) {
+    logger.error(colors.red(`❌ Found ${errors.length} error(s):`));
+    errors.forEach((error) => logger.error(colors.red(`  • ${error}`)));
+  }
+
+  if (warnings.length > 0) {
+    logger.warn(colors.yellow(`⚠️  Found ${warnings.length} warning(s):`));
+    warnings.forEach((warning) => logger.warn(colors.yellow(`  • ${warning}`)));
+  }
+};
+
+const checkValidationFailures = (errors: string[], warnings: string[], flags: ValidateConfigFlags): Error | null => {
+  if (flags.strict && warnings.length > 0) {
+    const error = new Error("Validation failed: warnings treated as errors in strict mode");
+    logger.error(colors.red("❌ Failed to validate configuration"));
+    logger.error(error.message);
+    return error;
+  }
+
+  if (errors.length > 0) {
+    const error = new Error("Validation failed: configuration has errors");
+    logger.error(colors.red("❌ Failed to validate configuration"));
+    logger.error(error.message);
+    return error;
+  }
+
+  return null;
+};
+
+const handleAutoFix = (flags: ValidateConfigFlags): void => {
+  if (flags.fix) {
+    logger.warn(colors.yellow("⚠️  Auto-fix functionality not yet implemented"));
   }
 };
 

@@ -47,10 +47,12 @@ describe("TokenManager", () => {
       const futureDate = new Date(Date.now() + 10000);
 
       // Mock the chain for the successful query
-      mockDb.limit.mockResolvedValue([{
-        accessToken: validAccessToken,
-        accessTokenExpiresAt: futureDate,
-      }]);
+      mockDb.limit.mockResolvedValue([
+        {
+          accessToken: validAccessToken,
+          accessTokenExpiresAt: futureDate,
+        },
+      ]);
 
       const token = await tokenManager.getAccessToken(accountId);
 
@@ -66,11 +68,13 @@ describe("TokenManager", () => {
       const expiredDate = new Date(Date.now() - 10000);
 
       // Mock the chain for the expired token query
-      mockDb.limit.mockResolvedValue([{
-        accessToken: "expired-token",
-        accessTokenExpiresAt: expiredDate,
-        refreshToken: "valid-refresh-token",
-      }]);
+      mockDb.limit.mockResolvedValue([
+        {
+          accessToken: "expired-token",
+          accessTokenExpiresAt: expiredDate,
+          refreshToken: "valid-refresh-token",
+        },
+      ]);
 
       jest.spyOn(tokenManager as any, "refreshAccessToken").mockResolvedValue("new-access-token");
 
@@ -100,9 +104,11 @@ describe("TokenManager", () => {
     it("should log an error if no refresh token is available", async () => {
       const accountId = "test-account";
 
-      mockDb.limit.mockResolvedValue([{
-        refreshToken: null,
-      }]);
+      mockDb.limit.mockResolvedValue([
+        {
+          refreshToken: null,
+        },
+      ]);
 
       const token = await (tokenManager as any).refreshAccessToken(accountId);
 

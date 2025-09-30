@@ -47,7 +47,7 @@ describe("GitLabRestClient", () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
-      text: () => Promise.resolve("")
+      text: () => Promise.resolve(""),
     } as any);
 
     await expect(client.request("/test")).rejects.toThrow("REST request failed: 500");
@@ -69,7 +69,7 @@ describe("GitLabRestClient", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockResponse)
+      json: () => Promise.resolve(mockResponse),
     } as any);
 
     const result = await client.request("/test");
@@ -84,7 +84,7 @@ describe("GitLabRestClient", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockBranches)
+      json: () => Promise.resolve(mockBranches),
     } as any);
 
     const result = await client.fetchBranches("123");
@@ -96,7 +96,7 @@ describe("GitLabRestClient", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockCommits)
+      json: () => Promise.resolve(mockCommits),
     } as any);
 
     const result = await client.fetchCommits("123");
@@ -108,7 +108,7 @@ describe("GitLabRestClient", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockTags)
+      json: () => Promise.resolve(mockTags),
     } as any);
 
     const result = await client.fetchTags("123");

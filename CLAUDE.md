@@ -14,6 +14,7 @@ A GitLab crawler CLI application built with TypeScript, Bun, and Stricli that ex
 ## Development Commands
 
 ### Essential Commands
+
 ```bash
 # Development - run with dev TLS bypass
 bun run dev
@@ -44,6 +45,7 @@ bun run db:studio        # Open Drizzle Studio
 ```
 
 ### E2E Testing Commands
+
 ```bash
 # Basic E2E test
 bun run test:e2e:basic
@@ -61,26 +63,31 @@ bun run test:e2e:dry-run
 ## Core Architecture
 
 ### CLI Framework (Stricli)
+
 - **Entry Point**: `src/bin/cli.ts` - Main CLI with authentication logic
 - **App Definition**: `src/app.ts` - Route configuration and command mapping
 - **Context**: `src/context.ts` - Command context building with API clients
 
 ### Configuration System
+
 - **5-Level Priority**: CLI args → env vars → user config → local config → defaults
 - **Types**: `src/config/types.ts` - Comprehensive configuration schema
 - **Loading**: Hierarchical config loader with validation and merging
 
 ### Authentication & OAuth2
+
 - **OAuth2 Server**: `src/auth/oauth2Server.ts` - Callback server for browser flow
 - **Token Management**: `src/auth/tokenManager.ts` - Database-backed token storage
 - **Providers**: `src/auth/oauth2Providers.ts` - GitLab OAuth2 configuration
 
 ### Database Layer (Drizzle ORM)
+
 - **Schema**: `src/db/schema.ts` - User and account tables for OAuth credentials
 - **Connection**: `src/db/connection.ts` - Bun SQLite integration
 - **Migration**: `src/db/migrate.ts` - Database initialization and migrations
 
 ### Crawling Implementation
+
 - **Commands**: `src/commands/crawl/commands.ts` - Individual step commands
 - **Implementation**: `src/commands/crawl/impl.ts` - Main crawling orchestration
 - **Resource Modules**:
@@ -89,6 +96,7 @@ bun run test:e2e:dry-run
   - `restResources.ts` - REST-only resources
 
 ### Core Systems
+
 - **Storage**: `src/storage/` - JSONL hierarchical file storage
 - **Progress**: `src/reporting/` - YAML progress reporting with file locking
 - **Resume**: `src/resume/` - State persistence for resumable operations
@@ -96,12 +104,14 @@ bun run test:e2e:dry-run
 - **Logging**: `src/logging/` - Winston-based structured logging
 
 ### API Clients
+
 - **GraphQL**: `src/api/gitlabGraphQLClient.ts` - GraphQL client with rate limiting
 - **REST**: `src/api/gitlabRestClient.ts` - REST client for non-GraphQL resources
 
 ## Required Libraries & Conventions
 
 ### Must-Use Libraries
+
 - **Stricli** - CLI framework for all user-facing commands
 - **Bun** - Runtime and package manager
 - **Winston** - Logging via `src/utils/logger.ts`
@@ -110,6 +120,7 @@ bun run test:e2e:dry-run
 - **Drizzle ORM** - Database access with Bun SQLite driver
 
 ### Non-Negotiable Rules
+
 1. **OAuth2 Only** - Access tokens only, no other auth methods
 2. **Token Refresh Strategy** - Always update refresh tokens from response
 3. **API Usage** - GraphQL preferred, REST for GraphQL-unavailable resources
@@ -119,20 +130,25 @@ bun run test:e2e:dry-run
 7. **Iterative Improvement** - Continue until validation succeeds
 
 ### Database Schema
+
 User and account tables with OAuth2 token storage:
+
 - `user` table with ban management and role system
 - `account` table linking users to OAuth providers with token storage
 
 ## Configuration Examples
 
 ### Basic Auth Setup
+
 ```bash
 # Authenticate with GitLab instance
 bun run dev:auth --config examples/unified-config.yaml
 ```
 
 ### Test Configuration
+
 Use `examples/unified-config.yaml` for both authentication and testing. The file includes:
+
 - GitLab instance configuration
 - OAuth2 provider setup
 - Database and output settings
@@ -149,16 +165,19 @@ Use `examples/unified-config.yaml` for both authentication and testing. The file
 ## API Integration Patterns
 
 ### GraphQL Usage (Steps 1-3)
+
 - Groups, projects, users via GraphQL API
 - Common resources (issues, MRs, labels) via GraphQL
 - Group-specific (epics, boards) and project-specific (releases, snippets) resources
 
 ### REST Usage (Step 4)
+
 - Repository data (commits, branches, file contents)
 - Artifacts, job logs, security compliance data
 - Any resources not available via GraphQL
 
 ### Error Handling
+
 - Graceful degradation when GraphQL unavailable
 - Automatic fallback to REST endpoints
 - Retry logic with exponential backoff

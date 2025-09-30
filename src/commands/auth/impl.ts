@@ -73,156 +73,154 @@ export const executeAuthFlow = async (flags: AuthCommandFlags): Promise<void> =>
 };
 
 const prepareOAuth2Config = async (flags: AuthCommandFlags): Promise<OAuth2Config> => {
-  // Enhanced fallback logic - try main config first, then OAuth2-specific configs
+  // Try to load config from various sources in priority order
   if (!flags.config) {
-    logger.info("No config file specified, trying intelligent fallback...");
+    const configFromMainApp = await tryLoadMainAppConfig(flags);
+    if (configFromMainApp) return configFromMainApp;
 
-    // First, try to use the main application config if it has OAuth2 settings
-    try {
-      const mainConfig = await loadConfig({ config: undefined });
-      if (mainConfig.oauth2?.providers && Object.keys(mainConfig.oauth2.providers).length > 0) {
-        logger.info("Using OAuth2 configuration from main application config");
-
-        const provider = flags.provider || "gitlab";
-        const providerConfig = mainConfig.oauth2.providers[provider];
-
-        if (!providerConfig) {
-          // List available providers
-          const availableProviders = Object.keys(mainConfig.oauth2.providers);
-          throw new Error(`Provider '${provider}' not found in config. Available providers: ${availableProviders.join(", ")}`);
-        }
-
-        // Convert main config format to OAuth2 config format
-        const config: OAuth2Config = {
-          clientId: flags["client-id"] || providerConfig.clientId,
-          clientSecret: flags["client-secret"] || providerConfig.clientSecret,
-          redirectUri: flags["redirect-uri"] || providerConfig.redirectUri || "http://localhost:3000/callback",
-          authorizationUrl: providerConfig.authorizationUrl,
-          tokenUrl: providerConfig.tokenUrl,
-          scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : providerConfig.scopes || [],
-        };
-
-        if (!validateProviderConfig(config)) {
-          throw new Error("Invalid OAuth2 configuration from main config");
-        }
-
-        return config;
-      }
-    } catch (error) {
-      logger.debug("Main config does not contain valid OAuth2 settings, trying OAuth2-specific configs...", { error: error instanceof Error ? error.message : String(error) });
-    }
-
-    // Fallback to OAuth2-specific config files
-    const { existsSync } = await import("fs");
-    const commonPaths = [
-      "./oauth2-config.yml",
-      "./config/oauth2-config.yml",
-      "./examples/oauth2-config.yml",
-      "./examples/test-configs/basic-test.yaml", // Include test config as fallback
-    ];
-
-    for (const path of commonPaths) {
-      if (existsSync(path)) {
-        logger.info(`Found OAuth2 config at: ${path}, trying to load as unified config first...`);
-
-        // Try to load as unified config first
-        try {
-          const mainConfig = await loadConfig({ config: path });
-          if (mainConfig.oauth2?.providers && Object.keys(mainConfig.oauth2.providers).length > 0) {
-            logger.info(`Using unified config from ${path}`);
-
-            const provider = flags.provider || "gitlab";
-            const providerConfig = mainConfig.oauth2.providers[provider];
-
-            if (!providerConfig) {
-              const availableProviders = Object.keys(mainConfig.oauth2.providers);
-              throw new Error(`Provider '${provider}' not found in unified config from ${path}. Available providers: ${availableProviders.join(", ")}`);
-            }
-
-            const config: OAuth2Config = {
-              clientId: flags["client-id"] || providerConfig.clientId,
-              clientSecret: flags["client-secret"] || providerConfig.clientSecret,
-              redirectUri: flags["redirect-uri"] || providerConfig.redirectUri || "http://localhost:3000/callback",
-              authorizationUrl: providerConfig.authorizationUrl,
-              tokenUrl: providerConfig.tokenUrl,
-              scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : providerConfig.scopes || [],
-            };
-
-            if (!validateProviderConfig(config)) {
-              throw new Error("Invalid OAuth2 configuration from unified config");
-            }
-
-            return config;
-          }
-        } catch (error) {
-          logger.debug(`Failed to load ${path} as unified config, trying legacy format...`, { error: error instanceof Error ? error.message : String(error) });
-        }
-
-        // Fall back to legacy OAuth2 config format
-        flags.config = path;
-        break;
-      }
-    }
-
-    if (!flags.config) {
+    const configPath = await findOAuth2ConfigFile();
+    if (configPath) {
+      flags.config = configPath;
+    } else {
       logger.info("No OAuth2 config found, using command-line flags and environment variables only");
     }
   }
 
-  // Handle explicit config file or legacy format fallback
+  // Handle explicit config file or auto-discovered config
   if (flags.config) {
-    logger.info(`Loading OAuth2 configuration from ${flags.config}`);
-
-    // Load YAML configuration loader dynamically to avoid import ordering issues
-    const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
-    const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config);
-
-    let config = oauth2YamlConfigLoader.getProviderFromYaml(yamlConfig, flags.provider);
-
-    // Override YAML config with command-line flags (flags take precedence)
-    config = {
-      ...config,
-      ...(flags["client-id"] && { clientId: flags["client-id"] }),
-      ...(flags["client-secret"] && { clientSecret: flags["client-secret"] }),
-      ...(flags.scopes && { scopes: flags.scopes.split(",").map((s) => s.trim()) }),
-      ...(flags["redirect-uri"] && { redirectUri: flags["redirect-uri"] }),
-    };
-
-    if (!validateProviderConfig(config)) {
-      throw new Error("Invalid OAuth2 configuration from YAML file");
-    }
-
-    return config;
+    return await loadConfigFromFile(flags);
   } else {
-    // Use command-line flags only (existing behavior)
-    const provider = getProviderConfig(flags.provider || "gitlab");
-    if (!provider) {
-      throw new Error(`Unsupported OAuth2 provider: ${flags.provider}`);
-    }
-
-    // Get client credentials from flags or environment
-    const clientId = flags["client-id"] || process.env["OAUTH2_CLIENT_ID"];
-    const clientSecret = flags["client-secret"] || process.env["OAUTH2_CLIENT_SECRET"];
-
-    if (!clientId || !clientSecret) {
-      throw new Error(
-        "OAuth2 client credentials required. Provide via --client-id and --client-secret flags, OAUTH2_CLIENT_ID and OAUTH2_CLIENT_SECRET environment variables, or use --config to specify a YAML configuration file"
-      );
-    }
-
-    const config = buildOAuth2Config(provider, {
-      clientId,
-      clientSecret,
-      redirectUri: "http://localhost:3000/callback", // Temporary, will be updated
-      scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : undefined,
-    });
-
-    if (!validateProviderConfig(config)) {
-      throw new Error("Invalid OAuth2 configuration");
-    }
-
-    return config;
+    return await buildConfigFromFlags(flags);
   }
+};
+
+const tryLoadMainAppConfig = async (flags: AuthCommandFlags): Promise<OAuth2Config | null> => {
+  try {
+    const mainConfig = await loadConfig({ config: undefined });
+    if (mainConfig.oauth2?.providers && Object.keys(mainConfig.oauth2.providers).length > 0) {
+      logger.info("Using OAuth2 configuration from main application config");
+      return buildConfigFromProvider(flags, mainConfig.oauth2.providers);
+    }
+  } catch (error) {
+    logger.debug("Main config does not contain valid OAuth2 settings", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+  return null;
+};
+
+const findOAuth2ConfigFile = async (): Promise<string | null> => {
+  const { existsSync } = await import("fs");
+  const commonPaths = ["./oauth2-config.yml", "./config/oauth2-config.yml", "./examples/oauth2-config.yml", "./examples/test-configs/basic-test.yaml"];
+
+  for (const path of commonPaths) {
+    if (existsSync(path)) {
+      logger.info(`Found OAuth2 config at: ${path}`);
+      return path;
+    }
+  }
+  return null;
+};
+
+const buildConfigFromProvider = (flags: AuthCommandFlags, providers: Record<string, any>): OAuth2Config => {
+  const provider = flags.provider || "gitlab";
+  const providerConfig = providers[provider];
+
+  if (!providerConfig) {
+    const availableProviders = Object.keys(providers);
+    throw new Error(`Provider '${provider}' not found. Available providers: ${availableProviders.join(", ")}`);
+  }
+
+  const config: OAuth2Config = {
+    clientId: flags["client-id"] || providerConfig.clientId,
+    clientSecret: flags["client-secret"] || providerConfig.clientSecret,
+    redirectUri: flags["redirect-uri"] || providerConfig.redirectUri || "http://localhost:3000/callback",
+    authorizationUrl: providerConfig.authorizationUrl,
+    tokenUrl: providerConfig.tokenUrl,
+    scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : providerConfig.scopes || [],
+  };
+
+  if (!validateProviderConfig(config)) {
+    throw new Error("Invalid OAuth2 configuration");
+  }
+
+  return config;
+};
+
+const loadConfigFromFile = async (flags: AuthCommandFlags): Promise<OAuth2Config> => {
+  logger.info(`Loading OAuth2 configuration from ${flags.config}`);
+
+  // Try unified config format first
+  const unifiedConfig = await tryLoadUnifiedConfig(flags);
+  if (unifiedConfig) return unifiedConfig;
+
+  // Fall back to legacy YAML format
+  return await loadLegacyYamlConfig(flags);
+};
+
+const tryLoadUnifiedConfig = async (flags: AuthCommandFlags): Promise<OAuth2Config | null> => {
+  try {
+    const mainConfig = await loadConfig({ config: flags.config });
+    if (mainConfig.oauth2?.providers && Object.keys(mainConfig.oauth2.providers).length > 0) {
+      logger.info(`Using unified config from ${flags.config}`);
+      return buildConfigFromProvider(flags, mainConfig.oauth2.providers);
+    }
+  } catch (error) {
+    logger.debug("Failed to load unified config, trying legacy format", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+  return null;
+};
+
+const loadLegacyYamlConfig = async (flags: AuthCommandFlags): Promise<OAuth2Config> => {
+  const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
+  const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config!);
+  let config = oauth2YamlConfigLoader.getProviderFromYaml(yamlConfig, flags.provider);
+
+  // Override YAML config with command-line flags
+  config = {
+    ...config,
+    ...(flags["client-id"] && { clientId: flags["client-id"] }),
+    ...(flags["client-secret"] && { clientSecret: flags["client-secret"] }),
+    ...(flags.scopes && { scopes: flags.scopes.split(",").map((s) => s.trim()) }),
+    ...(flags["redirect-uri"] && { redirectUri: flags["redirect-uri"] }),
+  };
+
+  if (!validateProviderConfig(config)) {
+    throw new Error("Invalid OAuth2 configuration from YAML file");
+  }
+
+  return config;
+};
+
+const buildConfigFromFlags = async (flags: AuthCommandFlags): Promise<OAuth2Config> => {
+  const provider = getProviderConfig(flags.provider || "gitlab");
+  if (!provider) {
+    throw new Error(`Unsupported OAuth2 provider: ${flags.provider}`);
+  }
+
+  const clientId = flags["client-id"] || process.env["OAUTH2_CLIENT_ID"];
+  const clientSecret = flags["client-secret"] || process.env["OAUTH2_CLIENT_SECRET"];
+
+  if (!clientId || !clientSecret) {
+    throw new Error(
+      "OAuth2 client credentials required. Provide via --client-id and --client-secret flags, OAUTH2_CLIENT_ID and OAUTH2_CLIENT_SECRET environment variables, or use --config to specify a YAML configuration file"
+    );
+  }
+
+  const config = buildOAuth2Config(provider, {
+    clientId,
+    clientSecret,
+    redirectUri: "http://localhost:3000/callback",
+    scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : undefined,
+  });
+
+  if (!validateProviderConfig(config)) {
+    throw new Error("Invalid OAuth2 configuration");
+  }
+
+  return config;
 };
 
 const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Server> => {
@@ -358,177 +356,217 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
   try {
     console.log(pc.blue("💾 Storing credentials..."));
 
-    // Import database modules
-    const { db, initDatabase, initializeDatabase } = await import("../../db/index.js");
-    const { user, account } = await import("../../db/schema.js");
-    const { randomUUID } = await import("node:crypto");
+    const databaseAvailable = await initializeDatabaseConnection();
+    const credentialData = await prepareCredentialData(tokens, flags, config);
 
-    // Initialize database if not already initialized
+    if (databaseAvailable) {
+      await storeCredentialsInDatabase(credentialData, tokens, config);
+    } else {
+      logCredentialsUnavailable(credentialData, tokens);
+    }
+
+    await setupTokenRefreshIfNeeded(tokens, credentialData.accountId, config);
+    displaySuccessMessage(credentialData, tokens.expires_in);
+  } catch (error) {
+    logger.error("Failed to store credentials in database", { error: error instanceof Error ? error.message : String(error) });
+    throw new Error(`Failed to store credentials: ${error instanceof Error ? error.message : String(error)}`);
+  }
+};
+
+const initializeDatabaseConnection = async (): Promise<boolean> => {
+  try {
+    const { initDatabase, initializeDatabase } = await import("../../db/index.js");
     const databaseConfig = {
       path: "./database.sqlite",
       wal: true,
       timeout: 5000,
     };
 
-    let databaseAvailable = false;
-    try {
-      initDatabase(databaseConfig);
-      initializeDatabase({ ...databaseConfig, migrationsFolder: "./drizzle" });
-      databaseAvailable = true;
-    } catch (error) {
-      logger.error("Database initialization failed", {
-        error: error instanceof Error ? error.message : String(error),
-      });
-      console.log(pc.yellow("⚠️  Database unavailable - showing credentials without storing:"));
-    }
+    initDatabase(databaseConfig);
+    initializeDatabase({ ...databaseConfig, migrationsFolder: "./drizzle" });
+    return true;
+  } catch (error) {
+    logger.error("Database initialization failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    console.log(pc.yellow("⚠️  Database unavailable - showing credentials without storing:"));
+    return false;
+  }
+};
 
-    // Calculate expiration times
-    const accessTokenExpiresAt = tokens.expires_in ? new Date(Date.now() + tokens.expires_in * 1000) : null;
-    const refreshTokenExpiresAt = null; // GitLab refresh tokens typically don't expire
+const prepareCredentialData = async (
+  tokens: OAuth2TokenResponse,
+  flags: AuthCommandFlags,
+  config: OAuth2Config
+): Promise<{
+  userId: string;
+  accountId: string;
+  providerId: string;
+  userName: string;
+  userEmail: string;
+  accessTokenExpiresAt: Date | null;
+  refreshTokenExpiresAt: Date | null;
+  now: Date;
+}> => {
+  const { randomUUID } = await import("node:crypto");
 
-    // Generate IDs and extract info
-    const userId = randomUUID();
-    const accountId = flags["account-id"] || randomUUID();
-    const providerId = flags.provider || "gitlab";
-    const now = new Date();
+  const accessTokenExpiresAt = tokens.expires_in ? new Date(Date.now() + tokens.expires_in * 1000) : null;
+  const refreshTokenExpiresAt = null; // GitLab refresh tokens typically don't expire
 
-    // Get user info from OAuth token (we'll need to make an API call to get user details)
-    let userInfo: { name: string; email: string } | null = null;
+  const userId = randomUUID();
+  const accountId = flags["account-id"] || randomUUID();
+  const providerId = flags.provider || "gitlab";
+  const now = new Date();
 
-    try {
-      // Make a request to get user info using the access token
-      const userResponse = await fetch(`${config.tokenUrl.replace("/oauth/token", "/api/v4/user")}`, {
-        headers: {
-          Authorization: `Bearer ${tokens.access_token}`,
-          Accept: "application/json",
-        },
-      });
+  const userInfo = await fetchUserInfoFromOAuth(tokens, config);
+  const userName = flags.name || userInfo?.name || `${providerId} User`;
+  const userEmail = flags.email || userInfo?.email || `${userId}@${providerId}.local`;
 
-      if (userResponse.ok) {
-        const userData = (await userResponse.json()) as any;
-        userInfo = {
-          name: userData.name || userData.username || "Unknown User",
-          email: userData.email || `${userData.username || userId}@gitlab.local`,
-        };
-      }
-    } catch (error) {
-      logger.warn("Failed to fetch user info, using defaults", { error: error instanceof Error ? error.message : String(error) });
-    }
+  return {
+    userId,
+    accountId,
+    providerId,
+    userName,
+    userEmail,
+    accessTokenExpiresAt,
+    refreshTokenExpiresAt,
+    now,
+  };
+};
 
-    // Use provided name/email or fallback to OAuth user info or defaults
-    const userName = flags.name || userInfo?.name || `${providerId} User`;
-    const userEmail = flags.email || userInfo?.email || `${userId}@${providerId}.local`;
+const fetchUserInfoFromOAuth = async (tokens: OAuth2TokenResponse, config: OAuth2Config): Promise<{ name: string; email: string } | null> => {
+  try {
+    const userResponse = await fetch(`${config.tokenUrl.replace("/oauth/token", "/api/v4/user")}`, {
+      headers: {
+        Authorization: `Bearer ${tokens.access_token}`,
+        Accept: "application/json",
+      },
+    });
 
-    if (databaseAvailable) {
-      // Store user in database
-      await db()
-        .insert(user)
-        .values({
-          id: userId,
-          name: userName,
-          email: userEmail,
-          emailVerified: false,
-          createdAt: now,
-          updatedAt: now,
-        })
-        .onConflictDoUpdate({
-          target: user.email,
-          set: {
-            name: userName,
-            updatedAt: now,
-          },
-        });
-
-      // Get the actual user ID (in case of conflict resolution)
-      const { eq } = await import("drizzle-orm");
-      const [existingUser] = await db().select({ id: user.id }).from(user).where(eq(user.email, userEmail)).limit(1);
-      const finalUserId = existingUser?.id || userId;
-
-      // Store account credentials in database
-      await db()
-        .insert(account)
-        .values({
-          id: randomUUID(),
-          accountId,
-          providerId,
-          userId: finalUserId,
-          accessToken: tokens.access_token,
-          refreshToken: tokens.refresh_token || null,
-          accessTokenExpiresAt,
-          refreshTokenExpiresAt,
-          scope: config.scopes.join(" "),
-          createdAt: now,
-          updatedAt: now,
-        });
-
-      logger.info("OAuth2 authentication successful - credentials stored in database", {
-        accountId,
-        providerId,
-        userName,
-        userEmail,
-        hasAccessToken: !!tokens.access_token,
-        hasRefreshToken: !!tokens.refresh_token,
-        expiresAt: accessTokenExpiresAt?.toISOString(),
-        scopes: config.scopes,
-      });
-    } else {
-      logger.info("OAuth2 authentication successful - database unavailable, credentials not stored", {
-        accountId,
-        providerId,
-        userName,
-        userEmail,
-        hasAccessToken: !!tokens.access_token,
-        hasRefreshToken: !!tokens.refresh_token,
-        expiresAt: accessTokenExpiresAt?.toISOString(),
-        scopes: config.scopes,
-      });
-
-      // Display credentials for manual storage/use
-      console.log(pc.yellow("📋 OAuth2 Credentials (DATABASE UNAVAILABLE):"));
-      console.log(pc.dim(`   Access Token: ${tokens.access_token.substring(0, 20)}...`));
-      if (tokens.refresh_token) {
-        console.log(pc.dim(`   Refresh Token: ${tokens.refresh_token.substring(0, 20)}...`));
-      }
-    }
-
-    // Create OAuth2Manager for token refresh scheduling
-    if (tokens.refresh_token && accessTokenExpiresAt && tokens.expires_in) {
-      const oauth2Manager = new OAuth2Manager({
-        enabled: true,
-        refreshThreshold: 300, // 5 minutes
-        maxRetries: 3,
-        tokenEndpoint: config.tokenUrl,
-        clientId: config.clientId,
-        clientSecret: config.clientSecret,
-      });
-
-      oauth2Manager.scheduleTokenRefresh(
-        accountId,
-        {
-          access_token: tokens.access_token,
-          token_type: tokens.token_type,
-          expires_in: tokens.expires_in,
-          refresh_token: tokens.refresh_token,
-          scope: tokens.scope,
-        },
-        async (_newTokens) => {
-          logger.info("Token refreshed automatically", { accountId });
-          // Update stored tokens in database would happen here
-        }
-      );
-    }
-
-    console.log(pc.green(`✅ Credentials stored in database for: ${pc.bold(userName)}`));
-    console.log(pc.dim(`   Account ID: ${accountId}`));
-    console.log(pc.dim(`   Provider: ${providerId}`));
-    console.log(pc.dim(`   Email: ${userEmail}`));
-    console.log(pc.dim(`   Scopes: ${config.scopes.join(", ")}`));
-
-    if (accessTokenExpiresAt) {
-      console.log(pc.dim(`   Expires: ${accessTokenExpiresAt.toLocaleString()}`));
+    if (userResponse.ok) {
+      const userData = (await userResponse.json()) as any;
+      return {
+        name: userData.name || userData.username || "Unknown User",
+        email: userData["email"] || `${userData.username}@gitlab.local`,
+      };
     }
   } catch (error) {
-    logger.error("Failed to store credentials in database", { error: error instanceof Error ? error.message : String(error) });
-    throw new Error(`Failed to store credentials: ${error instanceof Error ? error.message : String(error)}`);
+    logger.warn("Failed to fetch user info, using defaults", { error: error instanceof Error ? error.message : String(error) });
+  }
+  return null;
+};
+
+const storeCredentialsInDatabase = async (credentialData: any, tokens: OAuth2TokenResponse, config: OAuth2Config): Promise<void> => {
+  const { db } = await import("../../db/index.js");
+  const { user, account } = await import("../../db/schema.js");
+  const { randomUUID } = await import("node:crypto");
+  const { eq } = await import("drizzle-orm");
+
+  // Store user in database
+  await db()
+    .insert(user)
+    .values({
+      name: credentialData.userName,
+      email: credentialData.userEmail,
+      emailVerified: false,
+      createdAt: credentialData.now,
+      updatedAt: credentialData.now,
+    })
+    .onConflictDoUpdate({
+      target: user.email,
+      set: {
+        name: credentialData.userName,
+        updatedAt: credentialData.now,
+      },
+    });
+
+  // Get the actual user ID (in case of conflict resolution)
+  const [existingUser] = await db().select({ id: user.id }).from(user).where(eq(user.email, credentialData.userEmail)).limit(1);
+  const finalUserId = existingUser?.id || credentialData.userId;
+
+  // Store account credentials in database
+  await db()
+    .insert(account)
+    .values({
+      id: randomUUID(),
+      accountId: credentialData.accountId,
+      providerId: credentialData.providerId,
+      userId: finalUserId,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token || null,
+      accessTokenExpiresAt: credentialData.accessTokenExpiresAt,
+      refreshTokenExpiresAt: credentialData.refreshTokenExpiresAt,
+      scope: config.scopes.join(" "),
+      createdAt: credentialData.now,
+      updatedAt: credentialData.now,
+    });
+
+  logger.info("OAuth2 authentication successful - credentials stored in database", {
+    accountId: credentialData.accountId,
+    providerId: credentialData.providerId,
+    userName: credentialData.userName,
+    userEmail: credentialData.userEmail,
+    hasAccessToken: !!tokens.access_token,
+    hasRefreshToken: !!tokens.refresh_token,
+    expiresAt: credentialData.accessTokenExpiresAt?.toISOString(),
+    scopes: config.scopes,
+  });
+};
+
+const logCredentialsUnavailable = (credentialData: any, tokens: OAuth2TokenResponse): void => {
+  logger.info("OAuth2 authentication successful - database unavailable, credentials not stored", {
+    accountId: credentialData.accountId,
+    providerId: credentialData.providerId,
+    userName: credentialData.userName,
+    userEmail: credentialData.userEmail,
+    hasAccessToken: !!tokens.access_token,
+    hasRefreshToken: !!tokens.refresh_token,
+    expiresAt: credentialData.accessTokenExpiresAt?.toISOString(),
+  });
+
+  // Display credentials for manual storage/use
+  console.log(pc.yellow("📋 OAuth2 Credentials (DATABASE UNAVAILABLE):"));
+  console.log(pc.dim(`   Access Token: ${tokens.access_token.substring(0, 20)}...`));
+  if (tokens.refresh_token) {
+    console.log(pc.dim(`   Refresh Token: ${tokens.refresh_token.substring(0, 20)}...`));
+  }
+};
+
+const setupTokenRefreshIfNeeded = async (tokens: OAuth2TokenResponse, accountId: string, config: OAuth2Config): Promise<void> => {
+  if (!tokens.refresh_token || !tokens.expires_in) return;
+
+  const oauth2Manager = new OAuth2Manager({
+    enabled: true,
+    refreshThreshold: 300, // 5 minutes
+    maxRetries: 3,
+    tokenEndpoint: config.tokenUrl,
+    clientId: config.clientId,
+    clientSecret: config.clientSecret,
+  });
+
+  oauth2Manager.scheduleTokenRefresh(
+    accountId,
+    {
+      access_token: tokens.access_token,
+      token_type: tokens.token_type,
+      expires_in: tokens.expires_in,
+      refresh_token: tokens.refresh_token,
+      scope: tokens.scope,
+    },
+    async (_newTokens) => {
+      logger.info("Token refreshed automatically", { accountId });
+      // Update stored tokens in database would happen here
+    }
+  );
+};
+
+const displaySuccessMessage = (credentialData: any, _expiresIn?: number): void => {
+  console.log(pc.green(`✅ Credentials stored in database for: ${pc.bold(credentialData.userName)}`));
+  console.log(pc.dim(`   Account ID: ${credentialData.accountId}`));
+  console.log(pc.dim(`   Provider: ${credentialData.providerId}`));
+  console.log(pc.dim(`   Email: ${credentialData.userEmail}`));
+
+  if (credentialData.accessTokenExpiresAt) {
+    console.log(pc.dim(`   Expires: ${credentialData.accessTokenExpiresAt.toLocaleString()}`));
   }
 };

@@ -40,7 +40,10 @@ describe("StorageManager", () => {
     expect(filePath.endsWith("users.jsonl")).toBe(true);
     expect(fs.existsSync(path.dirname(filePath))).toBe(true);
 
-    const data = [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }];
+    const data = [
+      { id: 1, name: "Alice" },
+      { id: 2, name: "Bob" },
+    ];
     const written = manager.writeJsonlFile(filePath, data, false);
     expect(written).toBe(2);
 

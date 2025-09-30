@@ -158,7 +158,19 @@ export class ConfigLoader {
   private convertCliArgsToConfig(args: CliArgs): Partial<Config> {
     const argsConfig: Partial<Config> = {};
 
-    // GitLab configuration - build dynamically
+    // Build configuration sections using helper methods
+    this.addGitlabConfigFromArgs(args, argsConfig);
+    this.addDatabaseConfigFromArgs(args, argsConfig);
+    this.addOutputConfigFromArgs(args, argsConfig);
+    this.addLoggingConfigFromArgs(args, argsConfig);
+    this.addProgressConfigFromArgs(args, argsConfig);
+    this.addResumeConfigFromArgs(args, argsConfig);
+    this.addCallbackConfigFromArgs(args, argsConfig);
+
+    return argsConfig;
+  }
+
+  private addGitlabConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const gitlabConfig: any = {};
     if (args.host) gitlabConfig.host = args.host;
     if (args.accessToken) gitlabConfig.accessToken = args.accessToken;
@@ -169,8 +181,9 @@ export class ConfigLoader {
     if (Object.keys(gitlabConfig).length > 0) {
       argsConfig.gitlab = gitlabConfig;
     }
+  }
 
-    // Database configuration - build dynamically
+  private addDatabaseConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const databaseConfig: any = {};
     if (args.databasePath) databaseConfig.path = args.databasePath;
     if (args.walMode !== undefined) databaseConfig.walMode = args.walMode;
@@ -178,8 +191,9 @@ export class ConfigLoader {
     if (Object.keys(databaseConfig).length > 0) {
       argsConfig.database = databaseConfig;
     }
+  }
 
-    // Output configuration - build dynamically
+  private addOutputConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const outputConfig: any = {};
     if (args.outputDir) outputConfig.rootDir = args.outputDir;
     if (args.fileNaming) outputConfig.fileNaming = args.fileNaming;
@@ -188,8 +202,9 @@ export class ConfigLoader {
     if (Object.keys(outputConfig).length > 0) {
       argsConfig.output = outputConfig;
     }
+  }
 
-    // Logging configuration - build dynamically
+  private addLoggingConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const loggingConfig: any = {};
     if (args.logLevel) loggingConfig.level = args.logLevel;
     if (args.logFormat) loggingConfig.format = args.logFormat;
@@ -199,8 +214,9 @@ export class ConfigLoader {
     if (Object.keys(loggingConfig).length > 0) {
       argsConfig.logging = loggingConfig;
     }
+  }
 
-    // Progress configuration - build dynamically
+  private addProgressConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const progressConfig: any = {};
     if (args.progressEnabled !== undefined) progressConfig.enabled = args.progressEnabled;
     if (args.progressFile) progressConfig.file = args.progressFile;
@@ -209,8 +225,9 @@ export class ConfigLoader {
     if (Object.keys(progressConfig).length > 0) {
       argsConfig.progress = progressConfig;
     }
+  }
 
-    // Resume configuration - build dynamically
+  private addResumeConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const resumeConfig: any = {};
     if (args.resumeEnabled !== undefined) resumeConfig.enabled = args.resumeEnabled;
     if (args.resumeStateFile) resumeConfig.stateFile = args.resumeStateFile;
@@ -218,16 +235,15 @@ export class ConfigLoader {
     if (Object.keys(resumeConfig).length > 0) {
       argsConfig.resume = resumeConfig;
     }
+  }
 
-    // Callback configuration - build dynamically
+  private addCallbackConfigFromArgs(args: CliArgs, argsConfig: Partial<Config>): void {
     const callbackConfig: any = {};
     if (args.callbackEnabled !== undefined) callbackConfig.enabled = args.callbackEnabled;
     if (args.callbackModulePath) callbackConfig.modulePath = args.callbackModulePath;
     if (Object.keys(callbackConfig).length > 0) {
       argsConfig.callbacks = callbackConfig;
     }
-
-    return argsConfig;
   }
 
   /**
@@ -312,7 +328,21 @@ export class ConfigLoader {
   private loadCliArguments(args: CliArgs): void {
     const argsConfig: Partial<Config> = {};
 
-    // GitLab configuration
+    // Build configuration sections using helper methods
+    this.buildGitlabArgsConfig(args, argsConfig);
+    this.buildDatabaseArgsConfig(args, argsConfig);
+    this.buildOutputArgsConfig(args, argsConfig);
+    this.buildLoggingArgsConfig(args, argsConfig);
+    this.buildProgressArgsConfig(args, argsConfig);
+    this.buildResumeArgsConfig(args, argsConfig);
+
+    if (Object.keys(argsConfig).length > 0) {
+      this.mergeConfig(argsConfig);
+      this.logger.debug("Applied CLI argument configuration");
+    }
+  }
+
+  private buildGitlabArgsConfig(args: CliArgs, argsConfig: Partial<Config>): void {
     if (args.host) {
       argsConfig.gitlab = { ...this.config.gitlab, host: args.host };
     }
@@ -351,8 +381,9 @@ export class ConfigLoader {
         rateLimit: args.rateLimit,
       };
     }
+  }
 
-    // Database configuration
+  private buildDatabaseArgsConfig(args: CliArgs, argsConfig: Partial<Config>): void {
     if (args.databasePath) {
       argsConfig.database = {
         ...this.config.database,
@@ -373,8 +404,9 @@ export class ConfigLoader {
         timeout: args.databaseTimeout,
       };
     }
+  }
 
-    // Output configuration
+  private buildOutputArgsConfig(args: CliArgs, argsConfig: Partial<Config>): void {
     if (args.outputDir) {
       argsConfig.output = { ...this.config.output, rootDir: args.outputDir };
     }
@@ -399,8 +431,9 @@ export class ConfigLoader {
         compression: args.compression as "none" | "gzip" | "brotli",
       };
     }
+  }
 
-    // Logging configuration
+  private buildLoggingArgsConfig(args: CliArgs, argsConfig: Partial<Config>): void {
     if (args.logLevel) {
       argsConfig.logging = {
         ...this.config.logging,
@@ -435,8 +468,9 @@ export class ConfigLoader {
         colors: args.colors,
       };
     }
+  }
 
-    // Progress configuration
+  private buildProgressArgsConfig(args: CliArgs, argsConfig: Partial<Config>): void {
     if (args.progressEnabled !== undefined) {
       argsConfig.progress = {
         ...this.config.progress,
@@ -464,8 +498,9 @@ export class ConfigLoader {
         detailed: args.progressDetailed,
       };
     }
+  }
 
-    // Resume configuration
+  private buildResumeArgsConfig(args: CliArgs, argsConfig: Partial<Config>): void {
     if (args.resumeEnabled !== undefined) {
       argsConfig.resume = {
         ...this.config.resume,
@@ -485,11 +520,6 @@ export class ConfigLoader {
         ...this.config.resume,
         autoSaveInterval: args.resumeAutoSaveInterval,
       };
-    }
-
-    if (Object.keys(argsConfig).length > 0) {
-      this.mergeConfig(argsConfig);
-      this.logger.debug("Applied CLI argument configuration");
     }
   }
 

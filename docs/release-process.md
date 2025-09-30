@@ -5,6 +5,7 @@ This document describes how to create and manage releases for the Copima CLI Cra
 ## Overview
 
 The project uses Bun's built-in compilation features to create standalone executables for:
+
 - Windows (x64)
 - macOS (Intel x64)
 - macOS (Apple Silicon ARM64)
@@ -20,17 +21,20 @@ The project uses Bun's built-in compilation features to create standalone execut
 ### Step-by-Step Release
 
 1. **Update Version**
+
    ```bash
    # Update version in package.json
    npm version patch  # or minor/major
    ```
 
 2. **Build Executables**
+
    ```bash
    bun run build:executables
    ```
 
 3. **Test Executables Locally**
+
    ```bash
    # Test all executables
    bun run build:test
@@ -41,6 +45,7 @@ The project uses Bun's built-in compilation features to create standalone execut
    ```
 
 4. **Create Release**
+
    ```bash
    bun run release
    ```
@@ -61,12 +66,14 @@ The project uses Bun's built-in compilation features to create standalone execut
 The repository includes three GitHub Actions workflows:
 
 #### 1. Build and Test (`build-test.yml`)
+
 - Triggers on pushes to `main` and `develop` branches
 - Triggers on pull requests to `main`
 - Runs tests and builds executables
 - Uploads build artifacts for verification
 
 #### 2. Release (`release.yml`)
+
 - Triggers on semver git tags matching `v[0-9]+.[0-9]+.[0-9]+` pattern
 - Supports pre-release tags like `v1.0.0-alpha.1`
 - Builds executables for all platforms
@@ -74,6 +81,7 @@ The repository includes three GitHub Actions workflows:
 - Generates checksums for verification
 
 #### 3. Nightly Build (`nightly.yml`)
+
 - Manually triggered via GitHub Actions UI
 - Builds from main branch with nightly suffix
 - Creates pre-release with timestamp
@@ -83,6 +91,7 @@ The repository includes three GitHub Actions workflows:
 ### Automated Release Steps
 
 1. **Prepare Release**
+
    ```bash
    # Update version
    npm version patch
@@ -94,6 +103,7 @@ The repository includes three GitHub Actions workflows:
    ```
 
 2. **Trigger Release**
+
    ```bash
    # Create and push tag
    git tag v1.x.x
@@ -134,6 +144,7 @@ The build process creates these files in the `dist/` directory:
 ### GitHub Releases
 
 Each release includes:
+
 - Windows executable (.exe)
 - macOS executables (Intel and Apple Silicon)
 - Checksums file for verification
@@ -143,6 +154,7 @@ Each release includes:
 ### Installation Instructions
 
 #### Windows
+
 ```bash
 # Download
 curl -L -o copima-cli.exe https://github.com/pdiegmann/copima-cli-crawler/releases/latest/download/copima-cli-windows.exe
@@ -152,6 +164,7 @@ curl -L -o copima-cli.exe https://github.com/pdiegmann/copima-cli-crawler/releas
 ```
 
 #### macOS
+
 ```bash
 # Intel Macs
 curl -L -o copima-cli https://github.com/pdiegmann/copima-cli-crawler/releases/latest/download/copima-cli-macos-x64
@@ -166,12 +179,12 @@ chmod +x copima-cli
 
 ## Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `bun run build:executables` | Build all executables |
-| `bun run build:clean` | Clean and build |
-| `bun run build:test` | Test built executables |
-| `bun run release` | Complete release process |
+| Script                      | Description              |
+| --------------------------- | ------------------------ |
+| `bun run build:executables` | Build all executables    |
+| `bun run build:clean`       | Clean and build          |
+| `bun run build:test`        | Test built executables   |
+| `bun run release`           | Complete release process |
 
 ## Verification
 
@@ -256,12 +269,14 @@ bun run build:test
 ## Quick Reference
 
 ### For Maintainers (Automated)
+
 ```bash
 npm version patch
 git push origin main --follow-tags
 ```
 
 ### For Development (Manual)
+
 ```bash
 bun run build:executables
 bun run build:test

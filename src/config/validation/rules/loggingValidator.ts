@@ -6,7 +6,20 @@ export class LoggingConfigValidator implements BaseValidator {
     const errors: ConfigValidationError[] = [];
     const warnings: string[] = [];
 
-    // Validate log level
+    this.validateLogLevel(config, errors);
+    this.validateLogFormat(config, errors);
+    this.validateLogFile(config, errors);
+    this.validateConsoleSettings(config, errors);
+    this.validateColorSettings(config, errors);
+    this.addEnvironmentWarnings(config, warnings);
+
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  /**
+   * Validates log level configuration.
+   */
+  private validateLogLevel(config: Partial<Config>, errors: ConfigValidationError[]): void {
     if (config.logging?.level) {
       const validLevels = ["error", "warn", "info", "debug"];
       if (!validLevels.includes(config.logging.level)) {
@@ -24,8 +37,12 @@ export class LoggingConfigValidator implements BaseValidator {
         severity: "error",
       });
     }
+  }
 
-    // Validate log format
+  /**
+   * Validates log format configuration.
+   */
+  private validateLogFormat(config: Partial<Config>, errors: ConfigValidationError[]): void {
     if (config.logging?.format) {
       const validFormats = ["json", "simple", "combined"];
       if (!validFormats.includes(config.logging.format)) {
@@ -37,8 +54,12 @@ export class LoggingConfigValidator implements BaseValidator {
         });
       }
     }
+  }
 
-    // Validate log file path
+  /**
+   * Validates log file path configuration.
+   */
+  private validateLogFile(config: Partial<Config>, errors: ConfigValidationError[]): void {
     if (config.logging?.file && typeof config.logging.file !== "string") {
       errors.push({
         field: "logging.file",
@@ -47,8 +68,12 @@ export class LoggingConfigValidator implements BaseValidator {
         severity: "error",
       });
     }
+  }
 
-    // Validate console setting
+  /**
+   * Validates console logging settings.
+   */
+  private validateConsoleSettings(config: Partial<Config>, errors: ConfigValidationError[]): void {
     if (config.logging?.console !== undefined && typeof config.logging.console !== "boolean") {
       errors.push({
         field: "logging.console",
@@ -57,8 +82,12 @@ export class LoggingConfigValidator implements BaseValidator {
         severity: "error",
       });
     }
+  }
 
-    // Validate colors setting
+  /**
+   * Validates color settings.
+   */
+  private validateColorSettings(config: Partial<Config>, errors: ConfigValidationError[]): void {
     if (config.logging?.colors !== undefined && typeof config.logging.colors !== "boolean") {
       errors.push({
         field: "logging.colors",
@@ -67,7 +96,12 @@ export class LoggingConfigValidator implements BaseValidator {
         severity: "error",
       });
     }
+  }
 
+  /**
+   * Adds environment-specific warnings.
+   */
+  private addEnvironmentWarnings(config: Partial<Config>, warnings: string[]): void {
     // Warning for colors in non-interactive environments
     if (config.logging?.colors === true && process.env["NO_COLOR"]) {
       warnings.push("Console colors are enabled but NO_COLOR environment variable is set");
@@ -77,7 +111,5 @@ export class LoggingConfigValidator implements BaseValidator {
     if (config.logging?.level === "debug" && process.env["NODE_ENV"] === "production") {
       warnings.push("Debug logging level is not recommended for production environments");
     }
-
-    return { isValid: errors.length === 0, errors, warnings };
   }
 }

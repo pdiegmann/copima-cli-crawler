@@ -130,13 +130,14 @@ describe("Auth Command Implementation", () => {
       // Mock successful token exchange
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_access_token",
-          token_type: "Bearer",
-          expires_in: 3600,
-          refresh_token: "test_refresh_token",
-          scope: "api read_user",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_access_token",
+            token_type: "Bearer",
+            expires_in: 3600,
+            refresh_token: "test_refresh_token",
+            scope: "api read_user",
+          }),
       });
 
       await executeAuthFlow(flags);
@@ -175,10 +176,11 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_token",
-          token_type: "Bearer",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_token",
+            token_type: "Bearer",
+          }),
       });
 
       await executeAuthFlow(flags);
@@ -206,10 +208,11 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_token",
-          token_type: "Bearer",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_token",
+            token_type: "Bearer",
+          }),
       });
 
       await executeAuthFlow(flags);
@@ -390,10 +393,11 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          token_type: "Bearer",
-          // Missing access_token
-        }),
+        json: () =>
+          Promise.resolve({
+            token_type: "Bearer",
+            // Missing access_token
+          }),
       });
 
       const flags: AuthCommandFlags = {
@@ -437,10 +441,11 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_token",
-          token_type: "Bearer",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_token",
+            token_type: "Bearer",
+          }),
       });
 
       const flags: AuthCommandFlags = {
@@ -471,13 +476,14 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_access_token",
-          token_type: "Bearer",
-          expires_in: 3600,
-          refresh_token: "test_refresh_token",
-          scope: "api read_user",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_access_token",
+            token_type: "Bearer",
+            expires_in: 3600,
+            refresh_token: "test_refresh_token",
+            scope: "api read_user",
+          }),
       });
 
       const flags: AuthCommandFlags = {
@@ -512,11 +518,12 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_access_token",
-          token_type: "Bearer",
-          // No expires_in or refresh_token
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_access_token",
+            token_type: "Bearer",
+            // No expires_in or refresh_token
+          }),
       });
 
       const flags: AuthCommandFlags = {
@@ -540,10 +547,11 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_token",
-          token_type: "Bearer",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_token",
+            token_type: "Bearer",
+          }),
       });
 
       const flags: AuthCommandFlags = {
@@ -555,9 +563,7 @@ describe("Auth Command Implementation", () => {
       await executeAuthFlow(flags);
 
       expect(mockCrypto.randomBytes).toHaveBeenCalledWith(32);
-      expect(mockOpen).toHaveBeenCalledWith(
-        expect.stringContaining("state=6d6f636b2d72616e646f6d2d6279746573")
-      );
+      expect(mockOpen).toHaveBeenCalledWith(expect.stringContaining("state=6d6f636b2d72616e646f6d2d6279746573"));
     });
   });
 
@@ -570,10 +576,11 @@ describe("Auth Command Implementation", () => {
 
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({
-          access_token: "test_token",
-          token_type: "Bearer",
-        }),
+        json: () =>
+          Promise.resolve({
+            access_token: "test_token",
+            token_type: "Bearer",
+          }),
       });
 
       const flags: AuthCommandFlags = {
@@ -586,15 +593,9 @@ describe("Auth Command Implementation", () => {
       await executeAuthFlow(flags);
 
       const expectedUrl = expect.stringContaining("https://gitlab.com/oauth/authorize");
-      expect(mockOpen).toHaveBeenCalledWith(
-        expect.stringMatching(/client_id=test_client_id/)
-      );
-      expect(mockOpen).toHaveBeenCalledWith(
-        expect.stringMatching(/response_type=code/)
-      );
-      expect(mockOpen).toHaveBeenCalledWith(
-        expect.stringMatching(/state=6d6f636b2d72616e646f6d2d6279746573/)
-      );
+      expect(mockOpen).toHaveBeenCalledWith(expect.stringMatching(/client_id=test_client_id/));
+      expect(mockOpen).toHaveBeenCalledWith(expect.stringMatching(/response_type=code/));
+      expect(mockOpen).toHaveBeenCalledWith(expect.stringMatching(/state=6d6f636b2d72616e646f6d2d6279746573/));
     });
   });
 });

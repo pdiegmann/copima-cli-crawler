@@ -142,12 +142,31 @@ export class TestConfigValidator {
       return;
     }
 
-    // Host is always required
+    this.validateGitLabHost(gitlab);
+    this.validateGitLabAuthentication(gitlab);
+    this.validateGitLabNumericFields(gitlab);
+  }
+
+  /**
+   * Validates GitLab host configuration.
+   */
+  private validateGitLabHost(gitlab: any): void {
     if (!gitlab.host || typeof gitlab.host !== "string") {
       this.errors.push("GitLab.host is required and must be a string");
+      return;
     }
 
-    // Either accessToken OR accountId OR email must be provided
+    try {
+      new URL(gitlab.host);
+    } catch {
+      this.errors.push("GitLab.host must be a valid URL");
+    }
+  }
+
+  /**
+   * Validates GitLab authentication options.
+   */
+  private validateGitLabAuthentication(gitlab: any): void {
     const hasAccessToken = gitlab.accessToken && typeof gitlab.accessToken === "string";
     const hasAccountId = gitlab.accountId && typeof gitlab.accountId === "string";
     const hasEmail = gitlab.email && typeof gitlab.email === "string";
@@ -156,31 +175,30 @@ export class TestConfigValidator {
       this.errors.push("GitLab configuration must provide either accessToken, accountId, or email for authentication");
     }
 
-    // Validate accessToken if provided
+    this.validateGitLabAuthFields(gitlab);
+  }
+
+  /**
+   * Validates individual GitLab authentication fields.
+   */
+  private validateGitLabAuthFields(gitlab: any): void {
     if (gitlab.accessToken !== undefined && typeof gitlab.accessToken !== "string") {
       this.errors.push("GitLab.accessToken must be a string");
     }
 
-    // Validate accountId if provided
     if (gitlab.accountId !== undefined && typeof gitlab.accountId !== "string") {
       this.errors.push("GitLab.accountId must be a string");
     }
 
-    // Validate email if provided
     if (gitlab.email !== undefined && typeof gitlab.email !== "string") {
       this.errors.push("GitLab.email must be a string");
     }
+  }
 
-    // Validate host URL format
-    if (gitlab.host && typeof gitlab.host === "string") {
-      try {
-        new URL(gitlab.host);
-      } catch {
-        this.errors.push("GitLab.host must be a valid URL");
-      }
-    }
-
-    // Validate numeric fields
+  /**
+   * Validates GitLab numeric configuration fields.
+   */
+  private validateGitLabNumericFields(gitlab: any): void {
     const numericFields = ["timeout", "maxConcurrency", "rateLimit"];
     for (const field of numericFields) {
       if (gitlab[field] !== undefined && (typeof gitlab[field] !== "number" || gitlab[field] <= 0)) {
@@ -228,28 +246,48 @@ export class TestConfigValidator {
       return;
     }
 
+    this.validateExecutionRequiredFields(execution);
+    this.validateExecutionSteps(execution);
+    this.validateExecutionBooleanFields(execution);
+  }
+
+  /**
+   * Validates required fields in execution configuration.
+   */
+  private validateExecutionRequiredFields(execution: any): void {
     const required = ["workingDir", "outputDir", "databasePath"];
     for (const field of required) {
       if (!execution[field] || typeof execution[field] !== "string") {
         this.errors.push(`Execution.${field} is required and must be a string`);
       }
     }
+  }
 
-    // Validate steps array
-    if (execution.steps) {
-      if (!Array.isArray(execution.steps)) {
-        this.errors.push("Execution.steps must be an array");
-      } else {
-        const validSteps = ["areas", "users", "resources", "repository"];
-        for (const step of execution.steps) {
-          if (!validSteps.includes(step)) {
-            this.errors.push(`Invalid step: ${step}. Valid steps: ${validSteps.join(", ")}`);
-          }
-        }
-      }
+  /**
+   * Validates steps array in execution configuration.
+   */
+  private validateExecutionSteps(execution: any): void {
+    if (!execution.steps) {
+      return;
     }
 
-    // Validate boolean fields
+    if (!Array.isArray(execution.steps)) {
+      this.errors.push("Execution.steps must be an array");
+      return;
+    }
+
+    const validSteps = ["areas", "users", "resources", "repository"];
+    for (const step of execution.steps) {
+      if (!validSteps.includes(step)) {
+        this.errors.push(`Invalid step: ${step}. Valid steps: ${validSteps.join(", ")}`);
+      }
+    }
+  }
+
+  /**
+   * Validates boolean fields in execution configuration.
+   */
+  private validateExecutionBooleanFields(execution: any): void {
     const booleanFields = ["testResume", "testCallbacks"];
     for (const field of booleanFields) {
       if (execution[field] !== undefined && typeof execution[field] !== "boolean") {
@@ -267,7 +305,16 @@ export class TestConfigValidator {
       return;
     }
 
-    // Validate expected files
+    this.validateExpectedFiles(validation);
+    this.validateLogsConfig(validation);
+    this.validatePerformanceConfig(validation);
+    this.validateDataQualityConfig(validation);
+  }
+
+  /**
+   * Validates expected files configuration.
+   */
+  private validateExpectedFiles(validation: any): void {
     if (!Array.isArray(validation.expectedFiles)) {
       this.errors.push("Validation.expectedFiles must be an array");
     } else {
@@ -275,22 +322,34 @@ export class TestConfigValidator {
         this.validateExpectedFile(file, index);
       });
     }
+  }
 
-    // Validate logs configuration
+  /**
+   * Validates logs configuration.
+   */
+  private validateLogsConfig(validation: any): void {
     if (!validation.logs || typeof validation.logs !== "object") {
       this.errors.push("Validation.logs configuration is required");
     } else {
       this.validateLogValidation(validation.logs);
     }
+  }
 
-    // Validate performance configuration
+  /**
+   * Validates performance configuration.
+   */
+  private validatePerformanceConfig(validation: any): void {
     if (!validation.performance || typeof validation.performance !== "object") {
       this.errors.push("Validation.performance configuration is required");
     } else {
       this.validatePerformanceValidation(validation.performance);
     }
+  }
 
-    // Validate data quality configuration
+  /**
+   * Validates data quality configuration.
+   */
+  private validateDataQualityConfig(validation: any): void {
     if (!validation.dataQuality || typeof validation.dataQuality !== "object") {
       this.errors.push("Validation.dataQuality configuration is required");
     } else {

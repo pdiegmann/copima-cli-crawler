@@ -101,12 +101,14 @@ describe("OAuth2Server", () => {
       // Access private method through reflection
       (server as any).handleRequest(mockRequest, mockResponse);
 
-      callbackPromise.then((params: OAuth2CallbackParams) => {
-        expect(params.code).toBe("test_code");
-        expect(params.state).toBe("test_state");
-        expect(params.error).toBeUndefined();
-        done();
-      }).catch(done);
+      callbackPromise
+        .then((params: OAuth2CallbackParams) => {
+          expect(params.code).toBe("test_code");
+          expect(params.state).toBe("test_state");
+          expect(params.error).toBeUndefined();
+          done();
+        })
+        .catch(done);
     });
 
     it("should handle error callback", (done) => {
@@ -122,12 +124,14 @@ describe("OAuth2Server", () => {
 
       (server as any).handleRequest(mockRequest, mockResponse);
 
-      callbackPromise.then((params: OAuth2CallbackParams) => {
-        expect(params.error).toBe("access_denied");
-        expect(params.error_description).toBe("User denied access");
-        expect(params.code).toBeUndefined();
-        done();
-      }).catch(done);
+      callbackPromise
+        .then((params: OAuth2CallbackParams) => {
+          expect(params.error).toBe("access_denied");
+          expect(params.error_description).toBe("User denied access");
+          expect(params.code).toBeUndefined();
+          done();
+        })
+        .catch(done);
     });
 
     it("should handle invalid path", () => {
@@ -187,9 +191,12 @@ describe("OAuth2Server", () => {
 
       (server as any).sendSuccessResponse(mockResponse);
 
-      expect(mockResponse.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
-        "Content-Type": "text/html; charset=utf-8",
-      }));
+      expect(mockResponse.writeHead).toHaveBeenCalledWith(
+        200,
+        expect.objectContaining({
+          "Content-Type": "text/html; charset=utf-8",
+        })
+      );
       expect(mockResponse.end).toHaveBeenCalledWith(expect.stringContaining("Authorization Successful"));
     });
 
@@ -201,9 +208,12 @@ describe("OAuth2Server", () => {
 
       (server as any).sendErrorResponse(mockResponse, 400, "Error message");
 
-      expect(mockResponse.writeHead).toHaveBeenCalledWith(400, expect.objectContaining({
-        "Content-Type": "text/plain",
-      }));
+      expect(mockResponse.writeHead).toHaveBeenCalledWith(
+        400,
+        expect.objectContaining({
+          "Content-Type": "text/plain",
+        })
+      );
       expect(mockResponse.end).toHaveBeenCalledWith("Error message");
     });
   });

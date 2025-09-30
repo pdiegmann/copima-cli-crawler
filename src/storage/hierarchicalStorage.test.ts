@@ -47,7 +47,10 @@ describe("HierarchicalStorageManager", () => {
   });
 
   it("should write JSONL to hierarchy", async () => {
-    const data = [{ id: 1, name: "A" }, { id: 2, name: "B" }];
+    const data = [
+      { id: 1, name: "A" },
+      { id: 2, name: "B" },
+    ];
     await manager.writeJSONLToHierarchy(area, "users", data);
 
     const filePath = manager.getResourceFilePath(area, "users");

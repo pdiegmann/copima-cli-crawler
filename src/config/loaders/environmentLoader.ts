@@ -4,162 +4,164 @@ export class EnvironmentConfigLoader {
   loadFromEnvironment(): Partial<Config> {
     const config: Partial<Config> = {};
 
-    // GitLab configuration
-    const gitlabConfig: any = {};
-    if (process.env["GITLAB_HOST"]) {
-      gitlabConfig.host = process.env["GITLAB_HOST"];
-    }
-    if (process.env["GITLAB_ACCESS_TOKEN"]) {
-      gitlabConfig.accessToken = process.env["GITLAB_ACCESS_TOKEN"];
-    }
-    if (process.env["GITLAB_REFRESH_TOKEN"]) {
-      gitlabConfig.refreshToken = process.env["GITLAB_REFRESH_TOKEN"];
-    }
-    if (process.env["GITLAB_TIMEOUT"]) {
-      const timeout = parseInt(process.env["GITLAB_TIMEOUT"], 10);
-      if (!isNaN(timeout)) {
-        gitlabConfig.timeout = timeout;
-      }
-    }
-    if (process.env["GITLAB_MAX_CONCURRENCY"]) {
-      const maxConcurrency = parseInt(process.env["GITLAB_MAX_CONCURRENCY"], 10);
-      if (!isNaN(maxConcurrency)) {
-        gitlabConfig.maxConcurrency = maxConcurrency;
-      }
-    }
-    if (process.env["GITLAB_RATE_LIMIT"]) {
-      const rateLimit = parseInt(process.env["GITLAB_RATE_LIMIT"], 10);
-      if (!isNaN(rateLimit)) {
-        gitlabConfig.rateLimit = rateLimit;
-      }
-    }
-    if (Object.keys(gitlabConfig).length > 0) {
-      config.gitlab = gitlabConfig;
-    }
+    // Load each configuration section
+    this.addConfigSection(config, "gitlab", this.loadGitlabConfig());
+    this.addConfigSection(config, "database", this.loadDatabaseConfig());
+    this.addConfigSection(config, "output", this.loadOutputConfig());
+    this.addConfigSection(config, "logging", this.loadLoggingConfig());
+    this.addConfigSection(config, "progress", this.loadProgressConfig());
+    this.addConfigSection(config, "resume", this.loadResumeConfig());
+    this.addConfigSection(config, "callbacks", this.loadCallbackConfig());
 
-    // Database configuration
-    const databaseConfig: any = {};
-    if (process.env["DATABASE_PATH"]) {
-      databaseConfig.path = process.env["DATABASE_PATH"];
-    }
-    if (process.env["DATABASE_WAL_MODE"]) {
-      databaseConfig.walMode = process.env["DATABASE_WAL_MODE"].toLowerCase() === "true";
-    }
-    if (process.env["DATABASE_TIMEOUT"]) {
-      const timeout = parseInt(process.env["DATABASE_TIMEOUT"], 10);
-      if (!isNaN(timeout)) {
-        databaseConfig.timeout = timeout;
-      }
-    }
-    if (Object.keys(databaseConfig).length > 0) {
-      config.database = databaseConfig;
-    }
+    return config;
+  }
 
-    // Output configuration
-    const outputConfig: any = {};
-    if (process.env["OUTPUT_ROOT_DIR"]) {
-      outputConfig.rootDir = process.env["OUTPUT_ROOT_DIR"];
+  private addConfigSection(config: any, key: string, sectionConfig: any): void {
+    if (Object.keys(sectionConfig).length > 0) {
+      config[key] = sectionConfig;
     }
-    if (process.env["OUTPUT_FILE_NAMING"]) {
-      const validNaming = ["lowercase", "kebab-case", "snake_case"];
-      const naming = process.env["OUTPUT_FILE_NAMING"];
-      if (validNaming.includes(naming)) {
-        outputConfig.fileNaming = naming as any;
-      }
-    }
-    if (process.env["OUTPUT_PRETTY_PRINT"]) {
-      outputConfig.prettyPrint = process.env["OUTPUT_PRETTY_PRINT"].toLowerCase() === "true";
-    }
-    if (process.env["OUTPUT_COMPRESSION"]) {
-      const validCompression = ["none", "gzip", "brotli"];
-      const compression = process.env["OUTPUT_COMPRESSION"];
-      if (validCompression.includes(compression)) {
-        outputConfig.compression = compression as any;
-      }
-    }
-    if (Object.keys(outputConfig).length > 0) {
-      config.output = outputConfig;
-    }
+  }
 
-    // Logging configuration
-    const loggingConfig: any = {};
-    if (process.env["LOG_LEVEL"]) {
-      const validLevels = ["error", "warn", "info", "debug"];
-      const level = process.env["LOG_LEVEL"];
-      if (validLevels.includes(level)) {
-        loggingConfig.level = level as any;
-      }
-    }
-    if (process.env["LOG_FORMAT"]) {
-      const validFormats = ["json", "simple", "combined"];
-      const format = process.env["LOG_FORMAT"];
-      if (validFormats.includes(format)) {
-        loggingConfig.format = format as any;
-      }
-    }
-    if (process.env["LOG_FILE"]) {
-      loggingConfig.file = process.env["LOG_FILE"];
-    }
-    if (process.env["LOG_CONSOLE"]) {
-      loggingConfig.console = process.env["LOG_CONSOLE"].toLowerCase() === "true";
-    }
-    if (process.env["LOG_COLORS"]) {
-      loggingConfig.colors = process.env["LOG_COLORS"].toLowerCase() === "true";
-    }
-    if (Object.keys(loggingConfig).length > 0) {
-      config.logging = loggingConfig;
-    }
+  private getString(envVar: string): string | undefined {
+    return process.env[envVar];
+  }
 
-    // Progress configuration
-    const progressConfig: any = {};
-    if (process.env["PROGRESS_ENABLED"]) {
-      progressConfig.enabled = process.env["PROGRESS_ENABLED"].toLowerCase() === "true";
-    }
-    if (process.env["PROGRESS_FILE"]) {
-      progressConfig.file = process.env["PROGRESS_FILE"];
-    }
-    if (process.env["PROGRESS_INTERVAL"]) {
-      const interval = parseInt(process.env["PROGRESS_INTERVAL"], 10);
-      if (!isNaN(interval)) {
-        progressConfig.interval = interval;
-      }
-    }
-    if (process.env["PROGRESS_DETAILED"]) {
-      progressConfig.detailed = process.env["PROGRESS_DETAILED"].toLowerCase() === "true";
-    }
-    if (Object.keys(progressConfig).length > 0) {
-      config.progress = progressConfig;
-    }
+  private getInt(envVar: string): number | undefined {
+    const value = process.env[envVar];
+    if (!value) return undefined;
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? undefined : parsed;
+  }
 
-    // Resume configuration
-    const resumeConfig: any = {};
-    if (process.env["RESUME_ENABLED"]) {
-      resumeConfig.enabled = process.env["RESUME_ENABLED"].toLowerCase() === "true";
-    }
-    if (process.env["RESUME_STATE_FILE"]) {
-      resumeConfig.stateFile = process.env["RESUME_STATE_FILE"];
-    }
-    if (process.env["RESUME_AUTO_SAVE_INTERVAL"]) {
-      const interval = parseInt(process.env["RESUME_AUTO_SAVE_INTERVAL"], 10);
-      if (!isNaN(interval)) {
-        resumeConfig.autoSaveInterval = interval;
-      }
-    }
-    if (Object.keys(resumeConfig).length > 0) {
-      config.resume = resumeConfig;
-    }
+  private getBool(envVar: string): boolean | undefined {
+    const value = process.env[envVar];
+    return value ? value.toLowerCase() === "true" : undefined;
+  }
 
-    // Callback configuration
-    const callbackConfig: any = {};
-    if (process.env["CALLBACK_ENABLED"]) {
-      callbackConfig.enabled = process.env["CALLBACK_ENABLED"].toLowerCase() === "true";
-    }
-    if (process.env["CALLBACK_MODULE_PATH"]) {
-      callbackConfig.modulePath = process.env["CALLBACK_MODULE_PATH"];
-    }
-    if (Object.keys(callbackConfig).length > 0) {
-      config.callbacks = callbackConfig;
-    }
+  private getEnum<T extends string>(envVar: string, validValues: T[]): T | undefined {
+    const value = process.env[envVar] as T;
+    return validValues.includes(value) ? value : undefined;
+  }
+
+  private loadGitlabConfig(): any {
+    const config: any = {};
+
+    const host = this.getString("GITLAB_HOST");
+    if (host) config.host = host;
+
+    const accessToken = this.getString("GITLAB_ACCESS_TOKEN");
+    if (accessToken) config.accessToken = accessToken;
+
+    const refreshToken = this.getString("GITLAB_REFRESH_TOKEN");
+    if (refreshToken) config.refreshToken = refreshToken;
+
+    const timeout = this.getInt("GITLAB_TIMEOUT");
+    if (timeout !== undefined) config.timeout = timeout;
+
+    const maxConcurrency = this.getInt("GITLAB_MAX_CONCURRENCY");
+    if (maxConcurrency !== undefined) config.maxConcurrency = maxConcurrency;
+
+    const rateLimit = this.getInt("GITLAB_RATE_LIMIT");
+    if (rateLimit !== undefined) config.rateLimit = rateLimit;
+
+    return config;
+  }
+
+  private loadDatabaseConfig(): any {
+    const config: any = {};
+
+    const path = this.getString("DATABASE_PATH");
+    if (path) config.path = path;
+
+    const walMode = this.getBool("DATABASE_WAL_MODE");
+    if (walMode !== undefined) config.walMode = walMode;
+
+    const timeout = this.getInt("DATABASE_TIMEOUT");
+    if (timeout !== undefined) config.timeout = timeout;
+
+    return config;
+  }
+
+  private loadOutputConfig(): any {
+    const config: any = {};
+
+    const rootDir = this.getString("OUTPUT_ROOT_DIR");
+    if (rootDir) config.rootDir = rootDir;
+
+    const fileNaming = this.getEnum("OUTPUT_FILE_NAMING", ["lowercase", "kebab-case", "snake_case"]);
+    if (fileNaming) config.fileNaming = fileNaming;
+
+    const prettyPrint = this.getBool("OUTPUT_PRETTY_PRINT");
+    if (prettyPrint !== undefined) config.prettyPrint = prettyPrint;
+
+    const compression = this.getEnum("OUTPUT_COMPRESSION", ["none", "gzip", "brotli"]);
+    if (compression) config.compression = compression;
+
+    return config;
+  }
+
+  private loadLoggingConfig(): any {
+    const config: any = {};
+
+    const level = this.getEnum("LOG_LEVEL", ["error", "warn", "info", "debug"]);
+    if (level) config.level = level;
+
+    const format = this.getEnum("LOG_FORMAT", ["json", "simple", "combined"]);
+    if (format) config.format = format;
+
+    const file = this.getString("LOG_FILE");
+    if (file) config.file = file;
+
+    const console = this.getBool("LOG_CONSOLE");
+    if (console !== undefined) config.console = console;
+
+    const colors = this.getBool("LOG_COLORS");
+    if (colors !== undefined) config.colors = colors;
+
+    return config;
+  }
+
+  private loadProgressConfig(): any {
+    const config: any = {};
+
+    const enabled = this.getBool("PROGRESS_ENABLED");
+    if (enabled !== undefined) config.enabled = enabled;
+
+    const file = this.getString("PROGRESS_FILE");
+    if (file) config.file = file;
+
+    const interval = this.getInt("PROGRESS_INTERVAL");
+    if (interval !== undefined) config.interval = interval;
+
+    const detailed = this.getBool("PROGRESS_DETAILED");
+    if (detailed !== undefined) config.detailed = detailed;
+
+    return config;
+  }
+
+  private loadResumeConfig(): any {
+    const config: any = {};
+
+    const enabled = this.getBool("RESUME_ENABLED");
+    if (enabled !== undefined) config.enabled = enabled;
+
+    const stateFile = this.getString("RESUME_STATE_FILE");
+    if (stateFile) config.stateFile = stateFile;
+
+    const autoSaveInterval = this.getInt("RESUME_AUTO_SAVE_INTERVAL");
+    if (autoSaveInterval !== undefined) config.autoSaveInterval = autoSaveInterval;
+
+    return config;
+  }
+
+  private loadCallbackConfig(): any {
+    const config: any = {};
+
+    const enabled = this.getBool("CALLBACK_ENABLED");
+    if (enabled !== undefined) config.enabled = enabled;
+
+    const modulePath = this.getString("CALLBACK_MODULE_PATH");
+    if (modulePath) config.modulePath = modulePath;
 
     return config;
   }

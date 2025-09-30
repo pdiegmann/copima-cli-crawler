@@ -55,78 +55,124 @@ export class TestRunner {
     this.logger.info(`Starting test: ${config.metadata.name}`);
 
     try {
-      // Validate configuration
-      const validationResult = validateTestConfig(config);
-      if (!validationResult.valid) {
-        throw new Error(`Invalid test configuration: ${validationResult.errors.join(", ")}`);
-      }
+      await this.validateAndSetupTest(config, options);
 
-      // Setup test environment
-      await this.setupTestEnvironment(config, options);
-
-      let crawlerResult: CrawlerExecutionResult;
-      let validationResults: ValidationResults;
-
-      if (options.dryRun) {
-        // Dry run - just validate configuration
-        crawlerResult = {
-          exitCode: 0,
-          stdout: "Dry run - no execution",
-          stderr: "",
-          executionTime: 0,
-          generatedFiles: [],
-        };
-        validationResults = this.createEmptyValidationResults();
-      } else {
-        // Execute crawler
-        crawlerResult = await this.executeCrawler(config, options);
-
-        // Validate results
-        validationResults = await this.validateResults(config, crawlerResult);
-      }
-
-      // Cleanup
+      const { crawlerResult, validationResults } = await this.executeTestSteps(config, options);
       const cleanupResults = await this.cleanup(
         config,
         validationResults.files.every((f) => f.valid)
       );
 
-      const executionTime = Date.now() - startTime;
-      const success = crawlerResult.exitCode === 0 && this.isValidationSuccessful(validationResults);
-
-      this.logger.info(`Test completed: ${config.metadata.name} - ${success ? "PASSED" : "FAILED"}`);
-
-      return {
-        config,
-        success,
-        executionTime,
-        crawlerResult,
-        validationResults,
-        warnings: this.collectWarnings(validationResults),
-        cleanupResults,
-        error: success ? undefined : this.getFirstError(crawlerResult, validationResults),
-      };
+      return this.buildSuccessfulTestResult(config, startTime, crawlerResult, validationResults, cleanupResults);
     } catch (error) {
-      const executionTime = Date.now() - startTime;
-      this.logger.error(`Test failed: ${config.metadata.name}`, { error });
+      return this.buildFailedTestResult(config, startTime, error);
+    }
+  }
 
+  /**
+   * Validates configuration and sets up test environment.
+   */
+  private async validateAndSetupTest(config: TestConfig, options: TestExecutionOptions): Promise<void> {
+    const validationResult = validateTestConfig(config);
+    if (!validationResult.valid) {
+      throw new Error(`Invalid test configuration: ${validationResult.errors.join(", ")}`);
+    }
+
+    await this.setupTestEnvironment(config, options);
+  }
+
+  /**
+   * Executes test steps (dry run or actual execution with validation).
+   */
+  private async executeTestSteps(
+    config: TestConfig,
+    options: TestExecutionOptions
+  ): Promise<{
+    crawlerResult: CrawlerExecutionResult;
+    validationResults: ValidationResults;
+  }> {
+    if (options.dryRun) {
       return {
-        config,
-        success: false,
-        executionTime,
-        crawlerResult: {
-          exitCode: 1,
-          stdout: "",
-          stderr: error instanceof Error ? error.message : String(error),
-          executionTime: 0,
-          generatedFiles: [],
-        },
+        crawlerResult: this.createDryRunResult(),
         validationResults: this.createEmptyValidationResults(),
-        warnings: [],
-        cleanupResults: { success: false, outputDirCleaned: false, databaseCleaned: false, logsCleaned: false, errors: [String(error)] },
-        error: error instanceof Error ? error.message : String(error),
       };
     }
+
+    const crawlerResult = await this.executeCrawler(config, options);
+    const validationResults = await this.validateResults(config, crawlerResult);
+
+    return { crawlerResult, validationResults };
+  }
+
+  /**
+   * Creates a dry run execution result.
+   */
+  private createDryRunResult(): CrawlerExecutionResult {
+    return {
+      exitCode: 0,
+      stdout: "Dry run - no execution",
+      stderr: "",
+      executionTime: 0,
+      generatedFiles: [],
+    };
+  }
+
+  /**
+   * Builds successful test result.
+   */
+  private buildSuccessfulTestResult(
+    config: TestConfig,
+    startTime: number,
+    crawlerResult: CrawlerExecutionResult,
+    validationResults: ValidationResults,
+    cleanupResults: CleanupResults
+  ): TestResult {
+    const executionTime = Date.now() - startTime;
+    const success = crawlerResult.exitCode === 0 && this.isValidationSuccessful(validationResults);
+
+    this.logger.info(`Test completed: ${config.metadata.name} - ${success ? "PASSED" : "FAILED"}`);
+
+    return {
+      config,
+      success,
+      executionTime,
+      crawlerResult,
+      validationResults,
+      warnings: this.collectWarnings(validationResults),
+      cleanupResults,
+      error: success ? undefined : this.getFirstError(crawlerResult, validationResults),
+    };
+  }
+
+  /**
+   * Builds failed test result for exception cases.
+   */
+  private buildFailedTestResult(config: TestConfig, startTime: number, error: unknown): TestResult {
+    const executionTime = Date.now() - startTime;
+    this.logger.error(`Test failed: ${config.metadata.name}`, { error });
+
+    return {
+      config,
+      success: false,
+      executionTime,
+      crawlerResult: {
+        exitCode: 1,
+        stdout: "",
+        stderr: error instanceof Error ? error.message : String(error),
+        executionTime: 0,
+        generatedFiles: [],
+      },
+      validationResults: this.createEmptyValidationResults(),
+      warnings: [],
+      cleanupResults: {
+        success: false,
+        outputDirCleaned: false,
+        databaseCleaned: false,
+        logsCleaned: false,
+        errors: [String(error)],
+      },
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 
   /**
@@ -137,47 +183,85 @@ export class TestRunner {
 
     this.logger.info(`Starting test suite: ${suite.metadata.name}`);
 
-    // Validate suite configuration
+    this.validateTestSuite(suite);
+    const results = await this.executeTestSuite(suite, options);
+    const suiteResult = this.buildTestSuiteResult(suite, results, startTime);
+
+    await this.handleReportGeneration(suiteResult, suite.settings);
+    this.logTestSuiteCompletion(suiteResult);
+
+    return suiteResult;
+  }
+
+  /**
+   * Validates test suite configuration.
+   */
+  private validateTestSuite(suite: TestSuite): void {
     const validationResult = validateTestSuite(suite);
     if (!validationResult.valid) {
       throw new Error(`Invalid test suite configuration: ${validationResult.errors.join(", ")}`);
     }
+  }
 
+  /**
+   * Executes all tests in a test suite.
+   */
+  private async executeTestSuite(suite: TestSuite, options: TestExecutionOptions): Promise<TestResult[]> {
     const results: TestResult[] = [];
-    let shouldStop = false;
+    const shouldStop = false;
 
     if (suite.settings.parallel && !options.dryRun) {
-      // Run tests in parallel
-      const maxParallel = suite.settings.maxParallel || 3;
-      const chunks = this.chunkArray(suite.tests, maxParallel);
-
-      for (const chunk of chunks) {
-        if (shouldStop) break;
-
-        const chunkPromises = chunk.map((test) => this.runTest(test, options));
-        const chunkResults = await Promise.all(chunkPromises);
-
-        results.push(...chunkResults);
-
-        // Check if we should stop on failure
-        if (suite.settings.stopOnFailure && chunkResults.some((r) => !r.success)) {
-          shouldStop = true;
-        }
-      }
+      return await this.executeTestsInParallel(suite, options, results, shouldStop);
     } else {
-      // Run tests sequentially
-      for (const test of suite.tests) {
-        if (shouldStop) break;
+      return await this.executeTestsSequentially(suite, options, results, shouldStop);
+    }
+  }
 
-        const result = await this.runTest(test, options);
-        results.push(result);
+  /**
+   * Executes tests in parallel chunks.
+   */
+  private async executeTestsInParallel(suite: TestSuite, options: TestExecutionOptions, results: TestResult[], shouldStop: boolean): Promise<TestResult[]> {
+    const maxParallel = suite.settings.maxParallel || 3;
+    const chunks = this.chunkArray(suite.tests, maxParallel);
 
-        if (suite.settings.stopOnFailure && !result.success) {
-          shouldStop = true;
-        }
+    for (const chunk of chunks) {
+      if (shouldStop) break;
+
+      const chunkPromises = chunk.map((test) => this.runTest(test, options));
+      const chunkResults = await Promise.all(chunkPromises);
+
+      results.push(...chunkResults);
+
+      if (suite.settings.stopOnFailure && chunkResults.some((r) => !r.success)) {
+        shouldStop = true;
       }
     }
 
+    return results;
+  }
+
+  /**
+   * Executes tests sequentially.
+   */
+  private async executeTestsSequentially(suite: TestSuite, options: TestExecutionOptions, results: TestResult[], shouldStop: boolean): Promise<TestResult[]> {
+    for (const test of suite.tests) {
+      if (shouldStop) break;
+
+      const result = await this.runTest(test, options);
+      results.push(result);
+
+      if (suite.settings.stopOnFailure && !result.success) {
+        shouldStop = true;
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Builds test suite result from individual test results.
+   */
+  private buildTestSuiteResult(suite: TestSuite, results: TestResult[], startTime: number): TestSuiteResult {
     const totalExecutionTime = Date.now() - startTime;
     const summary = {
       total: results.length,
@@ -187,23 +271,30 @@ export class TestRunner {
       errors: results.filter((r) => r.error).length,
     };
 
-    const suiteResult: TestSuiteResult = {
+    return {
       suite,
       results,
       totalExecutionTime,
       success: summary.failed === 0,
       summary,
     };
+  }
 
-    // Generate report if requested
-    if (suite.settings.generateReport) {
-      await this.generateReport(suiteResult, suite.settings.reportFormat || "json");
+  /**
+   * Handles report generation if requested.
+   */
+  private async handleReportGeneration(suiteResult: TestSuiteResult, settings: any): Promise<void> {
+    if (settings.generateReport) {
+      await this.generateReport(suiteResult, settings.reportFormat || "json");
     }
+  }
 
-    this.logger.info(`Test suite completed: ${suite.metadata.name} - ${suiteResult.success ? "PASSED" : "FAILED"}`);
-    this.logger.info(`Results: ${summary.passed}/${summary.total} passed, ${summary.failed} failed, ${summary.warnings} warnings`);
-
-    return suiteResult;
+  /**
+   * Logs test suite completion summary.
+   */
+  private logTestSuiteCompletion(suiteResult: TestSuiteResult): void {
+    this.logger.info(`Test suite completed: ${suiteResult.suite.metadata.name} - ${suiteResult.success ? "PASSED" : "FAILED"}`);
+    this.logger.info(`Results: ${suiteResult.summary.passed}/${suiteResult.summary.total} passed, ${suiteResult.summary.failed} failed, ${suiteResult.summary.warnings} warnings`);
   }
 
   /**
@@ -280,84 +371,143 @@ export class TestRunner {
     const startTime = Date.now();
     const cliPath = options.cliPath || "bun run src/bin/cli.ts";
 
-    // Build command arguments
     const args = await this.buildCrawlerArgs(config);
-
-    // Setup environment variables
-    const testEnv = await this.buildEnvironmentVariables(config);
-    const env = {
-      ...process.env,
-      ...options.env,
-      ...testEnv,
-    };
+    const env = await this.buildCrawlerEnvironment(config, options);
 
     this.logger.debug("Executing crawler", { cliPath, args, workingDir: config.execution.workingDir });
 
     return new Promise((resolve) => {
-      let stdout = "";
-      let stderr = "";
-      const generatedFiles: string[] = [];
+      const executionState = this.initializeExecutionState();
+      const child = this.spawnCrawlerProcess(cliPath, args, config, env);
 
-      /* eslint-disable sonarjs/no-os-command-from-path */
-      const child = spawn("bash", ["-c", `${cliPath} ${args.join(" ")}`], {
-        cwd: config.execution.workingDir,
-        env,
-        stdio: ["pipe", "pipe", "pipe"],
-      });
-      /* eslint-enable sonarjs/no-os-command-from-path */
+      this.setupProcessHandlers(child, options, executionState);
+      this.setupProcessCompletion(child, config, startTime, executionState, resolve);
+      this.setupProcessTimeout(child, config);
+    });
+  }
 
-      this.activeProcesses.push(child);
+  /**
+   * Builds crawler environment variables.
+   */
+  private async buildCrawlerEnvironment(config: TestConfig, options: TestExecutionOptions): Promise<Record<string, string>> {
+    const testEnv = await this.buildEnvironmentVariables(config);
+    const processEnv = Object.fromEntries(Object.entries(process.env).filter(([_, value]) => value !== undefined)) as Record<string, string>;
 
-      child.stdout?.on("data", (data) => {
-        const chunk = data.toString();
-        stdout += chunk;
-        if (options.verbose) {
-          this.logger.info(`[CRAWLER STDOUT] ${chunk.trim()}`);
-        }
-      });
+    return {
+      ...processEnv,
+      ...options.env,
+      ...testEnv,
+    };
+  }
 
-      child.stderr?.on("data", (data) => {
-        const chunk = data.toString();
-        stderr += chunk;
-        if (options.verbose) {
-          this.logger.warn(`[CRAWLER STDERR] ${chunk.trim()}`);
-        }
-      });
+  /**
+   * Initializes execution state tracking.
+   */
+  private initializeExecutionState(): { stdout: string; stderr: string; generatedFiles: string[] } {
+    return {
+      stdout: "",
+      stderr: "",
+      generatedFiles: [],
+    };
+  }
 
-      child.on("close", (code) => {
-        const executionTime = Date.now() - startTime;
-        this.activeProcesses = this.activeProcesses.filter((p) => p !== child);
+  /**
+   * Spawns the crawler process.
+   */
+  private spawnCrawlerProcess(cliPath: string, args: string[], config: TestConfig, env: Record<string, string>): ChildProcess {
+    /* eslint-disable sonarjs/no-os-command-from-path */
+    const child = spawn("bash", ["-c", `${cliPath} ${args.join(" ")}`], {
+      cwd: config.execution.workingDir,
+      env,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    /* eslint-enable sonarjs/no-os-command-from-path */
 
-        // Collect generated files
-        try {
-          this.collectGeneratedFiles(config.execution.outputDir, generatedFiles);
-        } catch (error) {
-          this.logger.warn("Failed to collect generated files", { error });
-        }
+    this.activeProcesses.push(child);
+    return child;
+  }
 
-        resolve({
-          exitCode: code || 0,
-          stdout,
-          stderr,
-          executionTime,
-          generatedFiles,
-        });
-      });
-
-      // Handle timeout
-      if (config.metadata.timeout) {
-        setTimeout(() => {
-          if (!child.killed) {
-            child.kill("SIGTERM");
-            setTimeout(() => {
-              if (!child.killed) {
-                child.kill("SIGKILL");
-              }
-            }, 5000);
-          }
-        }, config.metadata.timeout);
+  /**
+   * Sets up process output handlers.
+   */
+  private setupProcessHandlers(child: ChildProcess, options: TestExecutionOptions, executionState: { stdout: string; stderr: string; generatedFiles: string[] }): void {
+    child.stdout?.on("data", (data) => {
+      const chunk = data.toString();
+      executionState.stdout += chunk;
+      if (options.verbose) {
+        this.logger.info(`[CRAWLER STDOUT] ${chunk.trim()}`);
       }
     });
+
+    child.stderr?.on("data", (data) => {
+      const chunk = data.toString();
+      executionState.stderr += chunk;
+      if (options.verbose) {
+        this.logger.warn(`[CRAWLER STDERR] ${chunk.trim()}`);
+      }
+    });
+  }
+
+  /**
+   * Sets up process completion handler.
+   */
+  private setupProcessCompletion(
+    child: ChildProcess,
+    config: TestConfig,
+    startTime: number,
+    executionState: { stdout: string; stderr: string; generatedFiles: string[] },
+    resolve: (result: CrawlerExecutionResult) => void
+  ): void {
+    child.on("close", (code) => {
+      const executionTime = Date.now() - startTime;
+      this.activeProcesses = this.activeProcesses.filter((p) => p !== child);
+
+      this.collectExecutionResults(config, executionState);
+
+      resolve({
+        exitCode: code || 0,
+        stdout: executionState.stdout,
+        stderr: executionState.stderr,
+        executionTime,
+        generatedFiles: executionState.generatedFiles,
+      });
+    });
+  }
+
+  /**
+   * Collects execution results and generated files.
+   */
+  private collectExecutionResults(config: TestConfig, executionState: { generatedFiles: string[] }): void {
+    try {
+      this.collectGeneratedFiles(config.execution.outputDir, executionState.generatedFiles);
+    } catch (error) {
+      this.logger.warn("Failed to collect generated files", { error });
+    }
+  }
+
+  /**
+   * Sets up process timeout handling.
+   */
+  private setupProcessTimeout(child: ChildProcess, config: TestConfig): void {
+    if (config.metadata.timeout) {
+      setTimeout(() => {
+        this.terminateProcess(child);
+      }, config.metadata.timeout);
+    }
+  }
+
+  /**
+   * Terminates process gracefully with fallback to force kill.
+   */
+  private terminateProcess(child: ChildProcess): void {
+    if (!child.killed) {
+      child.kill("SIGTERM");
+      setTimeout(() => {
+        if (!child.killed) {
+          child.kill("SIGKILL");
+        }
+      }, 5000);
+    }
   }
 
   /**
@@ -396,65 +546,15 @@ export class TestRunner {
 
     // Check if file exists
     if (!existsSync(filePath)) {
-      errors.push(`File does not exist: ${expectedFile.path}`);
-      return {
-        path: expectedFile.path,
-        exists: false,
-        valid: false,
-        errors,
-        warnings,
-      };
+      return this.createFileNotFoundResult(expectedFile.path, errors, warnings);
     }
 
-    let recordCount = 0;
+    const recordCount = this.countRecords(filePath, expectedFile.format, errors);
+    this.validateRecordCount(expectedFile, recordCount, errors);
 
-    try {
-      // Count records based on format
-      if (expectedFile.format === "jsonl") {
-        const content = readFileSync(filePath, "utf8");
-        recordCount = content
-          .trim()
-          .split("\n")
-          .filter((line) => line.trim()).length;
-      } else if (expectedFile.format === "json") {
-        const content = readFileSync(filePath, "utf8");
-        const data = JSON.parse(content);
-        recordCount = Array.isArray(data) ? data.length : 1;
-      }
-
-      // Validate record count
-      if (expectedFile.minRecords !== undefined && recordCount < expectedFile.minRecords) {
-        errors.push(`Too few records: ${recordCount} < ${expectedFile.minRecords}`);
-      }
-      if (expectedFile.maxRecords !== undefined && recordCount > expectedFile.maxRecords) {
-        errors.push(`Too many records: ${recordCount} > ${expectedFile.maxRecords}`);
-      }
-
-      // Validate required fields (for JSONL)
-      if (expectedFile.requiredFields && expectedFile.format === "jsonl") {
-        const content = readFileSync(filePath, "utf8");
-        const lines = content
-          .trim()
-          .split("\n")
-          .filter((line) => line.trim());
-
-        for (let i = 0; i < Math.min(lines.length, 10); i++) {
-          // Check first 10 records
-          try {
-            const record = JSON.parse(lines[i]);
-            for (const field of expectedFile.requiredFields) {
-              if (!(field in record)) {
-                errors.push(`Missing required field '${field}' in record ${i + 1}`);
-                break;
-              }
-            }
-          } catch {
-            errors.push(`Invalid JSON in line ${i + 1}`);
-          }
-        }
-      }
-    } catch (error) {
-      errors.push(`Failed to validate file: ${error instanceof Error ? error.message : String(error)}`);
+    // Validate required fields (for JSONL)
+    if (expectedFile.requiredFields && expectedFile.format === "jsonl") {
+      this.validateRequiredFields(filePath, expectedFile.requiredFields, errors);
     }
 
     return {
@@ -465,6 +565,85 @@ export class TestRunner {
       errors,
       warnings,
     };
+  }
+
+  /**
+   * Creates result for non-existent file.
+   */
+  private createFileNotFoundResult(path: string, errors: string[], warnings: string[]): FileValidationResult {
+    errors.push(`File does not exist: ${path}`);
+    return {
+      path,
+      exists: false,
+      valid: false,
+      errors,
+      warnings,
+    };
+  }
+
+  /**
+   * Counts records in a file based on format.
+   */
+  private countRecords(filePath: string, format: string, errors: string[]): number {
+    try {
+      if (format === "jsonl") {
+        const content = readFileSync(filePath, "utf8");
+        return content
+          .trim()
+          .split("\n")
+          .filter((line) => line.trim()).length;
+      } else if (format === "json") {
+        const content = readFileSync(filePath, "utf8");
+        const data = JSON.parse(content);
+        return Array.isArray(data) ? data.length : 1;
+      }
+      return 0;
+    } catch (error) {
+      errors.push(`Failed to count records: ${error instanceof Error ? error.message : String(error)}`);
+      return 0;
+    }
+  }
+
+  /**
+   * Validates record count against expected values.
+   */
+  private validateRecordCount(expectedFile: any, recordCount: number, errors: string[]): void {
+    if (expectedFile.minRecords !== undefined && recordCount < expectedFile.minRecords) {
+      errors.push(`Too few records: ${recordCount} < ${expectedFile.minRecords}`);
+    }
+    if (expectedFile.maxRecords !== undefined && recordCount > expectedFile.maxRecords) {
+      errors.push(`Too many records: ${recordCount} > ${expectedFile.maxRecords}`);
+    }
+  }
+
+  /**
+   * Validates required fields in JSONL file.
+   */
+  private validateRequiredFields(filePath: string, requiredFields: string[], errors: string[]): void {
+    try {
+      const content = readFileSync(filePath, "utf8");
+      const lines = content
+        .trim()
+        .split("\n")
+        .filter((line) => line.trim());
+
+      for (let i = 0; i < Math.min(lines.length, 10); i++) {
+        // Check first 10 records
+        try {
+          const record = JSON.parse(lines[i]);
+          for (const field of requiredFields) {
+            if (!(field in record)) {
+              errors.push(`Missing required field '${field}' in record ${i + 1}`);
+              break;
+            }
+          }
+        } catch {
+          errors.push(`Invalid JSON in line ${i + 1}`);
+        }
+      }
+    } catch (error) {
+      errors.push(`Failed to validate required fields: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   /**
@@ -561,38 +740,7 @@ export class TestRunner {
     const duplicates: { file: string; count: number }[] = [];
     const requiredFields: { file: string; missing: string[] }[] = [];
 
-    let jsonStructure = true;
-
-    // Validate JSON structure for JSONL files
-    if (qualityConfig.validateJsonStructure) {
-      for (const file of generatedFiles) {
-        if (file.endsWith(".jsonl")) {
-          const filePath = join(outputDir, file);
-          try {
-            if (existsSync(filePath)) {
-              const content = readFileSync(filePath, "utf8");
-              const lines = content
-                .trim()
-                .split("\n")
-                .filter((line) => line.trim());
-
-              for (let i = 0; i < lines.length; i++) {
-                try {
-                  JSON.parse(lines[i]);
-                } catch {
-                  jsonStructure = false;
-                  errors.push(`Invalid JSON structure in ${file} at line ${i + 1}`);
-                  break;
-                }
-              }
-            }
-          } catch (error) {
-            jsonStructure = false;
-            errors.push(`Failed to validate JSON structure in ${file}: ${error instanceof Error ? error.message : String(error)}`);
-          }
-        }
-      }
-    }
+    const jsonStructure = this.validateJsonStructureForFiles(qualityConfig, generatedFiles, outputDir, errors);
 
     return {
       valid: errors.length === 0,
@@ -602,6 +750,67 @@ export class TestRunner {
       customValidators: [],
       errors,
     };
+  }
+
+  /**
+   * Validates JSON structure for all generated files.
+   */
+  private validateJsonStructureForFiles(qualityConfig: any, generatedFiles: string[], outputDir: string, errors: string[]): boolean {
+    if (!qualityConfig.validateJsonStructure) {
+      return true;
+    }
+
+    let allValid = true;
+    for (const file of generatedFiles) {
+      if (file.endsWith(".jsonl")) {
+        const isValid = this.validateSingleJsonlFile(file, outputDir, errors);
+        if (!isValid) {
+          allValid = false;
+        }
+      }
+    }
+
+    return allValid;
+  }
+
+  /**
+   * Validates JSON structure for a single JSONL file.
+   */
+  private validateSingleJsonlFile(file: string, outputDir: string, errors: string[]): boolean {
+    const filePath = join(outputDir, file);
+
+    if (!existsSync(filePath)) {
+      return true; // Skip non-existent files
+    }
+
+    try {
+      const content = readFileSync(filePath, "utf8");
+      return this.validateJsonLinesContent(file, content, errors);
+    } catch (error) {
+      errors.push(`Failed to validate JSON structure in ${file}: ${error instanceof Error ? error.message : String(error)}`);
+      return false;
+    }
+  }
+
+  /**
+   * Validates JSON content line by line.
+   */
+  private validateJsonLinesContent(fileName: string, content: string, errors: string[]): boolean {
+    const lines = content
+      .trim()
+      .split("\n")
+      .filter((line) => line.trim());
+
+    for (let i = 0; i < lines.length; i++) {
+      try {
+        JSON.parse(lines[i]);
+      } catch {
+        errors.push(`Invalid JSON structure in ${fileName} at line ${i + 1}`);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
@@ -657,205 +866,312 @@ export class TestRunner {
    * Builds crawler command arguments from test configuration.
    */
   private async buildCrawlerArgs(config: TestConfig): Promise<string[]> {
-    const steps = config.execution.steps || ["areas", "users"];
+    const args = this.buildStepArgs(config.execution.steps);
+    this.addHostArgument(args, config.gitlab.host);
 
-    // Execute all configured steps sequentially
-    const allSteps = steps.length > 0 ? steps : ["areas"];
+    const { accessToken, accountId } = await this.resolveCredentials(config.gitlab);
+    this.addCredentialArgs(args, accessToken, accountId, config.gitlab.refreshToken);
+    this.addOutputArgs(args, config.execution.outputDir, config.execution.databasePath);
+
+    return args;
+  }
+
+  /**
+   * Builds step arguments for crawler command.
+   */
+  private buildStepArgs(steps?: string[]): string[] {
+    const allSteps = steps && steps.length > 0 ? steps : ["areas"];
     const args: string[] = [];
 
-    // For multiple steps, use the crawl command with steps parameter
     if (allSteps.length > 1) {
-      args.push("crawl");
-      args.push("--steps", allSteps.join(","));
+      args.push("crawl", "--steps", allSteps.join(","));
     } else {
-      // For single step, use the step command directly
       args.push(allSteps[0]);
     }
 
-    // Add authentication arguments
-    args.push("--host", config.gitlab.host);
+    return args;
+  }
 
-    // Get access token from database or config and resolve account ID
-    let accessToken = config.gitlab.accessToken;
-    let resolvedAccountId = config.gitlab.accountId;
+  /**
+   * Adds host argument if provided.
+   */
+  private addHostArgument(args: string[], host?: string): void {
+    if (host && host.trim()) {
+      args.push("--host", host);
+    }
+  }
 
-    // Try to retrieve access token from database first
+  /**
+   * Resolves access token and account ID from database or config.
+   */
+  private async resolveCredentials(gitlabConfig: any): Promise<{ accessToken?: string; accountId?: string }> {
+    let accessToken = gitlabConfig.accessToken;
+    let accountId = gitlabConfig.accountId;
+
     if (!accessToken) {
       try {
-        const { initDatabase } = await import("../db/connection.js");
-        const { TokenManager } = await import("../auth/tokenManager.js");
-        const { eq, desc } = await import("drizzle-orm");
-        const { account } = await import("../db/schema.js");
-
-        const db = initDatabase({ path: "./database.sqlite", wal: true });
-        const tokenManager = new TokenManager(db);
-
-        let storedToken = null;
-
-        // Check if we have account ID or email specified in config
-        if (config.gitlab.accountId) {
-          storedToken = await tokenManager.getAccessToken(config.gitlab.accountId);
-          if (storedToken) {
-            console.log(`Test runner: Using access token for account ID: ${config.gitlab.accountId}`);
-            resolvedAccountId = config.gitlab.accountId;
-          }
-        } else if (config.gitlab.email) {
-          // Look up account by email - need to join user and account tables
-          const { user } = await import("../db/schema.js");
-
-          const [userRecord] = await db
-            .select({
-              accountId: account.accountId,
-              userId: user.id,
-              email: user.email,
-            })
-            .from(user)
-            .innerJoin(account, eq(account.userId, user.id))
-            .where(eq(user.email, config.gitlab.email))
-            .orderBy(desc(account.createdAt))
-            .limit(1);
-
-          if (userRecord) {
-            storedToken = await tokenManager.getAccessToken(userRecord.accountId);
-            if (storedToken) {
-              console.log(`Test runner: Using access token for email: ${config.gitlab.email} (account: ${userRecord.accountId})`);
-              resolvedAccountId = userRecord.accountId; // Store the resolved account ID
-            }
-          } else {
-            console.warn(`Test runner: No account found for email: ${config.gitlab.email}`);
-          }
-        } else {
-          // Fallback to default account
-          storedToken = await tokenManager.getAccessToken("default");
-          if (storedToken) {
-            console.log("Test runner: Using access token for default account");
-            resolvedAccountId = "default";
-          }
-        }
-
-        if (storedToken) {
-          accessToken = storedToken;
+        const storedCredentials = await this.retrieveStoredCredentials(gitlabConfig);
+        if (storedCredentials) {
+          accessToken = storedCredentials.accessToken;
+          accountId = storedCredentials.accountId;
         }
       } catch (error) {
         console.warn("Test runner: Failed to retrieve stored token:", error);
       }
     }
 
-    // Add account ID (resolved or from config)
-    if (resolvedAccountId) {
-      args.push("--account-id", resolvedAccountId);
-    }
+    return { accessToken, accountId };
+  }
 
-    // Add access token if available (only if we have a valid non-empty token)
+  /**
+   * Retrieves stored credentials from database.
+   */
+  private async retrieveStoredCredentials(gitlabConfig: any): Promise<{ accessToken: string; accountId: string } | null> {
+    const { initDatabase } = await import("../db/connection.js");
+    const { TokenManager } = await import("../auth/tokenManager.js");
+    const db = initDatabase({ path: "./database.sqlite", wal: true });
+    const tokenManager = new TokenManager(db);
+
+    if (gitlabConfig.accountId) {
+      return await this.getTokenByAccountId(tokenManager, gitlabConfig.accountId);
+    } else if (gitlabConfig.email) {
+      return await this.getTokenByEmail(db, tokenManager, gitlabConfig.email);
+    } else {
+      return await this.getDefaultToken(tokenManager);
+    }
+  }
+
+  /**
+   * Gets token by account ID.
+   */
+  private async getTokenByAccountId(tokenManager: any, accountId: string): Promise<{ accessToken: string; accountId: string } | null> {
+    const storedToken = await tokenManager.getAccessToken(accountId);
+    if (storedToken) {
+      console.log(`Test runner: Using access token for account ID: ${accountId}`);
+      return { accessToken: storedToken, accountId };
+    }
+    return null;
+  }
+
+  /**
+   * Gets token by email lookup.
+   */
+  private async getTokenByEmail(db: any, tokenManager: any, email: string): Promise<{ accessToken: string; accountId: string } | null> {
+    const { eq, desc } = await import("drizzle-orm");
+    const { account, user } = await import("../db/schema.js");
+
+    const [userRecord] = await db
+      .select({
+        accountId: account.accountId,
+        userId: user.id,
+        email: user.email,
+      })
+      .from(user)
+      .innerJoin(account, eq(account.userId, user.id))
+      .where(eq(user.email, email))
+      .orderBy(desc(account.createdAt))
+      .limit(1);
+
+    if (userRecord) {
+      const storedToken = await tokenManager.getAccessToken(userRecord.accountId);
+      if (storedToken) {
+        console.log(`Test runner: Using access token for email: ${email} (account: ${userRecord.accountId})`);
+        return { accessToken: storedToken, accountId: userRecord.accountId };
+      }
+    } else {
+      console.warn(`Test runner: No account found for email: ${email}`);
+    }
+    return null;
+  }
+
+  /**
+   * Gets default token.
+   */
+  private async getDefaultToken(tokenManager: any): Promise<{ accessToken: string; accountId: string } | null> {
+    const storedToken = await tokenManager.getAccessToken("default");
+    if (storedToken) {
+      console.log("Test runner: Using access token for default account");
+      return { accessToken: storedToken, accountId: "default" };
+    }
+    return null;
+  }
+
+  /**
+   * Adds credential arguments to command.
+   */
+  private addCredentialArgs(args: string[], accessToken?: string, accountId?: string, refreshToken?: string): void {
+    if (accountId) {
+      args.push("--account-id", accountId);
+    }
     if (accessToken && accessToken.trim()) {
       args.push("--access-token", accessToken);
     }
-
-    // Add optional arguments
-    if (config.gitlab.refreshToken) {
-      args.push("--refresh-token", config.gitlab.refreshToken);
+    if (refreshToken) {
+      args.push("--refresh-token", refreshToken);
     }
+  }
 
-    // Set output directory
-    args.push("--output", config.execution.outputDir);
-
-    // Set database path to match test configuration
-    args.push("--database", config.execution.databasePath);
-
-    return args;
+  /**
+   * Adds output arguments to command.
+   */
+  private addOutputArgs(args: string[], outputDir: string, databasePath: string): void {
+    args.push("--output", outputDir);
+    args.push("--database", databasePath);
   }
 
   /**
    * Builds environment variables from configuration.
    */
   private async buildEnvironmentVariables(config: TestConfig): Promise<Record<string, string>> {
-    const env: Record<string, string> = {
+    const env = this.createBaseEnvironment();
+    await this.addGitlabEnvironmentVariables(env, config);
+    return env;
+  }
+
+  /**
+   * Creates base environment variables for testing.
+   */
+  private createBaseEnvironment(): Record<string, string> {
+    return {
       NODE_ENV: "test",
       LOG_LEVEL: "info",
+      NODE_TLS_REJECT_UNAUTHORIZED: "0", // Disable TLS certificate validation for test environments
     };
+  }
 
-    // Disable TLS certificate validation for test environments
-    env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+  /**
+   * Adds GitLab-related environment variables.
+   */
+  private async addGitlabEnvironmentVariables(env: Record<string, string>, config: TestConfig): Promise<void> {
+    if (!config.gitlab) return;
 
-    // Add GitLab configuration
-    if (config.gitlab) {
-      if (config.gitlab.host) {
-        env["GITLAB_HOST"] = config.gitlab.host;
+    this.addGitlabHostToEnvironment(env, config.gitlab);
+    const accessToken = await this.resolveGitlabAccessToken(config.gitlab);
+    this.addGitlabTokenToEnvironment(env, accessToken);
+  }
+
+  /**
+   * Adds GitLab host to environment variables.
+   */
+  private addGitlabHostToEnvironment(env: Record<string, string>, gitlabConfig: any): void {
+    if (gitlabConfig.host) {
+      env["GITLAB_HOST"] = gitlabConfig.host;
+    }
+  }
+
+  /**
+   * Resolves GitLab access token from database or configuration.
+   */
+  private async resolveGitlabAccessToken(gitlabConfig: any): Promise<string | undefined> {
+    let accessToken = gitlabConfig.accessToken;
+
+    try {
+      const storedToken = await this.retrieveStoredGitlabToken(gitlabConfig);
+      if (storedToken) {
+        accessToken = storedToken;
+      } else if (!accessToken) {
+        console.warn("Test runner: No stored access token found and none in config. Please run 'copima auth' first.");
       }
-
-      // Try to get access token from database first, fallback to config
-      let accessToken = config.gitlab.accessToken;
-
-      try {
-        const { initDatabase } = await import("../db/connection.js");
-        const { TokenManager } = await import("../auth/tokenManager.js");
-        const { eq, desc } = await import("drizzle-orm");
-        const { account } = await import("../db/schema.js");
-
-        try {
-          const db = initDatabase({ path: "./database.sqlite", wal: true });
-          const tokenManager = new TokenManager(db);
-
-          let storedToken = null;
-
-          // Check if we have account ID or email specified in config
-          if (config.gitlab.accountId) {
-            storedToken = await tokenManager.getAccessToken(config.gitlab.accountId);
-            if (storedToken) {
-              console.log(`Test runner: Using access token for account ID: ${config.gitlab.accountId}`);
-            }
-          } else if (config.gitlab.email) {
-            // Look up account by email - need to join user and account tables
-            const { user } = await import("../db/schema.js");
-
-            const [userRecord] = await db
-              .select({
-                accountId: account.accountId,
-                userId: user.id,
-                email: user.email,
-              })
-              .from(user)
-              .innerJoin(account, eq(account.userId, user.id))
-              .where(eq(user.email, config.gitlab.email))
-              .orderBy(desc(account.createdAt))
-              .limit(1);
-
-            if (userRecord) {
-              storedToken = await tokenManager.getAccessToken(userRecord.accountId);
-              if (storedToken) {
-                console.log(`Test runner: Using access token for email: ${config.gitlab.email} (account: ${userRecord.accountId})`);
-              }
-            } else {
-              console.warn(`Test runner: No account found for email: ${config.gitlab.email}`);
-            }
-          } else {
-            // Fallback to default account
-            storedToken = await tokenManager.getAccessToken("default");
-            if (storedToken) {
-              console.log("Test runner: Using access token for default account");
-            }
-          }
-
-          if (storedToken) {
-            accessToken = storedToken;
-          } else if (!accessToken) {
-            console.warn("Test runner: No stored access token found and none in config. Please run 'copima auth' first.");
-          }
-        } catch {
-          console.warn("Test runner: Database not available, using config token");
-        }
-      } catch (error) {
-        console.warn("Test runner: Failed to retrieve stored token, using config token:", error);
-      }
-
-      if (accessToken) {
-        env["GITLAB_ACCESS_TOKEN"] = accessToken;
-        // Set global token for test mode
-        (global as any).testAccessToken = accessToken;
-      }
+    } catch (error) {
+      console.warn("Test runner: Failed to retrieve stored token, using config token:", error);
     }
 
-    return env;
+    return accessToken;
+  }
+
+  /**
+   * Retrieves stored GitLab token from database.
+   */
+  private async retrieveStoredGitlabToken(gitlabConfig: any): Promise<string | null> {
+    try {
+      const { initDatabase } = await import("../db/connection.js");
+      const { TokenManager } = await import("../auth/tokenManager.js");
+
+      const db = initDatabase({ path: "./database.sqlite", wal: true });
+      const tokenManager = new TokenManager(db);
+
+      return await this.getStoredTokenByCredentials(tokenManager, gitlabConfig);
+    } catch {
+      console.warn("Test runner: Database not available, using config token");
+      return null;
+    }
+  }
+
+  /**
+   * Gets stored token based on account ID, email, or default account.
+   */
+  private async getStoredTokenByCredentials(tokenManager: any, gitlabConfig: any): Promise<string | null> {
+    if (gitlabConfig.accountId) {
+      const tokenData = await this.getTokenByAccountId(tokenManager, gitlabConfig.accountId);
+      return tokenData ? tokenData.accessToken : null;
+    } else if (gitlabConfig.email) {
+      return await this.getTokenByEmailLookup(gitlabConfig.email);
+    } else {
+      return await this.getDefaultStoredToken(tokenManager);
+    }
+  }
+
+  /**
+   * Gets token by email lookup through user-account join.
+   */
+  private async getTokenByEmailLookup(email: string): Promise<string | null> {
+    try {
+      const { initDatabase } = await import("../db/connection.js");
+      const { TokenManager } = await import("../auth/tokenManager.js");
+      const { eq, desc } = await import("drizzle-orm");
+      const { account, user } = await import("../db/schema.js");
+
+      const db = initDatabase({ path: "./database.sqlite", wal: true });
+      const tokenManager = new TokenManager(db);
+
+      const [userRecord] = await db
+        .select({
+          accountId: account.accountId,
+          userId: user.id,
+          email: user.email,
+        })
+        .from(user)
+        .innerJoin(account, eq(account.userId, user.id))
+        .where(eq(user.email, email))
+        .orderBy(desc(account.createdAt))
+        .limit(1);
+
+      if (userRecord) {
+        const storedToken = await tokenManager.getAccessToken(userRecord.accountId);
+        if (storedToken) {
+          console.log(`Test runner: Using access token for email: ${email} (account: ${userRecord.accountId})`);
+          return storedToken;
+        }
+      } else {
+        console.warn(`Test runner: No account found for email: ${email}`);
+      }
+    } catch (error) {
+      console.warn(`Test runner: Failed to lookup token by email: ${email}`, error);
+    }
+
+    return null;
+  }
+
+  /**
+   * Gets default stored token.
+   */
+  private async getDefaultStoredToken(tokenManager: any): Promise<string | null> {
+    const storedToken = await tokenManager.getAccessToken("default");
+    if (storedToken) {
+      console.log("Test runner: Using access token for default account");
+    }
+    return storedToken;
+  }
+
+  /**
+   * Adds GitLab token to environment variables.
+   */
+  private addGitlabTokenToEnvironment(env: Record<string, string>, accessToken?: string): void {
+    if (accessToken) {
+      env["GITLAB_ACCESS_TOKEN"] = accessToken;
+      // Set global token for test mode
+      (global as any).testAccessToken = accessToken;
+    }
   }
 
   /**
