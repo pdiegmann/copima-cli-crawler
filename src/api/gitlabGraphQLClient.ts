@@ -170,6 +170,32 @@ export class GitLabGraphQLClient {
     }
   }
 
+  async fetchAllUsers(): Promise<GitLabUser[]> {
+    try {
+      let allUsers: GitLabUser[] = [];
+      let hasNextPage = true;
+      let after: string | undefined = undefined;
+
+      logger.info("Starting to fetch all users with pagination");
+
+      while (hasNextPage) {
+        const result = await this.fetchUsers(100, after);
+        allUsers = allUsers.concat(result.nodes);
+
+        hasNextPage = result.pageInfo.hasNextPage || false;
+        after = result.pageInfo.endCursor || undefined;
+
+        logger.debug(`Fetched ${result.nodes.length} users (total: ${allUsers.length})`);
+      }
+
+      logger.info(`Successfully fetched all ${allUsers.length} users across ${Math.ceil(allUsers.length / 100)} pages`);
+      return allUsers;
+    } catch (error) {
+      logger.error("Failed to fetch all users:", { error });
+      throw error;
+    }
+  }
+
   async fetchGroups(first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
       const data = await this.query<any>(FETCH_COMPREHENSIVE_GROUPS_QUERY, { first, after });
@@ -180,6 +206,32 @@ export class GitLabGraphQLClient {
       };
     } catch (error) {
       logger.error("Failed to fetch groups:", { error });
+      throw error;
+    }
+  }
+
+  async fetchAllGroups(): Promise<GroupNode[]> {
+    try {
+      let allGroups: GroupNode[] = [];
+      let hasNextPage = true;
+      let after: string | undefined = undefined;
+
+      logger.info("Starting to fetch all groups with pagination");
+
+      while (hasNextPage) {
+        const result = await this.fetchGroups(100, after);
+        allGroups = allGroups.concat(result.nodes);
+
+        hasNextPage = result.pageInfo.hasNextPage || false;
+        after = result.pageInfo.endCursor || undefined;
+
+        logger.debug(`Fetched ${result.nodes.length} groups (total: ${allGroups.length})`);
+      }
+
+      logger.info(`Successfully fetched all ${allGroups.length} groups across ${Math.ceil(allGroups.length / 100)} pages`);
+      return allGroups;
+    } catch (error) {
+      logger.error("Failed to fetch all groups:", { error });
       throw error;
     }
   }
@@ -204,6 +256,32 @@ export class GitLabGraphQLClient {
     }
   }
 
+  async fetchAllGroupProjects(groupId: string): Promise<GitLabProject[]> {
+    try {
+      let allProjects: GitLabProject[] = [];
+      let hasNextPage = true;
+      let after: string | undefined = undefined;
+
+      logger.info(`Starting to fetch all projects for group ${groupId} with pagination`);
+
+      while (hasNextPage) {
+        const result = await this.fetchGroupProjects(groupId, 100, after);
+        allProjects = allProjects.concat(result.nodes);
+
+        hasNextPage = result.pageInfo.hasNextPage || false;
+        after = result.pageInfo.endCursor || undefined;
+
+        logger.debug(`Fetched ${result.nodes.length} projects for group ${groupId} (total: ${allProjects.length})`);
+      }
+
+      logger.info(`Successfully fetched all ${allProjects.length} projects for group ${groupId} across ${Math.ceil(allProjects.length / 100)} pages`);
+      return allProjects;
+    } catch (error) {
+      logger.error(`Failed to fetch all projects for group ${groupId}:`, { error });
+      throw error;
+    }
+  }
+
   async fetchSubgroups(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
       const data = await this.query<any>(FETCH_COMPREHENSIVE_SUBGROUPS_QUERY, { fullPath: groupId, first, after });
@@ -214,6 +292,32 @@ export class GitLabGraphQLClient {
       };
     } catch (error) {
       logger.error(`Failed to fetch subgroups for group ${groupId}:`, { error });
+      throw error;
+    }
+  }
+
+  async fetchAllSubgroups(groupId: string): Promise<GroupNode[]> {
+    try {
+      let allSubgroups: GroupNode[] = [];
+      let hasNextPage = true;
+      let after: string | undefined = undefined;
+
+      logger.info(`Starting to fetch all subgroups for group ${groupId} with pagination`);
+
+      while (hasNextPage) {
+        const result = await this.fetchSubgroups(groupId, 100, after);
+        allSubgroups = allSubgroups.concat(result.nodes);
+
+        hasNextPage = result.pageInfo.hasNextPage || false;
+        after = result.pageInfo.endCursor || undefined;
+
+        logger.debug(`Fetched ${result.nodes.length} subgroups for group ${groupId} (total: ${allSubgroups.length})`);
+      }
+
+      logger.info(`Successfully fetched all ${allSubgroups.length} subgroups for group ${groupId} across ${Math.ceil(allSubgroups.length / 100)} pages`);
+      return allSubgroups;
+    } catch (error) {
+      logger.error(`Failed to fetch all subgroups for group ${groupId}:`, { error });
       throw error;
     }
   }

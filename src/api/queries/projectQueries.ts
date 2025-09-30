@@ -4,7 +4,7 @@ export {
   FetchComprehensiveProjectsDocument as FETCH_COMPREHENSIVE_PROJECTS_QUERY,
   FetchProjectIssuesDocument as FETCH_PROJECT_ISSUES_QUERY,
   FetchProjectMergeRequestsDocument as FETCH_PROJECT_MERGE_REQUESTS_QUERY,
-  FetchProjectPipelinesDocument as FETCH_PROJECT_PIPELINES_QUERY
+  FetchProjectPipelinesDocument as FETCH_PROJECT_PIPELINES_QUERY,
 } from "../gql/graphql";
 
 export type {
@@ -17,5 +17,5 @@ export type {
   FetchProjectMergeRequestsQuery,
   FetchProjectMergeRequestsQueryVariables,
   FetchProjectPipelinesQuery,
-  FetchProjectPipelinesQueryVariables
+  FetchProjectPipelinesQueryVariables,
 } from "../gql/graphql";

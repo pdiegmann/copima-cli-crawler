@@ -17,7 +17,7 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
 
   try {
     logger.info("Fetching users from GitLab...");
-    const users = await client.fetchUsers();
+    const users = await client.fetchAllUsers();
 
     const context: CallbackContext = {
       host: config.gitlab.host,

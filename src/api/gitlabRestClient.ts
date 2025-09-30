@@ -35,19 +35,56 @@ export class GitLabRestClient {
       throw error;
     }
   }
-  // Fetch repository branches
+  // Fetch repository branches with pagination
   async fetchBranches(projectId: string): Promise<any> {
-    return await this.request(`/projects/${projectId}/repository/branches`);
+    return await this.fetchAllPaginated(`/projects/${projectId}/repository/branches`);
   }
 
-  // Fetch repository commits
+  // Fetch repository commits with pagination
   async fetchCommits(projectId: string): Promise<any> {
-    return await this.request(`/projects/${projectId}/repository/commits`);
+    return await this.fetchAllPaginated(`/projects/${projectId}/repository/commits`);
   }
 
-  // Fetch repository tags
+  // Fetch repository tags with pagination
   async fetchTags(projectId: string): Promise<any> {
-    return await this.request(`/projects/${projectId}/repository/tags`);
+    return await this.fetchAllPaginated(`/projects/${projectId}/repository/tags`);
+  }
+
+  // Generic pagination method for REST APIs
+  private async fetchAllPaginated(endpoint: string, options: { maxPages?: number; perPage?: number } = {}): Promise<any[]> {
+    const maxPages = options.maxPages || 100; // Prevent infinite loops
+    const perPage = options.perPage || 100;
+
+    let allData: any[] = [];
+    let page = 1;
+
+    while (page <= maxPages) {
+      try {
+        const separator = endpoint.includes("?") ? "&" : "?";
+        const paginatedEndpoint = `${endpoint}${separator}per_page=${perPage}&page=${page}`;
+
+        const data = await this.request<any[]>(paginatedEndpoint);
+
+        if (!Array.isArray(data) || data.length === 0) {
+          break; // No more data
+        }
+
+        allData = allData.concat(data);
+
+        // If we got fewer items than requested, we've reached the end
+        if (data.length < perPage) {
+          break;
+        }
+
+        page++;
+      } catch (error) {
+        logger.error(`Failed to fetch page ${page} from ${endpoint}:`, { error });
+        break; // Stop on errors to prevent infinite loops
+      }
+    }
+
+    logger.debug(`Fetched ${allData.length} items across ${page - 1} pages from ${endpoint}`);
+    return allData;
   }
 
   // Fetch file blobs
@@ -98,31 +135,71 @@ export class GitLabRestClient {
   }
 
   async getCommits(projectId: string, options: any = {}): Promise<any> {
-    const queryParams = new URLSearchParams(options).toString();
-    const queryString = queryParams ? `?${queryParams}` : "";
-    const endpoint = `/projects/${projectId}/repository/commits${queryString}`;
-    return this.request(endpoint);
+    const baseEndpoint = `/projects/${projectId}/repository/commits`;
+
+    // Handle pagination separately from other options
+    const { per_page, page, ...otherOptions } = options;
+    const queryParams = new URLSearchParams(otherOptions).toString();
+    const baseUrl = queryParams ? `${baseEndpoint}?${queryParams}` : baseEndpoint;
+
+    // If specific pagination is requested, use it; otherwise fetch all
+    if (page !== undefined) {
+      const separator = baseUrl.includes("?") ? "&" : "?";
+      return this.request(`${baseUrl}${separator}per_page=${per_page || 100}&page=${page}`);
+    }
+
+    return this.fetchAllPaginated(baseUrl);
   }
 
   async getRepositoryTree(projectId: string, options: any = {}): Promise<any> {
-    const queryParams = new URLSearchParams(options).toString();
-    const queryString = queryParams ? `?${queryParams}` : "";
-    const endpoint = `/projects/${projectId}/repository/tree${queryString}`;
-    return this.request(endpoint);
+    const baseEndpoint = `/projects/${projectId}/repository/tree`;
+
+    // Handle pagination separately from other options
+    const { per_page, page, ...otherOptions } = options;
+    const queryParams = new URLSearchParams(otherOptions).toString();
+    const baseUrl = queryParams ? `${baseEndpoint}?${queryParams}` : baseEndpoint;
+
+    // If specific pagination is requested, use it; otherwise fetch all
+    if (page !== undefined) {
+      const separator = baseUrl.includes("?") ? "&" : "?";
+      return this.request(`${baseUrl}${separator}per_page=${per_page || 100}&page=${page}`);
+    }
+
+    return this.fetchAllPaginated(baseUrl);
   }
 
   async getReleases(projectId: string, options: any = {}): Promise<any> {
-    const queryParams = new URLSearchParams(options).toString();
-    const queryString = queryParams ? `?${queryParams}` : "";
-    const endpoint = `/projects/${projectId}/releases${queryString}`;
-    return this.request(endpoint);
+    const baseEndpoint = `/projects/${projectId}/releases`;
+
+    // Handle pagination separately from other options
+    const { per_page, page, ...otherOptions } = options;
+    const queryParams = new URLSearchParams(otherOptions).toString();
+    const baseUrl = queryParams ? `${baseEndpoint}?${queryParams}` : baseEndpoint;
+
+    // If specific pagination is requested, use it; otherwise fetch all
+    if (page !== undefined) {
+      const separator = baseUrl.includes("?") ? "&" : "?";
+      return this.request(`${baseUrl}${separator}per_page=${per_page || 100}&page=${page}`);
+    }
+
+    return this.fetchAllPaginated(baseUrl);
   }
 
   async getPipelines(projectId: string, options: any = {}): Promise<any> {
-    const queryParams = new URLSearchParams(options).toString();
-    const queryString = queryParams ? `?${queryParams}` : "";
-    const endpoint = `/projects/${projectId}/pipelines${queryString}`;
-    return this.request(endpoint);
+    const baseEndpoint = `/projects/${projectId}/pipelines`;
+
+    // Handle pagination separately from other options
+    const { per_page, page, ...otherOptions } = options;
+    const queryParams = new URLSearchParams(otherOptions).toString();
+    const baseUrl = queryParams ? `${baseEndpoint}?${queryParams}` : baseEndpoint;
+
+    // If specific pagination is requested, use it; otherwise fetch all
+    if (page !== undefined) {
+      const separator = baseUrl.includes("?") ? "&" : "?";
+      return this.request(`${baseUrl}${separator}per_page=${per_page || 100}&page=${page}`);
+    }
+
+    return this.fetchAllPaginated(baseUrl);
   }
 
   async getFileContent(projectId: string, filePath: string, ref: string = "main"): Promise<any> {
@@ -135,31 +212,31 @@ export class GitLabRestClient {
   }
 }
 
-// Standalone utility functions that don't require class instance
+// Standalone utility functions that don't require class instance - now with pagination
 export const fetchGroups = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/groups", "GET");
+  return (client as any).fetchAllPaginated("/groups");
 };
 
 export const fetchProjects = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/projects", "GET");
+  return (client as any).fetchAllPaginated("/projects");
 };
 
 export const fetchUsers = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/users", "GET");
+  return (client as any).fetchAllPaginated("/users");
 };
 
 export const fetchLabels = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/labels", "GET");
+  return (client as any).fetchAllPaginated("/labels");
 };
 
 export const fetchMilestones = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/milestones", "GET");
+  return (client as any).fetchAllPaginated("/milestones");
 };
 
 export const fetchIssues = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/issues", "GET");
+  return (client as any).fetchAllPaginated("/issues");
 };
 
 export const fetchMergeRequests = async (client: GitLabRestClient): Promise<SafeRecord[]> => {
-  return client.request("/merge_requests", "GET");
+  return (client as any).fetchAllPaginated("/merge_requests");
 };
