@@ -209,134 +209,6 @@ export class RestResourcesFetcher {
   }
 
   /**
-   * Fetches project releases for a specific project
-   */
-  async fetchReleases(projectId: string, projectPath: string, callback: (release: unknown, context: CallbackContext) => unknown | null): Promise<void> {
-    try {
-      logger.info(`Fetching releases for project: ${projectPath}`);
-
-      let allReleases: unknown[] = [];
-      let page = 1;
-      const perPage = 100;
-
-      // Paginate through releases
-      while (true) {
-        const releases = await this.client.getReleases(projectId, {
-          per_page: perPage,
-          page,
-        });
-
-        if (!releases || releases.length === 0) {
-          break;
-        }
-
-        allReleases = allReleases.concat(releases);
-        page++;
-
-        if (releases.length < perPage) {
-          break; // Last page reached
-        }
-
-        logger.debug(`Fetched ${releases.length} releases (total: ${allReleases.length}) for ${projectPath}`);
-      }
-
-      const context: CallbackContext = {
-        host: this.config.gitlab.host,
-        accountId: projectId,
-        resourceType: "releases",
-      };
-
-      // Process releases through callback
-      const processedReleases: unknown[] = [];
-      for (const release of allReleases) {
-        const processedRelease = callback(release, context);
-        if (processedRelease) {
-          processedReleases.push(processedRelease);
-        }
-      }
-
-      // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
-      const filePath = this.storageManager.createHierarchicalPath("releases", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedReleases as any, false);
-
-      logger.info(`Successfully wrote ${writtenCount} releases for ${projectPath} to ${filePath}`);
-    } catch (error) {
-      logger.error(`Failed to fetch releases for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
-      throw error;
-    }
-  }
-
-  /**
-   * Fetches project pipelines for a specific project
-   */
-  async fetchPipelines(
-    projectId: string,
-    projectPath: string,
-    callback: (pipeline: unknown, context: CallbackContext) => unknown | null,
-    maxPipelines: number = 500
-  ): Promise<void> {
-    try {
-      logger.info(`Fetching pipelines for project: ${projectPath}`);
-
-      let allPipelines: unknown[] = [];
-      let page = 1;
-      const perPage = 100;
-
-      // Paginate through pipelines until we reach maxPipelines
-      while (allPipelines.length < maxPipelines) {
-        const pipelines = await this.client.getPipelines(projectId, {
-          per_page: perPage,
-          page,
-        });
-
-        if (!pipelines || pipelines.length === 0) {
-          break;
-        }
-
-        allPipelines = allPipelines.concat(pipelines);
-        page++;
-
-        if (pipelines.length < perPage) {
-          break; // Last page reached
-        }
-
-        logger.debug(`Fetched ${pipelines.length} pipelines (total: ${allPipelines.length}) for ${projectPath}`);
-      }
-
-      // Trim to maxPipelines if we exceeded the limit
-      if (allPipelines.length > maxPipelines) {
-        allPipelines = allPipelines.slice(0, maxPipelines);
-      }
-
-      const context: CallbackContext = {
-        host: this.config.gitlab.host,
-        accountId: projectId,
-        resourceType: "pipelines",
-      };
-
-      // Process pipelines through callback
-      const processedPipelines: unknown[] = [];
-      for (const pipeline of allPipelines) {
-        const processedPipeline = callback(pipeline, context);
-        if (processedPipeline) {
-          processedPipelines.push(processedPipeline);
-        }
-      }
-
-      // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
-      const filePath = this.storageManager.createHierarchicalPath("pipelines", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines as any, false);
-
-      logger.info(`Successfully wrote ${writtenCount} pipelines for ${projectPath} to ${filePath}`);
-    } catch (error) {
-      logger.error(`Failed to fetch pipelines for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
-      throw error;
-    }
-  }
-
-  /**
    * Fetches file content for a specific file in a project
    */
   async fetchFileContent(
@@ -400,6 +272,264 @@ export class RestResourcesFetcher {
       }
     } catch (error) {
       logger.error(`Failed to fetch project metadata for ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches commit references (branches and tags) for a specific commit
+   */
+  async fetchCommitRefs(projectId: string, projectPath: string, commitSha: string, callback: (refs: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      logger.info(`Fetching commit references for: ${projectPath}/${commitSha}`);
+      const refs = await this.client.request(`/projects/${projectId}/repository/commits/${commitSha}/refs`);
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "commitRefs",
+      };
+
+      // Process commit refs through callback
+      const processedRefs = callback(refs, context);
+      if (processedRefs) {
+        // Store in hierarchical structure
+        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "commits"];
+        const filePath = this.storageManager.createHierarchicalPath(`${commitSha}_refs`, hierarchy);
+        this.storageManager.writeJsonlFile(filePath, [processedRefs] as any, false);
+
+        logger.info(`Successfully wrote commit refs for ${commitSha} to ${filePath}`);
+      }
+    } catch (error) {
+      logger.error(`Failed to fetch commit refs for ${commitSha}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches job artifacts for project jobs
+   */
+  async fetchJobArtifacts(projectId: string, projectPath: string, jobId: string, callback: (artifacts: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      logger.info(`Fetching job artifacts for: ${projectPath}/job/${jobId}`);
+      const artifacts = await this.client.request(`/projects/${projectId}/jobs/${jobId}/artifacts`);
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "jobArtifacts",
+      };
+
+      // Process artifacts through callback
+      const processedArtifacts = callback(artifacts, context);
+      if (processedArtifacts) {
+        // Store in hierarchical structure
+        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "jobs"];
+        const filePath = this.storageManager.createHierarchicalPath(`${jobId}_artifacts`, hierarchy);
+        this.storageManager.writeJsonlFile(filePath, [processedArtifacts] as any, false);
+
+        logger.info(`Successfully wrote job artifacts for job ${jobId} to ${filePath}`);
+      }
+    } catch (error) {
+      logger.error(`Failed to fetch job artifacts for job ${jobId}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches job logs for project jobs
+   */
+  async fetchJobLogs(projectId: string, projectPath: string, jobId: string, callback: (logs: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      logger.info(`Fetching job logs for: ${projectPath}/job/${jobId}`);
+      const logs = await this.client.request(`/projects/${projectId}/jobs/${jobId}/trace`, "GET");
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "jobLogs",
+      };
+
+      // Process logs through callback
+      const processedLogs = callback(logs, context);
+      if (processedLogs) {
+        // Store in hierarchical structure
+        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "jobs"];
+        const filePath = this.storageManager.createHierarchicalPath(`${jobId}_logs`, hierarchy);
+        this.storageManager.writeJsonlFile(filePath, [processedLogs] as any, false);
+
+        logger.info(`Successfully wrote job logs for job ${jobId} to ${filePath}`);
+      }
+    } catch (error) {
+      logger.error(`Failed to fetch job logs for job ${jobId}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches project dependencies
+   */
+  async fetchDependencies(projectId: string, projectPath: string, callback: (dependencies: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      logger.info(`Fetching dependencies for project: ${projectPath}`);
+
+      let allDependencies: unknown[] = [];
+      let page = 1;
+      const perPage = 100;
+
+      // Paginate through dependencies
+      while (true) {
+        const dependencies = await this.client.request(`/projects/${projectId}/dependencies?per_page=${perPage}&page=${page}`);
+
+        if (!dependencies || !Array.isArray(dependencies) || dependencies.length === 0) {
+          break;
+        }
+
+        allDependencies = allDependencies.concat(dependencies);
+        page++;
+
+        if (dependencies.length < perPage) {
+          break; // Last page reached
+        }
+
+        logger.debug(`Fetched ${dependencies.length} dependencies (total: ${allDependencies.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "dependencies",
+      };
+
+      // Process dependencies through callback
+      const processedDependencies: unknown[] = [];
+      for (const dependency of allDependencies) {
+        const processedDependency = callback(dependency, context);
+        if (processedDependency) {
+          processedDependencies.push(processedDependency);
+        }
+      }
+
+      // Store in hierarchical structure
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("dependencies", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedDependencies as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} dependencies for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch dependencies for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches security vulnerabilities for a project
+   */
+  async fetchVulnerabilities(projectId: string, projectPath: string, callback: (vulnerability: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      logger.info(`Fetching vulnerabilities for project: ${projectPath}`);
+
+      let allVulnerabilities: unknown[] = [];
+      let page = 1;
+      const perPage = 100;
+
+      // Paginate through vulnerabilities
+      while (true) {
+        const vulnerabilities = await this.client.request(`/projects/${projectId}/vulnerabilities?per_page=${perPage}&page=${page}`);
+
+        if (!vulnerabilities || !Array.isArray(vulnerabilities) || vulnerabilities.length === 0) {
+          break;
+        }
+
+        allVulnerabilities = allVulnerabilities.concat(vulnerabilities);
+        page++;
+
+        if (vulnerabilities.length < perPage) {
+          break; // Last page reached
+        }
+
+        logger.debug(`Fetched ${vulnerabilities.length} vulnerabilities (total: ${allVulnerabilities.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "vulnerabilities",
+      };
+
+      // Process vulnerabilities through callback
+      const processedVulnerabilities: unknown[] = [];
+      for (const vulnerability of allVulnerabilities) {
+        const processedVulnerability = callback(vulnerability, context);
+        if (processedVulnerability) {
+          processedVulnerabilities.push(processedVulnerability);
+        }
+      }
+
+      // Store in hierarchical structure
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "security"];
+      const filePath = this.storageManager.createHierarchicalPath("vulnerabilities", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedVulnerabilities as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} vulnerabilities for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch vulnerabilities for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches packages for a project
+   */
+  async fetchPackages(projectId: string, projectPath: string, callback: (packageItem: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      logger.info(`Fetching packages for project: ${projectPath}`);
+
+      let allPackages: unknown[] = [];
+      let page = 1;
+      const perPage = 100;
+
+      // Paginate through packages
+      while (true) {
+        const packages = await this.client.request(`/projects/${projectId}/packages?per_page=${perPage}&page=${page}`);
+
+        if (!packages || !Array.isArray(packages) || packages.length === 0) {
+          break;
+        }
+
+        allPackages = allPackages.concat(packages);
+        page++;
+
+        if (packages.length < perPage) {
+          break; // Last page reached
+        }
+
+        logger.debug(`Fetched ${packages.length} packages (total: ${allPackages.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "packages",
+      };
+
+      // Process packages through callback
+      const processedPackages: unknown[] = [];
+      for (const packageItem of allPackages) {
+        const processedPackage = callback(packageItem, context);
+        if (processedPackage) {
+          processedPackages.push(processedPackage);
+        }
+      }
+
+      // Store in hierarchical structure
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("packages", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPackages as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} packages for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch packages for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }

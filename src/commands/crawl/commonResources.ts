@@ -162,6 +162,467 @@ export class CommonResourcesFetcher {
   }
 
   /**
+   * Fetches releases for a specific project via GraphQL
+   */
+  async fetchReleases(projectId: string, projectPath: string, callback: (release: unknown, context: CallbackContext) => unknown | null): Promise<void> {
+    try {
+      const query = `
+        query($id: ID!, $first: Int, $after: String) {
+          project(id: $id) {
+            releases(first: $first, after: $after) {
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+              nodes {
+                id
+                tagName
+                tagPath
+                name
+                description
+                descriptionHtml
+                createdAt
+                releasedAt
+                upcomingRelease
+                historicalRelease
+                milestones {
+                  nodes {
+                    id
+                    title
+                    description
+                    state
+                    webUrl
+                  }
+                }
+                evidences {
+                  nodes {
+                    id
+                    sha
+                    filepath
+                    collectedAt
+                  }
+                }
+                links {
+                  editUrl
+                  issuesUrl
+                  mergeRequestsUrl
+                  selfUrl
+                }
+                releaseAssets {
+                  count
+                  sources {
+                    nodes {
+                      format
+                      url
+                    }
+                  }
+                  links {
+                    nodes {
+                      id
+                      name
+                      url
+                      directAssetUrl
+                      linkType
+                    }
+                  }
+                }
+                author {
+                  id
+                  username
+                  name
+                  avatarUrl
+                  webUrl
+                  state
+                }
+                commit {
+                  id
+                  sha
+                  shortId
+                  title
+                  message
+                  authoredDate
+                  committedDate
+                  webUrl
+                  author {
+                    name
+                    email
+                    avatarUrl
+                  }
+                  committer {
+                    name
+                    email
+                    avatarUrl
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching releases for project: ${projectPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allReleases: unknown[] = [];
+
+      // Paginate through all releases
+      while (hasNextPage) {
+        const data: any = await this.client.query(query, {
+          id: projectId,
+          first: 100,
+          after,
+        });
+
+        const releasesData: any = (data["project"] && (data["project"] as any).releases) || [];
+        const releases = releasesData?.nodes || [];
+        allReleases = allReleases.concat(releases);
+
+        hasNextPage = releasesData?.pageInfo?.hasNextPage || false;
+        after = releasesData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched ${releases.length} releases (total: ${allReleases.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "releases",
+      };
+
+      // Process releases through callback
+      const processedReleases: unknown[] = [];
+      for (const release of allReleases) {
+        const processedRelease = callback(release, context);
+        if (processedRelease) {
+          processedReleases.push(processedRelease);
+        }
+      }
+
+      // Store in hierarchical structure
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("releases", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedReleases as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} releases for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch releases for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches pipelines for a specific project via GraphQL
+   */
+  async fetchPipelines(
+    projectId: string,
+    projectPath: string,
+    callback: (pipeline: unknown, context: CallbackContext) => unknown | null,
+    maxPipelines: number = 500
+  ): Promise<void> {
+    try {
+      const query = `
+        query($id: ID!, $first: Int, $after: String) {
+          project(id: $id) {
+            pipelines(first: $first, after: $after) {
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+              nodes {
+                id
+                iid
+                sha
+                beforeSha
+                status
+                detailedStatus {
+                  id
+                  group
+                  icon
+                  text
+                  label
+                  tooltip
+                  hasDetails
+                  detailsPath
+                  illustration
+                  favicon
+                  action {
+                    id
+                    path
+                    title
+                    icon
+                    buttonTitle
+                  }
+                }
+                source
+                ref
+                refPath
+                tag
+                yaml_errors: yamlErrors
+                user {
+                  id
+                  username
+                  name
+                  avatarUrl
+                  webUrl
+                  state
+                }
+                createdAt
+                updatedAt
+                startedAt
+                finishedAt
+                committedAt
+                duration
+                queuedDuration
+                coverage
+                webUrl
+                commit {
+                  id
+                  sha
+                  shortId
+                  title
+                  message
+                  description
+                  authoredDate
+                  committedDate
+                  webUrl
+                  author {
+                    name
+                    email
+                    avatarUrl
+                  }
+                  committer {
+                    name
+                    email
+                    avatarUrl
+                  }
+                }
+                downstream {
+                  nodes {
+                    id
+                    path
+                    project {
+                      id
+                      name
+                      fullPath
+                    }
+                  }
+                }
+                upstream {
+                  id
+                  path
+                  project {
+                    id
+                    name
+                    fullPath
+                  }
+                }
+                retryable
+                cancelable
+                userPermissions {
+                  adminPipeline
+                  destroyPipeline
+                  updatePipeline
+                }
+                configSource
+                mergeRequestEventType
+                mergeRequest {
+                  id
+                  iid
+                  title
+                  webUrl
+                }
+                warnings
+                totalJobs
+                warningMessages {
+                  nodes {
+                    content
+                  }
+                }
+                securityReportSummary {
+                  dast {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                  sast {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                  dependencyScanning {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                  containerScanning {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                  secretDetection {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                  coverageFuzzing {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                  apiFuzzing {
+                    vulnerabilitiesCount
+                    scannedResourcesCount
+                  }
+                }
+                jobs {
+                  nodes {
+                    id
+                    name
+                    stage {
+                      name
+                      id
+                    }
+                    status
+                    detailedStatus {
+                      id
+                      group
+                      icon
+                      text
+                      label
+                      tooltip
+                    }
+                    createdAt
+                    startedAt
+                    finishedAt
+                    duration
+                    queuedDuration
+                    webUrl
+                    webPath
+                    playable
+                    retryable
+                    cancelable
+                    scheduledAt
+                    allowFailure
+                    tags
+                    refName
+                    refPath
+                    artifacts {
+                      nodes {
+                        name
+                        path
+                        fileType
+                        fileFormat
+                        size
+                        downloadPath
+                      }
+                    }
+                    needs {
+                      nodes {
+                        id
+                        name
+                      }
+                    }
+                    userPermissions {
+                      readBuild
+                      readJobArtifacts
+                      updateBuild
+                    }
+                  }
+                }
+                stages {
+                  nodes {
+                    id
+                    name
+                    status
+                    detailedStatus {
+                      id
+                      group
+                      icon
+                      text
+                      label
+                    }
+                    groups {
+                      nodes {
+                        id
+                        name
+                        size
+                        status
+                        detailedStatus {
+                          id
+                          group
+                          icon
+                          text
+                          label
+                        }
+                        jobs {
+                          nodes {
+                            id
+                            name
+                            status
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching pipelines for project: ${projectPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allPipelines: unknown[] = [];
+
+      // Paginate through pipelines until we reach maxPipelines
+      while (hasNextPage && allPipelines.length < maxPipelines) {
+        const data: any = await this.client.query(query, {
+          id: projectId,
+          first: Math.min(100, maxPipelines - allPipelines.length),
+          after,
+        });
+
+        const pipelinesData: any = (data["project"] && (data["project"] as any).pipelines) || [];
+        const pipelines = pipelinesData?.nodes || [];
+        allPipelines = allPipelines.concat(pipelines);
+
+        hasNextPage = pipelinesData?.pageInfo?.hasNextPage || false;
+        after = pipelinesData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched ${pipelines.length} pipelines (total: ${allPipelines.length}) for ${projectPath}`);
+      }
+
+      // Trim to maxPipelines if we exceeded the limit
+      if (allPipelines.length > maxPipelines) {
+        allPipelines = allPipelines.slice(0, maxPipelines);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "pipelines",
+      };
+
+      // Process pipelines through callback
+      const processedPipelines: unknown[] = [];
+      for (const pipeline of allPipelines) {
+        const processedPipeline = callback(pipeline, context);
+        if (processedPipeline) {
+          processedPipelines.push(processedPipeline);
+        }
+      }
+
+      // Store in hierarchical structure
+      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      const filePath = this.storageManager.createHierarchicalPath("pipelines", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} pipelines for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch pipelines for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
    * Fetches milestones for a specific group or project
    */
   async fetchMilestones(
