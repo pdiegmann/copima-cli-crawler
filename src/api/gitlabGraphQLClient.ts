@@ -2,8 +2,7 @@ import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { PageInfo as CustomPageInfo, GitLabProject, GitLabUser, GroupNode, SafeRecord } from "../types/api.js";
 import { graphql } from "./gql";
-import type { FetchProjectQuery, FetchProjectsQuery } from "./gql/graphql";
-import { FetchProjectDocument, FetchProjectsDocument } from "./gql/graphql";
+// Note: These specific queries may not exist - using comprehensive queries instead
 import {
   FETCH_COMPREHENSIVE_GROUP_PROJECTS_QUERY,
   FETCH_COMPREHENSIVE_GROUP_QUERY,
@@ -185,18 +184,10 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
-    try {
-      const data = await this.query<FetchProjectsQuery>(FetchProjectsDocument, { first, after });
-      if (!data.projects?.nodes || !data.projects.pageInfo) throw new Error("Invalid data format");
-      return {
-        nodes: data.projects.nodes as GitLabProject[],
-        pageInfo: { ...data.projects.pageInfo, endCursor: data.projects.pageInfo.endCursor || undefined },
-      };
-    } catch (error) {
-      logger.error("Failed to fetch projects:", { error });
-      throw error;
-    }
+  // Note: General projects fetch not available - use fetchGroupProjects instead
+  async fetchProjects(_first: number = 100, _after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
+    logger.warn("fetchProjects is not available with current GraphQL schema - use fetchGroupProjects instead");
+    throw new Error("fetchProjects is not supported - use fetchGroupProjects with a specific group ID");
   }
 
   async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
@@ -238,14 +229,9 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchProject(projectId: string): Promise<GitLabProject> {
-    try {
-      const data = await this.query<FetchProjectQuery>(FetchProjectDocument, { fullPath: projectId });
-      if (!data.project) throw new Error("Invalid data format");
-      return data.project as GitLabProject;
-    } catch (error) {
-      logger.error(`Failed to fetch project ${projectId}:`, { error });
-      throw error;
-    }
+  // Note: Single project fetch not available - use fetchGroupProjects and filter instead
+  async fetchProject(_projectId: string): Promise<GitLabProject> {
+    logger.warn("fetchProject is not available with current GraphQL schema - use fetchGroupProjects instead");
+    throw new Error("fetchProject is not supported - use fetchGroupProjects and filter by project path");
   }
 }
