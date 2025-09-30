@@ -31,3 +31,4 @@ dist
 .scannerwork/
 
 tmp/
+.DS_Store

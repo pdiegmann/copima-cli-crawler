@@ -1,5 +1,5 @@
 {
-  "sonarCloudOrganization": "pdiegmann",
-  "projectKey": "pdiegmann_copima-cli-crawler",
-  "region": "EU"
+    "sonarCloudOrganization": "pdiegmann",
+    "projectKey": "copima-cli-crawler",
+    "region": "EU"
 }

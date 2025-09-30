@@ -37,6 +37,6 @@
   },
   "sonarlint.connectedMode.project": {
     "connectionId": "pdiegmann",
-    "projectKey": "pdiegmann_copima-cli-crawler"
+    "projectKey": "copima-cli-crawler"
   }
 }

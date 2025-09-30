@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1320,7 +1319,7 @@ export type AbuseReport = {
 };
 
 /** An abuse report */
-export type AbuseReportDiscussionsArgs = {
+export type AbuseReportdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1328,7 +1327,7 @@ export type AbuseReportDiscussionsArgs = {
 };
 
 /** An abuse report */
-export type AbuseReportLabelsArgs = {
+export type AbuseReportlabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1336,7 +1335,7 @@ export type AbuseReportLabelsArgs = {
 };
 
 /** An abuse report */
-export type AbuseReportNotesArgs = {
+export type AbuseReportnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1366,7 +1365,7 @@ export type AbuseReportDiscussion = BaseDiscussionInterface &
     resolvedBy?: Maybe<UserCore>;
   };
 
-export type AbuseReportDiscussionNotesArgs = {
+export type AbuseReportDiscussionnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1497,7 +1496,7 @@ export type AbuseReportNote = BaseNoteInterface &
     url?: Maybe<Scalars["String"]["output"]>;
   };
 
-export type AbuseReportNoteAwardEmojiArgs = {
+export type AbuseReportNoteawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1571,23 +1570,23 @@ export type AccessLevelDeployKeyEdge = {
 /** Access level to a resource */
 export enum AccessLevelEnum {
   /** Admin access. */
-  Admin = "ADMIN",
+  ADMIN = "ADMIN",
   /** Developer access. */
-  Developer = "DEVELOPER",
+  DEVELOPER = "DEVELOPER",
   /** Guest access. */
-  Guest = "GUEST",
+  GUEST = "GUEST",
   /** Maintainer access. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** Minimal access. */
-  MinimalAccess = "MINIMAL_ACCESS",
+  MINIMAL_ACCESS = "MINIMAL_ACCESS",
   /** No access. */
-  NoAccess = "NO_ACCESS",
+  NO_ACCESS = "NO_ACCESS",
   /** Owner access. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
   /** Planner access. */
-  Planner = "PLANNER",
+  PLANNER = "PLANNER",
   /** Reporter access. */
-  Reporter = "REPORTER",
+  REPORTER = "REPORTER",
 }
 
 /** Representation of a GitLab group. */
@@ -1669,7 +1668,7 @@ export type Achievement = {
   userAchievements?: Maybe<UserAchievementConnection>;
 };
 
-export type AchievementUserAchievementsArgs = {
+export type AchievementuserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1818,7 +1817,7 @@ export type ActivityStream = {
 };
 
 /** Activity streams associated with a user */
-export type ActivityStreamFollowedUsersActivityArgs = {
+export type ActivityStreamfollowedUsersActivityArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1972,7 +1971,7 @@ export type AddOnUser = Todoable &
   };
 
 /** A user with add-on data */
-export type AddOnUserAddOnAssignmentsArgs = {
+export type AddOnUseraddOnAssignmentsArgs = {
   addOnPurchaseIds: Array<Scalars["GitlabSubscriptionsAddOnPurchaseID"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -1981,7 +1980,7 @@ export type AddOnUserAddOnAssignmentsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserAssignedMergeRequestsArgs = {
+export type AddOnUserassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -2025,7 +2024,7 @@ export type AddOnUserAssignedMergeRequestsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserAuthoredMergeRequestsArgs = {
+export type AddOnUserauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -2072,7 +2071,7 @@ export type AddOnUserAuthoredMergeRequestsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserCalloutsArgs = {
+export type AddOnUsercalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2080,7 +2079,7 @@ export type AddOnUserCalloutsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserContributedProjectsArgs = {
+export type AddOnUsercontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2093,7 +2092,7 @@ export type AddOnUserContributedProjectsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserEmailsArgs = {
+export type AddOnUseremailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2101,7 +2100,7 @@ export type AddOnUserEmailsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserGroupMembershipsArgs = {
+export type AddOnUsergroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2109,7 +2108,7 @@ export type AddOnUserGroupMembershipsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserGroupsArgs = {
+export type AddOnUsergroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2120,7 +2119,7 @@ export type AddOnUserGroupsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserNamespaceCommitEmailsArgs = {
+export type AddOnUsernamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2128,7 +2127,7 @@ export type AddOnUserNamespaceCommitEmailsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserOrganizationsArgs = {
+export type AddOnUserorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2138,7 +2137,7 @@ export type AddOnUserOrganizationsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserProjectMembershipsArgs = {
+export type AddOnUserprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2146,7 +2145,7 @@ export type AddOnUserProjectMembershipsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserReviewRequestedMergeRequestsArgs = {
+export type AddOnUserreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -2191,7 +2190,7 @@ export type AddOnUserReviewRequestedMergeRequestsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserSavedRepliesArgs = {
+export type AddOnUsersavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2199,12 +2198,12 @@ export type AddOnUserSavedRepliesArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserSavedReplyArgs = {
+export type AddOnUsersavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** A user with add-on data */
-export type AddOnUserSnippetsArgs = {
+export type AddOnUsersnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2215,7 +2214,7 @@ export type AddOnUserSnippetsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserStarredProjectsArgs = {
+export type AddOnUserstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2227,7 +2226,7 @@ export type AddOnUserStarredProjectsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserTimelogsArgs = {
+export type AddOnUsertimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -2243,7 +2242,7 @@ export type AddOnUserTimelogsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserTodosArgs = {
+export type AddOnUsertodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -2259,7 +2258,7 @@ export type AddOnUserTodosArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserUserAchievementsArgs = {
+export type AddOnUseruserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2268,7 +2267,7 @@ export type AddOnUserUserAchievementsArgs = {
 };
 
 /** A user with add-on data */
-export type AddOnUserWorkspacesArgs = {
+export type AddOnUserworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -2360,7 +2359,7 @@ export type AdminMemberRole = CustomRoleInterface &
   };
 
 /** Represents an admin member role */
-export type AdminMemberRoleEnabledPermissionsArgs = {
+export type AdminMemberRoleenabledPermissionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2368,7 +2367,7 @@ export type AdminMemberRoleEnabledPermissionsArgs = {
 };
 
 /** Represents an admin member role */
-export type AdminMemberRoleLdapAdminRoleLinksArgs = {
+export type AdminMemberRoleldapAdminRoleLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2528,9 +2527,9 @@ export type AgentMetadata = {
 /** Agent token statuses */
 export enum AgentTokenStatus {
   /** Active agent token. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Revoked agent token. */
-  Revoked = "REVOKED",
+  REVOKED = "REVOKED",
 }
 
 /** Version-related warning for a connected Agent */
@@ -2562,31 +2561,31 @@ export type AggregationStatus = {
 /** LLMs supported by the self-hosted model features. */
 export enum AiAcceptedSelfHostedModels {
   /** Claude 3 model family, suitable for code generation and duo chat. */
-  Claude_3 = "CLAUDE_3",
+  CLAUDE_3 = "CLAUDE_3",
   /** CodeGemma Code: Suitable for code suggestions. */
-  Codegemma = "CODEGEMMA",
+  CODEGEMMA = "CODEGEMMA",
   /** Code-Llama Instruct: Suitable for code suggestions. */
-  Codellama = "CODELLAMA",
+  CODELLAMA = "CODELLAMA",
   /** Codestral: Suitable for code suggestions. */
-  Codestral = "CODESTRAL",
+  CODESTRAL = "CODESTRAL",
   /** Deepseek Coder base or instruct. */
-  Deepseekcoder = "DEEPSEEKCODER",
+  DEEPSEEKCODER = "DEEPSEEKCODER",
   /** General: Any model suitable for code suggestions and duo chat. */
-  General = "GENERAL",
+  GENERAL = "GENERAL",
   /** GPT: Suitable for code suggestions. */
-  Gpt = "GPT",
+  GPT = "GPT",
   /** LLaMA 3: Suitable for code suggestions and duo chat. */
-  Llama3 = "LLAMA3",
+  LLAMA3 = "LLAMA3",
   /** Mistral: Suitable for code suggestions and duo chat. */
-  Mistral = "MISTRAL",
+  MISTRAL = "MISTRAL",
   /** Mixtral: Suitable for code suggestions and duo chat. */
-  Mixtral = "MIXTRAL",
+  MIXTRAL = "MIXTRAL",
 }
 
 /** Action to subscribe to. */
 export enum AiAction {
   /** Chat action. */
-  Chat = "CHAT",
+  CHAT = "CHAT",
 }
 
 /** Autogenerated input type of AiAction */
@@ -2656,27 +2655,27 @@ export type AiAdditionalContext = {
 /** The category of the additional context */
 export enum AiAdditionalContextCategory {
   /** Agent_user_environment content category. */
-  AgentUserEnvironment = "AGENT_USER_ENVIRONMENT",
+  AGENT_USER_ENVIRONMENT = "AGENT_USER_ENVIRONMENT",
   /** Dependency content category. */
-  Dependency = "DEPENDENCY",
+  DEPENDENCY = "DEPENDENCY",
   /** Directory content category. */
-  Directory = "DIRECTORY",
+  DIRECTORY = "DIRECTORY",
   /** File content category. */
-  File = "FILE",
+  FILE = "FILE",
   /** Issue content category. */
-  Issue = "ISSUE",
+  ISSUE = "ISSUE",
   /** Local_git content category. */
-  LocalGit = "LOCAL_GIT",
+  LOCAL_GIT = "LOCAL_GIT",
   /** Merge_request content category. */
-  MergeRequest = "MERGE_REQUEST",
+  MERGE_REQUEST = "MERGE_REQUEST",
   /** Repository content category. */
-  Repository = "REPOSITORY",
+  REPOSITORY = "REPOSITORY",
   /** Snippet content category. */
-  Snippet = "SNIPPET",
+  SNIPPET = "SNIPPET",
   /** Terminal content category. */
-  Terminal = "TERMINAL",
+  TERMINAL = "TERMINAL",
   /** User_rule content category. */
-  UserRule = "USER_RULE",
+  USER_RULE = "USER_RULE",
 }
 
 export type AiAdditionalContextInput = {
@@ -2852,7 +2851,7 @@ export type AiCatalogAgent = AiCatalogItem & {
 };
 
 /** An AI catalog agent */
-export type AiCatalogAgentVersionsArgs = {
+export type AiCatalogAgentversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3003,7 +3002,7 @@ export type AiCatalogAgentVersion = AiCatalogItemVersion & {
 };
 
 /** An AI catalog agent version */
-export type AiCatalogAgentVersionToolsArgs = {
+export type AiCatalogAgentVersiontoolsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3071,7 +3070,7 @@ export type AiCatalogFlow = AiCatalogItem & {
 };
 
 /** An AI catalog flow */
-export type AiCatalogFlowVersionsArgs = {
+export type AiCatalogFlowversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3081,7 +3080,7 @@ export type AiCatalogFlowVersionsArgs = {
 /** Possible flow configuration types for AI Catalog agents. */
 export enum AiCatalogFlowConfigType {
   /** Chat flow configuration. */
-  Chat = "CHAT",
+  CHAT = "CHAT",
 }
 
 /** Autogenerated input type of AiCatalogFlowCreate */
@@ -3246,7 +3245,7 @@ export type AiCatalogFlowVersion = AiCatalogItemVersion & {
 };
 
 /** An AI catalog flow version */
-export type AiCatalogFlowVersionStepsArgs = {
+export type AiCatalogFlowVersionstepsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3280,7 +3279,7 @@ export type AiCatalogItem = {
 };
 
 /** An AI catalog item */
-export type AiCatalogItemVersionsArgs = {
+export type AiCatalogItemversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3423,9 +3422,9 @@ export type AiCatalogItemPermissions = {
 /** Possible item types for AI items. */
 export enum AiCatalogItemType {
   /** Agent. */
-  Agent = "AGENT",
+  AGENT = "AGENT",
   /** Flow. */
-  Flow = "FLOW",
+  FLOW = "FLOW",
 }
 
 /** An AI catalog item version */
@@ -3471,11 +3470,11 @@ export type AiCatalogItemVersionEdge = {
 /** Possible version bumps for AI catalog items. */
 export enum AiCatalogVersionBump {
   /** Major version bump. */
-  Major = "MAJOR",
+  MAJOR = "MAJOR",
   /** Minor version bump. */
-  Minor = "MINOR",
+  MINOR = "MINOR",
   /** Patch version bump. */
-  Patch = "PATCH",
+  PATCH = "PATCH",
 }
 
 export type AiChatInput = {
@@ -3531,13 +3530,13 @@ export type AiConversationsThreadEdge = {
 /** Conversation type of the thread. */
 export enum AiConversationsThreadsConversationType {
   /** duo_chat thread. */
-  DuoChat = "DUO_CHAT",
+  DUO_CHAT = "DUO_CHAT",
   /** duo_chat_legacy thread. */
-  DuoChatLegacy = "DUO_CHAT_LEGACY",
+  DUO_CHAT_LEGACY = "DUO_CHAT_LEGACY",
   /** duo_code_review thread. */
-  DuoCodeReview = "DUO_CODE_REVIEW",
+  DUO_CODE_REVIEW = "DUO_CODE_REVIEW",
   /** duo_quick_chat thread. */
-  DuoQuickChat = "DUO_QUICK_CHAT",
+  DUO_QUICK_CHAT = "DUO_QUICK_CHAT",
 }
 
 export type AiCurrentFileInput = {
@@ -3618,13 +3617,13 @@ export type AiExplainVulnerabilityInput = {
 /** Providers for AI features that can be configured. */
 export enum AiFeatureProviders {
   /** Disabled option */
-  Disabled = "DISABLED",
+  DISABLED = "DISABLED",
   /** Self hosted option */
-  SelfHosted = "SELF_HOSTED",
+  SELF_HOSTED = "SELF_HOSTED",
   /** Unassigned option */
-  Unassigned = "UNASSIGNED",
+  UNASSIGNED = "UNASSIGNED",
   /** Vendored option */
-  Vendored = "VENDORED",
+  VENDORED = "VENDORED",
 }
 
 /** Duo Chat feature setting */
@@ -3655,7 +3654,7 @@ export type AiFeatureSetting = {
 };
 
 /** Duo Chat feature setting */
-export type AiFeatureSettingValidGitlabModelsArgs = {
+export type AiFeatureSettingvalidGitlabModelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3663,7 +3662,7 @@ export type AiFeatureSettingValidGitlabModelsArgs = {
 };
 
 /** Duo Chat feature setting */
-export type AiFeatureSettingValidModelsArgs = {
+export type AiFeatureSettingvalidModelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3718,39 +3717,39 @@ export type AiFeatureSettingUpdatePayload = {
 /** AI features that can be configured through the Duo self-hosted feature settings. */
 export enum AiFeatures {
   /** Code completion feature setting */
-  CodeCompletions = "CODE_COMPLETIONS",
+  CODE_COMPLETIONS = "CODE_COMPLETIONS",
   /** Code generation feature setting */
-  CodeGenerations = "CODE_GENERATIONS",
+  CODE_GENERATIONS = "CODE_GENERATIONS",
   /** Duo agent platform feature setting */
-  DuoAgentPlatform = "DUO_AGENT_PLATFORM",
+  DUO_AGENT_PLATFORM = "DUO_AGENT_PLATFORM",
   /** Duo Chat feature setting */
-  DuoChat = "DUO_CHAT",
+  DUO_CHAT = "DUO_CHAT",
   /** Duo chat explain code feature setting */
-  DuoChatExplainCode = "DUO_CHAT_EXPLAIN_CODE",
+  DUO_CHAT_EXPLAIN_CODE = "DUO_CHAT_EXPLAIN_CODE",
   /** Duo chat explain vulnerability feature setting */
-  DuoChatExplainVulnerability = "DUO_CHAT_EXPLAIN_VULNERABILITY",
+  DUO_CHAT_EXPLAIN_VULNERABILITY = "DUO_CHAT_EXPLAIN_VULNERABILITY",
   /** Duo chat fix code feature setting */
-  DuoChatFixCode = "DUO_CHAT_FIX_CODE",
+  DUO_CHAT_FIX_CODE = "DUO_CHAT_FIX_CODE",
   /** Duo chat refactor code feature setting */
-  DuoChatRefactorCode = "DUO_CHAT_REFACTOR_CODE",
+  DUO_CHAT_REFACTOR_CODE = "DUO_CHAT_REFACTOR_CODE",
   /** Duo chat summarize comment feature setting */
-  DuoChatSummarizeComments = "DUO_CHAT_SUMMARIZE_COMMENTS",
+  DUO_CHAT_SUMMARIZE_COMMENTS = "DUO_CHAT_SUMMARIZE_COMMENTS",
   /** Duo chat troubleshoot job feature setting */
-  DuoChatTroubleshootJob = "DUO_CHAT_TROUBLESHOOT_JOB",
+  DUO_CHAT_TROUBLESHOOT_JOB = "DUO_CHAT_TROUBLESHOOT_JOB",
   /** Duo chat write test feature setting */
-  DuoChatWriteTests = "DUO_CHAT_WRITE_TESTS",
+  DUO_CHAT_WRITE_TESTS = "DUO_CHAT_WRITE_TESTS",
   /** Generate commit message feature setting */
-  GenerateCommitMessage = "GENERATE_COMMIT_MESSAGE",
+  GENERATE_COMMIT_MESSAGE = "GENERATE_COMMIT_MESSAGE",
   /** Glab ask git command feature setting */
-  GlabAskGitCommand = "GLAB_ASK_GIT_COMMAND",
+  GLAB_ASK_GIT_COMMAND = "GLAB_ASK_GIT_COMMAND",
   /** Resolve vulnerability feature setting */
-  ResolveVulnerability = "RESOLVE_VULNERABILITY",
+  RESOLVE_VULNERABILITY = "RESOLVE_VULNERABILITY",
   /** Review merge request feature setting */
-  ReviewMergeRequest = "REVIEW_MERGE_REQUEST",
+  REVIEW_MERGE_REQUEST = "REVIEW_MERGE_REQUEST",
   /** Summarize new merge request feature setting */
-  SummarizeNewMergeRequest = "SUMMARIZE_NEW_MERGE_REQUEST",
+  SUMMARIZE_NEW_MERGE_REQUEST = "SUMMARIZE_NEW_MERGE_REQUEST",
   /** Summarize review feature setting */
-  SummarizeReview = "SUMMARIZE_REVIEW",
+  SUMMARIZE_REVIEW = "SUMMARIZE_REVIEW",
 }
 
 /** Autogenerated input type of AiFlowTriggerCreate */
@@ -3959,17 +3958,17 @@ export type AiMessageExtras = {
 /** Possible message roles for AI features. */
 export enum AiMessageRole {
   /** assistant message. */
-  Assistant = "ASSISTANT",
+  ASSISTANT = "ASSISTANT",
   /** system message. */
-  System = "SYSTEM",
+  SYSTEM = "SYSTEM",
   /** user message. */
-  User = "USER",
+  USER = "USER",
 }
 
 /** Types of messages returned from AI features. */
 export enum AiMessageType {
   /** Tool selection message. */
-  Tool = "TOOL",
+  TOOL = "TOOL",
 }
 
 /** Requires ClickHouse. Premium and Ultimate with GitLab Duo Pro and Enterprise only. */
@@ -3978,7 +3977,7 @@ export type AiMetrics = {
   /** Number of code contributors. */
   codeContributorsCount?: Maybe<Scalars["Int"]["output"]>;
   /** Code suggestions metrics. */
-  codeSuggestions?: Maybe<CodeSuggestionMetrics>;
+  codeSuggestions?: Maybe<codeSuggestionMetrics>;
   /**
    * Total count of code suggestions accepted by code contributors. Deprecated in GitLab 18.0: moved to codeSuggestions field.
    * @deprecated moved to codeSuggestions field. Deprecated in GitLab 18.0.
@@ -4005,44 +4004,44 @@ export type AiMetrics = {
 };
 
 /** Requires ClickHouse. Premium and Ultimate with GitLab Duo Pro and Enterprise only. */
-export type AiMetricsCodeSuggestionsArgs = {
+export type AiMetricscodeSuggestionsArgs = {
   languages?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 /** AI features that can be configured through the Model Selection feature settings. */
 export enum AiModelSelectionFeatures {
   /** Code completion feature setting */
-  CodeCompletions = "CODE_COMPLETIONS",
+  CODE_COMPLETIONS = "CODE_COMPLETIONS",
   /** Code generation feature setting */
-  CodeGenerations = "CODE_GENERATIONS",
+  CODE_GENERATIONS = "CODE_GENERATIONS",
   /** Duo agent platform feature setting */
-  DuoAgentPlatform = "DUO_AGENT_PLATFORM",
+  DUO_AGENT_PLATFORM = "DUO_AGENT_PLATFORM",
   /** Duo Chat feature setting */
-  DuoChat = "DUO_CHAT",
+  DUO_CHAT = "DUO_CHAT",
   /** Duo chat explain code feature setting */
-  DuoChatExplainCode = "DUO_CHAT_EXPLAIN_CODE",
+  DUO_CHAT_EXPLAIN_CODE = "DUO_CHAT_EXPLAIN_CODE",
   /** Duo chat explain vulnerability feature setting */
-  DuoChatExplainVulnerability = "DUO_CHAT_EXPLAIN_VULNERABILITY",
+  DUO_CHAT_EXPLAIN_VULNERABILITY = "DUO_CHAT_EXPLAIN_VULNERABILITY",
   /** Duo chat fix code feature setting */
-  DuoChatFixCode = "DUO_CHAT_FIX_CODE",
+  DUO_CHAT_FIX_CODE = "DUO_CHAT_FIX_CODE",
   /** Duo chat refactor code feature setting */
-  DuoChatRefactorCode = "DUO_CHAT_REFACTOR_CODE",
+  DUO_CHAT_REFACTOR_CODE = "DUO_CHAT_REFACTOR_CODE",
   /** Duo chat summarize comment feature setting */
-  DuoChatSummarizeComments = "DUO_CHAT_SUMMARIZE_COMMENTS",
+  DUO_CHAT_SUMMARIZE_COMMENTS = "DUO_CHAT_SUMMARIZE_COMMENTS",
   /** Duo chat troubleshoot job feature setting */
-  DuoChatTroubleshootJob = "DUO_CHAT_TROUBLESHOOT_JOB",
+  DUO_CHAT_TROUBLESHOOT_JOB = "DUO_CHAT_TROUBLESHOOT_JOB",
   /** Duo chat write test feature setting */
-  DuoChatWriteTests = "DUO_CHAT_WRITE_TESTS",
+  DUO_CHAT_WRITE_TESTS = "DUO_CHAT_WRITE_TESTS",
   /** Generate commit message feature setting */
-  GenerateCommitMessage = "GENERATE_COMMIT_MESSAGE",
+  GENERATE_COMMIT_MESSAGE = "GENERATE_COMMIT_MESSAGE",
   /** Resolve vulnerability feature setting */
-  ResolveVulnerability = "RESOLVE_VULNERABILITY",
+  RESOLVE_VULNERABILITY = "RESOLVE_VULNERABILITY",
   /** Review merge request feature setting */
-  ReviewMergeRequest = "REVIEW_MERGE_REQUEST",
+  REVIEW_MERGE_REQUEST = "REVIEW_MERGE_REQUEST",
   /** Summarize new merge request feature setting */
-  SummarizeNewMergeRequest = "SUMMARIZE_NEW_MERGE_REQUEST",
+  SUMMARIZE_NEW_MERGE_REQUEST = "SUMMARIZE_NEW_MERGE_REQUEST",
   /** Summarize review feature setting */
-  SummarizeReview = "SUMMARIZE_REVIEW",
+  SUMMARIZE_REVIEW = "SUMMARIZE_REVIEW",
 }
 
 /** Model Selection feature setting for namespaces. */
@@ -4176,7 +4175,7 @@ export type AiSelfHostedModel = {
 };
 
 /** Self-hosted LLM servers */
-export type AiSelfHostedModelFeatureSettingsArgs = {
+export type AiSelfHostedModelfeatureSettingsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -4277,11 +4276,11 @@ export type AiSelfHostedModelEdge = {
 /** GitLab release state of the model */
 export enum AiSelfHostedModelReleaseState {
   /** Beta status. */
-  Beta = "BETA",
+  BETA = "BETA",
   /** Experimental status. */
-  Experimental = "EXPERIMENTAL",
+  EXPERIMENTAL = "EXPERIMENTAL",
   /** GA status. */
-  Ga = "GA",
+  GA = "GA",
 }
 
 /** Autogenerated input type of AiSelfHostedModelUpdate */
@@ -4340,7 +4339,7 @@ export type AiUsageData = {
 };
 
 /** Usage data for events stored in the default PostgreSQL database. Data retained for three months. Requires a personal access token. Endpoint works only on the top-level group. Premium and Ultimate with GitLab Duo Enterprise only. */
-export type AiUsageDataAllArgs = {
+export type AiUsageDataallArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
@@ -4352,7 +4351,7 @@ export type AiUsageDataAllArgs = {
 };
 
 /** Usage data for events stored in the default PostgreSQL database. Data retained for three months. Requires a personal access token. Endpoint works only on the top-level group. Premium and Ultimate with GitLab Duo Enterprise only. */
-export type AiUsageDataCodeSuggestionEventsArgs = {
+export type AiUsageDatacodeSuggestionEventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
@@ -4398,41 +4397,41 @@ export type AiUsageEventEdge = {
 /** Type of AI usage event */
 export enum AiUsageEventType {
   /** Agent platform session was created. */
-  AgentPlatformSessionCreated = "AGENT_PLATFORM_SESSION_CREATED",
+  AGENT_PLATFORM_SESSION_CREATED = "AGENT_PLATFORM_SESSION_CREATED",
   /** Agent platform session was started. */
-  AgentPlatformSessionStarted = "AGENT_PLATFORM_SESSION_STARTED",
+  AGENT_PLATFORM_SESSION_STARTED = "AGENT_PLATFORM_SESSION_STARTED",
   /** Code Suggestion was requested. Old data only. */
-  CodeSuggestionsRequested = "CODE_SUGGESTIONS_REQUESTED",
+  CODE_SUGGESTIONS_REQUESTED = "CODE_SUGGESTIONS_REQUESTED",
   /** Code Suggestion was accepted in IDE. */
-  CodeSuggestionAcceptedInIde = "CODE_SUGGESTION_ACCEPTED_IN_IDE",
+  CODE_SUGGESTION_ACCEPTED_IN_IDE = "CODE_SUGGESTION_ACCEPTED_IN_IDE",
   /** Code Suggestion token was refreshed. Old data only. */
-  CodeSuggestionDirectAccessTokenRefresh = "CODE_SUGGESTION_DIRECT_ACCESS_TOKEN_REFRESH",
+  CODE_SUGGESTION_DIRECT_ACCESS_TOKEN_REFRESH = "CODE_SUGGESTION_DIRECT_ACCESS_TOKEN_REFRESH",
   /** Code Suggestion was rejected in IDE. */
-  CodeSuggestionRejectedInIde = "CODE_SUGGESTION_REJECTED_IN_IDE",
+  CODE_SUGGESTION_REJECTED_IN_IDE = "CODE_SUGGESTION_REJECTED_IN_IDE",
   /** Code Suggestion was shown in IDE. */
-  CodeSuggestionShownInIde = "CODE_SUGGESTION_SHOWN_IN_IDE",
+  CODE_SUGGESTION_SHOWN_IN_IDE = "CODE_SUGGESTION_SHOWN_IN_IDE",
   /** Duo Code Review encountered an error. */
-  EncounterDuoCodeReviewErrorDuringReview = "ENCOUNTER_DUO_CODE_REVIEW_ERROR_DURING_REVIEW",
+  ENCOUNTER_DUO_CODE_REVIEW_ERROR_DURING_REVIEW = "ENCOUNTER_DUO_CODE_REVIEW_ERROR_DURING_REVIEW",
   /** Files were excluded from Duo Code Review. */
-  ExcludedFilesFromDuoCodeReview = "EXCLUDED_FILES_FROM_DUO_CODE_REVIEW",
+  EXCLUDED_FILES_FROM_DUO_CODE_REVIEW = "EXCLUDED_FILES_FROM_DUO_CODE_REVIEW",
   /** Duo Code Review found nothing to review on MR. */
-  FindNothingToReviewDuoCodeReviewOnMr = "FIND_NOTHING_TO_REVIEW_DUO_CODE_REVIEW_ON_MR",
+  FIND_NOTHING_TO_REVIEW_DUO_CODE_REVIEW_ON_MR = "FIND_NOTHING_TO_REVIEW_DUO_CODE_REVIEW_ON_MR",
   /** Duo Code Review found no issues after review. */
-  FindNoIssuesDuoCodeReviewAfterReview = "FIND_NO_ISSUES_DUO_CODE_REVIEW_AFTER_REVIEW",
+  FIND_NO_ISSUES_DUO_CODE_REVIEW_AFTER_REVIEW = "FIND_NO_ISSUES_DUO_CODE_REVIEW_AFTER_REVIEW",
   /** Duo Code Review posted a diff comment. */
-  PostCommentDuoCodeReviewOnDiff = "POST_COMMENT_DUO_CODE_REVIEW_ON_DIFF",
+  POST_COMMENT_DUO_CODE_REVIEW_ON_DIFF = "POST_COMMENT_DUO_CODE_REVIEW_ON_DIFF",
   /** User gave thumbs-down reaction to Duo Code Review comment. */
-  ReactThumbsDownOnDuoCodeReviewComment = "REACT_THUMBS_DOWN_ON_DUO_CODE_REVIEW_COMMENT",
+  REACT_THUMBS_DOWN_ON_DUO_CODE_REVIEW_COMMENT = "REACT_THUMBS_DOWN_ON_DUO_CODE_REVIEW_COMMENT",
   /** User gave thumbs-up reaction to Duo Code Review comment. */
-  ReactThumbsUpOnDuoCodeReviewComment = "REACT_THUMBS_UP_ON_DUO_CODE_REVIEW_COMMENT",
+  REACT_THUMBS_UP_ON_DUO_CODE_REVIEW_COMMENT = "REACT_THUMBS_UP_ON_DUO_CODE_REVIEW_COMMENT",
   /** Duo Chat response was requested. */
-  RequestDuoChatResponse = "REQUEST_DUO_CHAT_RESPONSE",
+  REQUEST_DUO_CHAT_RESPONSE = "REQUEST_DUO_CHAT_RESPONSE",
   /** MR author requested Duo Code Review. */
-  RequestReviewDuoCodeReviewOnMrByAuthor = "REQUEST_REVIEW_DUO_CODE_REVIEW_ON_MR_BY_AUTHOR",
+  REQUEST_REVIEW_DUO_CODE_REVIEW_ON_MR_BY_AUTHOR = "REQUEST_REVIEW_DUO_CODE_REVIEW_ON_MR_BY_AUTHOR",
   /** Non-author requested Duo Code Review on MR. */
-  RequestReviewDuoCodeReviewOnMrByNonAuthor = "REQUEST_REVIEW_DUO_CODE_REVIEW_ON_MR_BY_NON_AUTHOR",
+  REQUEST_REVIEW_DUO_CODE_REVIEW_ON_MR_BY_NON_AUTHOR = "REQUEST_REVIEW_DUO_CODE_REVIEW_ON_MR_BY_NON_AUTHOR",
   /** Troubleshoot job feature was used. */
-  TroubleshootJob = "TROUBLESHOOT_JOB",
+  TROUBLESHOOT_JOB = "TROUBLESHOOT_JOB",
 }
 
 /** Pre-aggregated per-user metrics for GitLab Code Suggestions and GitLab Duo Chat. Require ClickHouse to be enabled and GitLab Ultimate with the Duo Enterprise add-on. */
@@ -4566,7 +4565,7 @@ export type AlertManagementAlert = NoteableInterface &
   };
 
 /** Describes an alert from the project's Alert Management */
-export type AlertManagementAlertAssigneesArgs = {
+export type AlertManagementAlertassigneesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -4574,7 +4573,7 @@ export type AlertManagementAlertAssigneesArgs = {
 };
 
 /** Describes an alert from the project's Alert Management */
-export type AlertManagementAlertCommentersArgs = {
+export type AlertManagementAlertcommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -4582,7 +4581,7 @@ export type AlertManagementAlertCommentersArgs = {
 };
 
 /** Describes an alert from the project's Alert Management */
-export type AlertManagementAlertDiscussionsArgs = {
+export type AlertManagementAlertdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -4590,7 +4589,7 @@ export type AlertManagementAlertDiscussionsArgs = {
 };
 
 /** Describes an alert from the project's Alert Management */
-export type AlertManagementAlertNotesArgs = {
+export type AlertManagementAlertnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -4599,7 +4598,7 @@ export type AlertManagementAlertNotesArgs = {
 };
 
 /** Describes an alert from the project's Alert Management */
-export type AlertManagementAlertTodosArgs = {
+export type AlertManagementAlerttodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -4637,61 +4636,61 @@ export type AlertManagementAlertEdge = {
 /** Values for sorting alerts */
 export enum AlertManagementAlertSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Created time by ascending order. */
-  CreatedTimeAsc = "CREATED_TIME_ASC",
+  CREATED_TIME_ASC = "CREATED_TIME_ASC",
   /** Created time by descending order. */
-  CreatedTimeDesc = "CREATED_TIME_DESC",
+  CREATED_TIME_DESC = "CREATED_TIME_DESC",
   /** End time by ascending order. */
-  EndedAtAsc = "ENDED_AT_ASC",
+  ENDED_AT_ASC = "ENDED_AT_ASC",
   /** End time by descending order. */
-  EndedAtDesc = "ENDED_AT_DESC",
+  ENDED_AT_DESC = "ENDED_AT_DESC",
   /** Events count by ascending order. */
-  EventCountAsc = "EVENT_COUNT_ASC",
+  EVENT_COUNT_ASC = "EVENT_COUNT_ASC",
   /** Events count by descending order. */
-  EventCountDesc = "EVENT_COUNT_DESC",
+  EVENT_COUNT_DESC = "EVENT_COUNT_DESC",
   /** Severity from less critical to more critical. */
-  SeverityAsc = "SEVERITY_ASC",
+  SEVERITY_ASC = "SEVERITY_ASC",
   /** Severity from more critical to less critical. */
-  SeverityDesc = "SEVERITY_DESC",
+  SEVERITY_DESC = "SEVERITY_DESC",
   /** Start time by ascending order. */
-  StartedAtAsc = "STARTED_AT_ASC",
+  STARTED_AT_ASC = "STARTED_AT_ASC",
   /** Start time by descending order. */
-  StartedAtDesc = "STARTED_AT_DESC",
+  STARTED_AT_DESC = "STARTED_AT_DESC",
   /** Status by order: `Ignored > Resolved > Acknowledged > Triggered`. */
-  StatusAsc = "STATUS_ASC",
+  STATUS_ASC = "STATUS_ASC",
   /** Status by order: `Triggered > Acknowledged > Resolved > Ignored`. */
-  StatusDesc = "STATUS_DESC",
+  STATUS_DESC = "STATUS_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /** Created time by ascending order. */
-  UpdatedTimeAsc = "UPDATED_TIME_ASC",
+  UPDATED_TIME_ASC = "UPDATED_TIME_ASC",
   /** Created time by descending order. */
-  UpdatedTimeDesc = "UPDATED_TIME_DESC",
+  UPDATED_TIME_DESC = "UPDATED_TIME_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Represents total number of alerts for the represented categories */
@@ -4714,12 +4713,12 @@ export type AlertManagementAlertStatusCountsType = {
 /** Filters the alerts based on given domain */
 export enum AlertManagementDomainFilter {
   /** Alerts for operations domain. */
-  Operations = "operations",
+  operations = "operations",
   /**
    * Alerts for threat monitoring domain. Deprecated in GitLab 15.0: Network policies are deprecated and will be removed in GitLab 16.0.
    * @deprecated Network policies are deprecated and will be removed in GitLab 16.0. Deprecated in GitLab 15.0.
    */
-  ThreatMonitoring = "threat_monitoring",
+  threat_monitoring = "threat_monitoring",
 }
 
 /** An endpoint and credentials used to accept alerts for a project */
@@ -4813,9 +4812,9 @@ export type AlertManagementIntegrationEdge = {
 /** Values of types of integrations */
 export enum AlertManagementIntegrationType {
   /** Integration with any monitoring tool. */
-  Http = "HTTP",
+  HTTP = "HTTP",
   /** Prometheus integration. */
-  Prometheus = "PROMETHEUS",
+  PROMETHEUS = "PROMETHEUS",
 }
 
 /** Parsed field from an alert used for custom mappings */
@@ -4844,37 +4843,37 @@ export type AlertManagementPayloadAlertFieldInput = {
 /** Values for alert field names used in the custom mapping */
 export enum AlertManagementPayloadAlertFieldName {
   /** A high-level summary of the problem. */
-  Description = "DESCRIPTION",
+  DESCRIPTION = "DESCRIPTION",
   /** The resolved time of the incident. */
-  EndTime = "END_TIME",
+  END_TIME = "END_TIME",
   /** The unique identifier of the alert. This can be used to group occurrences of the same alert. */
-  Fingerprint = "FINGERPRINT",
+  FINGERPRINT = "FINGERPRINT",
   /** The name of the associated GitLab environment. */
-  GitlabEnvironmentName = "GITLAB_ENVIRONMENT_NAME",
+  GITLAB_ENVIRONMENT_NAME = "GITLAB_ENVIRONMENT_NAME",
   /** One or more hosts, as to where this incident occurred. */
-  Hosts = "HOSTS",
+  HOSTS = "HOSTS",
   /** The name of the associated monitoring tool. */
-  MonitoringTool = "MONITORING_TOOL",
+  MONITORING_TOOL = "MONITORING_TOOL",
   /** The affected service. */
-  Service = "SERVICE",
+  SERVICE = "SERVICE",
   /** The severity of the alert. */
-  Severity = "SEVERITY",
+  SEVERITY = "SEVERITY",
   /** The time of the incident. */
-  StartTime = "START_TIME",
+  START_TIME = "START_TIME",
   /** The title of the incident. */
-  Title = "TITLE",
+  TITLE = "TITLE",
 }
 
 /** Values for alert field types used in the custom mapping */
 export enum AlertManagementPayloadAlertFieldType {
   /** Array field type. */
-  Array = "ARRAY",
+  ARRAY = "ARRAY",
   /** DateTime field type. */
-  Datetime = "DATETIME",
+  DATETIME = "DATETIME",
   /** Number field type. */
-  Number = "NUMBER",
+  NUMBER = "NUMBER",
   /** String field type. */
-  String = "STRING",
+  STRING = "STRING",
 }
 
 /** Parsed field (with its name) from an alert used for custom mappings */
@@ -4915,29 +4914,29 @@ export type AlertManagementPrometheusIntegration = AlertManagementIntegration & 
 /** Alert severity values */
 export enum AlertManagementSeverity {
   /** Critical severity */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** High severity */
-  High = "HIGH",
+  HIGH = "HIGH",
   /** Info severity */
-  Info = "INFO",
+  INFO = "INFO",
   /** Low severity */
-  Low = "LOW",
+  LOW = "LOW",
   /** Medium severity */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
   /** Unknown severity */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** Alert status values */
 export enum AlertManagementStatus {
   /** Someone is actively investigating the problem. */
-  Acknowledged = "ACKNOWLEDGED",
+  ACKNOWLEDGED = "ACKNOWLEDGED",
   /** No action will be taken. */
-  Ignored = "IGNORED",
+  IGNORED = "IGNORED",
   /** The problem has been addressed. */
-  Resolved = "RESOLVED",
+  RESOLVED = "RESOLVED",
   /** Investigation has not started. */
-  Triggered = "TRIGGERED",
+  TRIGGERED = "TRIGGERED",
 }
 
 /** Autogenerated input type of AlertSetAssignees */
@@ -5050,11 +5049,11 @@ export type AmazonS3ConfigurationTypeEdge = {
 
 export enum AnalyticsAggregationPeriod {
   /** Daily aggregation. */
-  Day = "DAY",
+  DAY = "DAY",
   /** Monthly aggregation. */
-  Month = "MONTH",
+  MONTH = "MONTH",
   /** Weekly aggregation. */
-  Week = "WEEK",
+  WEEK = "WEEK",
 }
 
 /** Input type for filtering projects by analyzer type and status */
@@ -5104,43 +5103,43 @@ export type AnalyzerProjectStatusType = {
 /** Enum for types of analyzers  */
 export enum AnalyzerStatusEnum {
   /** Last analyzer execution failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Analyzer is not configured. */
-  NotConfigured = "NOT_CONFIGURED",
+  NOT_CONFIGURED = "NOT_CONFIGURED",
   /** Last analyzer execution finished successfully. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 /** Enum for types of analyzers  */
 export enum AnalyzerTypeEnum {
   /** Api fuzzing analyzer. */
-  ApiFuzzing = "API_FUZZING",
+  API_FUZZING = "API_FUZZING",
   /** Cluster image scanning analyzer. */
-  ClusterImageScanning = "CLUSTER_IMAGE_SCANNING",
+  CLUSTER_IMAGE_SCANNING = "CLUSTER_IMAGE_SCANNING",
   /** Any kind of container scanning. */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** Container scanning for registry. Managed via project security settings. */
-  ContainerScanningForRegistry = "CONTAINER_SCANNING_FOR_REGISTRY",
+  CONTAINER_SCANNING_FOR_REGISTRY = "CONTAINER_SCANNING_FOR_REGISTRY",
   /** Container scanning analyzer. */
-  ContainerScanningPipelineBased = "CONTAINER_SCANNING_PIPELINE_BASED",
+  CONTAINER_SCANNING_PIPELINE_BASED = "CONTAINER_SCANNING_PIPELINE_BASED",
   /** Coverage fuzzing analyzer. */
-  CoverageFuzzing = "COVERAGE_FUZZING",
+  COVERAGE_FUZZING = "COVERAGE_FUZZING",
   /** Dast analyzer. */
-  Dast = "DAST",
+  DAST = "DAST",
   /** Dependency scanning analyzer. */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** Sast analyzer. */
-  Sast = "SAST",
+  SAST = "SAST",
   /** Sast advanced analyzer. */
-  SastAdvanced = "SAST_ADVANCED",
+  SAST_ADVANCED = "SAST_ADVANCED",
   /** Sast iac analyzer. */
-  SastIac = "SAST_IAC",
+  SAST_IAC = "SAST_IAC",
   /** Any kind of secret detection. */
-  SecretDetection = "SECRET_DETECTION",
+  SECRET_DETECTION = "SECRET_DETECTION",
   /** Secret detection analyzer. */
-  SecretDetectionPipelineBased = "SECRET_DETECTION_PIPELINE_BASED",
+  SECRET_DETECTION_PIPELINE_BASED = "SECRET_DETECTION_PIPELINE_BASED",
   /** Secret push protection. Managed via project security settings. */
-  SecretDetectionSecretPushProtection = "SECRET_DETECTION_SECRET_PUSH_PROTECTION",
+  SECRET_DETECTION_SECRET_PUSH_PROTECTION = "SECRET_DETECTION_SECRET_PUSH_PROTECTION",
 }
 
 export type AncestorType = {
@@ -5163,11 +5162,11 @@ export type ApiFuzzingCiConfiguration = {
 /** All possible ways to specify the API surface for an API fuzzing scan. */
 export enum ApiFuzzingScanMode {
   /** The API surface is specified by a HAR file. */
-  Har = "HAR",
+  HAR = "HAR",
   /** The API surface is specified by a OPENAPI file. */
-  Openapi = "OPENAPI",
+  OPENAPI = "OPENAPI",
   /** The API surface is specified by a POSTMAN file. */
-  Postman = "POSTMAN",
+  POSTMAN = "POSTMAN",
 }
 
 /** An API Fuzzing scan profile. */
@@ -5280,7 +5279,7 @@ export type ApprovalProjectRule = {
 };
 
 /** Describes a project approval rule regarding who can approve merge requests. */
-export type ApprovalProjectRuleEligibleApproversArgs = {
+export type ApprovalProjectRuleeligibleApproversArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5309,11 +5308,11 @@ export type ApprovalProjectRuleEdge = {
 
 export enum ApprovalReportType {
   /** Represents report_type for any_merge_request related approval rules. */
-  AnyMergeRequest = "ANY_MERGE_REQUEST",
+  ANY_MERGE_REQUEST = "ANY_MERGE_REQUEST",
   /** Represents report_type for license scanning related approval rules. */
-  LicenseScanning = "LICENSE_SCANNING",
+  LICENSE_SCANNING = "LICENSE_SCANNING",
   /** Represents report_type for vulnerability check related approval rules. */
-  ScanFinding = "SCAN_FINDING",
+  SCAN_FINDING = "SCAN_FINDING",
 }
 
 /** Describes a rule for who can approve merge requests. */
@@ -5356,7 +5355,7 @@ export type ApprovalRule = {
 };
 
 /** Describes a rule for who can approve merge requests. */
-export type ApprovalRuleApprovedByArgs = {
+export type ApprovalRuleapprovedByArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5364,7 +5363,7 @@ export type ApprovalRuleApprovedByArgs = {
 };
 
 /** Describes a rule for who can approve merge requests. */
-export type ApprovalRuleCommentedByArgs = {
+export type ApprovalRulecommentedByArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5372,7 +5371,7 @@ export type ApprovalRuleCommentedByArgs = {
 };
 
 /** Describes a rule for who can approve merge requests. */
-export type ApprovalRuleGroupsArgs = {
+export type ApprovalRulegroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5380,7 +5379,7 @@ export type ApprovalRuleGroupsArgs = {
 };
 
 /** Describes a rule for who can approve merge requests. */
-export type ApprovalRuleUsersArgs = {
+export type ApprovalRuleusersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5390,13 +5389,13 @@ export type ApprovalRuleUsersArgs = {
 /** The kind of an approval rule. */
 export enum ApprovalRuleType {
   /** A `any_approver` approval rule. */
-  AnyApprover = "ANY_APPROVER",
+  ANY_APPROVER = "ANY_APPROVER",
   /** A `code_owner` approval rule. */
-  CodeOwner = "CODE_OWNER",
+  CODE_OWNER = "CODE_OWNER",
   /** A `regular` approval rule. */
-  Regular = "REGULAR",
+  REGULAR = "REGULAR",
   /** A `report_approver` approval rule. */
-  ReportApprover = "REPORT_APPROVER",
+  REPORT_APPROVER = "REPORT_APPROVER",
 }
 
 /** Represents the scan result policy */
@@ -5468,9 +5467,9 @@ export type AssetType = {
 /** Assignee ID wildcard values */
 export enum AssigneeWildcardId {
   /** An assignee is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No assignee is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Audit event. */
@@ -5567,7 +5566,7 @@ export type AuditEventStreamingDestinationInterface = {
 };
 
 /** Represents a subgroup or project filter that belongs to an external audit event streaming destination. */
-export type AuditEventStreamingHttpNamespaceFilter = {
+export type AuditEventStreamingHTTPNamespaceFilter = {
   __typename?: "AuditEventStreamingHTTPNamespaceFilter";
   /** Destination to which the filter belongs. */
   externalAuditEventDestination: ExternalAuditEventDestination;
@@ -5999,7 +5998,7 @@ export type AuditEventsStreamingDestinationInstanceEventsRemovePayload = {
 };
 
 /** Autogenerated input type of AuditEventsStreamingHTTPNamespaceFiltersAdd */
-export type AuditEventsStreamingHttpNamespaceFiltersAddInput = {
+export type AuditEventsStreamingHTTPNamespaceFiltersAddInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Destination ID. */
@@ -6011,18 +6010,18 @@ export type AuditEventsStreamingHttpNamespaceFiltersAddInput = {
 };
 
 /** Autogenerated return type of AuditEventsStreamingHTTPNamespaceFiltersAdd. */
-export type AuditEventsStreamingHttpNamespaceFiltersAddPayload = {
+export type AuditEventsStreamingHTTPNamespaceFiltersAddPayload = {
   __typename?: "AuditEventsStreamingHTTPNamespaceFiltersAddPayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
   /** Errors encountered during the mutation. */
   errors: Array<Scalars["String"]["output"]>;
   /** Namespace filter created. */
-  namespaceFilter?: Maybe<AuditEventStreamingHttpNamespaceFilter>;
+  namespaceFilter?: Maybe<AuditEventStreamingHTTPNamespaceFilter>;
 };
 
 /** Autogenerated input type of AuditEventsStreamingHTTPNamespaceFiltersDelete */
-export type AuditEventsStreamingHttpNamespaceFiltersDeleteInput = {
+export type AuditEventsStreamingHTTPNamespaceFiltersDeleteInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Namespace filter ID. */
@@ -6030,7 +6029,7 @@ export type AuditEventsStreamingHttpNamespaceFiltersDeleteInput = {
 };
 
 /** Autogenerated return type of AuditEventsStreamingHTTPNamespaceFiltersDelete. */
-export type AuditEventsStreamingHttpNamespaceFiltersDeletePayload = {
+export type AuditEventsStreamingHTTPNamespaceFiltersDeletePayload = {
   __typename?: "AuditEventsStreamingHTTPNamespaceFiltersDeletePayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -6208,9 +6207,9 @@ export type AuditEventsStreamingInstanceHeadersUpdatePayload = {
 /** Auto stop setting. */
 export enum AutoStopSetting {
   /** Always */
-  Always = "ALWAYS",
+  ALWAYS = "ALWAYS",
   /** With Action */
-  WithAction = "WITH_ACTION",
+  WITH_ACTION = "WITH_ACTION",
 }
 
 /** Core representation of a GitLab user. */
@@ -6339,7 +6338,7 @@ export type AutocompletedUser = Todoable &
   };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserAssignedMergeRequestsArgs = {
+export type AutocompletedUserassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -6383,7 +6382,7 @@ export type AutocompletedUserAssignedMergeRequestsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserAuthoredMergeRequestsArgs = {
+export type AutocompletedUserauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -6430,7 +6429,7 @@ export type AutocompletedUserAuthoredMergeRequestsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserCalloutsArgs = {
+export type AutocompletedUsercalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6438,7 +6437,7 @@ export type AutocompletedUserCalloutsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserContributedProjectsArgs = {
+export type AutocompletedUsercontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6451,7 +6450,7 @@ export type AutocompletedUserContributedProjectsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserEmailsArgs = {
+export type AutocompletedUseremailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6459,7 +6458,7 @@ export type AutocompletedUserEmailsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserGroupMembershipsArgs = {
+export type AutocompletedUsergroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6467,7 +6466,7 @@ export type AutocompletedUserGroupMembershipsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserGroupsArgs = {
+export type AutocompletedUsergroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6478,12 +6477,12 @@ export type AutocompletedUserGroupsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserMergeRequestInteractionArgs = {
+export type AutocompletedUsermergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserNamespaceCommitEmailsArgs = {
+export type AutocompletedUsernamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6491,7 +6490,7 @@ export type AutocompletedUserNamespaceCommitEmailsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserOrganizationsArgs = {
+export type AutocompletedUserorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6501,7 +6500,7 @@ export type AutocompletedUserOrganizationsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserProjectMembershipsArgs = {
+export type AutocompletedUserprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6509,7 +6508,7 @@ export type AutocompletedUserProjectMembershipsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserReviewRequestedMergeRequestsArgs = {
+export type AutocompletedUserreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -6554,7 +6553,7 @@ export type AutocompletedUserReviewRequestedMergeRequestsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserSavedRepliesArgs = {
+export type AutocompletedUsersavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6562,12 +6561,12 @@ export type AutocompletedUserSavedRepliesArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserSavedReplyArgs = {
+export type AutocompletedUsersavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserSnippetsArgs = {
+export type AutocompletedUsersnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6578,7 +6577,7 @@ export type AutocompletedUserSnippetsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserStarredProjectsArgs = {
+export type AutocompletedUserstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6590,7 +6589,7 @@ export type AutocompletedUserStarredProjectsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserTimelogsArgs = {
+export type AutocompletedUsertimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -6606,7 +6605,7 @@ export type AutocompletedUserTimelogsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserTodosArgs = {
+export type AutocompletedUsertodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -6622,7 +6621,7 @@ export type AutocompletedUserTodosArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserUserAchievementsArgs = {
+export type AutocompletedUseruserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -6631,7 +6630,7 @@ export type AutocompletedUserUserAchievementsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type AutocompletedUserWorkspacesArgs = {
+export type AutocompletedUserworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -6645,63 +6644,63 @@ export type AutocompletedUserWorkspacesArgs = {
 /** User availability status */
 export enum AvailabilityEnum {
   /** Busy */
-  Busy = "BUSY",
+  BUSY = "BUSY",
   /** Not Set */
-  NotSet = "NOT_SET",
+  NOT_SET = "NOT_SET",
 }
 
 /** Available fields to be exported as CSV */
 export enum AvailableExportFields {
   /** Assignee(s) name of the work item. */
-  Assignee = "ASSIGNEE",
+  ASSIGNEE = "ASSIGNEE",
   /** Assignee(s) username of the work item. */
-  AssigneeUsername = "ASSIGNEE_USERNAME",
+  ASSIGNEE_USERNAME = "ASSIGNEE_USERNAME",
   /** Author name of the work item. */
-  Author = "AUTHOR",
+  AUTHOR = "AUTHOR",
   /** Author username of the work item. */
-  AuthorUsername = "AUTHOR_USERNAME",
+  AUTHOR_USERNAME = "AUTHOR_USERNAME",
   /** Closed at (UTC) date of the work item. */
-  ClosedAt = "CLOSED_AT",
+  CLOSED_AT = "CLOSED_AT",
   /** Confidentiality flag of the work item. */
-  Confidential = "CONFIDENTIAL",
+  CONFIDENTIAL = "CONFIDENTIAL",
   /** Crated at (UTC) date of the work item. */
-  CreatedAt = "CREATED_AT",
+  CREATED_AT = "CREATED_AT",
   /** Description of the work item. */
-  Description = "DESCRIPTION",
+  DESCRIPTION = "DESCRIPTION",
   /** Due date (UTC) of the work item. */
-  DueDate = "DUE_DATE",
+  DUE_DATE = "DUE_DATE",
   /** Unique identifier of the work item. */
-  Id = "ID",
+  ID = "ID",
   /** IID identifier of the work item. */
-  Iid = "IID",
+  IID = "IID",
   /** Locked discussions flag of the work item. */
-  Locked = "LOCKED",
+  LOCKED = "LOCKED",
   /** Milestone of the work item. */
-  Milestone = "MILESTONE",
+  MILESTONE = "MILESTONE",
   /** Parent ID of the work item. */
-  ParentId = "PARENT_ID",
+  PARENT_ID = "PARENT_ID",
   /** Parent IID of the work item. */
-  ParentIid = "PARENT_IID",
+  PARENT_IID = "PARENT_IID",
   /** Parent title of the work item. */
-  ParentTitle = "PARENT_TITLE",
+  PARENT_TITLE = "PARENT_TITLE",
   /** Start date (UTC) of the work item. */
-  StartDate = "START_DATE",
+  START_DATE = "START_DATE",
   /** State of the work item. */
-  State = "STATE",
+  STATE = "STATE",
   /** Time estimate of the work item. */
-  TimeEstimate = "TIME_ESTIMATE",
+  TIME_ESTIMATE = "TIME_ESTIMATE",
   /** Time spent of the work item. */
-  TimeSpent = "TIME_SPENT",
+  TIME_SPENT = "TIME_SPENT",
   /** Title of the work item. */
-  Title = "TITLE",
+  TITLE = "TITLE",
   /** Type of the work item. */
-  Type = "TYPE",
+  TYPE = "TYPE",
   /** Updated at (UTC) date of the work item. */
-  UpdatedAt = "UPDATED_AT",
+  UPDATED_AT = "UPDATED_AT",
   /** Web URL to the work item. */
-  Url = "URL",
+  URL = "URL",
   /** Weight of the work item. */
-  Weight = "WEIGHT",
+  WEIGHT = "WEIGHT",
 }
 
 /** Available models for Duo Agentic Chat */
@@ -6876,7 +6875,7 @@ export type BaseNoteInterface = {
   url?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type BaseNoteInterfaceAwardEmojiArgs = {
+export type BaseNoteInterfaceawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7007,11 +7006,11 @@ export type BlobViewer = {
 /** Types of blob viewers */
 export enum BlobViewersType {
   /** Auxiliary blob viewers type. */
-  Auxiliary = "auxiliary",
+  auxiliary = "auxiliary",
   /** Rich blob viewers type. */
-  Rich = "rich",
+  rich = "rich",
   /** Simple blob viewers type. */
-  Simple = "simple",
+  simple = "simple",
 }
 
 /** Information about the rules that must be satisfied to merge this merge request. */
@@ -7063,7 +7062,7 @@ export type Board = {
 };
 
 /** Represents a project or group issue board */
-export type BoardEpicsArgs = {
+export type BoardepicsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7072,7 +7071,7 @@ export type BoardEpicsArgs = {
 };
 
 /** Represents a project or group issue board */
-export type BoardLabelsArgs = {
+export type BoardlabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7080,7 +7079,7 @@ export type BoardLabelsArgs = {
 };
 
 /** Represents a project or group issue board */
-export type BoardListsArgs = {
+export type BoardlistsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7246,7 +7245,7 @@ export type BoardEpic = CurrentUserTodos &
   };
 
 /** Represents an epic on an issue board */
-export type BoardEpicAncestorsArgs = {
+export type BoardEpicancestorsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -7277,7 +7276,7 @@ export type BoardEpicAncestorsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicAwardEmojiArgs = {
+export type BoardEpicawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7285,7 +7284,7 @@ export type BoardEpicAwardEmojiArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicBlockedByEpicsArgs = {
+export type BoardEpicblockedByEpicsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7293,7 +7292,7 @@ export type BoardEpicBlockedByEpicsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicChildrenArgs = {
+export type BoardEpicchildrenArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -7324,7 +7323,7 @@ export type BoardEpicChildrenArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicCommentersArgs = {
+export type BoardEpiccommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7332,7 +7331,7 @@ export type BoardEpicCommentersArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicCurrentUserTodosArgs = {
+export type BoardEpiccurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7341,7 +7340,7 @@ export type BoardEpicCurrentUserTodosArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicDiscussionsArgs = {
+export type BoardEpicdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7349,7 +7348,7 @@ export type BoardEpicDiscussionsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicEventsArgs = {
+export type BoardEpiceventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7357,7 +7356,7 @@ export type BoardEpicEventsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicIssuesArgs = {
+export type BoardEpicissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7365,7 +7364,7 @@ export type BoardEpicIssuesArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicLabelsArgs = {
+export type BoardEpiclabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7373,7 +7372,7 @@ export type BoardEpicLabelsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicLinkedWorkItemsArgs = {
+export type BoardEpiclinkedWorkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<WorkItemRelatedLinkType>;
@@ -7382,7 +7381,7 @@ export type BoardEpicLinkedWorkItemsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicNotesArgs = {
+export type BoardEpicnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -7391,7 +7390,7 @@ export type BoardEpicNotesArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicParticipantsArgs = {
+export type BoardEpicparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7399,7 +7398,7 @@ export type BoardEpicParticipantsArgs = {
 };
 
 /** Represents an epic on an issue board */
-export type BoardEpicReferenceArgs = {
+export type BoardEpicreferenceArgs = {
   full?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
@@ -7547,7 +7546,7 @@ export type BoardList = {
 };
 
 /** Represents a list for an issue board */
-export type BoardListIssuesArgs = {
+export type BoardListissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<BoardIssueInput>;
@@ -7694,7 +7693,7 @@ export type BranchProtection = {
 };
 
 /** Branch protection details for a branch rule. */
-export type BranchProtectionMergeAccessLevelsArgs = {
+export type BranchProtectionmergeAccessLevelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7702,7 +7701,7 @@ export type BranchProtectionMergeAccessLevelsArgs = {
 };
 
 /** Branch protection details for a branch rule. */
-export type BranchProtectionPushAccessLevelsArgs = {
+export type BranchProtectionpushAccessLevelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7710,7 +7709,7 @@ export type BranchProtectionPushAccessLevelsArgs = {
 };
 
 /** Branch protection details for a branch rule. */
-export type BranchProtectionUnprotectAccessLevelsArgs = {
+export type BranchProtectionunprotectAccessLevelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7759,7 +7758,7 @@ export type BranchRule = {
 };
 
 /** Branch rules configured for a rule target. */
-export type BranchRuleApprovalRulesArgs = {
+export type BranchRuleapprovalRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -7767,7 +7766,7 @@ export type BranchRuleApprovalRulesArgs = {
 };
 
 /** Branch rules configured for a rule target. */
-export type BranchRuleExternalStatusChecksArgs = {
+export type BranchRuleexternalStatusChecksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8052,17 +8051,17 @@ export type CarPermissions = {
 /** Status of a merge train's car */
 export enum CarStatus {
   /** Car's status: fresh */
-  Fresh = "FRESH",
+  FRESH = "FRESH",
   /** Car's status: idle */
-  Idle = "IDLE",
+  IDLE = "IDLE",
   /** Car's status: merged */
-  Merged = "MERGED",
+  MERGED = "MERGED",
   /** Car's status: merging */
-  Merging = "MERGING",
+  MERGING = "MERGING",
   /** Car's status: skip_merged */
-  SkipMerged = "SKIP_MERGED",
+  SKIP_MERGED = "SKIP_MERGED",
   /** Car's status: stale */
-  Stale = "STALE",
+  STALE = "STALE",
 }
 
 /** Autogenerated input type of CatalogResourcesCreate */
@@ -8179,7 +8178,7 @@ export type CiCatalogResource = {
   webPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiCatalogResourceVersionsArgs = {
+export type CiCatalogResourceversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8277,46 +8276,46 @@ export type CiCatalogResourceEdge = {
 /** Values for scoping catalog resources */
 export enum CiCatalogResourceScope {
   /** All catalog resources visible to the current user. */
-  All = "ALL",
+  ALL = "ALL",
   /** Catalog resources belonging to authorized namespaces of the user. */
-  Namespaces = "NAMESPACES",
+  NAMESPACES = "NAMESPACES",
 }
 
 /** Values for sorting catalog resources */
 export enum CiCatalogResourceSort {
   /** Created date by ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created date by descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Latest release date by ascending order. */
-  LatestReleasedAtAsc = "LATEST_RELEASED_AT_ASC",
+  LATEST_RELEASED_AT_ASC = "LATEST_RELEASED_AT_ASC",
   /** Latest release date by descending order. */
-  LatestReleasedAtDesc = "LATEST_RELEASED_AT_DESC",
+  LATEST_RELEASED_AT_DESC = "LATEST_RELEASED_AT_DESC",
   /** Name by ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Name by descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Star count by ascending order. */
-  StarCountAsc = "STAR_COUNT_ASC",
+  STAR_COUNT_ASC = "STAR_COUNT_ASC",
   /** Star count by descending order. */
-  StarCountDesc = "STAR_COUNT_DESC",
+  STAR_COUNT_DESC = "STAR_COUNT_DESC",
   /** Last 30-day usage count by ascending order. */
-  UsageCountAsc = "USAGE_COUNT_ASC",
+  USAGE_COUNT_ASC = "USAGE_COUNT_ASC",
   /** Last 30-day usage count by descending order. */
-  UsageCountDesc = "USAGE_COUNT_DESC",
+  USAGE_COUNT_DESC = "USAGE_COUNT_DESC",
 }
 
 export enum CiCatalogResourceVerificationLevel {
   /** The resource is Gitlab Maintained */
-  GitlabMaintained = "GITLAB_MAINTAINED",
+  GITLAB_MAINTAINED = "GITLAB_MAINTAINED",
   /** The resource is Gitlab Partner Maintained */
-  GitlabPartnerMaintained = "GITLAB_PARTNER_MAINTAINED",
+  GITLAB_PARTNER_MAINTAINED = "GITLAB_PARTNER_MAINTAINED",
   /** The resource is Unverified */
-  Unverified = "UNVERIFIED",
+  UNVERIFIED = "UNVERIFIED",
   /** The resource is Verified Creator Maintained */
-  VerifiedCreatorMaintained = "VERIFIED_CREATOR_MAINTAINED",
+  VERIFIED_CREATOR_MAINTAINED = "VERIFIED_CREATOR_MAINTAINED",
   /** The resource is Verified Creator Self Managed */
-  VerifiedCreatorSelfManaged = "VERIFIED_CREATOR_SELF_MANAGED",
+  VERIFIED_CREATOR_SELF_MANAGED = "VERIFIED_CREATOR_SELF_MANAGED",
 }
 
 export type CiCatalogResourceVersion = {
@@ -8346,7 +8345,7 @@ export type CiCatalogResourceVersion = {
   releasedAt?: Maybe<Scalars["Time"]["output"]>;
 };
 
-export type CiCatalogResourceVersionComponentsArgs = {
+export type CiCatalogResourceVersioncomponentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8397,7 +8396,7 @@ export type CiConfig = {
   warnings?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
-export type CiConfigStagesArgs = {
+export type CiConfigstagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8414,7 +8413,7 @@ export type CiConfigGroup = {
   size?: Maybe<Scalars["Int"]["output"]>;
 };
 
-export type CiConfigGroupJobsArgs = {
+export type CiConfigGroupjobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8472,15 +8471,15 @@ export type CiConfigInclude = {
 /** Include type. */
 export enum CiConfigIncludeType {
   /** Component include. */
-  Component = "component",
+  component = "component",
   /** Project file include. */
-  File = "file",
+  file = "file",
   /** Local include. */
-  Local = "local",
+  local = "local",
   /** Remote include. */
-  Remote = "remote",
+  remote = "remote",
   /** Template include. */
-  Template = "template",
+  template = "template",
 }
 
 export type CiConfigJob = {
@@ -8513,7 +8512,7 @@ export type CiConfigJob = {
   when?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiConfigJobNeedsArgs = {
+export type CiConfigJobneedsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8610,7 +8609,7 @@ export type CiConfigStage = {
   name?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiConfigStageGroupsArgs = {
+export type CiConfigStagegroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8648,9 +8647,9 @@ export type CiConfigStageV2 = {
 /** Values for YAML processor result */
 export enum CiConfigStatus {
   /** Configuration file is not valid. */
-  Invalid = "INVALID",
+  INVALID = "INVALID",
   /** Configuration file is valid. */
-  Valid = "VALID",
+  VALID = "VALID",
 }
 
 export type CiConfigV2 = {
@@ -8694,7 +8693,7 @@ export type CiDedicatedHostedRunnerFilters = {
 };
 
 /** Filter options available for GitLab Dedicated runner usage data. */
-export type CiDedicatedHostedRunnerFiltersDeletedRunnersArgs = {
+export type CiDedicatedHostedRunnerFiltersdeletedRunnersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8702,7 +8701,7 @@ export type CiDedicatedHostedRunnerFiltersDeletedRunnersArgs = {
 };
 
 /** Filter options available for GitLab Dedicated runner usage data. */
-export type CiDedicatedHostedRunnerFiltersRunnersArgs = {
+export type CiDedicatedHostedRunnerFiltersrunnersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8828,9 +8827,9 @@ export type CiFreezePeriod = {
 /** Deploy freeze period status */
 export enum CiFreezePeriodStatus {
   /** Freeze period is active. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Freeze period is inactive. */
-  Inactive = "INACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export type CiGroup = {
@@ -8847,7 +8846,7 @@ export type CiGroup = {
   size?: Maybe<Scalars["Int"]["output"]>;
 };
 
-export type CiGroupJobsArgs = {
+export type CiGroupjobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -8951,13 +8950,13 @@ export type CiGroupVariableEdge = {
 /** Values for sorting inherited variables */
 export enum CiGroupVariablesSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Key by ascending order. */
-  KeyAsc = "KEY_ASC",
+  KEY_ASC = "KEY_ASC",
   /** Key by descending order. */
-  KeyDesc = "KEY_DESC",
+  KEY_DESC = "KEY_DESC",
 }
 
 /** CI input saved for a pipeline schedule */
@@ -9021,13 +9020,13 @@ export type CiInputsSpec = {
 /** Available input types */
 export enum CiInputsType {
   /** Array input */
-  Array = "ARRAY",
+  ARRAY = "ARRAY",
   /** Boolean input */
-  Boolean = "BOOLEAN",
+  BOOLEAN = "BOOLEAN",
   /** Number input */
-  Number = "NUMBER",
+  NUMBER = "NUMBER",
   /** String input */
-  String = "STRING",
+  STRING = "STRING",
 }
 
 /** CI/CD variables for a GitLab instance. */
@@ -9187,35 +9186,35 @@ export type CiJob = CiJobInterface & {
   webPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiJobArtifactsArgs = {
+export type CiJobartifactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobManualVariablesArgs = {
+export type CiJobmanualVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobNeedsArgs = {
+export type CiJobneedsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobPreviousStageJobsArgs = {
+export type CiJobpreviousStageJobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobPreviousStageJobsOrNeedsArgs = {
+export type CiJobpreviousStageJobsOrNeedsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9274,7 +9273,7 @@ export type CiJobConnection = {
 };
 
 /** The connection type for CiJob. */
-export type CiJobConnectionCountArgs = {
+export type CiJobConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -9289,79 +9288,79 @@ export type CiJobEdge = {
 
 export enum CiJobFailureReason {
   /** A job that failed due to api failure. */
-  ApiFailure = "API_FAILURE",
+  API_FAILURE = "API_FAILURE",
   /** A job that failed due to archived failure. */
-  ArchivedFailure = "ARCHIVED_FAILURE",
+  ARCHIVED_FAILURE = "ARCHIVED_FAILURE",
   /** A job that failed due to bridge pipeline is child pipeline. */
-  BridgePipelineIsChildPipeline = "BRIDGE_PIPELINE_IS_CHILD_PIPELINE",
+  BRIDGE_PIPELINE_IS_CHILD_PIPELINE = "BRIDGE_PIPELINE_IS_CHILD_PIPELINE",
   /** A job that failed due to builds disabled. */
-  BuildsDisabled = "BUILDS_DISABLED",
+  BUILDS_DISABLED = "BUILDS_DISABLED",
   /** A job that failed due to ci quota exceeded. */
-  CiQuotaExceeded = "CI_QUOTA_EXCEEDED",
+  CI_QUOTA_EXCEEDED = "CI_QUOTA_EXCEEDED",
   /** A job that failed due to data integrity failure. */
-  DataIntegrityFailure = "DATA_INTEGRITY_FAILURE",
+  DATA_INTEGRITY_FAILURE = "DATA_INTEGRITY_FAILURE",
   /** A job that failed due to deployment rejected. */
-  DeploymentRejected = "DEPLOYMENT_REJECTED",
+  DEPLOYMENT_REJECTED = "DEPLOYMENT_REJECTED",
   /** A job that failed due to downstream bridge project not found. */
-  DownstreamBridgeProjectNotFound = "DOWNSTREAM_BRIDGE_PROJECT_NOT_FOUND",
+  DOWNSTREAM_BRIDGE_PROJECT_NOT_FOUND = "DOWNSTREAM_BRIDGE_PROJECT_NOT_FOUND",
   /** A job that failed due to downstream pipeline creation failed. */
-  DownstreamPipelineCreationFailed = "DOWNSTREAM_PIPELINE_CREATION_FAILED",
+  DOWNSTREAM_PIPELINE_CREATION_FAILED = "DOWNSTREAM_PIPELINE_CREATION_FAILED",
   /** A job that failed due to environment creation failure. */
-  EnvironmentCreationFailure = "ENVIRONMENT_CREATION_FAILURE",
+  ENVIRONMENT_CREATION_FAILURE = "ENVIRONMENT_CREATION_FAILURE",
   /** A job that failed due to failed outdated deployment job. */
-  FailedOutdatedDeploymentJob = "FAILED_OUTDATED_DEPLOYMENT_JOB",
+  FAILED_OUTDATED_DEPLOYMENT_JOB = "FAILED_OUTDATED_DEPLOYMENT_JOB",
   /** A job that failed due to forward deployment failure. */
-  ForwardDeploymentFailure = "FORWARD_DEPLOYMENT_FAILURE",
+  FORWARD_DEPLOYMENT_FAILURE = "FORWARD_DEPLOYMENT_FAILURE",
   /** A job that failed due to insufficient bridge permissions. */
-  InsufficientBridgePermissions = "INSUFFICIENT_BRIDGE_PERMISSIONS",
+  INSUFFICIENT_BRIDGE_PERMISSIONS = "INSUFFICIENT_BRIDGE_PERMISSIONS",
   /** A job that failed due to insufficient upstream permissions. */
-  InsufficientUpstreamPermissions = "INSUFFICIENT_UPSTREAM_PERMISSIONS",
+  INSUFFICIENT_UPSTREAM_PERMISSIONS = "INSUFFICIENT_UPSTREAM_PERMISSIONS",
   /** A job that failed due to invalid bridge trigger. */
-  InvalidBridgeTrigger = "INVALID_BRIDGE_TRIGGER",
+  INVALID_BRIDGE_TRIGGER = "INVALID_BRIDGE_TRIGGER",
   /** A job that failed due to ip restriction failure. */
-  IpRestrictionFailure = "IP_RESTRICTION_FAILURE",
+  IP_RESTRICTION_FAILURE = "IP_RESTRICTION_FAILURE",
   /** A job that failed due to job execution timeout. */
-  JobExecutionTimeout = "JOB_EXECUTION_TIMEOUT",
+  JOB_EXECUTION_TIMEOUT = "JOB_EXECUTION_TIMEOUT",
   /** A job that failed due to missing dependency failure. */
-  MissingDependencyFailure = "MISSING_DEPENDENCY_FAILURE",
+  MISSING_DEPENDENCY_FAILURE = "MISSING_DEPENDENCY_FAILURE",
   /** A job that failed due to no matching runner. */
-  NoMatchingRunner = "NO_MATCHING_RUNNER",
+  NO_MATCHING_RUNNER = "NO_MATCHING_RUNNER",
   /** A job that failed due to pipeline loop detected. */
-  PipelineLoopDetected = "PIPELINE_LOOP_DETECTED",
+  PIPELINE_LOOP_DETECTED = "PIPELINE_LOOP_DETECTED",
   /** A job that failed due to project deleted. */
-  ProjectDeleted = "PROJECT_DELETED",
+  PROJECT_DELETED = "PROJECT_DELETED",
   /** A job that failed due to protected environment failure. */
-  ProtectedEnvironmentFailure = "PROTECTED_ENVIRONMENT_FAILURE",
+  PROTECTED_ENVIRONMENT_FAILURE = "PROTECTED_ENVIRONMENT_FAILURE",
   /** A job that failed due to reached downstream pipeline trigger rate limit. */
-  ReachedDownstreamPipelineTriggerRateLimit = "REACHED_DOWNSTREAM_PIPELINE_TRIGGER_RATE_LIMIT",
+  REACHED_DOWNSTREAM_PIPELINE_TRIGGER_RATE_LIMIT = "REACHED_DOWNSTREAM_PIPELINE_TRIGGER_RATE_LIMIT",
   /** A job that failed due to reached max descendant pipelines depth. */
-  ReachedMaxDescendantPipelinesDepth = "REACHED_MAX_DESCENDANT_PIPELINES_DEPTH",
+  REACHED_MAX_DESCENDANT_PIPELINES_DEPTH = "REACHED_MAX_DESCENDANT_PIPELINES_DEPTH",
   /** A job that failed due to reached max pipeline hierarchy size. */
-  ReachedMaxPipelineHierarchySize = "REACHED_MAX_PIPELINE_HIERARCHY_SIZE",
+  REACHED_MAX_PIPELINE_HIERARCHY_SIZE = "REACHED_MAX_PIPELINE_HIERARCHY_SIZE",
   /** A job that failed due to runner system failure. */
-  RunnerSystemFailure = "RUNNER_SYSTEM_FAILURE",
+  RUNNER_SYSTEM_FAILURE = "RUNNER_SYSTEM_FAILURE",
   /** A job that failed due to runner unsupported. */
-  RunnerUnsupported = "RUNNER_UNSUPPORTED",
+  RUNNER_UNSUPPORTED = "RUNNER_UNSUPPORTED",
   /** A job that failed due to scheduler failure. */
-  SchedulerFailure = "SCHEDULER_FAILURE",
+  SCHEDULER_FAILURE = "SCHEDULER_FAILURE",
   /** A job that failed due to script failure. */
-  ScriptFailure = "SCRIPT_FAILURE",
+  SCRIPT_FAILURE = "SCRIPT_FAILURE",
   /** A job that failed due to secrets provider not found. */
-  SecretsProviderNotFound = "SECRETS_PROVIDER_NOT_FOUND",
+  SECRETS_PROVIDER_NOT_FOUND = "SECRETS_PROVIDER_NOT_FOUND",
   /** A job that failed due to stale schedule. */
-  StaleSchedule = "STALE_SCHEDULE",
+  STALE_SCHEDULE = "STALE_SCHEDULE",
   /** A job that failed due to stuck or timeout failure. */
-  StuckOrTimeoutFailure = "STUCK_OR_TIMEOUT_FAILURE",
+  STUCK_OR_TIMEOUT_FAILURE = "STUCK_OR_TIMEOUT_FAILURE",
   /** A job that failed due to trace size exceeded. */
-  TraceSizeExceeded = "TRACE_SIZE_EXCEEDED",
+  TRACE_SIZE_EXCEEDED = "TRACE_SIZE_EXCEEDED",
   /** A job that failed due to unknown failure. */
-  UnknownFailure = "UNKNOWN_FAILURE",
+  UNKNOWN_FAILURE = "UNKNOWN_FAILURE",
   /** A job that failed due to unmet prerequisites. */
-  UnmetPrerequisites = "UNMET_PREREQUISITES",
+  UNMET_PREREQUISITES = "UNMET_PREREQUISITES",
   /** A job that failed due to upstream bridge project not found. */
-  UpstreamBridgeProjectNotFound = "UPSTREAM_BRIDGE_PROJECT_NOT_FOUND",
+  UPSTREAM_BRIDGE_PROJECT_NOT_FOUND = "UPSTREAM_BRIDGE_PROJECT_NOT_FOUND",
   /** A job that failed due to user blocked. */
-  UserBlocked = "USER_BLOCKED",
+  USER_BLOCKED = "USER_BLOCKED",
 }
 
 export type CiJobInterface = {
@@ -9459,7 +9458,7 @@ export type CiJobInterface = {
   webPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiJobInterfaceArtifactsArgs = {
+export type CiJobInterfaceartifactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9480,7 +9479,7 @@ export type CiJobInterfaceConnection = {
 };
 
 /** The connection type for CiJobInterface. */
-export type CiJobInterfaceConnectionCountArgs = {
+export type CiJobInterfaceConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -9495,9 +9494,9 @@ export type CiJobInterfaceEdge = {
 
 export enum CiJobKind {
   /** Bridge CI job connecting a parent and child pipeline. */
-  Bridge = "BRIDGE",
+  BRIDGE = "BRIDGE",
   /** Standard CI job. */
-  Build = "BUILD",
+  BUILD = "BUILD",
 }
 
 export type CiJobMinimalAccess = CiJobInterface & {
@@ -9596,7 +9595,7 @@ export type CiJobMinimalAccess = CiJobInterface & {
   webPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiJobMinimalAccessArtifactsArgs = {
+export type CiJobMinimalAccessartifactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9605,76 +9604,76 @@ export type CiJobMinimalAccessArtifactsArgs = {
 
 export enum CiJobSource {
   /** A job initiated by api. */
-  Api = "API",
+  API = "API",
   /** A job initiated by chat. */
-  Chat = "CHAT",
+  CHAT = "CHAT",
   /** A job initiated by container registry push. */
-  ContainerRegistryPush = "CONTAINER_REGISTRY_PUSH",
+  CONTAINER_REGISTRY_PUSH = "CONTAINER_REGISTRY_PUSH",
   /** A job initiated by duo workflow. */
-  DuoWorkflow = "DUO_WORKFLOW",
+  DUO_WORKFLOW = "DUO_WORKFLOW",
   /** A job initiated by external. */
-  External = "EXTERNAL",
+  EXTERNAL = "EXTERNAL",
   /** A job initiated by external pull request event. */
-  ExternalPullRequestEvent = "EXTERNAL_PULL_REQUEST_EVENT",
+  EXTERNAL_PULL_REQUEST_EVENT = "EXTERNAL_PULL_REQUEST_EVENT",
   /** A job initiated by merge request event. */
-  MergeRequestEvent = "MERGE_REQUEST_EVENT",
+  MERGE_REQUEST_EVENT = "MERGE_REQUEST_EVENT",
   /** A job initiated by ondemand dast scan. */
-  OndemandDastScan = "ONDEMAND_DAST_SCAN",
+  ONDEMAND_DAST_SCAN = "ONDEMAND_DAST_SCAN",
   /** A job initiated by ondemand dast validation. */
-  OndemandDastValidation = "ONDEMAND_DAST_VALIDATION",
+  ONDEMAND_DAST_VALIDATION = "ONDEMAND_DAST_VALIDATION",
   /** A job initiated by parent pipeline. */
-  ParentPipeline = "PARENT_PIPELINE",
+  PARENT_PIPELINE = "PARENT_PIPELINE",
   /** A job initiated by pipeline. */
-  Pipeline = "PIPELINE",
+  PIPELINE = "PIPELINE",
   /** A job initiated by pipeline execution policy. */
-  PipelineExecutionPolicy = "PIPELINE_EXECUTION_POLICY",
+  PIPELINE_EXECUTION_POLICY = "PIPELINE_EXECUTION_POLICY",
   /** A job initiated by pipeline execution policy schedule. */
-  PipelineExecutionPolicySchedule = "PIPELINE_EXECUTION_POLICY_SCHEDULE",
+  PIPELINE_EXECUTION_POLICY_SCHEDULE = "PIPELINE_EXECUTION_POLICY_SCHEDULE",
   /** A job initiated by push. */
-  Push = "PUSH",
+  PUSH = "PUSH",
   /** A job initiated by scan execution policy. */
-  ScanExecutionPolicy = "SCAN_EXECUTION_POLICY",
+  SCAN_EXECUTION_POLICY = "SCAN_EXECUTION_POLICY",
   /** A job initiated by schedule. */
-  Schedule = "SCHEDULE",
+  SCHEDULE = "SCHEDULE",
   /** A job initiated by security orchestration policy. */
-  SecurityOrchestrationPolicy = "SECURITY_ORCHESTRATION_POLICY",
+  SECURITY_ORCHESTRATION_POLICY = "SECURITY_ORCHESTRATION_POLICY",
   /** A job initiated by trigger. */
-  Trigger = "TRIGGER",
+  TRIGGER = "TRIGGER",
   /** A job initiated by unknown. */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
   /** A job initiated by web. */
-  Web = "WEB",
+  WEB = "WEB",
   /** A job initiated by webide. */
-  Webide = "WEBIDE",
+  WEBIDE = "WEBIDE",
 }
 
 export enum CiJobStatus {
   /** A job that is canceled. */
-  Canceled = "CANCELED",
+  CANCELED = "CANCELED",
   /** A job that is canceling. */
-  Canceling = "CANCELING",
+  CANCELING = "CANCELING",
   /** A job that is created. */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** A job that is failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** A job that is manual. */
-  Manual = "MANUAL",
+  MANUAL = "MANUAL",
   /** A job that is pending. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
   /** A job that is preparing. */
-  Preparing = "PREPARING",
+  PREPARING = "PREPARING",
   /** A job that is running. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** A job that is scheduled. */
-  Scheduled = "SCHEDULED",
+  SCHEDULED = "SCHEDULED",
   /** A job that is skipped. */
-  Skipped = "SKIPPED",
+  SKIPPED = "SKIPPED",
   /** A job that is success. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
   /** A job that is waiting for callback. */
-  WaitingForCallback = "WAITING_FOR_CALLBACK",
+  WAITING_FOR_CALLBACK = "WAITING_FOR_CALLBACK",
   /** A job that is waiting for resource. */
-  WaitingForResource = "WAITING_FOR_RESOURCE",
+  WAITING_FOR_RESOURCE = "WAITING_FOR_RESOURCE",
 }
 
 /** Group that can access the current project by authenticating with a CI/CD job token. */
@@ -9847,14 +9846,14 @@ export type CiJobTokenScopeAllowlist = {
   projectsAllowlist?: Maybe<CiJobTokenScopeAllowlistEntryConnection>;
 };
 
-export type CiJobTokenScopeAllowlistGroupsAllowlistArgs = {
+export type CiJobTokenScopeAllowlistgroupsAllowlistArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobTokenScopeAllowlistProjectsAllowlistArgs = {
+export type CiJobTokenScopeAllowlistprojectsAllowlistArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9951,51 +9950,51 @@ export type CiJobTokenScopeClearAllowlistAutopopulationsPayload = {
 /** Direction of access. */
 export enum CiJobTokenScopeDirection {
   /** Target projects in the inbound allowlist can access the scope project through their job tokens. */
-  Inbound = "INBOUND",
+  INBOUND = "INBOUND",
   /** Job token scope project can access target project in the outbound allowlist. */
-  Outbound = "OUTBOUND",
+  OUTBOUND = "OUTBOUND",
 }
 
 /** CI_JOB_TOKEN policy */
 export enum CiJobTokenScopePolicies {
   /** Admin Deployments */
-  AdminDeployments = "ADMIN_DEPLOYMENTS",
+  ADMIN_DEPLOYMENTS = "ADMIN_DEPLOYMENTS",
   /** Admin Environments */
-  AdminEnvironments = "ADMIN_ENVIRONMENTS",
+  ADMIN_ENVIRONMENTS = "ADMIN_ENVIRONMENTS",
   /** Admin Jobs */
-  AdminJobs = "ADMIN_JOBS",
+  ADMIN_JOBS = "ADMIN_JOBS",
   /** Admin Packages */
-  AdminPackages = "ADMIN_PACKAGES",
+  ADMIN_PACKAGES = "ADMIN_PACKAGES",
   /** Admin Pipelines */
-  AdminPipelines = "ADMIN_PIPELINES",
+  ADMIN_PIPELINES = "ADMIN_PIPELINES",
   /** Admin Releases */
-  AdminReleases = "ADMIN_RELEASES",
+  ADMIN_RELEASES = "ADMIN_RELEASES",
   /** Admin Secure Files */
-  AdminSecureFiles = "ADMIN_SECURE_FILES",
+  ADMIN_SECURE_FILES = "ADMIN_SECURE_FILES",
   /** Admin Terraform State */
-  AdminTerraformState = "ADMIN_TERRAFORM_STATE",
+  ADMIN_TERRAFORM_STATE = "ADMIN_TERRAFORM_STATE",
   /** Read Deployments */
-  ReadDeployments = "READ_DEPLOYMENTS",
+  READ_DEPLOYMENTS = "READ_DEPLOYMENTS",
   /** Read Environments */
-  ReadEnvironments = "READ_ENVIRONMENTS",
+  READ_ENVIRONMENTS = "READ_ENVIRONMENTS",
   /** Read Jobs */
-  ReadJobs = "READ_JOBS",
+  READ_JOBS = "READ_JOBS",
   /** Read Merge Requests */
-  ReadMergeRequests = "READ_MERGE_REQUESTS",
+  READ_MERGE_REQUESTS = "READ_MERGE_REQUESTS",
   /** Read Packages */
-  ReadPackages = "READ_PACKAGES",
+  READ_PACKAGES = "READ_PACKAGES",
   /** Read Pipelines */
-  ReadPipelines = "READ_PIPELINES",
+  READ_PIPELINES = "READ_PIPELINES",
   /** Read Releases */
-  ReadReleases = "READ_RELEASES",
+  READ_RELEASES = "READ_RELEASES",
   /** Read Repositories */
-  ReadRepositories = "READ_REPOSITORIES",
+  READ_REPOSITORIES = "READ_REPOSITORIES",
   /** Read Secure Files */
-  ReadSecureFiles = "READ_SECURE_FILES",
+  READ_SECURE_FILES = "READ_SECURE_FILES",
   /** Read Terraform State */
-  ReadTerraformState = "READ_TERRAFORM_STATE",
+  READ_TERRAFORM_STATE = "READ_TERRAFORM_STATE",
   /** Read Work Items */
-  ReadWorkItems = "READ_WORK_ITEMS",
+  READ_WORK_ITEMS = "READ_WORK_ITEMS",
 }
 
 /** Autogenerated input type of CiJobTokenScopeRemoveGroup */
@@ -10079,28 +10078,28 @@ export type CiJobTokenScopeType = {
   projects: ProjectConnection;
 };
 
-export type CiJobTokenScopeTypeGroupsAllowlistArgs = {
+export type CiJobTokenScopeTypegroupsAllowlistArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobTokenScopeTypeInboundAllowlistArgs = {
+export type CiJobTokenScopeTypeinboundAllowlistArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobTokenScopeTypeOutboundAllowlistArgs = {
+export type CiJobTokenScopeTypeoutboundAllowlistArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiJobTokenScopeTypeProjectsArgs = {
+export type CiJobTokenScopeTypeprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -10144,7 +10143,7 @@ export type CiJobTrace = {
   htmlSummary: Scalars["String"]["output"];
 };
 
-export type CiJobTraceHtmlSummaryArgs = {
+export type CiJobTracehtmlSummaryArgs = {
   lastLines?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -10234,7 +10233,7 @@ export type CiMinutesNamespaceMonthlyUsage = {
   sharedRunnersDuration?: Maybe<Scalars["Int"]["output"]>;
 };
 
-export type CiMinutesNamespaceMonthlyUsageProjectsArgs = {
+export type CiMinutesNamespaceMonthlyUsageprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -10305,53 +10304,53 @@ export type CiPipelineCreationRequest = {
 /** The status of a pipeline creation */
 export enum CiPipelineCreationStatus {
   /** The pipeline creation is failed */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** The pipeline creation is in progress */
-  InProgress = "IN_PROGRESS",
+  IN_PROGRESS = "IN_PROGRESS",
   /** The pipeline creation is succeeded */
-  Succeeded = "SUCCEEDED",
+  SUCCEEDED = "SUCCEEDED",
 }
 
 /** Ci Pipeline sources enum */
 export enum CiPipelineSources {
   /** Pipeline created by an API event */
-  Api = "API",
+  API = "API",
   /** Pipeline created by a chat event */
-  Chat = "CHAT",
+  CHAT = "CHAT",
   /** Pipeline created by a container registry push event */
-  ContainerRegistryPush = "CONTAINER_REGISTRY_PUSH",
+  CONTAINER_REGISTRY_PUSH = "CONTAINER_REGISTRY_PUSH",
   /** Pipeline created by a duo workflow event */
-  DuoWorkflow = "DUO_WORKFLOW",
+  DUO_WORKFLOW = "DUO_WORKFLOW",
   /** Pipeline created by an external event */
-  External = "EXTERNAL",
+  EXTERNAL = "EXTERNAL",
   /** Pipeline created by an external pull request event */
-  ExternalPullRequestEvent = "EXTERNAL_PULL_REQUEST_EVENT",
+  EXTERNAL_PULL_REQUEST_EVENT = "EXTERNAL_PULL_REQUEST_EVENT",
   /** Pipeline created by a merge request event */
-  MergeRequestEvent = "MERGE_REQUEST_EVENT",
+  MERGE_REQUEST_EVENT = "MERGE_REQUEST_EVENT",
   /** Pipeline created by an ondemand dast scan event */
-  OndemandDastScan = "ONDEMAND_DAST_SCAN",
+  ONDEMAND_DAST_SCAN = "ONDEMAND_DAST_SCAN",
   /** Pipeline created by an ondemand dast validation event */
-  OndemandDastValidation = "ONDEMAND_DAST_VALIDATION",
+  ONDEMAND_DAST_VALIDATION = "ONDEMAND_DAST_VALIDATION",
   /** Pipeline created by a parent pipeline event */
-  ParentPipeline = "PARENT_PIPELINE",
+  PARENT_PIPELINE = "PARENT_PIPELINE",
   /** Pipeline created by a pipeline event */
-  Pipeline = "PIPELINE",
+  PIPELINE = "PIPELINE",
   /** Pipeline created by a pipeline execution policy schedule event */
-  PipelineExecutionPolicySchedule = "PIPELINE_EXECUTION_POLICY_SCHEDULE",
+  PIPELINE_EXECUTION_POLICY_SCHEDULE = "PIPELINE_EXECUTION_POLICY_SCHEDULE",
   /** Pipeline created by a push event */
-  Push = "PUSH",
+  PUSH = "PUSH",
   /** Pipeline created by a schedule event */
-  Schedule = "SCHEDULE",
+  SCHEDULE = "SCHEDULE",
   /** Pipeline created by a security orchestration policy event */
-  SecurityOrchestrationPolicy = "SECURITY_ORCHESTRATION_POLICY",
+  SECURITY_ORCHESTRATION_POLICY = "SECURITY_ORCHESTRATION_POLICY",
   /** Pipeline created by a trigger event */
-  Trigger = "TRIGGER",
+  TRIGGER = "TRIGGER",
   /** Pipeline created by an unknown event */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
   /** Pipeline created by a web event */
-  Web = "WEB",
+  WEB = "WEB",
   /** Pipeline created by a webide event */
-  Webide = "WEBIDE",
+  WEBIDE = "WEBIDE",
 }
 
 export type CiProjectSubscription = {
@@ -10528,18 +10527,18 @@ export type CiRunner = {
   userPermissions: RunnerPermissions;
 };
 
-export type CiRunnerGroupsArgs = {
+export type CiRunnergroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiRunnerJobCountArgs = {
+export type CiRunnerjobCountArgs = {
   statuses?: InputMaybe<Array<CiJobStatus>>;
 };
 
-export type CiRunnerJobsArgs = {
+export type CiRunnerjobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -10547,7 +10546,7 @@ export type CiRunnerJobsArgs = {
   statuses?: InputMaybe<Array<CiJobStatus>>;
 };
 
-export type CiRunnerManagersArgs = {
+export type CiRunnermanagersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -10556,7 +10555,7 @@ export type CiRunnerManagersArgs = {
   systemId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type CiRunnerProjectsArgs = {
+export type CiRunnerprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -10572,17 +10571,17 @@ export type CiRunnerProjectsArgs = {
 
 export enum CiRunnerAccessLevel {
   /** A runner that is not protected. */
-  NotProtected = "NOT_PROTECTED",
+  NOT_PROTECTED = "NOT_PROTECTED",
   /** A runner that is ref protected. */
-  RefProtected = "REF_PROTECTED",
+  REF_PROTECTED = "REF_PROTECTED",
 }
 
 /** Runner cloud provider. */
 export enum CiRunnerCloudProvider {
   /** Google Kubernetes Engine. */
-  Gke = "GKE",
+  GKE = "GKE",
   /** Google Cloud. */
-  GoogleCloud = "GOOGLE_CLOUD",
+  GOOGLE_CLOUD = "GOOGLE_CLOUD",
 }
 
 /** Information used in runner cloud provisioning. */
@@ -10619,16 +10618,16 @@ export type CiRunnerConnection = {
 
 export enum CiRunnerCreationMethod {
   /** Applies to a runner that was created by an authenticated user. */
-  AuthenticatedUser = "AUTHENTICATED_USER",
+  AUTHENTICATED_USER = "AUTHENTICATED_USER",
   /** Applies to a runner that was created by a runner registration token. */
-  RegistrationToken = "REGISTRATION_TOKEN",
+  REGISTRATION_TOKEN = "REGISTRATION_TOKEN",
 }
 
 export enum CiRunnerCreationState {
   /** Applies to a runner that has been registered and has polled for CI/CD jobs at least once. */
-  Finished = "FINISHED",
+  FINISHED = "FINISHED",
   /** Applies to a runner that has been created, but is not yet registered and running. */
-  Started = "STARTED",
+  STARTED = "STARTED",
 }
 
 /** An edge in a connection. */
@@ -10654,7 +10653,7 @@ export type CiRunnerGkeProvisioning = {
 };
 
 /** Information used for GKE runner provisioning. */
-export type CiRunnerGkeProvisioningProvisioningStepsArgs = {
+export type CiRunnerGkeProvisioningprovisioningStepsArgs = {
   nodePools?: InputMaybe<Array<GoogleCloudNodePool>>;
   region: Scalars["GoogleCloudRegion"]["input"];
   runnerToken: Scalars["String"]["input"];
@@ -10682,7 +10681,7 @@ export type CiRunnerGoogleCloudProvisioning = {
 };
 
 /** Information used for runner Google Cloud provisioning. */
-export type CiRunnerGoogleCloudProvisioningProvisioningStepsArgs = {
+export type CiRunnerGoogleCloudProvisioningprovisioningStepsArgs = {
   ephemeralMachineType: Scalars["GoogleCloudMachineType"]["input"];
   region: Scalars["GoogleCloudRegion"]["input"];
   runnerToken?: InputMaybe<Scalars["String"]["input"]>;
@@ -10691,9 +10690,9 @@ export type CiRunnerGoogleCloudProvisioningProvisioningStepsArgs = {
 
 export enum CiRunnerJobExecutionStatus {
   /** Runner is busy. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Runner is idle. */
-  Idle = "IDLE",
+  IDLE = "IDLE",
 }
 
 export type CiRunnerManager = {
@@ -10756,63 +10755,63 @@ export enum CiRunnerMembershipFilter {
    * Include all runners. This list includes runners for all projects in the group and subgroups, as well as for the parent groups and instance. Introduced in GitLab 15.5: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 15.5.
    */
-  AllAvailable = "ALL_AVAILABLE",
+  ALL_AVAILABLE = "ALL_AVAILABLE",
   /** Include runners that have either a direct or inherited relationship. These runners can be specific to a project or a group. */
-  Descendants = "DESCENDANTS",
+  DESCENDANTS = "DESCENDANTS",
   /** Include runners that have a direct relationship. */
-  Direct = "DIRECT",
+  DIRECT = "DIRECT",
 }
 
 /** Values for sorting runners */
 export enum CiRunnerSort {
   /** Ordered by contacted_at in ascending order. */
-  ContactedAsc = "CONTACTED_ASC",
+  CONTACTED_ASC = "CONTACTED_ASC",
   /** Ordered by contacted_at in descending order. */
-  ContactedDesc = "CONTACTED_DESC",
+  CONTACTED_DESC = "CONTACTED_DESC",
   /** Ordered by created_at in ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Ordered by created_at in descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /**
    * Ordered by number of running jobs in descending order (only available on Ultimate plans). Introduced in GitLab 16.2: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 16.2.
    */
-  MostActiveDesc = "MOST_ACTIVE_DESC",
+  MOST_ACTIVE_DESC = "MOST_ACTIVE_DESC",
   /** Ordered by token_expires_at in ascending order. */
-  TokenExpiresAtAsc = "TOKEN_EXPIRES_AT_ASC",
+  TOKEN_EXPIRES_AT_ASC = "TOKEN_EXPIRES_AT_ASC",
   /** Ordered by token_expires_at in descending order. */
-  TokenExpiresAtDesc = "TOKEN_EXPIRES_AT_DESC",
+  TOKEN_EXPIRES_AT_DESC = "TOKEN_EXPIRES_AT_DESC",
 }
 
 export enum CiRunnerStatus {
   /** Runner that has never contacted the instance. */
-  NeverContacted = "NEVER_CONTACTED",
+  NEVER_CONTACTED = "NEVER_CONTACTED",
   /** Runner that has not contacted this instance within the last 2 hours. Will be considered `STALE` if offline for more than 7 days. */
-  Offline = "OFFLINE",
+  OFFLINE = "OFFLINE",
   /** Runner that contacted this instance within the last 2 hours. */
-  Online = "ONLINE",
+  ONLINE = "ONLINE",
   /** Runner that has not contacted this instance within the last 7 days. */
-  Stale = "STALE",
+  STALE = "STALE",
 }
 
 export enum CiRunnerType {
   /** A runner that is group type. */
-  GroupType = "GROUP_TYPE",
+  GROUP_TYPE = "GROUP_TYPE",
   /** A runner that is instance type. */
-  InstanceType = "INSTANCE_TYPE",
+  INSTANCE_TYPE = "INSTANCE_TYPE",
   /** A runner that is project type. */
-  ProjectType = "PROJECT_TYPE",
+  PROJECT_TYPE = "PROJECT_TYPE",
 }
 
 export enum CiRunnerUpgradeStatus {
   /** Upgrade is available for the runner. */
-  Available = "AVAILABLE",
+  AVAILABLE = "AVAILABLE",
   /** Runner version is not valid. */
-  Invalid = "INVALID",
+  INVALID = "INVALID",
   /** Upgrade is not available for the runner. */
-  NotAvailable = "NOT_AVAILABLE",
+  NOT_AVAILABLE = "NOT_AVAILABLE",
   /** Upgrade is available and recommended for the runner. */
-  Recommended = "RECOMMENDED",
+  RECOMMENDED = "RECOMMENDED",
 }
 
 /** Runner usage in minutes. */
@@ -10909,7 +10908,7 @@ export type CiSecureFileRegistryConnection = {
 };
 
 /** The connection type for CiSecureFileRegistry. */
-export type CiSecureFileRegistryConnectionCountArgs = {
+export type CiSecureFileRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -10938,14 +10937,14 @@ export type CiStage = {
   status?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type CiStageGroupsArgs = {
+export type CiStagegroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type CiStageJobsArgs = {
+export type CiStagejobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -11061,16 +11060,16 @@ export type CiVariableInput = {
 /** Values for sorting variables */
 export enum CiVariableSort {
   /** Sorted by key in ascending order. */
-  KeyAsc = "KEY_ASC",
+  KEY_ASC = "KEY_ASC",
   /** Sorted by key in descending order. */
-  KeyDesc = "KEY_DESC",
+  KEY_DESC = "KEY_DESC",
 }
 
 export enum CiVariableType {
   /** Env var type. */
-  EnvVar = "ENV_VAR",
+  ENV_VAR = "ENV_VAR",
   /** File type. */
-  File = "FILE",
+  FILE = "FILE",
 }
 
 export type CloudConnectorProbeResult = {
@@ -11134,42 +11133,42 @@ export type ClusterAgent = {
   workspacesAgentConfig?: Maybe<WorkspacesAgentConfig>;
 };
 
-export type ClusterAgentActivityEventsArgs = {
+export type ClusterAgentactivityEventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ClusterAgentConnectionsArgs = {
+export type ClusterAgentconnectionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ClusterAgentTokensArgs = {
+export type ClusterAgenttokensArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ClusterAgentUrlConfigurationsArgs = {
+export type ClusterAgenturlConfigurationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ClusterAgentVulnerabilityImagesArgs = {
+export type ClusterAgentvulnerabilityImagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ClusterAgentWorkspacesArgs = {
+export type ClusterAgentworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -11527,11 +11526,11 @@ export type CodeCoverageSummary = {
 /** The code flow node type */
 export enum CodeFlowNodeType {
   /** Propagation node. */
-  Propagation = "PROPAGATION",
+  PROPAGATION = "PROPAGATION",
   /** Sink node. */
-  Sink = "SINK",
+  SINK = "SINK",
   /** Source node. */
-  Source = "SOURCE",
+  SOURCE = "SOURCE",
 }
 
 /** Represents a code quality degradation on the pipeline. */
@@ -11577,17 +11576,17 @@ export type CodeQualityDegradationEdge = {
 
 export enum CodeQualityDegradationSeverity {
   /** Code Quality degradation has a status of blocker. */
-  Blocker = "BLOCKER",
+  BLOCKER = "BLOCKER",
   /** Code Quality degradation has a status of critical. */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** Code Quality degradation has a status of info. */
-  Info = "INFO",
+  INFO = "INFO",
   /** Code Quality degradation has a status of major. */
-  Major = "MAJOR",
+  MAJOR = "MAJOR",
   /** Code Quality degradation has a status of minor. */
-  Minor = "MINOR",
+  MINOR = "MINOR",
   /** Code Quality degradation has a status of unknown. */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** Code Quality report for a pipeline */
@@ -11693,11 +11692,11 @@ export type CodequalityReportsComparerReportDegradation = {
 /** Represents the generation status of the compared codequality report. */
 export enum CodequalityReportsComparerReportGenerationStatus {
   /** An error happened while generating the report. */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** Report was generated. */
-  Parsed = "PARSED",
+  PARSED = "PARSED",
   /** Report is being generated. */
-  Parsing = "PARSING",
+  PARSING = "PARSING",
 }
 
 /** Represents a summary of the compared codequality report. */
@@ -11714,11 +11713,11 @@ export type CodequalityReportsComparerReportSummary = {
 /** Represents the state of the code quality report. */
 export enum CodequalityReportsComparerStatus {
   /** Report generated and there are new code quality degradations. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Head report or base report not found. */
-  NotFound = "NOT_FOUND",
+  NOT_FOUND = "NOT_FOUND",
   /** No degradations found in the head pipeline report. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 export type CommentTemplatePath = {
@@ -11791,7 +11790,7 @@ export type Commit = Todoable & {
   webUrl: Scalars["String"]["output"];
 };
 
-export type CommitPipelinesArgs = {
+export type CommitpipelinesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -11826,15 +11825,15 @@ export type CommitAction = {
 /** Mode of a commit action */
 export enum CommitActionMode {
   /** Chmod command. */
-  Chmod = "CHMOD",
+  CHMOD = "CHMOD",
   /** Create command. */
-  Create = "CREATE",
+  CREATE = "CREATE",
   /** Delete command. */
-  Delete = "DELETE",
+  DELETE = "DELETE",
   /** Move command. */
-  Move = "MOVE",
+  MOVE = "MOVE",
   /** Update command. */
-  Update = "UPDATE",
+  UPDATE = "UPDATE",
 }
 
 /** The connection type for Commit. */
@@ -11906,9 +11905,9 @@ export type CommitEdge = {
 
 export enum CommitEncoding {
   /** Base64 encoding. */
-  Base64 = "BASE64",
+  BASE64 = "BASE64",
   /** Text encoding. */
-  Text = "TEXT",
+  TEXT = "TEXT",
 }
 
 export type CommitParentNames = {
@@ -11929,21 +11928,21 @@ export type CommitReferences = {
   tippingTags?: Maybe<CommitParentNames>;
 };
 
-export type CommitReferencesContainingBranchesArgs = {
+export type CommitReferencescontainingBranchesArgs = {
   excludeTipped?: Scalars["Boolean"]["input"];
   limit?: Scalars["Int"]["input"];
 };
 
-export type CommitReferencesContainingTagsArgs = {
+export type CommitReferencescontainingTagsArgs = {
   excludeTipped?: Scalars["Boolean"]["input"];
   limit?: Scalars["Int"]["input"];
 };
 
-export type CommitReferencesTippingBranchesArgs = {
+export type CommitReferencestippingBranchesArgs = {
   limit?: Scalars["Int"]["input"];
 };
 
-export type CommitReferencesTippingTagsArgs = {
+export type CommitReferencestippingTagsArgs = {
   limit?: Scalars["Int"]["input"];
 };
 
@@ -11960,19 +11959,19 @@ export type CommitSignature = {
 /** Comparable security report type */
 export enum ComparableSecurityReportType {
   /** API Fuzzing report */
-  ApiFuzzing = "API_FUZZING",
+  API_FUZZING = "API_FUZZING",
   /** Container Scanning report */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** Coverage Fuzzing report */
-  CoverageFuzzing = "COVERAGE_FUZZING",
+  COVERAGE_FUZZING = "COVERAGE_FUZZING",
   /** DAST report */
-  Dast = "DAST",
+  DAST = "DAST",
   /** Dependency Scanning report */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** SAST report */
-  Sast = "SAST",
+  SAST = "SAST",
   /** Secret Detection report */
-  SecretDetection = "SECRET_DETECTION",
+  SECRET_DETECTION = "SECRET_DETECTION",
 }
 
 /** Represents compared security report. */
@@ -12044,11 +12043,11 @@ export type ComparedSecurityReportScanner = {
 /** Comparison operators for filtering */
 export enum ComparisonOperator {
   /** Equal to (=). */
-  EqualTo = "EQUAL_TO",
+  EQUAL_TO = "EQUAL_TO",
   /** Greater than or equal to (>=). */
-  GreaterThanOrEqualTo = "GREATER_THAN_OR_EQUAL_TO",
+  GREATER_THAN_OR_EQUAL_TO = "GREATER_THAN_OR_EQUAL_TO",
   /** Less than or equal to (<=). */
-  LessThanOrEqualTo = "LESS_THAN_OR_EQUAL_TO",
+  LESS_THAN_OR_EQUAL_TO = "LESS_THAN_OR_EQUAL_TO",
 }
 
 /** Represents a ComplianceFramework associated with a Project */
@@ -12092,7 +12091,7 @@ export type ComplianceFramework = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkComplianceRequirementsArgs = {
+export type ComplianceFrameworkcomplianceRequirementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12100,7 +12099,7 @@ export type ComplianceFrameworkComplianceRequirementsArgs = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkPipelineExecutionPoliciesArgs = {
+export type ComplianceFrameworkpipelineExecutionPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12108,7 +12107,7 @@ export type ComplianceFrameworkPipelineExecutionPoliciesArgs = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkPipelineExecutionSchedulePoliciesArgs = {
+export type ComplianceFrameworkpipelineExecutionSchedulePoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -12119,7 +12118,7 @@ export type ComplianceFrameworkPipelineExecutionSchedulePoliciesArgs = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkProjectsArgs = {
+export type ComplianceFrameworkprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12127,7 +12126,7 @@ export type ComplianceFrameworkProjectsArgs = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkScanExecutionPoliciesArgs = {
+export type ComplianceFrameworkscanExecutionPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12135,7 +12134,7 @@ export type ComplianceFrameworkScanExecutionPoliciesArgs = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkScanResultPoliciesArgs = {
+export type ComplianceFrameworkscanResultPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12143,7 +12142,7 @@ export type ComplianceFrameworkScanResultPoliciesArgs = {
 };
 
 /** Represents a ComplianceFramework associated with a Project */
-export type ComplianceFrameworkVulnerabilityManagementPoliciesArgs = {
+export type ComplianceFrameworkvulnerabilityManagementPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12237,9 +12236,9 @@ export type ComplianceFrameworkInput = {
 /** ComplianceFramework of a project for filtering */
 export enum ComplianceFrameworkPresenceFilter {
   /** Any compliance framework is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No compliance framework is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 export type ComplianceFrameworkProjectInput = {
@@ -12252,13 +12251,13 @@ export type ComplianceFrameworkProjectInput = {
 /** Values for sorting compliance frameworks. */
 export enum ComplianceFrameworkSort {
   /** Sort by compliance framework name, ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Sort by compliance framework name, descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Sort by compliance framework updated date, ascending order. */
-  UpdatedAtAsc = "UPDATED_AT_ASC",
+  UPDATED_AT_ASC = "UPDATED_AT_ASC",
   /** Sort by compliance framework updated date, descending order. */
-  UpdatedAtDesc = "UPDATED_AT_DESC",
+  UPDATED_AT_DESC = "UPDATED_AT_DESC",
 }
 
 /** Compliance framework requiring attention. */
@@ -12312,7 +12311,7 @@ export type ComplianceRequirement = {
 };
 
 /** Represents a ComplianceRequirement associated with a ComplianceFramework */
-export type ComplianceRequirementComplianceRequirementsControlsArgs = {
+export type ComplianceRequirementcomplianceRequirementsControlsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12433,17 +12432,17 @@ export type ComplianceStandardsAdherence = {
 /** Name of the check for the compliance standard. */
 export enum ComplianceStandardsAdherenceCheckName {
   /** At least one non author approval */
-  AtLeastOneNonAuthorApproval = "AT_LEAST_ONE_NON_AUTHOR_APPROVAL",
+  AT_LEAST_ONE_NON_AUTHOR_APPROVAL = "AT_LEAST_ONE_NON_AUTHOR_APPROVAL",
   /** At least two approvals */
-  AtLeastTwoApprovals = "AT_LEAST_TWO_APPROVALS",
+  AT_LEAST_TWO_APPROVALS = "AT_LEAST_TWO_APPROVALS",
   /** Dast */
-  Dast = "DAST",
+  DAST = "DAST",
   /** Prevent approval by merge request creator (author) */
-  PreventApprovalByMergeRequestAuthor = "PREVENT_APPROVAL_BY_MERGE_REQUEST_AUTHOR",
+  PREVENT_APPROVAL_BY_MERGE_REQUEST_AUTHOR = "PREVENT_APPROVAL_BY_MERGE_REQUEST_AUTHOR",
   /** Prevent approval by merge request committers */
-  PreventApprovalByMergeRequestCommitters = "PREVENT_APPROVAL_BY_MERGE_REQUEST_COMMITTERS",
+  PREVENT_APPROVAL_BY_MERGE_REQUEST_COMMITTERS = "PREVENT_APPROVAL_BY_MERGE_REQUEST_COMMITTERS",
   /** Sast */
-  Sast = "SAST",
+  SAST = "SAST",
 }
 
 /** The connection type for ComplianceStandardsAdherence. */
@@ -12478,17 +12477,17 @@ export type ComplianceStandardsAdherenceInput = {
 /** Name of the compliance standard. */
 export enum ComplianceStandardsAdherenceStandard {
   /** Gitlab */
-  Gitlab = "GITLAB",
+  GITLAB = "GITLAB",
   /** Soc2 */
-  Soc2 = "SOC2",
+  SOC2 = "SOC2",
 }
 
 /** Status of the compliance standards adherence. */
 export enum ComplianceStandardsAdherenceStatus {
   /** Fail */
-  Fail = "FAIL",
+  FAIL = "FAIL",
   /** Success */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 export type ComplianceStandardsProjectAdherenceInput = {
@@ -12556,57 +12555,57 @@ export type ComplianceViolationProjectInput = {
 /** Reason for the compliance violation. */
 export enum ComplianceViolationReason {
   /** Approved by committer */
-  ApprovedByCommitter = "APPROVED_BY_COMMITTER",
+  APPROVED_BY_COMMITTER = "APPROVED_BY_COMMITTER",
   /** Approved by insufficient users */
-  ApprovedByInsufficientUsers = "APPROVED_BY_INSUFFICIENT_USERS",
+  APPROVED_BY_INSUFFICIENT_USERS = "APPROVED_BY_INSUFFICIENT_USERS",
   /** Approved by merge request author */
-  ApprovedByMergeRequestAuthor = "APPROVED_BY_MERGE_REQUEST_AUTHOR",
+  APPROVED_BY_MERGE_REQUEST_AUTHOR = "APPROVED_BY_MERGE_REQUEST_AUTHOR",
 }
 
 /** Severity of the compliance violation. */
 export enum ComplianceViolationSeverity {
   /** Critical severity */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** High severity */
-  High = "HIGH",
+  HIGH = "HIGH",
   /** Info severity */
-  Info = "INFO",
+  INFO = "INFO",
   /** Low severity */
-  Low = "LOW",
+  LOW = "LOW",
   /** Medium severity */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
 }
 
 /** Compliance violation sort values. */
 export enum ComplianceViolationSort {
   /** Date merged in ascending order, further sorted by ID in ascending order. */
-  MergedAtAsc = "MERGED_AT_ASC",
+  MERGED_AT_ASC = "MERGED_AT_ASC",
   /** Date merged in descending order, further sorted by ID in descending order. */
-  MergedAtDesc = "MERGED_AT_DESC",
+  MERGED_AT_DESC = "MERGED_AT_DESC",
   /** Merge request title in ascending order, further sorted by ID in ascending order. */
-  MergeRequestTitleAsc = "MERGE_REQUEST_TITLE_ASC",
+  MERGE_REQUEST_TITLE_ASC = "MERGE_REQUEST_TITLE_ASC",
   /** Merge request title in descending order, further sorted by ID in descending order. */
-  MergeRequestTitleDesc = "MERGE_REQUEST_TITLE_DESC",
+  MERGE_REQUEST_TITLE_DESC = "MERGE_REQUEST_TITLE_DESC",
   /** Severity in ascending order, further sorted by ID in ascending order. */
-  SeverityLevelAsc = "SEVERITY_LEVEL_ASC",
+  SEVERITY_LEVEL_ASC = "SEVERITY_LEVEL_ASC",
   /** Severity in descending order, further sorted by ID in descending order. */
-  SeverityLevelDesc = "SEVERITY_LEVEL_DESC",
+  SEVERITY_LEVEL_DESC = "SEVERITY_LEVEL_DESC",
   /** Violation reason in ascending order, further sorted by ID in ascending order. */
-  ViolationReasonAsc = "VIOLATION_REASON_ASC",
+  VIOLATION_REASON_ASC = "VIOLATION_REASON_ASC",
   /** Violation reason in descending order, further sorted by ID in descending order. */
-  ViolationReasonDesc = "VIOLATION_REASON_DESC",
+  VIOLATION_REASON_DESC = "VIOLATION_REASON_DESC",
 }
 
 /** Compliance violation status of the project. */
 export enum ComplianceViolationStatus {
   /** Detected */
-  Detected = "DETECTED",
+  DETECTED = "DETECTED",
   /** Dismissed */
-  Dismissed = "DISMISSED",
+  DISMISSED = "DISMISSED",
   /** In review */
-  InReview = "IN_REVIEW",
+  IN_REVIEW = "IN_REVIEW",
   /** Resolved */
-  Resolved = "RESOLVED",
+  RESOLVED = "RESOLVED",
 }
 
 /** A software dependency used by a project */
@@ -12697,9 +12696,9 @@ export type ConanMetadata = {
 /** Conan file types */
 export enum ConanMetadatumFileTypeEnum {
   /** A package file type. */
-  PackageFile = "PACKAGE_FILE",
+  PACKAGE_FILE = "PACKAGE_FILE",
   /** A recipe file type. */
-  RecipeFile = "RECIPE_FILE",
+  RECIPE_FILE = "RECIPE_FILE",
 }
 
 /** Autogenerated input type of ConfigureContainerScanning */
@@ -12845,57 +12844,57 @@ export type ConnectedAgentEdge = {
 /** Values for sorting contacts */
 export enum ContactSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Description in ascending order. */
-  DescriptionAsc = "DESCRIPTION_ASC",
+  DESCRIPTION_ASC = "DESCRIPTION_ASC",
   /** Description in descending order. */
-  DescriptionDesc = "DESCRIPTION_DESC",
+  DESCRIPTION_DESC = "DESCRIPTION_DESC",
   /** Email in ascending order. */
-  EmailAsc = "EMAIL_ASC",
+  EMAIL_ASC = "EMAIL_ASC",
   /** Email in descending order. */
-  EmailDesc = "EMAIL_DESC",
+  EMAIL_DESC = "EMAIL_DESC",
   /** First name in ascending order. */
-  FirstNameAsc = "FIRST_NAME_ASC",
+  FIRST_NAME_ASC = "FIRST_NAME_ASC",
   /** First name in descending order. */
-  FirstNameDesc = "FIRST_NAME_DESC",
+  FIRST_NAME_DESC = "FIRST_NAME_DESC",
   /** Last name in ascending order. */
-  LastNameAsc = "LAST_NAME_ASC",
+  LAST_NAME_ASC = "LAST_NAME_ASC",
   /** Last name in descending order. */
-  LastNameDesc = "LAST_NAME_DESC",
+  LAST_NAME_DESC = "LAST_NAME_DESC",
   /** Organization in ascending order. */
-  OrganizationAsc = "ORGANIZATION_ASC",
+  ORGANIZATION_ASC = "ORGANIZATION_ASC",
   /** Organization in descending order. */
-  OrganizationDesc = "ORGANIZATION_DESC",
+  ORGANIZATION_DESC = "ORGANIZATION_DESC",
   /** Phone in ascending order. */
-  PhoneAsc = "PHONE_ASC",
+  PHONE_ASC = "PHONE_ASC",
   /** Phone in descending order. */
-  PhoneDesc = "PHONE_DESC",
+  PHONE_DESC = "PHONE_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Represents the total number of contacts for the represented states. */
@@ -12934,43 +12933,43 @@ export type ContainerExpirationPolicy = {
 
 export enum ContainerExpirationPolicyCadenceEnum {
   /** Every day */
-  EveryDay = "EVERY_DAY",
+  EVERY_DAY = "EVERY_DAY",
   /** Every month */
-  EveryMonth = "EVERY_MONTH",
+  EVERY_MONTH = "EVERY_MONTH",
   /** Every three months */
-  EveryThreeMonths = "EVERY_THREE_MONTHS",
+  EVERY_THREE_MONTHS = "EVERY_THREE_MONTHS",
   /** Every two weeks */
-  EveryTwoWeeks = "EVERY_TWO_WEEKS",
+  EVERY_TWO_WEEKS = "EVERY_TWO_WEEKS",
   /** Every week */
-  EveryWeek = "EVERY_WEEK",
+  EVERY_WEEK = "EVERY_WEEK",
 }
 
 export enum ContainerExpirationPolicyKeepEnum {
   /** 50 tags per image name */
-  FiftyTags = "FIFTY_TAGS",
+  FIFTY_TAGS = "FIFTY_TAGS",
   /** 5 tags per image name */
-  FiveTags = "FIVE_TAGS",
+  FIVE_TAGS = "FIVE_TAGS",
   /** 100 tags per image name */
-  OneHundredTags = "ONE_HUNDRED_TAGS",
+  ONE_HUNDRED_TAGS = "ONE_HUNDRED_TAGS",
   /** 1 tag per image name */
-  OneTag = "ONE_TAG",
+  ONE_TAG = "ONE_TAG",
   /** 10 tags per image name */
-  TenTags = "TEN_TAGS",
+  TEN_TAGS = "TEN_TAGS",
   /** 25 tags per image name */
-  TwentyFiveTags = "TWENTY_FIVE_TAGS",
+  TWENTY_FIVE_TAGS = "TWENTY_FIVE_TAGS",
 }
 
 export enum ContainerExpirationPolicyOlderThanEnum {
   /** 14 days until tags are automatically removed */
-  FourteenDays = "FOURTEEN_DAYS",
+  FOURTEEN_DAYS = "FOURTEEN_DAYS",
   /** 90 days until tags are automatically removed */
-  NinetyDays = "NINETY_DAYS",
+  NINETY_DAYS = "NINETY_DAYS",
   /** 7 days until tags are automatically removed */
-  SevenDays = "SEVEN_DAYS",
+  SEVEN_DAYS = "SEVEN_DAYS",
   /** 60 days until tags are automatically removed */
-  SixtyDays = "SIXTY_DAYS",
+  SIXTY_DAYS = "SIXTY_DAYS",
   /** 30 days until tags are automatically removed */
-  ThirtyDays = "THIRTY_DAYS",
+  THIRTY_DAYS = "THIRTY_DAYS",
 }
 
 /** Represents the most restrictive permissions for a container image tag */
@@ -13009,11 +13008,11 @@ export type ContainerProtectionRepositoryRule = {
 /** Access level for a container repository protection rule resource */
 export enum ContainerProtectionRepositoryRuleAccessLevel {
   /** Admin access. */
-  Admin = "ADMIN",
+  ADMIN = "ADMIN",
   /** Maintainer access. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** Owner access. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
 }
 
 /** The connection type for ContainerProtectionRepositoryRule. */
@@ -13074,17 +13073,17 @@ export enum ContainerProtectionTagRuleAccessLevel {
    * Admin access. Introduced in GitLab 17.8: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.8.
    */
-  Admin = "ADMIN",
+  ADMIN = "ADMIN",
   /**
    * Maintainer access. Introduced in GitLab 17.8: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.8.
    */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /**
    * Owner access. Introduced in GitLab 17.8: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.8.
    */
-  Owner = "OWNER",
+  OWNER = "OWNER",
 }
 
 /** The connection type for ContainerProtectionTagRule. */
@@ -13154,13 +13153,13 @@ export type ContainerRepository = {
 /** Status of the tags cleanup of a container repository */
 export enum ContainerRepositoryCleanupStatus {
   /** Tags cleanup is ongoing. */
-  Ongoing = "ONGOING",
+  ONGOING = "ONGOING",
   /** Tags cleanup is scheduled and is going to be executed shortly. */
-  Scheduled = "SCHEDULED",
+  SCHEDULED = "SCHEDULED",
   /** Tags cleanup has been partially executed. There are still remaining tags to delete. */
-  Unfinished = "UNFINISHED",
+  UNFINISHED = "UNFINISHED",
   /** Tags cleanup is not scheduled. This is the default state. */
-  Unscheduled = "UNSCHEDULED",
+  UNSCHEDULED = "UNSCHEDULED",
 }
 
 /** The connection type for ContainerRepository. */
@@ -13221,12 +13220,12 @@ export type ContainerRepositoryDetails = {
 };
 
 /** Details of a container repository */
-export type ContainerRepositoryDetailsManifestArgs = {
+export type ContainerRepositoryDetailsmanifestArgs = {
   reference: Scalars["String"]["input"];
 };
 
 /** Details of a container repository */
-export type ContainerRepositoryDetailsTagsArgs = {
+export type ContainerRepositoryDetailstagsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13325,7 +13324,7 @@ export type ContainerRepositoryRegistryConnection = {
 };
 
 /** The connection type for ContainerRepositoryRegistry. */
-export type ContainerRepositoryRegistryConnectionCountArgs = {
+export type ContainerRepositoryRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -13341,47 +13340,47 @@ export type ContainerRepositoryRegistryEdge = {
 /** Values for sorting container repositories */
 export enum ContainerRepositorySort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Name by ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Name by descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Status of a container repository */
 export enum ContainerRepositoryStatus {
   /** Delete Failed status. */
-  DeleteFailed = "DELETE_FAILED",
+  DELETE_FAILED = "DELETE_FAILED",
   /** Delete Ongoing status. */
-  DeleteOngoing = "DELETE_ONGOING",
+  DELETE_ONGOING = "DELETE_ONGOING",
   /** Delete Scheduled status. */
-  DeleteScheduled = "DELETE_SCHEDULED",
+  DELETE_SCHEDULED = "DELETE_SCHEDULED",
 }
 
 /** A tag from a container repository */
@@ -13447,13 +13446,13 @@ export type ContainerRepositoryTagPermissions = {
 /** Values for sorting tags */
 export enum ContainerRepositoryTagSort {
   /** Ordered by name in ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Ordered by name in descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Ordered by published_at in ascending order. Only available for GitLab.com. */
-  PublishedAtAsc = "PUBLISHED_AT_ASC",
+  PUBLISHED_AT_ASC = "PUBLISHED_AT_ASC",
   /** Ordered by published_at in descending order. Only available for GitLab.com. */
-  PublishedAtDesc = "PUBLISHED_AT_DESC",
+  PUBLISHED_AT_DESC = "PUBLISHED_AT_DESC",
 }
 
 /** A tag expiration policy using regex patterns to control which images to keep or expire. */
@@ -13701,7 +13700,7 @@ export type CountableVulnerability = NoteableInterface &
   };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityCommentersArgs = {
+export type CountableVulnerabilitycommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13709,7 +13708,7 @@ export type CountableVulnerabilityCommentersArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityDependenciesArgs = {
+export type CountableVulnerabilitydependenciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentIds?: InputMaybe<Array<Scalars["SbomComponentID"]["input"]>>;
@@ -13723,7 +13722,7 @@ export type CountableVulnerabilityDependenciesArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityDiscussionsArgs = {
+export type CountableVulnerabilitydiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13731,7 +13730,7 @@ export type CountableVulnerabilityDiscussionsArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityExternalIssueLinksArgs = {
+export type CountableVulnerabilityexternalIssueLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13739,7 +13738,7 @@ export type CountableVulnerabilityExternalIssueLinksArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityIssueLinksArgs = {
+export type CountableVulnerabilityissueLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13748,7 +13747,7 @@ export type CountableVulnerabilityIssueLinksArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityMergeRequestsArgs = {
+export type CountableVulnerabilitymergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13756,7 +13755,7 @@ export type CountableVulnerabilityMergeRequestsArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityNotesArgs = {
+export type CountableVulnerabilitynotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -13765,7 +13764,7 @@ export type CountableVulnerabilityNotesArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilitySeverityOverridesArgs = {
+export type CountableVulnerabilityseverityOverridesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13773,7 +13772,7 @@ export type CountableVulnerabilitySeverityOverridesArgs = {
 };
 
 /** Represents a vulnerability. The connection type is countable. */
-export type CountableVulnerabilityStateTransitionsArgs = {
+export type CountableVulnerabilitystateTransitionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14688,7 +14687,7 @@ export type CurrentUser = Todoable &
   };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserAssignedMergeRequestsArgs = {
+export type CurrentUserassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -14732,7 +14731,7 @@ export type CurrentUserAssignedMergeRequestsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserAssigneeOrReviewerMergeRequestsArgs = {
+export type CurrentUserassigneeOrReviewerMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -14775,7 +14774,7 @@ export type CurrentUserAssigneeOrReviewerMergeRequestsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserAuthoredMergeRequestsArgs = {
+export type CurrentUserauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -14822,7 +14821,7 @@ export type CurrentUserAuthoredMergeRequestsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserCalloutsArgs = {
+export type CurrentUsercalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14830,7 +14829,7 @@ export type CurrentUserCalloutsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserContributedProjectsArgs = {
+export type CurrentUsercontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14843,7 +14842,7 @@ export type CurrentUserContributedProjectsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserEmailsArgs = {
+export type CurrentUseremailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14851,7 +14850,7 @@ export type CurrentUserEmailsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserGroupMembershipsArgs = {
+export type CurrentUsergroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14859,7 +14858,7 @@ export type CurrentUserGroupMembershipsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserGroupsArgs = {
+export type CurrentUsergroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14870,7 +14869,7 @@ export type CurrentUserGroupsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserNamespaceCommitEmailsArgs = {
+export type CurrentUsernamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14878,7 +14877,7 @@ export type CurrentUserNamespaceCommitEmailsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserOrganizationsArgs = {
+export type CurrentUserorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14888,7 +14887,7 @@ export type CurrentUserOrganizationsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserProjectMembershipsArgs = {
+export type CurrentUserprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14896,7 +14895,7 @@ export type CurrentUserProjectMembershipsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserReviewRequestedMergeRequestsArgs = {
+export type CurrentUserreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -14941,7 +14940,7 @@ export type CurrentUserReviewRequestedMergeRequestsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserRunnersArgs = {
+export type CurrentUserrunnersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assignableToProjectPath?: InputMaybe<Scalars["ID"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -14960,7 +14959,7 @@ export type CurrentUserRunnersArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserSavedRepliesArgs = {
+export type CurrentUsersavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14968,12 +14967,12 @@ export type CurrentUserSavedRepliesArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserSavedReplyArgs = {
+export type CurrentUsersavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserSnippetsArgs = {
+export type CurrentUsersnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14984,7 +14983,7 @@ export type CurrentUserSnippetsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserStarredProjectsArgs = {
+export type CurrentUserstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -14996,7 +14995,7 @@ export type CurrentUserStarredProjectsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserTimelogsArgs = {
+export type CurrentUsertimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -15012,7 +15011,7 @@ export type CurrentUserTimelogsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserTodosArgs = {
+export type CurrentUsertodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -15028,7 +15027,7 @@ export type CurrentUserTodosArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserUserAchievementsArgs = {
+export type CurrentUseruserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -15037,13 +15036,13 @@ export type CurrentUserUserAchievementsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserWorkItemPreferencesArgs = {
+export type CurrentUserworkItemPreferencesArgs = {
   namespacePath: Scalars["ID"]["input"];
   workItemTypeId?: InputMaybe<Scalars["WorkItemsTypeID"]["input"]>;
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserWorkItemsArgs = {
+export type CurrentUserworkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
@@ -15081,7 +15080,7 @@ export type CurrentUserWorkItemsArgs = {
 };
 
 /** The currently authenticated GitLab user. */
-export type CurrentUserWorkspacesArgs = {
+export type CurrentUserworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -15097,7 +15096,7 @@ export type CurrentUserTodos = {
   currentUserTodos: TodoConnection;
 };
 
-export type CurrentUserTodosCurrentUserTodosArgs = {
+export type CurrentUserTodoscurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -15267,15 +15266,15 @@ export type CustomFieldSelectOptionInput = {
 /** Type of custom field */
 export enum CustomFieldType {
   /** Date field type. */
-  Date = "DATE",
+  DATE = "DATE",
   /** Multi select field type. */
-  MultiSelect = "MULTI_SELECT",
+  MULTI_SELECT = "MULTI_SELECT",
   /** Number field type. */
-  Number = "NUMBER",
+  NUMBER = "NUMBER",
   /** Single select field type. */
-  SingleSelect = "SINGLE_SELECT",
+  SINGLE_SELECT = "SINGLE_SELECT",
   /** Text field type. */
-  Text = "TEXT",
+  TEXT = "TEXT",
 }
 
 /** Autogenerated input type of CustomFieldUnarchive */
@@ -15409,11 +15408,11 @@ export type CustomerRelationsContactEdge = {
 
 export enum CustomerRelationsContactState {
   /** Active contacts. */
-  Active = "active",
+  active = "active",
   /** All available contacts. */
-  All = "all",
+  all = "all",
   /** Inactive contacts. */
-  Inactive = "inactive",
+  inactive = "inactive",
 }
 
 /** Autogenerated input type of CustomerRelationsContactUpdate */
@@ -15514,11 +15513,11 @@ export type CustomerRelationsOrganizationEdge = {
 
 export enum CustomerRelationsOrganizationState {
   /** Active organizations. */
-  Active = "active",
+  active = "active",
   /** All available organizations. */
-  All = "all",
+  all = "all",
   /** Inactive organizations. */
-  Inactive = "inactive",
+  inactive = "inactive",
 }
 
 /** Autogenerated input type of CustomerRelationsOrganizationUpdate */
@@ -15609,7 +15608,7 @@ export type CustomizableDashboard = {
 };
 
 /** Represents a customizable dashboard. */
-export type CustomizableDashboardPanelsArgs = {
+export type CustomizableDashboardpanelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -15619,7 +15618,7 @@ export type CustomizableDashboardPanelsArgs = {
 /** Categories for customizable dashboards. */
 export enum CustomizableDashboardCategory {
   /** Analytics category for customizable dashboards. */
-  Analytics = "ANALYTICS",
+  ANALYTICS = "ANALYTICS",
 }
 
 /** The connection type for CustomizableDashboard. */
@@ -15773,15 +15772,15 @@ export type CveEnrichmentType = {
 /** Values for a CVSS severity */
 export enum CvssSeverity {
   /** Critical severity. */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** High severity. */
-  High = "HIGH",
+  HIGH = "HIGH",
   /** Low severity. */
-  Low = "LOW",
+  LOW = "LOW",
   /** Medium severity. */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
   /** Not a vulnerability. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Represents a vulnerability's CVSS score. */
@@ -15838,23 +15837,23 @@ export type DastPreScanVerification = {
 /** Check type of the pre scan verification step. */
 export enum DastPreScanVerificationCheckType {
   /** Authentication check */
-  Authentication = "AUTHENTICATION",
+  AUTHENTICATION = "AUTHENTICATION",
   /** Connection check */
-  Connection = "CONNECTION",
+  CONNECTION = "CONNECTION",
   /** Crawling check */
-  Crawling = "CRAWLING",
+  CRAWLING = "CRAWLING",
 }
 
 /** Status of DAST pre scan verification. */
 export enum DastPreScanVerificationStatus {
   /** Pre Scan Verification complete without errors. */
-  Complete = "COMPLETE",
+  COMPLETE = "COMPLETE",
   /** Pre Scan Verification finished with one or more errors. */
-  CompleteWithErrors = "COMPLETE_WITH_ERRORS",
+  COMPLETE_WITH_ERRORS = "COMPLETE_WITH_ERRORS",
   /** Pre Scan Validation unable to finish. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Pre Scan Verification in execution. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
 }
 
 /** Represents a DAST Pre Scan Verification Step */
@@ -15927,13 +15926,13 @@ export type DastProfileCadenceInput = {
 /** Unit for the duration of Dast Profile Cadence. */
 export enum DastProfileCadenceUnit {
   /** DAST Profile Cadence duration in days. */
-  Day = "DAY",
+  DAY = "DAY",
   /** DAST Profile Cadence duration in months. */
-  Month = "MONTH",
+  MONTH = "MONTH",
   /** DAST Profile Cadence duration in weeks. */
-  Week = "WEEK",
+  WEEK = "WEEK",
   /** DAST Profile Cadence duration in years. */
-  Year = "YEAR",
+  YEAR = "YEAR",
 }
 
 /** The connection type for DastProfile. */
@@ -16102,22 +16101,22 @@ export type DastProfileUpdatePayload = {
 /** Scan method to be used by the scanner. */
 export enum DastScanMethodType {
   /** GraphQL scan method. */
-  Graphql = "GRAPHQL",
+  GRAPHQL = "GRAPHQL",
   /** HAR scan method. */
-  Har = "HAR",
+  HAR = "HAR",
   /** OpenAPI scan method. */
-  Openapi = "OPENAPI",
+  OPENAPI = "OPENAPI",
   /** Postman scan method. */
-  PostmanCollection = "POSTMAN_COLLECTION",
+  POSTMAN_COLLECTION = "POSTMAN_COLLECTION",
   /** Website scan method. */
-  Website = "WEBSITE",
+  WEBSITE = "WEBSITE",
 }
 
 export enum DastScanTypeEnum {
   /** Active DAST scan. This scan will make active attacks against the target site. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Passive DAST scan. This scan will not make active attacks against the target site. */
-  Passive = "PASSIVE",
+  PASSIVE = "PASSIVE",
 }
 
 /** Represents a DAST scanner profile */
@@ -16461,15 +16460,15 @@ export type DastSiteProfileUpdatePayload = {
 
 export enum DastSiteProfileValidationStatusEnum {
   /** Site validation process finished but failed. */
-  FailedValidation = "FAILED_VALIDATION",
+  FAILED_VALIDATION = "FAILED_VALIDATION",
   /** Site validation process is in progress. */
-  InprogressValidation = "INPROGRESS_VALIDATION",
+  INPROGRESS_VALIDATION = "INPROGRESS_VALIDATION",
   /** No site validation exists. */
-  None = "NONE",
+  NONE = "NONE",
   /** Site validation process finished successfully. */
-  PassedValidation = "PASSED_VALIDATION",
+  PASSED_VALIDATION = "PASSED_VALIDATION",
   /** Site validation process has not started. */
-  PendingValidation = "PENDING_VALIDATION",
+  PENDING_VALIDATION = "PENDING_VALIDATION",
 }
 
 /** Autogenerated input type of DastSiteTokenCreate */
@@ -16578,69 +16577,69 @@ export type DastSiteValidationRevokePayload = {
 
 export enum DastSiteValidationStatusEnum {
   /** Site validation process finished but failed. */
-  FailedValidation = "FAILED_VALIDATION",
+  FAILED_VALIDATION = "FAILED_VALIDATION",
   /** Site validation process is in progress. */
-  InprogressValidation = "INPROGRESS_VALIDATION",
+  INPROGRESS_VALIDATION = "INPROGRESS_VALIDATION",
   /** Site validation process finished successfully. */
-  PassedValidation = "PASSED_VALIDATION",
+  PASSED_VALIDATION = "PASSED_VALIDATION",
   /** Site validation process has not started. */
-  PendingValidation = "PENDING_VALIDATION",
+  PENDING_VALIDATION = "PENDING_VALIDATION",
 }
 
 export enum DastSiteValidationStrategyEnum {
   /** Header validation. */
-  Header = "HEADER",
+  HEADER = "HEADER",
   /** Meta tag validation. */
-  MetaTag = "META_TAG",
+  META_TAG = "META_TAG",
   /** Text file validation. */
-  TextFile = "TEXT_FILE",
+  TEXT_FILE = "TEXT_FILE",
 }
 
 export enum DastTargetTypeEnum {
   /** API target. */
-  Api = "API",
+  API = "API",
   /** Website target. */
-  Website = "WEBSITE",
+  WEBSITE = "WEBSITE",
 }
 
 /** Color of the data visualization palette */
 export enum DataVisualizationColorEnum {
   /** Aqua color */
-  Aqua = "AQUA",
+  AQUA = "AQUA",
   /** Blue color */
-  Blue = "BLUE",
+  BLUE = "BLUE",
   /** Green color */
-  Green = "GREEN",
+  GREEN = "GREEN",
   /** Magenta color */
-  Magenta = "MAGENTA",
+  MAGENTA = "MAGENTA",
   /** Orange color */
-  Orange = "ORANGE",
+  ORANGE = "ORANGE",
 }
 
 /** Weight of the data visualization palette */
 export enum DataVisualizationWeightEnum {
   /** 50 weight */
-  Weight_50 = "WEIGHT_50",
+  WEIGHT_50 = "WEIGHT_50",
   /** 100 weight */
-  Weight_100 = "WEIGHT_100",
+  WEIGHT_100 = "WEIGHT_100",
   /** 200 weight */
-  Weight_200 = "WEIGHT_200",
+  WEIGHT_200 = "WEIGHT_200",
   /** 300 weight */
-  Weight_300 = "WEIGHT_300",
+  WEIGHT_300 = "WEIGHT_300",
   /** 400 weight */
-  Weight_400 = "WEIGHT_400",
+  WEIGHT_400 = "WEIGHT_400",
   /** 500 weight */
-  Weight_500 = "WEIGHT_500",
+  WEIGHT_500 = "WEIGHT_500",
   /** 600 weight */
-  Weight_600 = "WEIGHT_600",
+  WEIGHT_600 = "WEIGHT_600",
   /** 700 weight */
-  Weight_700 = "WEIGHT_700",
+  WEIGHT_700 = "WEIGHT_700",
   /** 800 weight */
-  Weight_800 = "WEIGHT_800",
+  WEIGHT_800 = "WEIGHT_800",
   /** 900 weight */
-  Weight_900 = "WEIGHT_900",
+  WEIGHT_900 = "WEIGHT_900",
   /** 950 weight */
-  Weight_950 = "WEIGHT_950",
+  WEIGHT_950 = "WEIGHT_950",
 }
 
 /** Autogenerated input type of DeleteAnnotation */
@@ -16838,14 +16837,14 @@ export type Dependency = DependencyInterface & {
 };
 
 /** A software dependency used by a project */
-export type DependencyDependencyPathsArgs = {
+export type DependencydependencyPathsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** A software dependency used by a project */
-export type DependencyVulnerabilitiesArgs = {
+export type DependencyvulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -16889,14 +16888,14 @@ export type DependencyAggregation = DependencyInterface & {
 };
 
 /** A software dependency aggregation used by a group */
-export type DependencyAggregationDependencyPathsArgs = {
+export type DependencyAggregationdependencyPathsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** A software dependency aggregation used by a group */
-export type DependencyAggregationVulnerabilitiesArgs = {
+export type DependencyAggregationvulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -16975,13 +16974,13 @@ export type DependencyInterface = {
   vulnerabilityCount: Scalars["Int"]["output"];
 };
 
-export type DependencyInterfaceDependencyPathsArgs = {
+export type DependencyInterfacedependencyPathsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type DependencyInterfaceVulnerabilitiesArgs = {
+export type DependencyInterfacevulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -17136,7 +17135,7 @@ export type DependencyProxyBlobRegistryConnection = {
 };
 
 /** The connection type for DependencyProxyBlobRegistry. */
-export type DependencyProxyBlobRegistryConnectionCountArgs = {
+export type DependencyProxyBlobRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -17265,7 +17264,7 @@ export type DependencyProxyManifestRegistryConnection = {
 };
 
 /** The connection type for DependencyProxyManifestRegistry. */
-export type DependencyProxyManifestRegistryConnectionCountArgs = {
+export type DependencyProxyManifestRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -17280,13 +17279,13 @@ export type DependencyProxyManifestRegistryEdge = {
 
 export enum DependencyProxyManifestStatus {
   /** Dependency proxy manifest has a status of default. */
-  Default = "DEFAULT",
+  DEFAULT = "DEFAULT",
   /** Dependency proxy manifest has a status of error. */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** Dependency proxy manifest has a status of pending_destruction. */
-  PendingDestruction = "PENDING_DESTRUCTION",
+  PENDING_DESTRUCTION = "PENDING_DESTRUCTION",
   /** Dependency proxy manifest has a status of processing. */
-  Processing = "PROCESSING",
+  PROCESSING = "PROCESSING",
 }
 
 /** Project-level Dependency Proxy for packages settings */
@@ -17312,21 +17311,21 @@ export type DependencyProxySetting = {
 /** Values for sorting dependencies */
 export enum DependencySort {
   /** License by ascending order. */
-  LicenseAsc = "LICENSE_ASC",
+  LICENSE_ASC = "LICENSE_ASC",
   /** License by descending order. */
-  LicenseDesc = "LICENSE_DESC",
+  LICENSE_DESC = "LICENSE_DESC",
   /** Name by ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Name by descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Packager by ascending order. */
-  PackagerAsc = "PACKAGER_ASC",
+  PACKAGER_ASC = "PACKAGER_ASC",
   /** Packager by descending order. */
-  PackagerDesc = "PACKAGER_DESC",
+  PACKAGER_DESC = "PACKAGER_DESC",
   /** Severity by ascending order. */
-  SeverityAsc = "SEVERITY_ASC",
+  SEVERITY_ASC = "SEVERITY_ASC",
   /** Severity by descending order. */
-  SeverityDesc = "SEVERITY_DESC",
+  SEVERITY_DESC = "SEVERITY_DESC",
 }
 
 /** The deployment of an environment */
@@ -17403,11 +17402,11 @@ export type DeploymentApprovalSummary = {
 /** Status of the deployment approval summary. */
 export enum DeploymentApprovalSummaryStatus {
   /** Summarized deployment approval status that is approved. */
-  Approved = "APPROVED",
+  APPROVED = "APPROVED",
   /** Summarized deployment approval status that is pending approval. */
-  PendingApproval = "PENDING_APPROVAL",
+  PENDING_APPROVAL = "PENDING_APPROVAL",
   /** Summarized deployment approval status that is rejected. */
-  Rejected = "REJECTED",
+  REJECTED = "REJECTED",
 }
 
 /** The connection type for Deployment. */
@@ -17443,19 +17442,19 @@ export type DeploymentPermissions = {
 /** All deployment statuses. */
 export enum DeploymentStatus {
   /** A deployment that is blocked. */
-  Blocked = "BLOCKED",
+  BLOCKED = "BLOCKED",
   /** A deployment that is canceled. */
-  Canceled = "CANCELED",
+  CANCELED = "CANCELED",
   /** A deployment that is created. */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** A deployment that is failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** A deployment that is running. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** A deployment that is skipped. */
-  Skipped = "SKIPPED",
+  SKIPPED = "SKIPPED",
   /** A deployment that is success. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 /** Tags for a given deployment */
@@ -17472,23 +17471,23 @@ export type DeploymentTag = {
 /** All environment deployment tiers. */
 export enum DeploymentTier {
   /** Development. */
-  Development = "DEVELOPMENT",
+  DEVELOPMENT = "DEVELOPMENT",
   /** Other. */
-  Other = "OTHER",
+  OTHER = "OTHER",
   /** Production. */
-  Production = "PRODUCTION",
+  PRODUCTION = "PRODUCTION",
   /** Staging. */
-  Staging = "STAGING",
+  STAGING = "STAGING",
   /** Testing. */
-  Testing = "TESTING",
+  TESTING = "TESTING",
 }
 
 /** Status of the deployment approval. */
 export enum DeploymentsApprovalStatus {
   /** A deployment approval that is approved. */
-  Approved = "APPROVED",
+  APPROVED = "APPROVED",
   /** A deployment approval that is rejected. */
-  Rejected = "REJECTED",
+  REJECTED = "REJECTED",
 }
 
 /** Values for ordering deployments by a specific field */
@@ -17529,7 +17528,7 @@ export type DescriptionVersion = {
   id: Scalars["DescriptionVersionID"]["output"];
 };
 
-export type DescriptionVersionDiffArgs = {
+export type DescriptionVersiondiffArgs = {
   versionId?: InputMaybe<Scalars["DescriptionVersionID"]["input"]>;
 };
 
@@ -17584,7 +17583,7 @@ export type Design = CurrentUserTodos &
   };
 
 /** A single design */
-export type DesignCommentersArgs = {
+export type DesigncommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -17592,7 +17591,7 @@ export type DesignCommentersArgs = {
 };
 
 /** A single design */
-export type DesignCurrentUserTodosArgs = {
+export type DesigncurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -17601,7 +17600,7 @@ export type DesignCurrentUserTodosArgs = {
 };
 
 /** A single design */
-export type DesignDiscussionsArgs = {
+export type DesigndiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -17609,7 +17608,7 @@ export type DesignDiscussionsArgs = {
 };
 
 /** A single design */
-export type DesignNotesArgs = {
+export type DesignnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -17618,7 +17617,7 @@ export type DesignNotesArgs = {
 };
 
 /** A single design */
-export type DesignVersionsArgs = {
+export type DesignversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   earlierOrEqualToId?: InputMaybe<Scalars["DesignManagementVersionID"]["input"]>;
@@ -17698,18 +17697,18 @@ export type DesignCollection = {
 };
 
 /** A collection of designs */
-export type DesignCollectionDesignArgs = {
+export type DesignCollectiondesignArgs = {
   filename?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["DesignManagementDesignID"]["input"]>;
 };
 
 /** A collection of designs */
-export type DesignCollectionDesignAtVersionArgs = {
+export type DesignCollectiondesignAtVersionArgs = {
   id: Scalars["DesignManagementDesignAtVersionID"]["input"];
 };
 
 /** A collection of designs */
-export type DesignCollectionDesignsArgs = {
+export type DesignCollectiondesignsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   atVersion?: InputMaybe<Scalars["DesignManagementVersionID"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -17720,13 +17719,13 @@ export type DesignCollectionDesignsArgs = {
 };
 
 /** A collection of designs */
-export type DesignCollectionVersionArgs = {
+export type DesignCollectionversionArgs = {
   id?: InputMaybe<Scalars["DesignManagementVersionID"]["input"]>;
   sha?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** A collection of designs */
-export type DesignCollectionVersionsArgs = {
+export type DesignCollectionversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   earlierOrEqualToId?: InputMaybe<Scalars["DesignManagementVersionID"]["input"]>;
@@ -17738,11 +17737,11 @@ export type DesignCollectionVersionsArgs = {
 /** Copy state of a DesignCollection */
 export enum DesignCollectionCopyState {
   /** The DesignCollection encountered an error during a copy */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** The DesignCollection is being copied */
-  InProgress = "IN_PROGRESS",
+  IN_PROGRESS = "IN_PROGRESS",
   /** The DesignCollection has no copy in progress */
-  Ready = "READY",
+  READY = "READY",
 }
 
 /** The connection type for Design. */
@@ -17796,11 +17795,11 @@ export type DesignManagement = {
   version?: Maybe<DesignVersion>;
 };
 
-export type DesignManagementDesignAtVersionArgs = {
+export type DesignManagementdesignAtVersionArgs = {
   id: Scalars["DesignManagementDesignAtVersionID"]["input"];
 };
 
-export type DesignManagementVersionArgs = {
+export type DesignManagementversionArgs = {
   id: Scalars["DesignManagementVersionID"]["input"];
 };
 
@@ -17912,7 +17911,7 @@ export type DesignManagementRepositoryRegistryConnection = {
 };
 
 /** The connection type for DesignManagementRepositoryRegistry. */
-export type DesignManagementRepositoryRegistryConnectionCountArgs = {
+export type DesignManagementRepositoryRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -17991,14 +17990,14 @@ export type DesignVersion = {
 };
 
 /** A specific version in which designs were added, modified or deleted */
-export type DesignVersionDesignAtVersionArgs = {
+export type DesignVersiondesignAtVersionArgs = {
   designId?: InputMaybe<Scalars["DesignManagementDesignID"]["input"]>;
   filename?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["DesignManagementDesignAtVersionID"]["input"]>;
 };
 
 /** A specific version in which designs were added, modified or deleted */
-export type DesignVersionDesignsArgs = {
+export type DesignVersiondesignsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -18006,7 +18005,7 @@ export type DesignVersionDesignsArgs = {
 };
 
 /** A specific version in which designs were added, modified or deleted */
-export type DesignVersionDesignsAtVersionArgs = {
+export type DesignVersiondesignsAtVersionArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filenames?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -18038,13 +18037,13 @@ export type DesignVersionEdge = {
 /** Mutation event of a design within a version */
 export enum DesignVersionEvent {
   /** A creation event */
-  Creation = "CREATION",
+  CREATION = "CREATION",
   /** A deletion event */
-  Deletion = "DELETION",
+  DELETION = "DELETION",
   /** A modification event */
-  Modification = "MODIFICATION",
+  MODIFICATION = "MODIFICATION",
   /** No change. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Autogenerated input type of DestroyBoard */
@@ -18346,51 +18345,51 @@ export type DetailedImportStatus = {
 /** Detailed representation of whether a GitLab merge request can be merged. */
 export enum DetailedMergeStatus {
   /** Merge request approvals currently syncing. */
-  ApprovalsSyncing = "APPROVALS_SYNCING",
+  APPROVALS_SYNCING = "APPROVALS_SYNCING",
   /** Merge request dependencies must be merged. */
-  BlockedStatus = "BLOCKED_STATUS",
+  BLOCKED_STATUS = "BLOCKED_STATUS",
   /** Currently checking for mergeability. */
-  Checking = "CHECKING",
+  CHECKING = "CHECKING",
   /** Pipeline must succeed before merging. */
-  CiMustPass = "CI_MUST_PASS",
+  CI_MUST_PASS = "CI_MUST_PASS",
   /** Pipeline is still running. */
-  CiStillRunning = "CI_STILL_RUNNING",
+  CI_STILL_RUNNING = "CI_STILL_RUNNING",
   /** Source branch exists and contains commits. */
-  CommitsStatus = "COMMITS_STATUS",
+  COMMITS_STATUS = "COMMITS_STATUS",
   /** There are conflicts between the source and target branches. */
-  Conflict = "CONFLICT",
+  CONFLICT = "CONFLICT",
   /** Discussions must be resolved before merging. */
-  DiscussionsNotResolved = "DISCUSSIONS_NOT_RESOLVED",
+  DISCUSSIONS_NOT_RESOLVED = "DISCUSSIONS_NOT_RESOLVED",
   /** Merge request must not be draft before merging. */
-  DraftStatus = "DRAFT_STATUS",
+  DRAFT_STATUS = "DRAFT_STATUS",
   /** Status checks must pass. */
-  ExternalStatusChecks = "EXTERNAL_STATUS_CHECKS",
+  EXTERNAL_STATUS_CHECKS = "EXTERNAL_STATUS_CHECKS",
   /** Either the title or description must reference a Jira issue. */
-  JiraAssociation = "JIRA_ASSOCIATION",
+  JIRA_ASSOCIATION = "JIRA_ASSOCIATION",
   /** Merge request includes locked LFS files. */
-  LockedLfsFiles = "LOCKED_LFS_FILES",
+  LOCKED_LFS_FILES = "LOCKED_LFS_FILES",
   /** Merge request includes locked paths. */
-  LockedPaths = "LOCKED_PATHS",
+  LOCKED_PATHS = "LOCKED_PATHS",
   /** Branch can be merged. */
-  Mergeable = "MERGEABLE",
+  MERGEABLE = "MERGEABLE",
   /** Merge request may not be merged until after the specified time. */
-  MergeTime = "MERGE_TIME",
+  MERGE_TIME = "MERGE_TIME",
   /** Merge request needs to be rebased. */
-  NeedRebase = "NEED_REBASE",
+  NEED_REBASE = "NEED_REBASE",
   /** Merge request must be approved before merging. */
-  NotApproved = "NOT_APPROVED",
+  NOT_APPROVED = "NOT_APPROVED",
   /** Merge request must be open before merging. */
-  NotOpen = "NOT_OPEN",
+  NOT_OPEN = "NOT_OPEN",
   /** Merge request diff is being created. */
-  Preparing = "PREPARING",
+  PREPARING = "PREPARING",
   /** Indicates a reviewer has requested changes. */
-  RequestedChanges = "REQUESTED_CHANGES",
+  REQUESTED_CHANGES = "REQUESTED_CHANGES",
   /** All policy rules must be satisfied. */
-  SecurityPoliciesViolations = "SECURITY_POLICIES_VIOLATIONS",
+  SECURITY_POLICIES_VIOLATIONS = "SECURITY_POLICIES_VIOLATIONS",
   /** Merge request title does not match required regex. */
-  TitleNotMatching = "TITLE_NOT_MATCHING",
+  TITLE_NOT_MATCHING = "TITLE_NOT_MATCHING",
   /** Merge status has not been checked. */
-  Unchecked = "UNCHECKED",
+  UNCHECKED = "UNCHECKED",
 }
 
 export type DetailedStatus = {
@@ -18465,7 +18464,7 @@ export type DevopsAdoptionEnabledNamespace = {
 };
 
 /** Enabled namespace for DevopsAdoption */
-export type DevopsAdoptionEnabledNamespaceSnapshotsArgs = {
+export type DevopsAdoptionEnabledNamespacesnapshotsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endTimeAfter?: InputMaybe<Scalars["Time"]["input"]>;
@@ -18645,11 +18644,11 @@ export type DiffPositionInput = {
 /** Type of file the position refers to */
 export enum DiffPositionType {
   /** Unknown file type. */
-  File = "file",
+  file = "file",
   /** An image. */
-  Image = "image",
+  image = "image",
   /** Text file. */
-  Text = "text",
+  text = "text",
 }
 
 export type DiffRefs = {
@@ -18728,7 +18727,7 @@ export type Discussion = BaseDiscussionInterface &
     userPermissions: DiscussionPermissions;
   };
 
-export type DiscussionNotesArgs = {
+export type DiscussionnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -18812,13 +18811,13 @@ export type DismissPolicyViolationsPayload = {
 /** Represents the different dismissal types for security policy violations. */
 export enum DismissalType {
   /** Dismissal due to emergency hot fix. */
-  EmergencyHotFix = "EMERGENCY_HOT_FIX",
+  EMERGENCY_HOT_FIX = "EMERGENCY_HOT_FIX",
   /** Dismissal due to other reasons. */
-  Other = "OTHER",
+  OTHER = "OTHER",
   /** Dismissal due to policy false positive. */
-  PolicyFalsePositive = "POLICY_FALSE_POSITIVE",
+  POLICY_FALSE_POSITIVE = "POLICY_FALSE_POSITIVE",
   /** Dismissal due to scanner false positive. */
-  ScannerFalsePositive = "SCANNER_FALSE_POSITIVE",
+  SCANNER_FALSE_POSITIVE = "SCANNER_FALSE_POSITIVE",
 }
 
 /** All information related to DORA metrics. */
@@ -18829,7 +18828,7 @@ export type Dora = {
 };
 
 /** All information related to DORA metrics. */
-export type DoraMetricsArgs = {
+export type DorametricsArgs = {
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
   environmentTiers?: InputMaybe<Array<DeploymentTier>>;
   interval?: InputMaybe<DoraMetricBucketingInterval>;
@@ -18853,11 +18852,11 @@ export type DoraMetric = {
 /** All possible ways that DORA metrics can be aggregated. */
 export enum DoraMetricBucketingInterval {
   /** All data points are combined into a single value. */
-  All = "ALL",
+  ALL = "ALL",
   /** Data points are combined into chunks by day. */
-  Daily = "DAILY",
+  DAILY = "DAILY",
   /** Data points are combined into chunks by month. */
-  Monthly = "MONTHLY",
+  MONTHLY = "MONTHLY",
 }
 
 /** Aggregated DORA score counts for projects for the last complete month. */
@@ -19134,23 +19133,23 @@ export type DuoWorkflowEventEdge = {
 /** The status of the workflow. */
 export enum DuoWorkflowStatus {
   /** The workflow is created. */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** The workflow is failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** The workflow is finished. */
-  Finished = "FINISHED",
+  FINISHED = "FINISHED",
   /** The workflow is input_required. */
-  InputRequired = "INPUT_REQUIRED",
+  INPUT_REQUIRED = "INPUT_REQUIRED",
   /** The workflow is paused. */
-  Paused = "PAUSED",
+  PAUSED = "PAUSED",
   /** The workflow is plan_approval_required. */
-  PlanApprovalRequired = "PLAN_APPROVAL_REQUIRED",
+  PLAN_APPROVAL_REQUIRED = "PLAN_APPROVAL_REQUIRED",
   /** The workflow is running. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** The workflow is stopped. */
-  Stopped = "STOPPED",
+  STOPPED = "STOPPED",
   /** The workflow is tool_call_approval_required. */
-  ToolCallApprovalRequired = "TOOL_CALL_APPROVAL_REQUIRED",
+  TOOL_CALL_APPROVAL_REQUIRED = "TOOL_CALL_APPROVAL_REQUIRED",
 }
 
 /** Autogenerated input type of EchoCreate */
@@ -19332,11 +19331,11 @@ export type Entry = {
 /** Type of a tree entry */
 export enum EntryType {
   /** File tree type. */
-  Blob = "blob",
+  blob = "blob",
   /** Commit tree type. */
-  Commit = "commit",
+  commit = "commit",
   /** Directory tree type. */
-  Tree = "tree",
+  tree = "tree",
 }
 
 /** Describes where code is deployed for a project */
@@ -19395,7 +19394,7 @@ export type Environment = {
 };
 
 /** Describes where code is deployed for a project */
-export type EnvironmentDeploymentsArgs = {
+export type EnvironmentdeploymentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19405,12 +19404,12 @@ export type EnvironmentDeploymentsArgs = {
 };
 
 /** Describes where code is deployed for a project */
-export type EnvironmentLastDeploymentArgs = {
+export type EnvironmentlastDeploymentArgs = {
   status: DeploymentStatus;
 };
 
 /** Describes where code is deployed for a project */
-export type EnvironmentProtectedEnvironmentsArgs = {
+export type EnvironmentprotectedEnvironmentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19707,7 +19706,7 @@ export type Epic = CurrentUserTodos &
   };
 
 /** Represents an epic */
-export type EpicAncestorsArgs = {
+export type EpicancestorsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -19738,7 +19737,7 @@ export type EpicAncestorsArgs = {
 };
 
 /** Represents an epic */
-export type EpicAwardEmojiArgs = {
+export type EpicawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19746,7 +19745,7 @@ export type EpicAwardEmojiArgs = {
 };
 
 /** Represents an epic */
-export type EpicBlockedByEpicsArgs = {
+export type EpicblockedByEpicsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19754,7 +19753,7 @@ export type EpicBlockedByEpicsArgs = {
 };
 
 /** Represents an epic */
-export type EpicChildrenArgs = {
+export type EpicchildrenArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -19785,7 +19784,7 @@ export type EpicChildrenArgs = {
 };
 
 /** Represents an epic */
-export type EpicCommentersArgs = {
+export type EpiccommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19793,7 +19792,7 @@ export type EpicCommentersArgs = {
 };
 
 /** Represents an epic */
-export type EpicCurrentUserTodosArgs = {
+export type EpiccurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19802,7 +19801,7 @@ export type EpicCurrentUserTodosArgs = {
 };
 
 /** Represents an epic */
-export type EpicDiscussionsArgs = {
+export type EpicdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19810,7 +19809,7 @@ export type EpicDiscussionsArgs = {
 };
 
 /** Represents an epic */
-export type EpicEventsArgs = {
+export type EpiceventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19818,7 +19817,7 @@ export type EpicEventsArgs = {
 };
 
 /** Represents an epic */
-export type EpicIssuesArgs = {
+export type EpicissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19826,7 +19825,7 @@ export type EpicIssuesArgs = {
 };
 
 /** Represents an epic */
-export type EpicLabelsArgs = {
+export type EpiclabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19834,7 +19833,7 @@ export type EpicLabelsArgs = {
 };
 
 /** Represents an epic */
-export type EpicLinkedWorkItemsArgs = {
+export type EpiclinkedWorkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<WorkItemRelatedLinkType>;
@@ -19843,7 +19842,7 @@ export type EpicLinkedWorkItemsArgs = {
 };
 
 /** Represents an epic */
-export type EpicNotesArgs = {
+export type EpicnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -19852,7 +19851,7 @@ export type EpicNotesArgs = {
 };
 
 /** Represents an epic */
-export type EpicParticipantsArgs = {
+export type EpicparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19860,7 +19859,7 @@ export type EpicParticipantsArgs = {
 };
 
 /** Represents an epic */
-export type EpicReferenceArgs = {
+export type EpicreferenceArgs = {
   full?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
@@ -19915,7 +19914,7 @@ export type EpicBoard = {
 };
 
 /** Represents an epic board */
-export type EpicBoardLabelsArgs = {
+export type EpicBoardlabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -19923,7 +19922,7 @@ export type EpicBoardLabelsArgs = {
 };
 
 /** Represents an epic board */
-export type EpicBoardListsArgs = {
+export type EpicBoardlistsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   epicFilters?: InputMaybe<EpicFilters>;
@@ -20326,7 +20325,7 @@ export type EpicIssue = CurrentUserTodos &
   };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueAlertManagementAlertsArgs = {
+export type EpicIssuealertManagementAlertsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -20340,7 +20339,7 @@ export type EpicIssueAlertManagementAlertsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueAssigneesArgs = {
+export type EpicIssueassigneesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20348,7 +20347,7 @@ export type EpicIssueAssigneesArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueBlockedByIssuesArgs = {
+export type EpicIssueblockedByIssuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20356,7 +20355,7 @@ export type EpicIssueBlockedByIssuesArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueCommentersArgs = {
+export type EpicIssuecommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20364,7 +20363,7 @@ export type EpicIssueCommentersArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueCurrentUserTodosArgs = {
+export type EpicIssuecurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20373,7 +20372,7 @@ export type EpicIssueCurrentUserTodosArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueCustomerRelationsContactsArgs = {
+export type EpicIssuecustomerRelationsContactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20381,7 +20380,7 @@ export type EpicIssueCustomerRelationsContactsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueDiscussionsArgs = {
+export type EpicIssuediscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20389,7 +20388,7 @@ export type EpicIssueDiscussionsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueIssuableResourceLinksArgs = {
+export type EpicIssueissuableResourceLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20398,7 +20397,7 @@ export type EpicIssueIssuableResourceLinksArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueLabelsArgs = {
+export type EpicIssuelabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20406,7 +20405,7 @@ export type EpicIssueLabelsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueLinkedWorkItemsArgs = {
+export type EpicIssuelinkedWorkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<WorkItemRelatedLinkType>;
@@ -20415,7 +20414,7 @@ export type EpicIssueLinkedWorkItemsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueNotesArgs = {
+export type EpicIssuenotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -20424,7 +20423,7 @@ export type EpicIssueNotesArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueParticipantsArgs = {
+export type EpicIssueparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20432,12 +20431,12 @@ export type EpicIssueParticipantsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueReferenceArgs = {
+export type EpicIssuereferenceArgs = {
   full?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueRelatedMergeRequestsArgs = {
+export type EpicIssuerelatedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20445,7 +20444,7 @@ export type EpicIssueRelatedMergeRequestsArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueRelatedVulnerabilitiesArgs = {
+export type EpicIssuerelatedVulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20453,7 +20452,7 @@ export type EpicIssueRelatedVulnerabilitiesArgs = {
 };
 
 /** Relationship between an epic and an issue */
-export type EpicIssueTimelogsArgs = {
+export type EpicIssuetimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -20506,7 +20505,7 @@ export type EpicList = {
 };
 
 /** Represents an epic board list */
-export type EpicListEpicsArgs = {
+export type EpicListepicsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<EpicFilters>;
@@ -20626,63 +20625,63 @@ export type EpicSetSubscriptionPayload = {
 /** Roadmap sort values */
 export enum EpicSort {
   /** Sort by created_at by ascending order. */
-  CreatedAtAsc = "CREATED_AT_ASC",
+  CREATED_AT_ASC = "CREATED_AT_ASC",
   /** Sort by created_at by descending order. */
-  CreatedAtDesc = "CREATED_AT_DESC",
+  CREATED_AT_DESC = "CREATED_AT_DESC",
   /** Sort by end date in ascending order. */
-  EndDateAsc = "END_DATE_ASC",
+  END_DATE_ASC = "END_DATE_ASC",
   /** Sort by end date in descending order. */
-  EndDateDesc = "END_DATE_DESC",
+  END_DATE_DESC = "END_DATE_DESC",
   /** Sort by start date in ascending order. */
-  StartDateAsc = "START_DATE_ASC",
+  START_DATE_ASC = "START_DATE_ASC",
   /** Sort by start date in descending order. */
-  StartDateDesc = "START_DATE_DESC",
+  START_DATE_DESC = "START_DATE_DESC",
   /** Sort by title in ascending order. */
-  TitleAsc = "TITLE_ASC",
+  TITLE_ASC = "TITLE_ASC",
   /** Sort by title in descending order. */
-  TitleDesc = "TITLE_DESC",
+  TITLE_DESC = "TITLE_DESC",
   /** Sort by updated_at by ascending order. */
-  UpdatedAtAsc = "UPDATED_AT_ASC",
+  UPDATED_AT_ASC = "UPDATED_AT_ASC",
   /** Sort by updated_at by descending order. */
-  UpdatedAtDesc = "UPDATED_AT_DESC",
+  UPDATED_AT_DESC = "UPDATED_AT_DESC",
   /**
    * End date at ascending order. Deprecated in GitLab 13.11: Use END_DATE_ASC.
    * @deprecated Use END_DATE_ASC. Deprecated in GitLab 13.11.
    */
-  EndDateAsc = "end_date_asc",
+  end_date_asc = "end_date_asc",
   /**
    * End date at descending order. Deprecated in GitLab 13.11: Use END_DATE_DESC.
    * @deprecated Use END_DATE_DESC. Deprecated in GitLab 13.11.
    */
-  EndDateDesc = "end_date_desc",
+  end_date_desc = "end_date_desc",
   /**
    * Start date at ascending order. Deprecated in GitLab 13.11: Use START_DATE_ASC.
    * @deprecated Use START_DATE_ASC. Deprecated in GitLab 13.11.
    */
-  StartDateAsc = "start_date_asc",
+  start_date_asc = "start_date_asc",
   /**
    * Start date at descending order. Deprecated in GitLab 13.11: Use START_DATE_DESC.
    * @deprecated Use START_DATE_DESC. Deprecated in GitLab 13.11.
    */
-  StartDateDesc = "start_date_desc",
+  start_date_desc = "start_date_desc",
 }
 
 /** State of an epic */
 export enum EpicState {
   /** All epics. */
-  All = "all",
+  all = "all",
   /** Closed epics. */
-  Closed = "closed",
+  closed = "closed",
   /** Open epics. */
-  Opened = "opened",
+  opened = "opened",
 }
 
 /** State event of an epic */
 export enum EpicStateEvent {
   /** Close the epic. */
-  Close = "CLOSE",
+  CLOSE = "CLOSE",
   /** Reopen the epic. */
-  Reopen = "REOPEN",
+  REOPEN = "REOPEN",
 }
 
 /** A node of an epic tree. */
@@ -20719,9 +20718,9 @@ export type EpicTreeReorderPayload = {
 /** Epic ID wildcard values */
 export enum EpicWildcardId {
   /** Any epic is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No epic is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Represents a stack trace */
@@ -20766,13 +20765,13 @@ export type ErrorTrackingStackTraceEdge = {
 /** Status of the error tracking service */
 export enum ErrorTrackingStatus {
   /** Error tracking service respond with an error. */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** Sentry issue not found. */
-  NotFound = "NOT_FOUND",
+  NOT_FOUND = "NOT_FOUND",
   /** Error tracking service is not ready. */
-  Retry = "RETRY",
+  RETRY = "RETRY",
   /** Successfuly fetch the stack trace. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 /** Autogenerated input type of EscalationPolicyCreate */
@@ -20892,9 +20891,9 @@ export type EscalationRuleInput = {
 /** Escalation rule statuses */
 export enum EscalationRuleStatus {
   /** . */
-  Acknowledged = "ACKNOWLEDGED",
+  ACKNOWLEDGED = "ACKNOWLEDGED",
   /** . */
-  Resolved = "RESOLVED",
+  RESOLVED = "RESOLVED",
 }
 
 /** Represents an escalation rule for an escalation policy */
@@ -20934,29 +20933,29 @@ export type Event = {
 /** Event action */
 export enum EventAction {
   /** Approved action */
-  Approved = "APPROVED",
+  APPROVED = "APPROVED",
   /** Closed action */
-  Closed = "CLOSED",
+  CLOSED = "CLOSED",
   /** Commented action */
-  Commented = "COMMENTED",
+  COMMENTED = "COMMENTED",
   /** Created action */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** Destroyed action */
-  Destroyed = "DESTROYED",
+  DESTROYED = "DESTROYED",
   /** Expired action */
-  Expired = "EXPIRED",
+  EXPIRED = "EXPIRED",
   /** Joined action */
-  Joined = "JOINED",
+  JOINED = "JOINED",
   /** Left action */
-  Left = "LEFT",
+  LEFT = "LEFT",
   /** Merged action */
-  Merged = "MERGED",
+  MERGED = "MERGED",
   /** Pushed action */
-  Pushed = "PUSHED",
+  PUSHED = "PUSHED",
   /** Reopened action */
-  Reopened = "REOPENED",
+  REOPENED = "REOPENED",
   /** Updated action */
-  Updated = "UPDATED",
+  UPDATED = "UPDATED",
 }
 
 /** The connection type for Event. */
@@ -20982,23 +20981,23 @@ export type EventEdge = {
 /** Event target */
 export enum EventTarget {
   /** All events */
-  All = "ALL",
+  ALL = "ALL",
   /** Comments events */
-  Comments = "COMMENTS",
+  COMMENTS = "COMMENTS",
   /** Designs events */
-  Designs = "DESIGNS",
+  DESIGNS = "DESIGNS",
   /** Epic events */
-  Epic = "EPIC",
+  EPIC = "EPIC",
   /** Issue events */
-  Issue = "ISSUE",
+  ISSUE = "ISSUE",
   /** Merged events */
-  Merged = "MERGED",
+  MERGED = "MERGED",
   /** Push events */
-  Push = "PUSH",
+  PUSH = "PUSH",
   /** Team events */
-  Team = "TEAM",
+  TEAM = "TEAM",
   /** Wiki events */
-  Wiki = "WIKI",
+  WIKI = "WIKI",
 }
 
 /** Represents an object that can be the subject of an event. */
@@ -21009,7 +21008,7 @@ export type Eventable = {
   events?: Maybe<EventConnection>;
 };
 
-export type EventableEventsArgs = {
+export type EventableeventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21019,19 +21018,19 @@ export type EventableEventsArgs = {
 /** Enum for the security scanners used with exclusions */
 export enum ExclusionScannerEnum {
   /** Secret Push Protection. */
-  SecretPushProtection = "SECRET_PUSH_PROTECTION",
+  SECRET_PUSH_PROTECTION = "SECRET_PUSH_PROTECTION",
 }
 
 /** Enum for types of exclusion for a security scanner */
 export enum ExclusionTypeEnum {
   /** File or directory location. */
-  Path = "PATH",
+  PATH = "PATH",
   /** Raw value to ignore. */
-  RawValue = "RAW_VALUE",
+  RAW_VALUE = "RAW_VALUE",
   /** Regex pattern matching rules. */
-  RegexPattern = "REGEX_PATTERN",
+  REGEX_PATTERN = "REGEX_PATTERN",
   /** Scanner rule identifier. */
-  Rule = "RULE",
+  RULE = "RULE",
 }
 
 /** Autogenerated input type of ExportRequirements */
@@ -21075,11 +21074,11 @@ export type ExpressionValue = BooleanExpression | IntegerExpression | StringExpr
 /** Values for status of the Web IDE Extension Marketplace opt-in for the user */
 export enum ExtensionsMarketplaceOptInStatus {
   /** Web IDE Extension Marketplace opt-in status: DISABLED. */
-  Disabled = "DISABLED",
+  DISABLED = "DISABLED",
   /** Web IDE Extension Marketplace opt-in status: ENABLED. */
-  Enabled = "ENABLED",
+  ENABLED = "ENABLED",
   /** Web IDE Extension Marketplace opt-in status: UNSET. */
-  Unset = "UNSET",
+  UNSET = "UNSET",
 }
 
 /** Represents an external resource to send audit events to */
@@ -21100,13 +21099,13 @@ export type ExternalAuditEventDestination = ExternalAuditEventDestinationInterfa
   /** Name of the external destination to send audit events to. */
   name: Scalars["String"]["output"];
   /** List of subgroup or project filters for the destination. */
-  namespaceFilter?: Maybe<AuditEventStreamingHttpNamespaceFilter>;
+  namespaceFilter?: Maybe<AuditEventStreamingHTTPNamespaceFilter>;
   /** Verification token to validate source of event. */
   verificationToken: Scalars["String"]["output"];
 };
 
 /** Represents an external resource to send audit events to */
-export type ExternalAuditEventDestinationHeadersArgs = {
+export type ExternalAuditEventDestinationheadersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21328,11 +21327,11 @@ export type FindingReportsComparer = {
 /** Report comparison status */
 export enum FindingReportsComparerStatus {
   /** An error happened while generating the report. */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** Report was generated. */
-  Parsed = "PARSED",
+  PARSED = "PARSED",
   /** Report is being generated. */
-  Parsing = "PARSING",
+  PARSING = "PARSING",
 }
 
 /** Details of the fork project compared to its upstream project. */
@@ -21422,7 +21421,7 @@ export type GeoNode = {
   verificationMaxCapacity?: Maybe<Scalars["Int"]["output"]>;
 };
 
-export type GeoNodeCiSecureFileRegistriesArgs = {
+export type GeoNodeciSecureFileRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21433,7 +21432,7 @@ export type GeoNodeCiSecureFileRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeContainerRepositoryRegistriesArgs = {
+export type GeoNodecontainerRepositoryRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21444,7 +21443,7 @@ export type GeoNodeContainerRepositoryRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeDependencyProxyBlobRegistriesArgs = {
+export type GeoNodedependencyProxyBlobRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21455,7 +21454,7 @@ export type GeoNodeDependencyProxyBlobRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeDependencyProxyManifestRegistriesArgs = {
+export type GeoNodedependencyProxyManifestRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21466,7 +21465,7 @@ export type GeoNodeDependencyProxyManifestRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeDesignManagementRepositoryRegistriesArgs = {
+export type GeoNodedesignManagementRepositoryRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21477,7 +21476,7 @@ export type GeoNodeDesignManagementRepositoryRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeGroupWikiRepositoryRegistriesArgs = {
+export type GeoNodegroupWikiRepositoryRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21488,7 +21487,7 @@ export type GeoNodeGroupWikiRepositoryRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeJobArtifactRegistriesArgs = {
+export type GeoNodejobArtifactRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21499,7 +21498,7 @@ export type GeoNodeJobArtifactRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeLfsObjectRegistriesArgs = {
+export type GeoNodelfsObjectRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21510,7 +21509,7 @@ export type GeoNodeLfsObjectRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeMergeRequestDiffRegistriesArgs = {
+export type GeoNodemergeRequestDiffRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21521,7 +21520,7 @@ export type GeoNodeMergeRequestDiffRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodePackageFileRegistriesArgs = {
+export type GeoNodepackageFileRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21532,7 +21531,7 @@ export type GeoNodePackageFileRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodePagesDeploymentRegistriesArgs = {
+export type GeoNodepagesDeploymentRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21543,7 +21542,7 @@ export type GeoNodePagesDeploymentRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodePipelineArtifactRegistriesArgs = {
+export type GeoNodepipelineArtifactRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21554,7 +21553,7 @@ export type GeoNodePipelineArtifactRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeProjectRepositoryRegistriesArgs = {
+export type GeoNodeprojectRepositoryRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21565,7 +21564,7 @@ export type GeoNodeProjectRepositoryRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeProjectWikiRepositoryRegistriesArgs = {
+export type GeoNodeprojectWikiRepositoryRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21576,14 +21575,14 @@ export type GeoNodeProjectWikiRepositoryRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeSelectiveSyncNamespacesArgs = {
+export type GeoNodeselectiveSyncNamespacesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GeoNodeSnippetRepositoryRegistriesArgs = {
+export type GeoNodesnippetRepositoryRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21594,7 +21593,7 @@ export type GeoNodeSnippetRepositoryRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeTerraformStateVersionRegistriesArgs = {
+export type GeoNodeterraformStateVersionRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21605,7 +21604,7 @@ export type GeoNodeTerraformStateVersionRegistriesArgs = {
   verificationState?: InputMaybe<VerificationStateEnum>;
 };
 
-export type GeoNodeUploadRegistriesArgs = {
+export type GeoNodeuploadRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -21619,9 +21618,9 @@ export type GeoNodeUploadRegistriesArgs = {
 /** Action to trigger on multiple Geo registries */
 export enum GeoRegistriesBulkAction {
   /** Resync multiple registries. */
-  ResyncAll = "RESYNC_ALL",
+  RESYNC_ALL = "RESYNC_ALL",
   /** Reverify multiple registries. */
-  ReverifyAll = "REVERIFY_ALL",
+  REVERIFY_ALL = "REVERIFY_ALL",
 }
 
 /** Autogenerated input type of GeoRegistriesBulkUpdate */
@@ -21675,63 +21674,63 @@ export type GeoRegistriesUpdatePayload = {
 /** Action to trigger on an individual Geo registry */
 export enum GeoRegistryAction {
   /** Resync a registry. */
-  Resync = "RESYNC",
+  RESYNC = "RESYNC",
   /** Reverify a registry. */
-  Reverify = "REVERIFY",
+  REVERIFY = "REVERIFY",
 }
 
 /** Geo registry class */
 export enum GeoRegistryClass {
   /** Geo::CiSecureFileRegistry registry class */
-  CiSecureFileRegistry = "CI_SECURE_FILE_REGISTRY",
+  CI_SECURE_FILE_REGISTRY = "CI_SECURE_FILE_REGISTRY",
   /** Geo::ContainerRepositoryRegistry registry class */
-  ContainerRepositoryRegistry = "CONTAINER_REPOSITORY_REGISTRY",
+  CONTAINER_REPOSITORY_REGISTRY = "CONTAINER_REPOSITORY_REGISTRY",
   /** Geo::DependencyProxyBlobRegistry registry class */
-  DependencyProxyBlobRegistry = "DEPENDENCY_PROXY_BLOB_REGISTRY",
+  DEPENDENCY_PROXY_BLOB_REGISTRY = "DEPENDENCY_PROXY_BLOB_REGISTRY",
   /** Geo::DependencyProxyManifestRegistry registry class */
-  DependencyProxyManifestRegistry = "DEPENDENCY_PROXY_MANIFEST_REGISTRY",
+  DEPENDENCY_PROXY_MANIFEST_REGISTRY = "DEPENDENCY_PROXY_MANIFEST_REGISTRY",
   /** Geo::DesignManagementRepositoryRegistry registry class */
-  DesignManagementRepositoryRegistry = "DESIGN_MANAGEMENT_REPOSITORY_REGISTRY",
+  DESIGN_MANAGEMENT_REPOSITORY_REGISTRY = "DESIGN_MANAGEMENT_REPOSITORY_REGISTRY",
   /** Geo::GroupWikiRepositoryRegistry registry class */
-  GroupWikiRepositoryRegistry = "GROUP_WIKI_REPOSITORY_REGISTRY",
+  GROUP_WIKI_REPOSITORY_REGISTRY = "GROUP_WIKI_REPOSITORY_REGISTRY",
   /** Geo::JobArtifactRegistry registry class */
-  JobArtifactRegistry = "JOB_ARTIFACT_REGISTRY",
+  JOB_ARTIFACT_REGISTRY = "JOB_ARTIFACT_REGISTRY",
   /** Geo::LfsObjectRegistry registry class */
-  LfsObjectRegistry = "LFS_OBJECT_REGISTRY",
+  LFS_OBJECT_REGISTRY = "LFS_OBJECT_REGISTRY",
   /** Geo::MergeRequestDiffRegistry registry class */
-  MergeRequestDiffRegistry = "MERGE_REQUEST_DIFF_REGISTRY",
+  MERGE_REQUEST_DIFF_REGISTRY = "MERGE_REQUEST_DIFF_REGISTRY",
   /** Geo::PackageFileRegistry registry class */
-  PackageFileRegistry = "PACKAGE_FILE_REGISTRY",
+  PACKAGE_FILE_REGISTRY = "PACKAGE_FILE_REGISTRY",
   /** Geo::PagesDeploymentRegistry registry class */
-  PagesDeploymentRegistry = "PAGES_DEPLOYMENT_REGISTRY",
+  PAGES_DEPLOYMENT_REGISTRY = "PAGES_DEPLOYMENT_REGISTRY",
   /** Geo::PipelineArtifactRegistry registry class */
-  PipelineArtifactRegistry = "PIPELINE_ARTIFACT_REGISTRY",
+  PIPELINE_ARTIFACT_REGISTRY = "PIPELINE_ARTIFACT_REGISTRY",
   /** Geo::ProjectRepositoryRegistry registry class */
-  ProjectRepositoryRegistry = "PROJECT_REPOSITORY_REGISTRY",
+  PROJECT_REPOSITORY_REGISTRY = "PROJECT_REPOSITORY_REGISTRY",
   /** Geo::ProjectWikiRepositoryRegistry registry class */
-  ProjectWikiRepositoryRegistry = "PROJECT_WIKI_REPOSITORY_REGISTRY",
+  PROJECT_WIKI_REPOSITORY_REGISTRY = "PROJECT_WIKI_REPOSITORY_REGISTRY",
   /** Geo::SnippetRepositoryRegistry registry class */
-  SnippetRepositoryRegistry = "SNIPPET_REPOSITORY_REGISTRY",
+  SNIPPET_REPOSITORY_REGISTRY = "SNIPPET_REPOSITORY_REGISTRY",
   /** Geo::TerraformStateVersionRegistry registry class */
-  TerraformStateVersionRegistry = "TERRAFORM_STATE_VERSION_REGISTRY",
+  TERRAFORM_STATE_VERSION_REGISTRY = "TERRAFORM_STATE_VERSION_REGISTRY",
   /** Geo::UploadRegistry registry class */
-  UploadRegistry = "UPLOAD_REGISTRY",
+  UPLOAD_REGISTRY = "UPLOAD_REGISTRY",
 }
 
 /** Values for sorting Geo registries */
 export enum GeoRegistrySort {
   /** ID by ascending order. */
-  IdAsc = "ID_ASC",
+  ID_ASC = "ID_ASC",
   /** ID by descending order. */
-  IdDesc = "ID_DESC",
+  ID_DESC = "ID_DESC",
   /** Latest sync date by ascending order. */
-  LastSyncedAtAsc = "LAST_SYNCED_AT_ASC",
+  LAST_SYNCED_AT_ASC = "LAST_SYNCED_AT_ASC",
   /** Latest sync date by descending order. */
-  LastSyncedAtDesc = "LAST_SYNCED_AT_DESC",
+  LAST_SYNCED_AT_DESC = "LAST_SYNCED_AT_DESC",
   /** Latest verification date by ascending order. */
-  VerifiedAtAsc = "VERIFIED_AT_ASC",
+  VERIFIED_AT_ASC = "VERIFIED_AT_ASC",
   /** Latest verification date by descending order. */
-  VerifiedAtDesc = "VERIFIED_AT_DESC",
+  VERIFIED_AT_DESC = "VERIFIED_AT_DESC",
 }
 
 /** A feature flag for the GitLab instance. */
@@ -21806,48 +21805,48 @@ export type GitlabSubscriptionHistoryEdge = {
 /** Types of add-ons */
 export enum GitlabSubscriptionsAddOnType {
   /** GitLab Duo Pro add-on. */
-  CodeSuggestions = "CODE_SUGGESTIONS",
+  CODE_SUGGESTIONS = "CODE_SUGGESTIONS",
   /** GitLab Duo with Amazon Q add-on. */
-  DuoAmazonQ = "DUO_AMAZON_Q",
+  DUO_AMAZON_Q = "DUO_AMAZON_Q",
   /**
    * GitLab Duo Core add-on. Introduced in GitLab 18.0: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.0.
    */
-  DuoCore = "DUO_CORE",
+  DUO_CORE = "DUO_CORE",
   /** GitLab Duo Enterprise add-on. */
-  DuoEnterprise = "DUO_ENTERPRISE",
+  DUO_ENTERPRISE = "DUO_ENTERPRISE",
 }
 
 /** Role of User */
 export enum GitlabSubscriptionsUserRole {
   /** Developer. */
-  Developer = "DEVELOPER",
+  DEVELOPER = "DEVELOPER",
   /** Guest. */
-  Guest = "GUEST",
+  GUEST = "GUEST",
   /** Maintainer. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** Owner. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
   /** Planner. */
-  Planner = "PLANNER",
+  PLANNER = "PLANNER",
   /** Reporter. */
-  Reporter = "REPORTER",
+  REPORTER = "REPORTER",
 }
 
 /** Values for sorting users */
 export enum GitlabSubscriptionsUserSort {
   /** Id by ascending order. */
-  IdAsc = "ID_ASC",
+  ID_ASC = "ID_ASC",
   /** Id by descending order. */
-  IdDesc = "ID_DESC",
+  ID_DESC = "ID_DESC",
   /** Last activity by ascending order. */
-  LastActivityOnAsc = "LAST_ACTIVITY_ON_ASC",
+  LAST_ACTIVITY_ON_ASC = "LAST_ACTIVITY_ON_ASC",
   /** Last activity by descending order. */
-  LastActivityOnDesc = "LAST_ACTIVITY_ON_DESC",
+  LAST_ACTIVITY_ON_DESC = "LAST_ACTIVITY_ON_DESC",
   /** Name by ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Name by descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
 }
 
 /** A base type of Google Artifact Registry artifacts */
@@ -21879,29 +21878,29 @@ export type GoogleCloudArtifactRegistryArtifactEdge = {
 /** Values for sorting artifacts */
 export enum GoogleCloudArtifactRegistryArtifactsSort {
   /** Ordered by `build_time` in ascending order. */
-  BuildTimeAsc = "BUILD_TIME_ASC",
+  BUILD_TIME_ASC = "BUILD_TIME_ASC",
   /** Ordered by `build_time` in descending order. */
-  BuildTimeDesc = "BUILD_TIME_DESC",
+  BUILD_TIME_DESC = "BUILD_TIME_DESC",
   /** Ordered by `image_size_bytes` in ascending order. */
-  ImageSizeBytesAsc = "IMAGE_SIZE_BYTES_ASC",
+  IMAGE_SIZE_BYTES_ASC = "IMAGE_SIZE_BYTES_ASC",
   /** Ordered by `image_size_bytes` in descending order. */
-  ImageSizeBytesDesc = "IMAGE_SIZE_BYTES_DESC",
+  IMAGE_SIZE_BYTES_DESC = "IMAGE_SIZE_BYTES_DESC",
   /** Ordered by `media_type` in ascending order. */
-  MediaTypeAsc = "MEDIA_TYPE_ASC",
+  MEDIA_TYPE_ASC = "MEDIA_TYPE_ASC",
   /** Ordered by `media_type` in descending order. */
-  MediaTypeDesc = "MEDIA_TYPE_DESC",
+  MEDIA_TYPE_DESC = "MEDIA_TYPE_DESC",
   /** Ordered by `name` in ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Ordered by `name` in descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Ordered by `update_time` in ascending order. */
-  UpdateTimeAsc = "UPDATE_TIME_ASC",
+  UPDATE_TIME_ASC = "UPDATE_TIME_ASC",
   /** Ordered by `update_time` in descending order. */
-  UpdateTimeDesc = "UPDATE_TIME_DESC",
+  UPDATE_TIME_DESC = "UPDATE_TIME_DESC",
   /** Ordered by `upload_time` in ascending order. */
-  UploadTimeAsc = "UPLOAD_TIME_ASC",
+  UPLOAD_TIME_ASC = "UPLOAD_TIME_ASC",
   /** Ordered by `upload_time` in descending order. */
-  UploadTimeDesc = "UPLOAD_TIME_DESC",
+  UPLOAD_TIME_DESC = "UPLOAD_TIME_DESC",
 }
 
 /** Represents a docker artifact of Google Artifact Registry */
@@ -21970,7 +21969,7 @@ export type GoogleCloudArtifactRegistryRepository = {
 };
 
 /** Represents a repository of Google Artifact Registry */
-export type GoogleCloudArtifactRegistryRepositoryArtifactsArgs = {
+export type GoogleCloudArtifactRegistryRepositoryartifactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22780,7 +22779,7 @@ export type Group = GroupInterface &
     workspacesClusterAgents?: Maybe<ClusterAgentConnection>;
   };
 
-export type GroupAchievementsArgs = {
+export type GroupachievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22788,7 +22787,7 @@ export type GroupAchievementsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupAddOnEligibleUsersArgs = {
+export type GroupaddOnEligibleUsersArgs = {
   addOnPurchaseIds: Array<Scalars["GitlabSubscriptionsAddOnPurchaseID"]["input"]>;
   addOnType: GitlabSubscriptionsAddOnType;
   after?: InputMaybe<Scalars["String"]["input"]>;
@@ -22800,12 +22799,12 @@ export type GroupAddOnEligibleUsersArgs = {
   sort?: InputMaybe<GitlabSubscriptionsUserSort>;
 };
 
-export type GroupAiMetricsArgs = {
+export type GroupaiMetricsArgs = {
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
   startDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type GroupAiUserMetricsArgs = {
+export type GroupaiUserMetricsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
@@ -22814,14 +22813,14 @@ export type GroupAiUserMetricsArgs = {
   startDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type GroupAmazonS3ConfigurationsArgs = {
+export type GroupamazonS3ConfigurationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupApprovalPoliciesArgs = {
+export type GroupapprovalPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -22831,19 +22830,19 @@ export type GroupApprovalPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type GroupAutocompleteUsersArgs = {
+export type GroupautocompleteUsersArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupBillableMembersCountArgs = {
+export type GroupbillableMembersCountArgs = {
   requestedHostedPlan?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupBoardArgs = {
+export type GroupboardArgs = {
   id: Scalars["BoardID"]["input"];
 };
 
-export type GroupBoardsArgs = {
+export type GroupboardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22851,12 +22850,12 @@ export type GroupBoardsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupCiQueueingHistoryArgs = {
+export type GroupciQueueingHistoryArgs = {
   fromTime?: InputMaybe<Scalars["Time"]["input"]>;
   toTime?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type GroupCiVariablesArgs = {
+export type GroupciVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22864,7 +22863,7 @@ export type GroupCiVariablesArgs = {
   sort?: InputMaybe<CiVariableSort>;
 };
 
-export type GroupClusterAgentsArgs = {
+export type GroupclusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22874,7 +22873,7 @@ export type GroupClusterAgentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupCodeCoverageActivitiesArgs = {
+export type GroupcodeCoverageActivitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22882,7 +22881,7 @@ export type GroupCodeCoverageActivitiesArgs = {
   startDate: Scalars["Date"]["input"];
 };
 
-export type GroupComplianceFrameworksArgs = {
+export type GroupcomplianceFrameworksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22893,21 +22892,21 @@ export type GroupComplianceFrameworksArgs = {
   sort?: InputMaybe<ComplianceFrameworkSort>;
 };
 
-export type GroupComplianceFrameworksCoverageDetailsArgs = {
+export type GroupcomplianceFrameworksCoverageDetailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupComplianceFrameworksNeedingAttentionArgs = {
+export type GroupcomplianceFrameworksNeedingAttentionArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupComponentVersionsArgs = {
+export type GroupcomponentVersionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentName: Scalars["String"]["input"];
@@ -22915,16 +22914,16 @@ export type GroupComponentVersionsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupComponentsArgs = {
+export type GroupcomponentsArgs = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupContactStateCountsArgs = {
+export type GroupcontactStateCountsArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<CustomerRelationsContactState>;
 };
 
-export type GroupContactsArgs = {
+export type GroupcontactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22935,7 +22934,7 @@ export type GroupContactsArgs = {
   state?: InputMaybe<CustomerRelationsContactState>;
 };
 
-export type GroupContainerRepositoriesArgs = {
+export type GroupcontainerRepositoriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22944,14 +22943,14 @@ export type GroupContainerRepositoriesArgs = {
   sort?: InputMaybe<ContainerRepositorySort>;
 };
 
-export type GroupContributionsArgs = {
+export type GroupcontributionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   from: Scalars["ISO8601Date"]["input"];
   to: Scalars["ISO8601Date"]["input"];
 };
 
-export type GroupCustomEmojiArgs = {
+export type GroupcustomEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22959,11 +22958,11 @@ export type GroupCustomEmojiArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupCustomFieldArgs = {
+export type GroupcustomFieldArgs = {
   id: Scalars["IssuablesCustomFieldID"]["input"];
 };
 
-export type GroupCustomFieldsArgs = {
+export type GroupcustomFieldsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -22974,7 +22973,7 @@ export type GroupCustomFieldsArgs = {
   workItemTypeId?: InputMaybe<Scalars["WorkItemsTypeID"]["input"]>;
 };
 
-export type GroupCustomizableDashboardVisualizationsArgs = {
+export type GroupcustomizableDashboardVisualizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -22982,7 +22981,7 @@ export type GroupCustomizableDashboardVisualizationsArgs = {
   slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupCustomizableDashboardsArgs = {
+export type GroupcustomizableDashboardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<CustomizableDashboardCategory>;
@@ -22991,12 +22990,12 @@ export type GroupCustomizableDashboardsArgs = {
   slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupDataTransferArgs = {
+export type GroupdataTransferArgs = {
   from?: InputMaybe<Scalars["Date"]["input"]>;
   to?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type GroupDependenciesArgs = {
+export type GroupdependenciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentIds?: InputMaybe<Array<Scalars["SbomComponentID"]["input"]>>;
@@ -23009,7 +23008,7 @@ export type GroupDependenciesArgs = {
   sourceTypes?: InputMaybe<Array<SbomSourceType>>;
 };
 
-export type GroupDependencyAggregationsArgs = {
+export type GroupdependencyAggregationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentIds?: InputMaybe<Array<Scalars["SbomComponentID"]["input"]>>;
@@ -23024,21 +23023,21 @@ export type GroupDependencyAggregationsArgs = {
   sourceTypes?: InputMaybe<Array<SbomSourceType>>;
 };
 
-export type GroupDependencyProxyBlobsArgs = {
+export type GroupdependencyProxyBlobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupDependencyProxyManifestsArgs = {
+export type GroupdependencyProxyManifestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupDescendantGroupsArgs = {
+export type GroupdescendantGroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23050,7 +23049,7 @@ export type GroupDescendantGroupsArgs = {
   sort?: InputMaybe<GroupSort>;
 };
 
-export type GroupDoraPerformanceScoreCountsArgs = {
+export type GroupdoraPerformanceScoreCountsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23058,7 +23057,7 @@ export type GroupDoraPerformanceScoreCountsArgs = {
   projectFilters?: InputMaybe<DoraProjectFilterInput>;
 };
 
-export type GroupEnvironmentScopesArgs = {
+export type GroupenvironmentScopesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23067,7 +23066,7 @@ export type GroupEnvironmentScopesArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupEpicArgs = {
+export type GroupepicArgs = {
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   confidential?: InputMaybe<Scalars["Boolean"]["input"]>;
   createdAfter?: InputMaybe<Scalars["Time"]["input"]>;
@@ -23093,18 +23092,18 @@ export type GroupEpicArgs = {
   updatedBefore?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type GroupEpicBoardArgs = {
+export type GroupepicBoardArgs = {
   id: Scalars["BoardsEpicBoardID"]["input"];
 };
 
-export type GroupEpicBoardsArgs = {
+export type GroupepicBoardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupEpicsArgs = {
+export type GroupepicsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23134,21 +23133,21 @@ export type GroupEpicsArgs = {
   updatedBefore?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type GroupExternalAuditEventDestinationsArgs = {
+export type GroupexternalAuditEventDestinationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupExternalAuditEventStreamingDestinationsArgs = {
+export type GroupexternalAuditEventStreamingDestinationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupGitlabSubscriptionsPreviewBillableUserChangeArgs = {
+export type GroupgitlabSubscriptionsPreviewBillableUserChangeArgs = {
   addGroupId?: InputMaybe<Scalars["Int"]["input"]>;
   addUserEmails?: InputMaybe<Array<Scalars["String"]["input"]>>;
   addUserIds?: InputMaybe<Array<Scalars["Int"]["input"]>>;
@@ -23156,14 +23155,14 @@ export type GroupGitlabSubscriptionsPreviewBillableUserChangeArgs = {
   role: GitlabSubscriptionsUserRole;
 };
 
-export type GroupGoogleCloudLoggingConfigurationsArgs = {
+export type GroupgoogleCloudLoggingConfigurationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupGroupMembersArgs = {
+export type GroupgroupMembersArgs = {
   accessLevels?: InputMaybe<Array<AccessLevelEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23175,7 +23174,7 @@ export type GroupGroupMembersArgs = {
   sort?: InputMaybe<MemberSort>;
 };
 
-export type GroupImportSourceUsersArgs = {
+export type GroupimportSourceUsersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23185,7 +23184,7 @@ export type GroupImportSourceUsersArgs = {
   statuses?: InputMaybe<Array<ImportSourceUserStatus>>;
 };
 
-export type GroupIssuesArgs = {
+export type GroupissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeId?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -23233,7 +23232,7 @@ export type GroupIssuesArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type GroupIterationCadencesArgs = {
+export type GroupiterationCadencesArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   automatic?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -23246,7 +23245,7 @@ export type GroupIterationCadencesArgs = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupIterationsArgs = {
+export type GroupiterationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23263,11 +23262,11 @@ export type GroupIterationsArgs = {
   timeframe?: InputMaybe<Timeframe>;
 };
 
-export type GroupLabelArgs = {
+export type GrouplabelArgs = {
   title: Scalars["String"]["input"];
 };
 
-export type GroupLabelsArgs = {
+export type GrouplabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   archived?: InputMaybe<Scalars["Boolean"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23281,21 +23280,21 @@ export type GroupLabelsArgs = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupLifecyclesArgs = {
+export type GrouplifecyclesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupMavenVirtualRegistriesArgs = {
+export type GroupmavenVirtualRegistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupMemberRolesArgs = {
+export type GroupmemberRolesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23306,7 +23305,7 @@ export type GroupMemberRolesArgs = {
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type GroupMergeRequestViolationsArgs = {
+export type GroupmergeRequestViolationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<ComplianceViolationInput>;
@@ -23315,7 +23314,7 @@ export type GroupMergeRequestViolationsArgs = {
   sort?: InputMaybe<ComplianceViolationSort>;
 };
 
-export type GroupMergeRequestsArgs = {
+export type GroupmergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -23359,7 +23358,7 @@ export type GroupMergeRequestsArgs = {
   updatedBefore?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type GroupMilestonesArgs = {
+export type GroupmilestonesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   containingDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -23375,12 +23374,12 @@ export type GroupMilestonesArgs = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupOrganizationStateCountsArgs = {
+export type GrouporganizationStateCountsArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
   state?: InputMaybe<CustomerRelationsOrganizationState>;
 };
 
-export type GroupOrganizationsArgs = {
+export type GrouporganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23391,7 +23390,7 @@ export type GroupOrganizationsArgs = {
   state?: InputMaybe<CustomerRelationsOrganizationState>;
 };
 
-export type GroupPackagesArgs = {
+export type GrouppackagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23404,7 +23403,7 @@ export type GroupPackagesArgs = {
   status?: InputMaybe<PackageStatus>;
 };
 
-export type GroupPagesDeploymentsArgs = {
+export type GrouppagesDeploymentsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23414,28 +23413,28 @@ export type GroupPagesDeploymentsArgs = {
   versioned?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type GroupPendingMemberApprovalsArgs = {
+export type GrouppendingMemberApprovalsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupPendingMembersArgs = {
+export type GrouppendingMembersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupPipelineAnalyticsArgs = {
+export type GrouppipelineAnalyticsArgs = {
   fromTime?: InputMaybe<Scalars["Time"]["input"]>;
   ref?: InputMaybe<Scalars["String"]["input"]>;
   source?: InputMaybe<CiPipelineSources>;
   toTime?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type GroupPipelineExecutionPoliciesArgs = {
+export type GrouppipelineExecutionPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -23445,7 +23444,7 @@ export type GroupPipelineExecutionPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type GroupPipelineExecutionSchedulePoliciesArgs = {
+export type GrouppipelineExecutionSchedulePoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -23455,7 +23454,7 @@ export type GroupPipelineExecutionSchedulePoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type GroupProjectComplianceRequirementsStatusArgs = {
+export type GroupprojectComplianceRequirementsStatusArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<GroupProjectRequirementComplianceStatusInput>;
@@ -23464,7 +23463,7 @@ export type GroupProjectComplianceRequirementsStatusArgs = {
   orderBy?: InputMaybe<ProjectComplianceRequirementStatusOrderBy>;
 };
 
-export type GroupProjectComplianceStandardsAdherenceArgs = {
+export type GroupprojectComplianceStandardsAdherenceArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<ComplianceStandardsAdherenceInput>;
@@ -23472,14 +23471,14 @@ export type GroupProjectComplianceStandardsAdherenceArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupProjectComplianceViolationsArgs = {
+export type GroupprojectComplianceViolationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupProjectsArgs = {
+export type GroupprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   archivedOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23500,14 +23499,14 @@ export type GroupProjectsArgs = {
   withNamespaceDomainPages?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type GroupRecentIssueBoardsArgs = {
+export type GrouprecentIssueBoardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupReleasesArgs = {
+export type GroupreleasesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23515,7 +23514,7 @@ export type GroupReleasesArgs = {
   sort?: InputMaybe<GroupReleaseSort>;
 };
 
-export type GroupRemoteDevelopmentClusterAgentsArgs = {
+export type GroupremoteDevelopmentClusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter: NamespaceClusterAgentFilter;
@@ -23523,12 +23522,12 @@ export type GroupRemoteDevelopmentClusterAgentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupRunnerCloudProvisioningArgs = {
+export type GrouprunnerCloudProvisioningArgs = {
   cloudProjectId: Scalars["GoogleCloudProject"]["input"];
   provider: CiRunnerCloudProvider;
 };
 
-export type GroupRunnersArgs = {
+export type GrouprunnersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   creatorId?: InputMaybe<Scalars["UserID"]["input"]>;
@@ -23546,7 +23545,7 @@ export type GroupRunnersArgs = {
   versionPrefix?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupSavedRepliesArgs = {
+export type GroupsavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23554,11 +23553,11 @@ export type GroupSavedRepliesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupSavedReplyArgs = {
+export type GroupsavedReplyArgs = {
   id: Scalars["GroupsSavedReplyID"]["input"];
 };
 
-export type GroupScanExecutionPoliciesArgs = {
+export type GroupscanExecutionPoliciesArgs = {
   actionScanTypes?: InputMaybe<Array<SecurityReportTypeEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23569,7 +23568,7 @@ export type GroupScanExecutionPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type GroupScanResultPoliciesArgs = {
+export type GroupscanResultPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -23579,12 +23578,12 @@ export type GroupScanResultPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type GroupSecurityMetricsArgs = {
+export type GroupsecurityMetricsArgs = {
   projectId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
   reportType?: InputMaybe<Array<VulnerabilityReportType>>;
 };
 
-export type GroupSecurityPoliciesArgs = {
+export type GroupsecurityPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23594,7 +23593,7 @@ export type GroupSecurityPoliciesArgs = {
   type?: InputMaybe<PolicyType>;
 };
 
-export type GroupSecurityPolicyProjectSuggestionsArgs = {
+export type GroupsecurityPolicyProjectSuggestionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23603,7 +23602,7 @@ export type GroupSecurityPolicyProjectSuggestionsArgs = {
   search: Scalars["String"]["input"];
 };
 
-export type GroupSharedGroupsArgs = {
+export type GroupsharedGroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23612,7 +23611,7 @@ export type GroupSharedGroupsArgs = {
   sort?: InputMaybe<GroupSort>;
 };
 
-export type GroupSharedProjectsArgs = {
+export type GroupsharedProjectsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23624,11 +23623,11 @@ export type GroupSharedProjectsArgs = {
   sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupStandardRoleArgs = {
+export type GroupstandardRoleArgs = {
   accessLevel?: InputMaybe<Array<MemberAccessLevel>>;
 };
 
-export type GroupStandardRolesArgs = {
+export type GroupstandardRolesArgs = {
   accessLevel?: InputMaybe<Array<MemberAccessLevel>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -23636,28 +23635,28 @@ export type GroupStandardRolesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupStatusesArgs = {
+export type GroupstatusesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupSubscriptionHistoryArgs = {
+export type GroupsubscriptionHistoryArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupTimelogCategoriesArgs = {
+export type GrouptimelogCategoriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupTimelogsArgs = {
+export type GrouptimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -23672,12 +23671,12 @@ export type GroupTimelogsArgs = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupValueStreamDashboardUsageOverviewArgs = {
+export type GroupvalueStreamDashboardUsageOverviewArgs = {
   identifier: ValueStreamDashboardMetric;
   timeframe: Timeframe;
 };
 
-export type GroupValueStreamsArgs = {
+export type GroupvalueStreamsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23685,7 +23684,7 @@ export type GroupValueStreamsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupVulnerabilitiesArgs = {
+export type GroupvulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   clusterAgentId?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -23710,7 +23709,7 @@ export type GroupVulnerabilitiesArgs = {
   state?: InputMaybe<Array<VulnerabilityState>>;
 };
 
-export type GroupVulnerabilitiesCountByDayArgs = {
+export type GroupvulnerabilitiesCountByDayArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate: Scalars["ISO8601Date"]["input"];
@@ -23719,16 +23718,16 @@ export type GroupVulnerabilitiesCountByDayArgs = {
   startDate: Scalars["ISO8601Date"]["input"];
 };
 
-export type GroupVulnerabilityGradesArgs = {
+export type GroupvulnerabilityGradesArgs = {
   includeSubgroups?: InputMaybe<Scalars["Boolean"]["input"]>;
   letterGrade?: InputMaybe<VulnerabilityGrade>;
 };
 
-export type GroupVulnerabilityIdentifierSearchArgs = {
+export type GroupvulnerabilityIdentifierSearchArgs = {
   name: Scalars["String"]["input"];
 };
 
-export type GroupVulnerabilityManagementPoliciesArgs = {
+export type GroupvulnerabilityManagementPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -23738,14 +23737,14 @@ export type GroupVulnerabilityManagementPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type GroupVulnerabilityScannersArgs = {
+export type GroupvulnerabilityScannersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupVulnerabilitySeveritiesCountArgs = {
+export type GroupvulnerabilitySeveritiesCountArgs = {
   capped?: InputMaybe<Scalars["Boolean"]["input"]>;
   clusterAgentId?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
   dismissalReason?: InputMaybe<Array<VulnerabilityDismissalReason>>;
@@ -23764,18 +23763,18 @@ export type GroupVulnerabilitySeveritiesCountArgs = {
   state?: InputMaybe<Array<VulnerabilityState>>;
 };
 
-export type GroupWorkItemArgs = {
+export type GroupworkItemArgs = {
   iid: Scalars["String"]["input"];
 };
 
-export type GroupWorkItemDescriptionTemplatesArgs = {
+export type GroupworkItemDescriptionTemplatesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type GroupWorkItemStateCountsArgs = {
+export type GroupworkItemStateCountsArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
@@ -23819,7 +23818,7 @@ export type GroupWorkItemStateCountsArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type GroupWorkItemTypesArgs = {
+export type GroupworkItemTypesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -23827,7 +23826,7 @@ export type GroupWorkItemTypesArgs = {
   name?: InputMaybe<IssueType>;
 };
 
-export type GroupWorkItemsArgs = {
+export type GroupworkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
@@ -23875,12 +23874,12 @@ export type GroupWorkItemsArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type GroupWorkItemsWidgetsArgs = {
+export type GroupworkItemsWidgetsArgs = {
   ids: Array<Scalars["WorkItemsTypeID"]["input"]>;
   union?: Scalars["Boolean"]["input"];
 };
 
-export type GroupWorkspacesClusterAgentsArgs = {
+export type GroupworkspacesClusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter: NamespaceClusterAgentFilter;
@@ -24034,7 +24033,7 @@ export type GroupDataTransfer = {
   egressNodes?: Maybe<EgressNodeConnection>;
 };
 
-export type GroupDataTransferEgressNodesArgs = {
+export type GroupDataTransferegressNodesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -24051,7 +24050,7 @@ export type GroupDora = {
 };
 
 /** All information related to group DORA metrics. */
-export type GroupDoraMetricsArgs = {
+export type GroupDorametricsArgs = {
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
   environmentTiers?: InputMaybe<Array<DeploymentTier>>;
   interval?: InputMaybe<DoraMetricBucketingInterval>;
@@ -24059,7 +24058,7 @@ export type GroupDoraMetricsArgs = {
 };
 
 /** All information related to group DORA metrics. */
-export type GroupDoraProjectsArgs = {
+export type GroupDoraprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   archivedOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -24159,7 +24158,7 @@ export type GroupMember = MemberInterface & {
 };
 
 /** Represents a Group Membership */
-export type GroupMemberMergeRequestInteractionArgs = {
+export type GroupMembermergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
@@ -24191,7 +24190,7 @@ export type GroupMemberBulkUpdatePayload = {
 };
 
 /** Autogenerated return type of GroupMemberBulkUpdate. */
-export type GroupMemberBulkUpdatePayloadQueuedMemberApprovalsArgs = {
+export type GroupMemberBulkUpdatePayloadqueuedMemberApprovalsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -24235,13 +24234,13 @@ export type GroupMemberPermissions = {
 /** Group member relation */
 export enum GroupMemberRelation {
   /** Members in the group's subgroups. */
-  Descendants = "DESCENDANTS",
+  DESCENDANTS = "DESCENDANTS",
   /** Members in the group itself. */
-  Direct = "DIRECT",
+  DIRECT = "DIRECT",
   /** Members in the group's ancestor groups. */
-  Inherited = "INHERITED",
+  INHERITED = "INHERITED",
   /** Invited group's members. */
-  SharedFromGroups = "SHARED_FROM_GROUPS",
+  SHARED_FROM_GROUPS = "SHARED_FROM_GROUPS",
 }
 
 /** Autogenerated input type of GroupMembersExport */
@@ -24341,23 +24340,23 @@ export type GroupNamespaceMarkdownPaths = MarkdownPaths & {
   uploadsPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type GroupNamespaceMarkdownPathsAutocompleteSourcesPathArgs = {
+export type GroupNamespaceMarkdownPathsautocompleteSourcesPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
   workItemTypeId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GroupNamespaceMarkdownPathsMarkdownPreviewPathArgs = {
+export type GroupNamespaceMarkdownPathsmarkdownPreviewPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** User permission on groups */
 export enum GroupPermission {
   /** Groups where the user can create projects. */
-  CreateProjects = "CREATE_PROJECTS",
+  CREATE_PROJECTS = "CREATE_PROJECTS",
   /** Groups where the user can import projects to. */
-  ImportProjects = "IMPORT_PROJECTS",
+  IMPORT_PROJECTS = "IMPORT_PROJECTS",
   /** Groups where the user can transfer projects to. */
-  TransferProjects = "TRANSFER_PROJECTS",
+  TRANSFER_PROJECTS = "TRANSFER_PROJECTS",
 }
 
 export type GroupPermissions = {
@@ -24405,9 +24404,9 @@ export type GroupProjectRequirementComplianceStatusInput = {
 /** Values for sorting releases belonging to a group */
 export enum GroupReleaseSort {
   /** Released at by ascending order. */
-  ReleasedAtAsc = "RELEASED_AT_ASC",
+  RELEASED_AT_ASC = "RELEASED_AT_ASC",
   /** Released at by descending order. */
-  ReleasedAtDesc = "RELEASED_AT_DESC",
+  RELEASED_AT_DESC = "RELEASED_AT_DESC",
 }
 
 /** Contains release-related statistics about a group */
@@ -24528,27 +24527,27 @@ export type GroupSecurityPolicySource = {
 /** Values for sorting groups */
 export enum GroupSort {
   /** Sort by created at, ascending order. */
-  CreatedAtAsc = "CREATED_AT_ASC",
+  CREATED_AT_ASC = "CREATED_AT_ASC",
   /** Sort by created at, descending order. */
-  CreatedAtDesc = "CREATED_AT_DESC",
+  CREATED_AT_DESC = "CREATED_AT_DESC",
   /** Sort by ID, ascending order. */
-  IdAsc = "ID_ASC",
+  ID_ASC = "ID_ASC",
   /** Sort by ID, descending order. */
-  IdDesc = "ID_DESC",
+  ID_DESC = "ID_DESC",
   /** Sort by name, ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Sort by name, descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Sort by path, ascending order. */
-  PathAsc = "PATH_ASC",
+  PATH_ASC = "PATH_ASC",
   /** Sort by path, descending order. */
-  PathDesc = "PATH_DESC",
+  PATH_DESC = "PATH_DESC",
   /** Most similar to the search query. */
-  Similarity = "SIMILARITY",
+  SIMILARITY = "SIMILARITY",
   /** Sort by updated at, ascending order. */
-  UpdatedAtAsc = "UPDATED_AT_ASC",
+  UPDATED_AT_ASC = "UPDATED_AT_ASC",
   /** Sort by updated at, descending order. */
-  UpdatedAtDesc = "UPDATED_AT_DESC",
+  UPDATED_AT_DESC = "UPDATED_AT_DESC",
 }
 
 /** Contains statistics about a group */
@@ -24611,7 +24610,7 @@ export type GroupValueStreamAnalyticsFlowMetrics = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type GroupValueStreamAnalyticsFlowMetricsCycleTimeArgs = {
+export type GroupValueStreamAnalyticsFlowMetricscycleTimeArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -24627,14 +24626,14 @@ export type GroupValueStreamAnalyticsFlowMetricsCycleTimeArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type GroupValueStreamAnalyticsFlowMetricsDeploymentCountArgs = {
+export type GroupValueStreamAnalyticsFlowMetricsdeploymentCountArgs = {
   from: Scalars["Time"]["input"];
   projectIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
   to: Scalars["Time"]["input"];
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type GroupValueStreamAnalyticsFlowMetricsIssueCountArgs = {
+export type GroupValueStreamAnalyticsFlowMetricsissueCountArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -24650,7 +24649,7 @@ export type GroupValueStreamAnalyticsFlowMetricsIssueCountArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type GroupValueStreamAnalyticsFlowMetricsIssuesCompletedCountArgs = {
+export type GroupValueStreamAnalyticsFlowMetricsissuesCompletedCountArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -24666,7 +24665,7 @@ export type GroupValueStreamAnalyticsFlowMetricsIssuesCompletedCountArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type GroupValueStreamAnalyticsFlowMetricsLeadTimeArgs = {
+export type GroupValueStreamAnalyticsFlowMetricsleadTimeArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -24682,7 +24681,7 @@ export type GroupValueStreamAnalyticsFlowMetricsLeadTimeArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type GroupValueStreamAnalyticsFlowMetricsTimeToMergeArgs = {
+export type GroupValueStreamAnalyticsFlowMetricstimeToMergeArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   from: Scalars["Time"]["input"];
@@ -24754,7 +24753,7 @@ export type GroupWikiRepositoryRegistryConnection = {
 };
 
 /** The connection type for GroupWikiRepositoryRegistry. */
-export type GroupWikiRepositoryRegistryConnectionCountArgs = {
+export type GroupWikiRepositoryRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -24770,9 +24769,9 @@ export type GroupWikiRepositoryRegistryEdge = {
 /** Values for grouping compute usage data. */
 export enum GroupingEnum {
   /** Aggregate usage data across all namespaces in the instance. */
-  InstanceAggregate = "INSTANCE_AGGREGATE",
+  INSTANCE_AGGREGATE = "INSTANCE_AGGREGATE",
   /** Group data by individual root namespace. */
-  PerRootNamespace = "PER_ROOT_NAMESPACE",
+  PER_ROOT_NAMESPACE = "PER_ROOT_NAMESPACE",
 }
 
 export type Groups = {
@@ -24792,25 +24791,25 @@ export type Groups = {
 /** Health status of an issue or epic */
 export enum HealthStatus {
   /** At risk */
-  AtRisk = "atRisk",
+  atRisk = "atRisk",
   /** Needs attention */
-  NeedsAttention = "needsAttention",
+  needsAttention = "needsAttention",
   /** On track */
-  OnTrack = "onTrack",
+  onTrack = "onTrack",
 }
 
 /** Health status of an issue or epic for filtering */
 export enum HealthStatusFilter {
   /** Any health status is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No health status is assigned. */
-  None = "NONE",
+  NONE = "NONE",
   /** At risk */
-  AtRisk = "atRisk",
+  atRisk = "atRisk",
   /** Needs attention */
-  NeedsAttention = "needsAttention",
+  needsAttention = "needsAttention",
   /** On track */
-  OnTrack = "onTrack",
+  onTrack = "onTrack",
 }
 
 /** Helm file metadata */
@@ -24945,31 +24944,31 @@ export type ImagePullSecrets = {
 /** Import source */
 export enum ImportSource {
   /** Bitbucket */
-  Bitbucket = "BITBUCKET",
+  BITBUCKET = "BITBUCKET",
   /** Bitbucket Server */
-  BitbucketServer = "BITBUCKET_SERVER",
+  BITBUCKET_SERVER = "BITBUCKET_SERVER",
   /** Custom Template */
-  CustomTemplate = "CUSTOM_TEMPLATE",
+  CUSTOM_TEMPLATE = "CUSTOM_TEMPLATE",
   /** Fogbugz */
-  Fogbugz = "FOGBUGZ",
+  FOGBUGZ = "FOGBUGZ",
   /** Git */
-  Git = "GIT",
+  GIT = "GIT",
   /** Gitea */
-  Gitea = "GITEA",
+  GITEA = "GITEA",
   /** Github */
-  Github = "GITHUB",
+  GITHUB = "GITHUB",
   /** Gitlab Group */
-  GitlabGroup = "GITLAB_GROUP",
+  GITLAB_GROUP = "GITLAB_GROUP",
   /** Gitlab Migration */
-  GitlabMigration = "GITLAB_MIGRATION",
+  GITLAB_MIGRATION = "GITLAB_MIGRATION",
   /** Gitlab Project */
-  GitlabProject = "GITLAB_PROJECT",
+  GITLAB_PROJECT = "GITLAB_PROJECT",
   /** Jira */
-  Jira = "JIRA",
+  JIRA = "JIRA",
   /** Manifest */
-  Manifest = "MANIFEST",
+  MANIFEST = "MANIFEST",
   /** Not imported */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 export type ImportSourceUser = {
@@ -25119,19 +25118,19 @@ export type ImportSourceUserResendNotificationPayload = {
 
 export enum ImportSourceUserStatus {
   /** An import source user mapping that is awaiting approval. */
-  AwaitingApproval = "AWAITING_APPROVAL",
+  AWAITING_APPROVAL = "AWAITING_APPROVAL",
   /** An import source user mapping that is completed. */
-  Completed = "COMPLETED",
+  COMPLETED = "COMPLETED",
   /** An import source user mapping that is failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** An import source user mapping that is keep as placeholder. */
-  KeepAsPlaceholder = "KEEP_AS_PLACEHOLDER",
+  KEEP_AS_PLACEHOLDER = "KEEP_AS_PLACEHOLDER",
   /** An import source user mapping that is pending reassignment. */
-  PendingReassignment = "PENDING_REASSIGNMENT",
+  PENDING_REASSIGNMENT = "PENDING_REASSIGNMENT",
   /** An import source user mapping that is reassignment in progress. */
-  ReassignmentInProgress = "REASSIGNMENT_IN_PROGRESS",
+  REASSIGNMENT_IN_PROGRESS = "REASSIGNMENT_IN_PROGRESS",
   /** An import source user mapping that is rejected. */
-  Rejected = "REJECTED",
+  REJECTED = "REJECTED",
 }
 
 /** Autogenerated input type of ImportSourceUserUndoKeepAsPlaceholder */
@@ -25177,7 +25176,7 @@ export type IncidentManagementOncallRotation = {
 };
 
 /** Describes an incident management on-call rotation */
-export type IncidentManagementOncallRotationParticipantsArgs = {
+export type IncidentManagementOncallRotationparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -25185,7 +25184,7 @@ export type IncidentManagementOncallRotationParticipantsArgs = {
 };
 
 /** Describes an incident management on-call rotation */
-export type IncidentManagementOncallRotationShiftsArgs = {
+export type IncidentManagementOncallRotationshiftsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endTime: Scalars["Time"]["input"];
@@ -25233,12 +25232,12 @@ export type IncidentManagementOncallSchedule = {
 };
 
 /** Describes an incident management on-call schedule */
-export type IncidentManagementOncallScheduleRotationArgs = {
+export type IncidentManagementOncallSchedulerotationArgs = {
   id: Scalars["IncidentManagementOncallRotationID"]["input"];
 };
 
 /** Describes an incident management on-call schedule */
-export type IncidentManagementOncallScheduleRotationsArgs = {
+export type IncidentManagementOncallSchedulerotationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -25523,7 +25522,7 @@ export type InstanceExternalAuditEventDestination = ExternalAuditEventDestinatio
 };
 
 /** Represents an external resource to send instance audit events to */
-export type InstanceExternalAuditEventDestinationHeadersArgs = {
+export type InstanceExternalAuditEventDestinationheadersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -25739,7 +25738,7 @@ export type InstanceSecurityDashboard = {
   vulnerabilitySeveritiesCount?: Maybe<VulnerabilitySeveritiesCount>;
 };
 
-export type InstanceSecurityDashboardClusterAgentsArgs = {
+export type InstanceSecurityDashboardclusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -25749,7 +25748,7 @@ export type InstanceSecurityDashboardClusterAgentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type InstanceSecurityDashboardProjectsArgs = {
+export type InstanceSecurityDashboardprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -25757,18 +25756,18 @@ export type InstanceSecurityDashboardProjectsArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type InstanceSecurityDashboardVulnerabilityGradesArgs = {
+export type InstanceSecurityDashboardvulnerabilityGradesArgs = {
   letterGrade?: InputMaybe<VulnerabilityGrade>;
 };
 
-export type InstanceSecurityDashboardVulnerabilityScannersArgs = {
+export type InstanceSecurityDashboardvulnerabilityScannersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type InstanceSecurityDashboardVulnerabilitySeveritiesCountArgs = {
+export type InstanceSecurityDashboardvulnerabilitySeveritiesCountArgs = {
   capped?: InputMaybe<Scalars["Boolean"]["input"]>;
   clusterAgentId?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
   dismissalReason?: InputMaybe<Array<VulnerabilityDismissalReason>>;
@@ -25876,7 +25875,7 @@ export type IntegrationExclusionEdge = {
 /** Integration Names */
 export enum IntegrationType {
   /** Beyond Identity. */
-  BeyondIdentity = "BEYOND_IDENTITY",
+  BEYOND_IDENTITY = "BEYOND_IDENTITY",
 }
 
 /** Represents an issuable. */
@@ -25964,47 +25963,47 @@ export type IssuableResourceLinkEdge = {
 /** Issuable resource link type enum */
 export enum IssuableResourceLinkType {
   /** General link type */
-  General = "general",
+  general = "general",
   /** Pagerduty link type */
-  Pagerduty = "pagerduty",
+  pagerduty = "pagerduty",
   /** Slack link type */
-  Slack = "slack",
+  slack = "slack",
   /** Zoom link type */
-  Zoom = "zoom",
+  zoom = "zoom",
 }
 
 /** Fields to perform the search in */
 export enum IssuableSearchableField {
   /** Search in description field. */
-  Description = "DESCRIPTION",
+  DESCRIPTION = "DESCRIPTION",
   /** Search in title field. */
-  Title = "TITLE",
+  TITLE = "TITLE",
 }
 
 /** Incident severity */
 export enum IssuableSeverity {
   /** Critical severity */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** High severity */
-  High = "HIGH",
+  HIGH = "HIGH",
   /** Low severity */
-  Low = "LOW",
+  LOW = "LOW",
   /** Medium severity */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
   /** Unknown severity */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** State of a GitLab issue or merge request */
 export enum IssuableState {
   /** All available. */
-  All = "all",
+  all = "all",
   /** In closed state. */
-  Closed = "closed",
+  closed = "closed",
   /** Discussion has been locked. */
-  Locked = "locked",
+  locked = "locked",
   /** In open state. */
-  Opened = "opened",
+  opened = "opened",
 }
 
 export type Issue = CurrentUserTodos &
@@ -26186,7 +26185,7 @@ export type Issue = CurrentUserTodos &
     weight?: Maybe<Scalars["Int"]["output"]>;
   };
 
-export type IssueAlertManagementAlertsArgs = {
+export type IssuealertManagementAlertsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -26199,28 +26198,28 @@ export type IssueAlertManagementAlertsArgs = {
   statuses?: InputMaybe<Array<AlertManagementStatus>>;
 };
 
-export type IssueAssigneesArgs = {
+export type IssueassigneesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueBlockedByIssuesArgs = {
+export type IssueblockedByIssuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueCommentersArgs = {
+export type IssuecommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueCurrentUserTodosArgs = {
+export type IssuecurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -26228,21 +26227,21 @@ export type IssueCurrentUserTodosArgs = {
   state?: InputMaybe<TodoStateEnum>;
 };
 
-export type IssueCustomerRelationsContactsArgs = {
+export type IssuecustomerRelationsContactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueDiscussionsArgs = {
+export type IssuediscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueIssuableResourceLinksArgs = {
+export type IssueissuableResourceLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -26250,14 +26249,14 @@ export type IssueIssuableResourceLinksArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueLabelsArgs = {
+export type IssuelabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueLinkedWorkItemsArgs = {
+export type IssuelinkedWorkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<WorkItemRelatedLinkType>;
@@ -26265,7 +26264,7 @@ export type IssueLinkedWorkItemsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueNotesArgs = {
+export type IssuenotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -26273,32 +26272,32 @@ export type IssueNotesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueParticipantsArgs = {
+export type IssueparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueReferenceArgs = {
+export type IssuereferenceArgs = {
   full?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type IssueRelatedMergeRequestsArgs = {
+export type IssuerelatedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueRelatedVulnerabilitiesArgs = {
+export type IssuerelatedVulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type IssueTimelogsArgs = {
+export type IssuetimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -26323,7 +26322,7 @@ export type IssueConnection = {
 /** Iteration ID wildcard values for issue creation */
 export enum IssueCreationIterationWildcardId {
   /** Current iteration. */
-  Current = "CURRENT",
+  CURRENT = "CURRENT",
 }
 
 /** An edge in a connection. */
@@ -26338,13 +26337,13 @@ export type IssueEdge = {
 /** Issue escalation status values */
 export enum IssueEscalationStatus {
   /** Someone is actively investigating the problem. */
-  Acknowledged = "ACKNOWLEDGED",
+  ACKNOWLEDGED = "ACKNOWLEDGED",
   /** No action will be taken. */
-  Ignored = "IGNORED",
+  IGNORED = "IGNORED",
   /** The problem has been addressed. */
-  Resolved = "RESOLVED",
+  RESOLVED = "RESOLVED",
   /** Investigation has not started. */
-  Triggered = "TRIGGERED",
+  TRIGGERED = "TRIGGERED",
 }
 
 /** Autogenerated input type of IssueLinkAlerts */
@@ -26741,121 +26740,121 @@ export type IssueSetWeightPayload = {
 /** Values for sorting issues */
 export enum IssueSort {
   /** Blocking issues count by ascending order. */
-  BlockingIssuesAsc = "BLOCKING_ISSUES_ASC",
+  BLOCKING_ISSUES_ASC = "BLOCKING_ISSUES_ASC",
   /** Blocking issues count by descending order. */
-  BlockingIssuesDesc = "BLOCKING_ISSUES_DESC",
+  BLOCKING_ISSUES_DESC = "BLOCKING_ISSUES_DESC",
   /** Closed time by ascending order. */
-  ClosedAtAsc = "CLOSED_AT_ASC",
+  CLOSED_AT_ASC = "CLOSED_AT_ASC",
   /** Closed time by descending order. */
-  ClosedAtDesc = "CLOSED_AT_DESC",
+  CLOSED_AT_DESC = "CLOSED_AT_DESC",
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Due date by ascending order. */
-  DueDateAsc = "DUE_DATE_ASC",
+  DUE_DATE_ASC = "DUE_DATE_ASC",
   /** Due date by descending order. */
-  DueDateDesc = "DUE_DATE_DESC",
+  DUE_DATE_DESC = "DUE_DATE_DESC",
   /** Status from triggered to resolved. */
-  EscalationStatusAsc = "ESCALATION_STATUS_ASC",
+  ESCALATION_STATUS_ASC = "ESCALATION_STATUS_ASC",
   /** Status from resolved to triggered. */
-  EscalationStatusDesc = "ESCALATION_STATUS_DESC",
+  ESCALATION_STATUS_DESC = "ESCALATION_STATUS_DESC",
   /** Issues with healthy issues first. */
-  HealthStatusAsc = "HEALTH_STATUS_ASC",
+  HEALTH_STATUS_ASC = "HEALTH_STATUS_ASC",
   /** Issues with unhealthy issues first. */
-  HealthStatusDesc = "HEALTH_STATUS_DESC",
+  HEALTH_STATUS_DESC = "HEALTH_STATUS_DESC",
   /** Label priority by ascending order. */
-  LabelPriorityAsc = "LABEL_PRIORITY_ASC",
+  LABEL_PRIORITY_ASC = "LABEL_PRIORITY_ASC",
   /** Label priority by descending order. */
-  LabelPriorityDesc = "LABEL_PRIORITY_DESC",
+  LABEL_PRIORITY_DESC = "LABEL_PRIORITY_DESC",
   /** Milestone due date by ascending order. */
-  MilestoneDueAsc = "MILESTONE_DUE_ASC",
+  MILESTONE_DUE_ASC = "MILESTONE_DUE_ASC",
   /** Milestone due date by descending order. */
-  MilestoneDueDesc = "MILESTONE_DUE_DESC",
+  MILESTONE_DUE_DESC = "MILESTONE_DUE_DESC",
   /** Number of upvotes (awarded "thumbs up" emoji) by ascending order. */
-  PopularityAsc = "POPULARITY_ASC",
+  POPULARITY_ASC = "POPULARITY_ASC",
   /** Number of upvotes (awarded "thumbs up" emoji) by descending order. */
-  PopularityDesc = "POPULARITY_DESC",
+  POPULARITY_DESC = "POPULARITY_DESC",
   /** Priority by ascending order. */
-  PriorityAsc = "PRIORITY_ASC",
+  PRIORITY_ASC = "PRIORITY_ASC",
   /** Priority by descending order. */
-  PriorityDesc = "PRIORITY_DESC",
+  PRIORITY_DESC = "PRIORITY_DESC",
   /** Published issues shown last. */
-  PublishedAsc = "PUBLISHED_ASC",
+  PUBLISHED_ASC = "PUBLISHED_ASC",
   /** Published issues shown first. */
-  PublishedDesc = "PUBLISHED_DESC",
+  PUBLISHED_DESC = "PUBLISHED_DESC",
   /** Relative position by ascending order. */
-  RelativePositionAsc = "RELATIVE_POSITION_ASC",
+  RELATIVE_POSITION_ASC = "RELATIVE_POSITION_ASC",
   /** Severity from less critical to more critical. */
-  SeverityAsc = "SEVERITY_ASC",
+  SEVERITY_ASC = "SEVERITY_ASC",
   /** Severity from more critical to less critical. */
-  SeverityDesc = "SEVERITY_DESC",
+  SEVERITY_DESC = "SEVERITY_DESC",
   /** Issues with earliest SLA due time shown first. */
-  SlaDueAtAsc = "SLA_DUE_AT_ASC",
+  SLA_DUE_AT_ASC = "SLA_DUE_AT_ASC",
   /** Issues with latest SLA due time shown first. */
-  SlaDueAtDesc = "SLA_DUE_AT_DESC",
+  SLA_DUE_AT_DESC = "SLA_DUE_AT_DESC",
   /**
    * Status by ascending order. Introduced in GitLab 18.4: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.4.
    */
-  StatusAsc = "STATUS_ASC",
+  STATUS_ASC = "STATUS_ASC",
   /**
    * Status by descending order. Introduced in GitLab 18.4: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.4.
    */
-  StatusDesc = "STATUS_DESC",
+  STATUS_DESC = "STATUS_DESC",
   /** Title by ascending order. */
-  TitleAsc = "TITLE_ASC",
+  TITLE_ASC = "TITLE_ASC",
   /** Title by descending order. */
-  TitleDesc = "TITLE_DESC",
+  TITLE_DESC = "TITLE_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /** Weight by ascending order. */
-  WeightAsc = "WEIGHT_ASC",
+  WEIGHT_ASC = "WEIGHT_ASC",
   /** Weight by descending order. */
-  WeightDesc = "WEIGHT_DESC",
+  WEIGHT_DESC = "WEIGHT_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** State of a GitLab issue */
 export enum IssueState {
   /** All available. */
-  All = "all",
+  all = "all",
   /** In closed state. */
-  Closed = "closed",
+  closed = "closed",
   /** Discussion has been locked. */
-  Locked = "locked",
+  locked = "locked",
   /** In open state. */
-  Opened = "opened",
+  opened = "opened",
 }
 
 /** Values for issue state events */
 export enum IssueStateEvent {
   /** Closes the issue. */
-  Close = "CLOSE",
+  CLOSE = "CLOSE",
   /** Reopens the issue. */
-  Reopen = "REOPEN",
+  REOPEN = "REOPEN",
 }
 
 /** Represents total number of issues for the represented statuses */
@@ -26875,29 +26874,29 @@ export enum IssueType {
    * Epic issue type. Available only when feature epics is available. Introduced in GitLab 16.7: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 16.7.
    */
-  Epic = "EPIC",
+  EPIC = "EPIC",
   /** Incident issue type */
-  Incident = "INCIDENT",
+  INCIDENT = "INCIDENT",
   /** Issue issue type */
-  Issue = "ISSUE",
+  ISSUE = "ISSUE",
   /**
    * Key Result issue type. Available only when feature flag `okrs_mvc` is enabled. Introduced in GitLab 15.7: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 15.7.
    */
-  KeyResult = "KEY_RESULT",
+  KEY_RESULT = "KEY_RESULT",
   /**
    * Objective issue type. Available only when feature flag `okrs_mvc` is enabled. Introduced in GitLab 15.6: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 15.6.
    */
-  Objective = "OBJECTIVE",
+  OBJECTIVE = "OBJECTIVE",
   /** Requirement issue type */
-  Requirement = "REQUIREMENT",
+  REQUIREMENT = "REQUIREMENT",
   /** Task issue type */
-  Task = "TASK",
+  TASK = "TASK",
   /** Test Case issue type */
-  TestCase = "TEST_CASE",
+  TEST_CASE = "TEST_CASE",
   /** Ticket issue type */
-  Ticket = "TICKET",
+  TICKET = "TICKET",
 }
 
 /** Autogenerated input type of IssueUnlinkAlert */
@@ -26970,7 +26969,7 @@ export type Iteration = TimeboxReportInterface & {
 };
 
 /** Represents an iteration object */
-export type IterationReportArgs = {
+export type IterationreportArgs = {
   fullPath?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -27148,41 +27147,41 @@ export type IterationEdge = {
 /** Fields to perform the search in */
 export enum IterationSearchableField {
   /** Search in cadence_title field. */
-  CadenceTitle = "CADENCE_TITLE",
+  CADENCE_TITLE = "CADENCE_TITLE",
   /** Search in title field. */
-  Title = "TITLE",
+  TITLE = "TITLE",
 }
 
 /** Iteration sort values */
 export enum IterationSort {
   /** Sort by cadence id in ascending and due date in ascending order. */
-  CadenceAndDueDateAsc = "CADENCE_AND_DUE_DATE_ASC",
+  CADENCE_AND_DUE_DATE_ASC = "CADENCE_AND_DUE_DATE_ASC",
   /** Sort by cadence id in ascending and due date in descending order. */
-  CadenceAndDueDateDesc = "CADENCE_AND_DUE_DATE_DESC",
+  CADENCE_AND_DUE_DATE_DESC = "CADENCE_AND_DUE_DATE_DESC",
 }
 
 /** State of a GitLab iteration */
 export enum IterationState {
   /** Any iteration. */
-  All = "all",
+  all = "all",
   /** Closed iteration. */
-  Closed = "closed",
+  closed = "closed",
   /** Current iteration. */
-  Current = "current",
+  current = "current",
   /** Open iteration. */
-  Opened = "opened",
+  opened = "opened",
   /** Upcoming iteration. */
-  Upcoming = "upcoming",
+  upcoming = "upcoming",
 }
 
 /** Iteration ID wildcard values */
 export enum IterationWildcardId {
   /** An iteration is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** Current iteration. */
-  Current = "CURRENT",
+  CURRENT = "CURRENT",
   /** No iteration is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 export type JiraImport = {
@@ -27309,7 +27308,7 @@ export type JiraService = Service & {
   type?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type JiraServiceProjectsArgs = {
+export type JiraServiceprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -27342,69 +27341,69 @@ export type JiraUsersMappingInputType = {
 
 export enum JobArtifactFileType {
   /** ACCESSIBILITY job artifact file type. */
-  Accessibility = "ACCESSIBILITY",
+  ACCESSIBILITY = "ACCESSIBILITY",
   /** ANNOTATIONS job artifact file type. */
-  Annotations = "ANNOTATIONS",
+  ANNOTATIONS = "ANNOTATIONS",
   /** API FUZZING job artifact file type. */
-  ApiFuzzing = "API_FUZZING",
+  API_FUZZING = "API_FUZZING",
   /** ARCHIVE job artifact file type. */
-  Archive = "ARCHIVE",
+  ARCHIVE = "ARCHIVE",
   /** BROWSER PERFORMANCE job artifact file type. */
-  BrowserPerformance = "BROWSER_PERFORMANCE",
+  BROWSER_PERFORMANCE = "BROWSER_PERFORMANCE",
   /** CLUSTER APPLICATIONS job artifact file type. */
-  ClusterApplications = "CLUSTER_APPLICATIONS",
+  CLUSTER_APPLICATIONS = "CLUSTER_APPLICATIONS",
   /** CLUSTER IMAGE SCANNING job artifact file type. */
-  ClusterImageScanning = "CLUSTER_IMAGE_SCANNING",
+  CLUSTER_IMAGE_SCANNING = "CLUSTER_IMAGE_SCANNING",
   /** COBERTURA job artifact file type. */
-  Cobertura = "COBERTURA",
+  COBERTURA = "COBERTURA",
   /** CODE QUALITY job artifact file type. */
-  Codequality = "CODEQUALITY",
+  CODEQUALITY = "CODEQUALITY",
   /** CONTAINER SCANNING job artifact file type. */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** COVERAGE FUZZING job artifact file type. */
-  CoverageFuzzing = "COVERAGE_FUZZING",
+  COVERAGE_FUZZING = "COVERAGE_FUZZING",
   /** CYCLONEDX job artifact file type. */
-  Cyclonedx = "CYCLONEDX",
+  CYCLONEDX = "CYCLONEDX",
   /** DAST job artifact file type. */
-  Dast = "DAST",
+  DAST = "DAST",
   /** DEPENDENCY SCANNING job artifact file type. */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** DOTENV job artifact file type. */
-  Dotenv = "DOTENV",
+  DOTENV = "DOTENV",
   /** JACOCO job artifact file type. */
-  Jacoco = "JACOCO",
+  JACOCO = "JACOCO",
   /** JUNIT job artifact file type. */
-  Junit = "JUNIT",
+  JUNIT = "JUNIT",
   /** LICENSE SCANNING job artifact file type. */
-  LicenseScanning = "LICENSE_SCANNING",
+  LICENSE_SCANNING = "LICENSE_SCANNING",
   /** LOAD PERFORMANCE job artifact file type. */
-  LoadPerformance = "LOAD_PERFORMANCE",
+  LOAD_PERFORMANCE = "LOAD_PERFORMANCE",
   /** LSIF job artifact file type. */
-  Lsif = "LSIF",
+  LSIF = "LSIF",
   /** METADATA job artifact file type. */
-  Metadata = "METADATA",
+  METADATA = "METADATA",
   /** METRICS job artifact file type. */
-  Metrics = "METRICS",
+  METRICS = "METRICS",
   /** METRICS REFEREE job artifact file type. */
-  MetricsReferee = "METRICS_REFEREE",
+  METRICS_REFEREE = "METRICS_REFEREE",
   /** NETWORK REFEREE job artifact file type. */
-  NetworkReferee = "NETWORK_REFEREE",
+  NETWORK_REFEREE = "NETWORK_REFEREE",
   /** PERFORMANCE job artifact file type. */
-  Performance = "PERFORMANCE",
+  PERFORMANCE = "PERFORMANCE",
   /** REPOSITORY XRAY job artifact file type. */
-  RepositoryXray = "REPOSITORY_XRAY",
+  REPOSITORY_XRAY = "REPOSITORY_XRAY",
   /** REQUIREMENTS job artifact file type. */
-  Requirements = "REQUIREMENTS",
+  REQUIREMENTS = "REQUIREMENTS",
   /** REQUIREMENTS V2 job artifact file type. */
-  RequirementsV2 = "REQUIREMENTS_V2",
+  REQUIREMENTS_V2 = "REQUIREMENTS_V2",
   /** SAST job artifact file type. */
-  Sast = "SAST",
+  SAST = "SAST",
   /** SECRET DETECTION job artifact file type. */
-  SecretDetection = "SECRET_DETECTION",
+  SECRET_DETECTION = "SECRET_DETECTION",
   /** TERRAFORM job artifact file type. */
-  Terraform = "TERRAFORM",
+  TERRAFORM = "TERRAFORM",
   /** TRACE job artifact file type. */
-  Trace = "TRACE",
+  TRACE = "TRACE",
 }
 
 /** Represents the Geo replication and verification state of a job_artifact. */
@@ -27469,7 +27468,7 @@ export type JobArtifactRegistryConnection = {
 };
 
 /** The connection type for JobArtifactRegistry. */
-export type JobArtifactRegistryConnectionCountArgs = {
+export type JobArtifactRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -27761,9 +27760,9 @@ export type LabelInterface = {
 /** List of fields where the provided searchTerm should be looked up */
 export enum LabelSearchFieldList {
   /** Search in the label description. */
-  Description = "DESCRIPTION",
+  DESCRIPTION = "DESCRIPTION",
   /** Search in the label title. */
-  Title = "TITLE",
+  TITLE = "TITLE",
 }
 
 /** Autogenerated input type of LabelUpdate */
@@ -27879,15 +27878,15 @@ export type LdapAdminRoleLinkEdge = {
 /** All LDAP admin role sync statuses. */
 export enum LdapAdminRoleSyncStatus {
   /** A sync that is failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** A sync that is never synced. */
-  NeverSynced = "NEVER_SYNCED",
+  NEVER_SYNCED = "NEVER_SYNCED",
   /** A sync that is queued. */
-  Queued = "QUEUED",
+  QUEUED = "QUEUED",
   /** A sync that is running. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** A sync that is successful. */
-  Successful = "SUCCESSFUL",
+  SUCCESSFUL = "SUCCESSFUL",
 }
 
 /** Represents a LDAP provider. */
@@ -27961,7 +27960,7 @@ export type LfsObjectRegistryConnection = {
 };
 
 /** The connection type for LfsObjectRegistry. */
-export type LfsObjectRegistryConnectionCountArgs = {
+export type LfsObjectRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -28203,11 +28202,11 @@ export type LinkedWorkItemTypeEdge = {
 /** List limit metric setting */
 export enum ListLimitMetric {
   /** Limit list by number and total weight of issues. */
-  AllMetrics = "all_metrics",
+  all_metrics = "all_metrics",
   /** Limit list by number of issues. */
-  IssueCount = "issue_count",
+  issue_count = "issue_count",
   /** Limit list by total weight of issues. */
-  IssueWeights = "issue_weights",
+  issue_weights = "issue_weights",
 }
 
 export type Location = {
@@ -28223,7 +28222,7 @@ export type Location = {
 };
 
 /** Represents links to perform actions on the candidate */
-export type MlCandidateLinks = {
+export type MLCandidateLinks = {
   __typename?: "MLCandidateLinks";
   /** Path to the artifact. */
   artifactPath?: Maybe<Scalars["String"]["output"]>;
@@ -28232,14 +28231,14 @@ export type MlCandidateLinks = {
 };
 
 /** Represents links to perform actions on the model */
-export type MlModelLinks = {
+export type MLModelLinks = {
   __typename?: "MLModelLinks";
   /** Path to the details page of the model. */
   showPath?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** Represents links to perform actions on the model version */
-export type MlModelVersionLinks = {
+export type MLModelVersionLinks = {
   __typename?: "MLModelVersionLinks";
   /** File upload path for the machine learning model. */
   importPath?: Maybe<Scalars["String"]["output"]>;
@@ -28277,12 +28276,12 @@ export type MarkdownPaths = {
   uploadsPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type MarkdownPathsAutocompleteSourcesPathArgs = {
+export type MarkdownPathsautocompleteSourcesPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
   workItemTypeId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type MarkdownPathsMarkdownPreviewPathArgs = {
+export type MarkdownPathsmarkdownPreviewPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -28371,7 +28370,7 @@ export type MavenUpstream = {
 };
 
 /** Represents the upstream registries of a Maven virtual registry. */
-export type MavenUpstreamRegistriesArgs = {
+export type MavenUpstreamregistriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -28450,59 +28449,59 @@ export type MavenVirtualRegistryEdge = {
 /** Possible identifier types for a measurement */
 export enum MeasurementIdentifier {
   /** Group count. */
-  Groups = "GROUPS",
+  GROUPS = "GROUPS",
   /** Issue count. */
-  Issues = "ISSUES",
+  ISSUES = "ISSUES",
   /** Merge request count. */
-  MergeRequests = "MERGE_REQUESTS",
+  MERGE_REQUESTS = "MERGE_REQUESTS",
   /** Pipeline count. */
-  Pipelines = "PIPELINES",
+  PIPELINES = "PIPELINES",
   /** Pipeline count with canceled status. */
-  PipelinesCanceled = "PIPELINES_CANCELED",
+  PIPELINES_CANCELED = "PIPELINES_CANCELED",
   /** Pipeline count with failed status. */
-  PipelinesFailed = "PIPELINES_FAILED",
+  PIPELINES_FAILED = "PIPELINES_FAILED",
   /** Pipeline count with skipped status. */
-  PipelinesSkipped = "PIPELINES_SKIPPED",
+  PIPELINES_SKIPPED = "PIPELINES_SKIPPED",
   /** Pipeline count with success status. */
-  PipelinesSucceeded = "PIPELINES_SUCCEEDED",
+  PIPELINES_SUCCEEDED = "PIPELINES_SUCCEEDED",
   /** Project count. */
-  Projects = "PROJECTS",
+  PROJECTS = "PROJECTS",
   /** User count. */
-  Users = "USERS",
+  USERS = "USERS",
 }
 
 /** Access level of a group or project member */
 export enum MemberAccessLevel {
   /** The Developer role gives users access to contribute code while restricting sensitive administrative actions. */
-  Developer = "DEVELOPER",
+  DEVELOPER = "DEVELOPER",
   /** The Guest role is for users who need visibility into a project or group but should not have the ability to make changes, such as external stakeholders. */
-  Guest = "GUEST",
+  GUEST = "GUEST",
   /** The Maintainer role is primarily used for managing code reviews, approvals, and administrative settings for projects. This role can also manage project memberships. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** The Minimal Access role is for users who need the least amount of access into groups and projects. You can assign this role as a default, before giving a user another role with more permissions. */
-  MinimalAccess = "MINIMAL_ACCESS",
+  MINIMAL_ACCESS = "MINIMAL_ACCESS",
   /** The Owner role is typically assigned to the individual or team responsible for managing and maintaining the group or creating the project. This role has the highest level of administrative control, and can manage all aspects of the group or project, including managing other Owners. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
   /** The Planner role is suitable for team members who need to manage projects and track work items but do not need to contribute code. */
-  Planner = "PLANNER",
+  PLANNER = "PLANNER",
   /** The Reporter role is suitable for team members who need to stay informed about a project or group but do not actively contribute code. */
-  Reporter = "REPORTER",
+  REPORTER = "REPORTER",
 }
 
 /** Name of access levels of a group or project member */
 export enum MemberAccessLevelName {
   /** Developer access. */
-  Developer = "DEVELOPER",
+  DEVELOPER = "DEVELOPER",
   /** Guest access. */
-  Guest = "GUEST",
+  GUEST = "GUEST",
   /** Maintainer access. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** Owner access. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
   /** Planner access. */
-  Planner = "PLANNER",
+  PLANNER = "PLANNER",
   /** Reporter access. */
-  Reporter = "REPORTER",
+  REPORTER = "REPORTER",
 }
 
 /** Represents a Member Approval queued for role promotion. */
@@ -28555,11 +28554,11 @@ export type MemberApprovalEdge = {
 /** Types of member approval status. */
 export enum MemberApprovalStatusType {
   /** Approved promotion request. */
-  Approved = "APPROVED",
+  APPROVED = "APPROVED",
   /** Denied promotion request. */
-  Denied = "DENIED",
+  DENIED = "DENIED",
   /** Pending promotion request. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
 }
 
 export type MemberInterface = {
@@ -28581,7 +28580,7 @@ export type MemberInterface = {
   user?: Maybe<UserCore>;
 };
 
-export type MemberInterfaceMergeRequestInteractionArgs = {
+export type MemberInterfacemergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
@@ -28653,7 +28652,7 @@ export type MemberRole = CustomRoleInterface &
   };
 
 /** Represents a member role */
-export type MemberRoleEnabledPermissionsArgs = {
+export type MemberRoleenabledPermissionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -28708,32 +28707,32 @@ export enum MemberRoleAdminPermission {
    * Read CI/CD details for runners and jobs in the Admin Area. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  ReadAdminCicd = "READ_ADMIN_CICD",
+  READ_ADMIN_CICD = "READ_ADMIN_CICD",
   /**
    * Read group details in the Admin Area. Introduced in GitLab 18.3: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.3.
    */
-  ReadAdminGroups = "READ_ADMIN_GROUPS",
+  READ_ADMIN_GROUPS = "READ_ADMIN_GROUPS",
   /**
    * Read system information such as background migrations, health checks, and Gitaly in the Admin Area. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  ReadAdminMonitoring = "READ_ADMIN_MONITORING",
+  READ_ADMIN_MONITORING = "READ_ADMIN_MONITORING",
   /**
    * Read project details in the Admin Area. Introduced in GitLab 18.3: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.3.
    */
-  ReadAdminProjects = "READ_ADMIN_PROJECTS",
+  READ_ADMIN_PROJECTS = "READ_ADMIN_PROJECTS",
   /**
    * Read subscription details in the Admin area. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  ReadAdminSubscription = "READ_ADMIN_SUBSCRIPTION",
+  READ_ADMIN_SUBSCRIPTION = "READ_ADMIN_SUBSCRIPTION",
   /**
    * Read the user list and user details in the Admin area. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  ReadAdminUsers = "READ_ADMIN_USERS",
+  READ_ADMIN_USERS = "READ_ADMIN_USERS",
 }
 
 /** Autogenerated input type of MemberRoleAdminUpdate */
@@ -28843,146 +28842,146 @@ export type MemberRoleInterface = {
 /** Member role permission */
 export enum MemberRolePermission {
   /** Create, read, update, and delete CI/CD variables. */
-  AdminCicdVariables = "ADMIN_CICD_VARIABLES",
+  ADMIN_CICD_VARIABLES = "ADMIN_CICD_VARIABLES",
   /** Create, read, update, and delete compliance frameworks. Users with this permission can also assign a compliance framework label to a project, and set the default framework of a group. */
-  AdminComplianceFramework = "ADMIN_COMPLIANCE_FRAMEWORK",
+  ADMIN_COMPLIANCE_FRAMEWORK = "ADMIN_COMPLIANCE_FRAMEWORK",
   /** Add or remove users in a group, and assign roles to users. When assigning a role, users with this custom permission must select a role that has the same or fewer permissions as the default role used as the base for their custom role. */
-  AdminGroupMember = "ADMIN_GROUP_MEMBER",
+  ADMIN_GROUP_MEMBER = "ADMIN_GROUP_MEMBER",
   /** Create, read, update, and delete integrations with external applications. */
-  AdminIntegrations = "ADMIN_INTEGRATIONS",
+  ADMIN_INTEGRATIONS = "ADMIN_INTEGRATIONS",
   /** Allows approval of merge requests. */
-  AdminMergeRequest = "ADMIN_MERGE_REQUEST",
+  ADMIN_MERGE_REQUEST = "ADMIN_MERGE_REQUEST",
   /** Create, read, update, and delete protected branches for a project. */
-  AdminProtectedBranch = "ADMIN_PROTECTED_BRANCH",
+  ADMIN_PROTECTED_BRANCH = "ADMIN_PROTECTED_BRANCH",
   /** Create, read, update, and delete protected environments */
-  AdminProtectedEnvironments = "ADMIN_PROTECTED_ENVIRONMENTS",
+  ADMIN_PROTECTED_ENVIRONMENTS = "ADMIN_PROTECTED_ENVIRONMENTS",
   /** Configure push rules for repositories at the group or project level. */
-  AdminPushRules = "ADMIN_PUSH_RULES",
+  ADMIN_PUSH_RULES = "ADMIN_PUSH_RULES",
   /** Create, view, edit, and delete group or project Runners. Includes configuring Runner settings. */
-  AdminRunners = "ADMIN_RUNNERS",
+  ADMIN_RUNNERS = "ADMIN_RUNNERS",
   /** Edit the security attributes belonging to a top-level group. */
-  AdminSecurityAttributes = "ADMIN_SECURITY_ATTRIBUTES",
+  ADMIN_SECURITY_ATTRIBUTES = "ADMIN_SECURITY_ATTRIBUTES",
   /** Edit and manage security testing configurations and settings. */
-  AdminSecurityTesting = "ADMIN_SECURITY_TESTING",
+  ADMIN_SECURITY_TESTING = "ADMIN_SECURITY_TESTING",
   /** Execute terraform commands, lock/unlock terraform state files, and remove file versions. */
-  AdminTerraformState = "ADMIN_TERRAFORM_STATE",
+  ADMIN_TERRAFORM_STATE = "ADMIN_TERRAFORM_STATE",
   /** Edit the status, linked issue, and severity of a vulnerability object. Also requires the `read_vulnerability` permission. */
-  AdminVulnerability = "ADMIN_VULNERABILITY",
+  ADMIN_VULNERABILITY = "ADMIN_VULNERABILITY",
   /** Manage webhooks */
-  AdminWebHook = "ADMIN_WEB_HOOK",
+  ADMIN_WEB_HOOK = "ADMIN_WEB_HOOK",
   /** Allows archiving of projects. */
-  ArchiveProject = "ARCHIVE_PROJECT",
+  ARCHIVE_PROJECT = "ARCHIVE_PROJECT",
   /** Manage deploy tokens at the group or project level. */
-  ManageDeployTokens = "MANAGE_DEPLOY_TOKENS",
+  MANAGE_DEPLOY_TOKENS = "MANAGE_DEPLOY_TOKENS",
   /** Create, read, update, and delete group access tokens. When creating a token, users with this custom permission must select a role for that token that has the same or fewer permissions as the default role used as the base for the custom role. */
-  ManageGroupAccessTokens = "MANAGE_GROUP_ACCESS_TOKENS",
+  MANAGE_GROUP_ACCESS_TOKENS = "MANAGE_GROUP_ACCESS_TOKENS",
   /** Configure merge request settings at the group or project level. Group actions include managing merge checks and approval settings. Project actions include managing MR configurations, approval rules and settings, and branch targets. In order to enable Suggested reviewers, the "Manage project access tokens" custom permission needs to be enabled. */
-  ManageMergeRequestSettings = "MANAGE_MERGE_REQUEST_SETTINGS",
+  MANAGE_MERGE_REQUEST_SETTINGS = "MANAGE_MERGE_REQUEST_SETTINGS",
   /** Create, read, update, and delete project access tokens. When creating a token, users with this custom permission must select a role for that token that has the same or fewer permissions as the default role used as the base for the custom role. */
-  ManageProjectAccessTokens = "MANAGE_PROJECT_ACCESS_TOKENS",
+  MANAGE_PROJECT_ACCESS_TOKENS = "MANAGE_PROJECT_ACCESS_TOKENS",
   /** Create, read, update, and delete protected tags. */
-  ManageProtectedTags = "MANAGE_PROTECTED_TAGS",
+  MANAGE_PROTECTED_TAGS = "MANAGE_PROTECTED_TAGS",
   /** Allows linking security policy projects. */
-  ManageSecurityPolicyLink = "MANAGE_SECURITY_POLICY_LINK",
+  MANAGE_SECURITY_POLICY_LINK = "MANAGE_SECURITY_POLICY_LINK",
   /** Read CI/CD details for runners and jobs in the Admin Area. */
-  ReadAdminCicd = "READ_ADMIN_CICD",
+  READ_ADMIN_CICD = "READ_ADMIN_CICD",
   /** Read group details in the Admin Area. */
-  ReadAdminGroups = "READ_ADMIN_GROUPS",
+  READ_ADMIN_GROUPS = "READ_ADMIN_GROUPS",
   /** Read system information such as background migrations, health checks, and Gitaly in the Admin Area. */
-  ReadAdminMonitoring = "READ_ADMIN_MONITORING",
+  READ_ADMIN_MONITORING = "READ_ADMIN_MONITORING",
   /** Read project details in the Admin Area. */
-  ReadAdminProjects = "READ_ADMIN_PROJECTS",
+  READ_ADMIN_PROJECTS = "READ_ADMIN_PROJECTS",
   /** Read subscription details in the Admin area. */
-  ReadAdminSubscription = "READ_ADMIN_SUBSCRIPTION",
+  READ_ADMIN_SUBSCRIPTION = "READ_ADMIN_SUBSCRIPTION",
   /** Read the user list and user details in the Admin area. */
-  ReadAdminUsers = "READ_ADMIN_USERS",
+  READ_ADMIN_USERS = "READ_ADMIN_USERS",
   /** Allows read-only access to the source code in the user interface. Does not allow users to edit or download repository archives, clone or pull repositories, view source code in an IDE, or view merge requests for private projects. You can download individual files because read-only access inherently grants the ability to make a local copy of the file. */
-  ReadCode = "READ_CODE",
+  READ_CODE = "READ_CODE",
   /** Read compliance capabilities including adherence, violations, and frameworks for groups and projects. */
-  ReadComplianceDashboard = "READ_COMPLIANCE_DASHBOARD",
+  READ_COMPLIANCE_DASHBOARD = "READ_COMPLIANCE_DASHBOARD",
   /** Read CRM contact. */
-  ReadCrmContact = "READ_CRM_CONTACT",
+  READ_CRM_CONTACT = "READ_CRM_CONTACT",
   /** Allows read-only access to the dependencies and licenses. */
-  ReadDependency = "READ_DEPENDENCY",
+  READ_DEPENDENCY = "READ_DEPENDENCY",
   /** Allows read-only access to group or project runners, including the runner fleet dashboard. */
-  ReadRunners = "READ_RUNNERS",
+  READ_RUNNERS = "READ_RUNNERS",
   /** Read vulnerability reports and security dashboards. */
-  ReadVulnerability = "READ_VULNERABILITY",
+  READ_VULNERABILITY = "READ_VULNERABILITY",
   /** Ability to delete or restore a group. This ability does not allow deleting top-level groups. Review the Retention period settings to prevent accidental deletion. */
-  RemoveGroup = "REMOVE_GROUP",
+  REMOVE_GROUP = "REMOVE_GROUP",
   /** Allows deletion of projects. */
-  RemoveProject = "REMOVE_PROJECT",
+  REMOVE_PROJECT = "REMOVE_PROJECT",
 }
 
 /** Member role standard permission */
 export enum MemberRoleStandardPermission {
   /** Create, read, update, and delete CI/CD variables. */
-  AdminCicdVariables = "ADMIN_CICD_VARIABLES",
+  ADMIN_CICD_VARIABLES = "ADMIN_CICD_VARIABLES",
   /** Create, read, update, and delete compliance frameworks. Users with this permission can also assign a compliance framework label to a project, and set the default framework of a group. */
-  AdminComplianceFramework = "ADMIN_COMPLIANCE_FRAMEWORK",
+  ADMIN_COMPLIANCE_FRAMEWORK = "ADMIN_COMPLIANCE_FRAMEWORK",
   /** Add or remove users in a group, and assign roles to users. When assigning a role, users with this custom permission must select a role that has the same or fewer permissions as the default role used as the base for their custom role. */
-  AdminGroupMember = "ADMIN_GROUP_MEMBER",
+  ADMIN_GROUP_MEMBER = "ADMIN_GROUP_MEMBER",
   /** Create, read, update, and delete integrations with external applications. */
-  AdminIntegrations = "ADMIN_INTEGRATIONS",
+  ADMIN_INTEGRATIONS = "ADMIN_INTEGRATIONS",
   /** Allows approval of merge requests. */
-  AdminMergeRequest = "ADMIN_MERGE_REQUEST",
+  ADMIN_MERGE_REQUEST = "ADMIN_MERGE_REQUEST",
   /** Create, read, update, and delete protected branches for a project. */
-  AdminProtectedBranch = "ADMIN_PROTECTED_BRANCH",
+  ADMIN_PROTECTED_BRANCH = "ADMIN_PROTECTED_BRANCH",
   /** Create, read, update, and delete protected environments */
-  AdminProtectedEnvironments = "ADMIN_PROTECTED_ENVIRONMENTS",
+  ADMIN_PROTECTED_ENVIRONMENTS = "ADMIN_PROTECTED_ENVIRONMENTS",
   /** Configure push rules for repositories at the group or project level. */
-  AdminPushRules = "ADMIN_PUSH_RULES",
+  ADMIN_PUSH_RULES = "ADMIN_PUSH_RULES",
   /** Create, view, edit, and delete group or project Runners. Includes configuring Runner settings. */
-  AdminRunners = "ADMIN_RUNNERS",
+  ADMIN_RUNNERS = "ADMIN_RUNNERS",
   /**
    * Edit the security attributes belonging to a top-level group. Introduced in GitLab 18.2: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.2.
    */
-  AdminSecurityAttributes = "ADMIN_SECURITY_ATTRIBUTES",
+  ADMIN_SECURITY_ATTRIBUTES = "ADMIN_SECURITY_ATTRIBUTES",
   /**
    * Edit and manage security testing configurations and settings. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  AdminSecurityTesting = "ADMIN_SECURITY_TESTING",
+  ADMIN_SECURITY_TESTING = "ADMIN_SECURITY_TESTING",
   /** Execute terraform commands, lock/unlock terraform state files, and remove file versions. */
-  AdminTerraformState = "ADMIN_TERRAFORM_STATE",
+  ADMIN_TERRAFORM_STATE = "ADMIN_TERRAFORM_STATE",
   /** Edit the status, linked issue, and severity of a vulnerability object. Also requires the `read_vulnerability` permission. */
-  AdminVulnerability = "ADMIN_VULNERABILITY",
+  ADMIN_VULNERABILITY = "ADMIN_VULNERABILITY",
   /** Manage webhooks */
-  AdminWebHook = "ADMIN_WEB_HOOK",
+  ADMIN_WEB_HOOK = "ADMIN_WEB_HOOK",
   /** Allows archiving of projects. */
-  ArchiveProject = "ARCHIVE_PROJECT",
+  ARCHIVE_PROJECT = "ARCHIVE_PROJECT",
   /** Manage deploy tokens at the group or project level. */
-  ManageDeployTokens = "MANAGE_DEPLOY_TOKENS",
+  MANAGE_DEPLOY_TOKENS = "MANAGE_DEPLOY_TOKENS",
   /** Create, read, update, and delete group access tokens. When creating a token, users with this custom permission must select a role for that token that has the same or fewer permissions as the default role used as the base for the custom role. */
-  ManageGroupAccessTokens = "MANAGE_GROUP_ACCESS_TOKENS",
+  MANAGE_GROUP_ACCESS_TOKENS = "MANAGE_GROUP_ACCESS_TOKENS",
   /** Configure merge request settings at the group or project level. Group actions include managing merge checks and approval settings. Project actions include managing MR configurations, approval rules and settings, and branch targets. In order to enable Suggested reviewers, the "Manage project access tokens" custom permission needs to be enabled. */
-  ManageMergeRequestSettings = "MANAGE_MERGE_REQUEST_SETTINGS",
+  MANAGE_MERGE_REQUEST_SETTINGS = "MANAGE_MERGE_REQUEST_SETTINGS",
   /** Create, read, update, and delete project access tokens. When creating a token, users with this custom permission must select a role for that token that has the same or fewer permissions as the default role used as the base for the custom role. */
-  ManageProjectAccessTokens = "MANAGE_PROJECT_ACCESS_TOKENS",
+  MANAGE_PROJECT_ACCESS_TOKENS = "MANAGE_PROJECT_ACCESS_TOKENS",
   /**
    * Create, read, update, and delete protected tags. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  ManageProtectedTags = "MANAGE_PROTECTED_TAGS",
+  MANAGE_PROTECTED_TAGS = "MANAGE_PROTECTED_TAGS",
   /** Allows linking security policy projects. */
-  ManageSecurityPolicyLink = "MANAGE_SECURITY_POLICY_LINK",
+  MANAGE_SECURITY_POLICY_LINK = "MANAGE_SECURITY_POLICY_LINK",
   /** Allows read-only access to the source code in the user interface. Does not allow users to edit or download repository archives, clone or pull repositories, view source code in an IDE, or view merge requests for private projects. You can download individual files because read-only access inherently grants the ability to make a local copy of the file. */
-  ReadCode = "READ_CODE",
+  READ_CODE = "READ_CODE",
   /** Read compliance capabilities including adherence, violations, and frameworks for groups and projects. */
-  ReadComplianceDashboard = "READ_COMPLIANCE_DASHBOARD",
+  READ_COMPLIANCE_DASHBOARD = "READ_COMPLIANCE_DASHBOARD",
   /** Read CRM contact. */
-  ReadCrmContact = "READ_CRM_CONTACT",
+  READ_CRM_CONTACT = "READ_CRM_CONTACT",
   /** Allows read-only access to the dependencies and licenses. */
-  ReadDependency = "READ_DEPENDENCY",
+  READ_DEPENDENCY = "READ_DEPENDENCY",
   /** Allows read-only access to group or project runners, including the runner fleet dashboard. */
-  ReadRunners = "READ_RUNNERS",
+  READ_RUNNERS = "READ_RUNNERS",
   /** Read vulnerability reports and security dashboards. */
-  ReadVulnerability = "READ_VULNERABILITY",
+  READ_VULNERABILITY = "READ_VULNERABILITY",
   /** Ability to delete or restore a group. This ability does not allow deleting top-level groups. Review the Retention period settings to prevent accidental deletion. */
-  RemoveGroup = "REMOVE_GROUP",
+  REMOVE_GROUP = "REMOVE_GROUP",
   /** Allows deletion of projects. */
-  RemoveProject = "REMOVE_PROJECT",
+  REMOVE_PROJECT = "REMOVE_PROJECT",
 }
 
 /** Autogenerated input type of MemberRoleToUserAssign */
@@ -29037,67 +29036,67 @@ export type MemberRoleUpdatePayload = {
 /** Access level of a group or project member */
 export enum MemberRolesAccessLevel {
   /** The Developer role gives users access to contribute code while restricting sensitive administrative actions. */
-  Developer = "DEVELOPER",
+  DEVELOPER = "DEVELOPER",
   /** The Guest role is for users who need visibility into a project or group but should not have the ability to make changes, such as external stakeholders. */
-  Guest = "GUEST",
+  GUEST = "GUEST",
   /** The Maintainer role is primarily used for managing code reviews, approvals, and administrative settings for projects. This role can also manage project memberships. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** The Minimal Access role is for users who need the least amount of access into groups and projects. You can assign this role as a default, before giving a user another role with more permissions. */
-  MinimalAccess = "MINIMAL_ACCESS",
+  MINIMAL_ACCESS = "MINIMAL_ACCESS",
   /** The Planner role is suitable for team members who need to manage projects and track work items but do not need to contribute code. */
-  Planner = "PLANNER",
+  PLANNER = "PLANNER",
   /** The Reporter role is suitable for team members who need to stay informed about a project or group but do not actively contribute code. */
-  Reporter = "REPORTER",
+  REPORTER = "REPORTER",
 }
 
 /** Values for ordering member roles by a specific field */
 export enum MemberRolesOrderBy {
   /** Ordered by creation time. */
-  CreatedAt = "CREATED_AT",
+  CREATED_AT = "CREATED_AT",
   /** Ordered by id. */
-  Id = "ID",
+  ID = "ID",
   /** Ordered by name. */
-  Name = "NAME",
+  NAME = "NAME",
 }
 
 /** Values for sorting members */
 export enum MemberSort {
   /** Access level ascending order. */
-  AccessLevelAsc = "ACCESS_LEVEL_ASC",
+  ACCESS_LEVEL_ASC = "ACCESS_LEVEL_ASC",
   /** Access level descending order. */
-  AccessLevelDesc = "ACCESS_LEVEL_DESC",
+  ACCESS_LEVEL_DESC = "ACCESS_LEVEL_DESC",
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /** User's full name ascending order. */
-  UserFullNameAsc = "USER_FULL_NAME_ASC",
+  USER_FULL_NAME_ASC = "USER_FULL_NAME_ASC",
   /** User's full name descending order. */
-  UserFullNameDesc = "USER_FULL_NAME_DESC",
+  USER_FULL_NAME_DESC = "USER_FULL_NAME_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Defines which user roles, users, or groups can merge into a protected branch. */
@@ -29417,63 +29416,63 @@ export type MergeRequest = CurrentUserTodos &
     webUrl?: Maybe<Scalars["String"]["output"]>;
   };
 
-export type MergeRequestApprovedByArgs = {
+export type MergeRequestapprovedByArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestAssigneesArgs = {
+export type MergeRequestassigneesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestAwardEmojiArgs = {
+export type MergeRequestawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestChangeRequestersArgs = {
+export type MergeRequestchangeRequestersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestCommentersArgs = {
+export type MergeRequestcommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestCommitsArgs = {
+export type MergeRequestcommitsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestCommitsWithoutMergeCommitsArgs = {
+export type MergeRequestcommitsWithoutMergeCommitsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestCommittersArgs = {
+export type MergeRequestcommittersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestCurrentUserTodosArgs = {
+export type MergeRequestcurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29481,37 +29480,37 @@ export type MergeRequestCurrentUserTodosArgs = {
   state?: InputMaybe<TodoStateEnum>;
 };
 
-export type MergeRequestDiffStatsArgs = {
+export type MergeRequestdiffStatsArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type MergeRequestDiscussionsArgs = {
+export type MergeRequestdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestFindingReportsComparerArgs = {
+export type MergeRequestfindingReportsComparerArgs = {
   reportType: ComparableSecurityReportType;
   scanMode?: InputMaybe<ScanModeEnum>;
 };
 
-export type MergeRequestLabelsArgs = {
+export type MergeRequestlabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestMergeRequestDiffsArgs = {
+export type MergeRequestmergeRequestDiffsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestNotesArgs = {
+export type MergeRequestnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -29519,14 +29518,14 @@ export type MergeRequestNotesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestParticipantsArgs = {
+export type MergeRequestparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestPipelinesArgs = {
+export type MergeRequestpipelinesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29541,18 +29540,18 @@ export type MergeRequestPipelinesArgs = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type MergeRequestReferenceArgs = {
+export type MergeRequestreferenceArgs = {
   full?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type MergeRequestReviewersArgs = {
+export type MergeRequestreviewersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type MergeRequestTimelogsArgs = {
+export type MergeRequesttimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29606,7 +29605,7 @@ export type MergeRequestApprovalState = {
 };
 
 /** Information relating to rules that must be satisfied to merge this merge request. */
-export type MergeRequestApprovalStateSuggestedApproversArgs = {
+export type MergeRequestApprovalStatesuggestedApproversArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29739,7 +29738,7 @@ export type MergeRequestAssignee = Todoable &
   };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeAssignedMergeRequestsArgs = {
+export type MergeRequestAssigneeassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -29783,7 +29782,7 @@ export type MergeRequestAssigneeAssignedMergeRequestsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeAuthoredMergeRequestsArgs = {
+export type MergeRequestAssigneeauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -29830,7 +29829,7 @@ export type MergeRequestAssigneeAuthoredMergeRequestsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeCalloutsArgs = {
+export type MergeRequestAssigneecalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29838,7 +29837,7 @@ export type MergeRequestAssigneeCalloutsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeContributedProjectsArgs = {
+export type MergeRequestAssigneecontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29851,7 +29850,7 @@ export type MergeRequestAssigneeContributedProjectsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeEmailsArgs = {
+export type MergeRequestAssigneeemailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29859,7 +29858,7 @@ export type MergeRequestAssigneeEmailsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeGroupMembershipsArgs = {
+export type MergeRequestAssigneegroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29867,7 +29866,7 @@ export type MergeRequestAssigneeGroupMembershipsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeGroupsArgs = {
+export type MergeRequestAssigneegroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29878,7 +29877,7 @@ export type MergeRequestAssigneeGroupsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeNamespaceCommitEmailsArgs = {
+export type MergeRequestAssigneenamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29886,7 +29885,7 @@ export type MergeRequestAssigneeNamespaceCommitEmailsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeOrganizationsArgs = {
+export type MergeRequestAssigneeorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29896,7 +29895,7 @@ export type MergeRequestAssigneeOrganizationsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeProjectMembershipsArgs = {
+export type MergeRequestAssigneeprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29904,7 +29903,7 @@ export type MergeRequestAssigneeProjectMembershipsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeReviewRequestedMergeRequestsArgs = {
+export type MergeRequestAssigneereviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -29949,7 +29948,7 @@ export type MergeRequestAssigneeReviewRequestedMergeRequestsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeSavedRepliesArgs = {
+export type MergeRequestAssigneesavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29957,12 +29956,12 @@ export type MergeRequestAssigneeSavedRepliesArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeSavedReplyArgs = {
+export type MergeRequestAssigneesavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeSnippetsArgs = {
+export type MergeRequestAssigneesnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29973,7 +29972,7 @@ export type MergeRequestAssigneeSnippetsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeStarredProjectsArgs = {
+export type MergeRequestAssigneestarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -29985,7 +29984,7 @@ export type MergeRequestAssigneeStarredProjectsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeTimelogsArgs = {
+export type MergeRequestAssigneetimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -30001,7 +30000,7 @@ export type MergeRequestAssigneeTimelogsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeTodosArgs = {
+export type MergeRequestAssigneetodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -30017,7 +30016,7 @@ export type MergeRequestAssigneeTodosArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeUserAchievementsArgs = {
+export type MergeRequestAssigneeuserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30026,7 +30025,7 @@ export type MergeRequestAssigneeUserAchievementsArgs = {
 };
 
 /** A user assigned to a merge request. */
-export type MergeRequestAssigneeWorkspacesArgs = {
+export type MergeRequestAssigneeworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -30185,7 +30184,7 @@ export type MergeRequestAuthor = Todoable &
   };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorAssignedMergeRequestsArgs = {
+export type MergeRequestAuthorassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -30229,7 +30228,7 @@ export type MergeRequestAuthorAssignedMergeRequestsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorAuthoredMergeRequestsArgs = {
+export type MergeRequestAuthorauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -30276,7 +30275,7 @@ export type MergeRequestAuthorAuthoredMergeRequestsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorCalloutsArgs = {
+export type MergeRequestAuthorcalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30284,7 +30283,7 @@ export type MergeRequestAuthorCalloutsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorContributedProjectsArgs = {
+export type MergeRequestAuthorcontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30297,7 +30296,7 @@ export type MergeRequestAuthorContributedProjectsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorEmailsArgs = {
+export type MergeRequestAuthoremailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30305,7 +30304,7 @@ export type MergeRequestAuthorEmailsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorGroupMembershipsArgs = {
+export type MergeRequestAuthorgroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30313,7 +30312,7 @@ export type MergeRequestAuthorGroupMembershipsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorGroupsArgs = {
+export type MergeRequestAuthorgroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30324,7 +30323,7 @@ export type MergeRequestAuthorGroupsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorNamespaceCommitEmailsArgs = {
+export type MergeRequestAuthornamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30332,7 +30331,7 @@ export type MergeRequestAuthorNamespaceCommitEmailsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorOrganizationsArgs = {
+export type MergeRequestAuthororganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30342,7 +30341,7 @@ export type MergeRequestAuthorOrganizationsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorProjectMembershipsArgs = {
+export type MergeRequestAuthorprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30350,7 +30349,7 @@ export type MergeRequestAuthorProjectMembershipsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorReviewRequestedMergeRequestsArgs = {
+export type MergeRequestAuthorreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -30395,7 +30394,7 @@ export type MergeRequestAuthorReviewRequestedMergeRequestsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorSavedRepliesArgs = {
+export type MergeRequestAuthorsavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30403,12 +30402,12 @@ export type MergeRequestAuthorSavedRepliesArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorSavedReplyArgs = {
+export type MergeRequestAuthorsavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorSnippetsArgs = {
+export type MergeRequestAuthorsnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30419,7 +30418,7 @@ export type MergeRequestAuthorSnippetsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorStarredProjectsArgs = {
+export type MergeRequestAuthorstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30431,7 +30430,7 @@ export type MergeRequestAuthorStarredProjectsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorTimelogsArgs = {
+export type MergeRequestAuthortimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -30447,7 +30446,7 @@ export type MergeRequestAuthorTimelogsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorTodosArgs = {
+export type MergeRequestAuthortodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -30463,7 +30462,7 @@ export type MergeRequestAuthorTodosArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorUserAchievementsArgs = {
+export type MergeRequestAuthoruserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30472,7 +30471,7 @@ export type MergeRequestAuthorUserAchievementsArgs = {
 };
 
 /** The author of the merge request. */
-export type MergeRequestAuthorWorkspacesArgs = {
+export type MergeRequestAuthorworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -30668,7 +30667,7 @@ export type MergeRequestDiffRegistryConnection = {
 };
 
 /** The connection type for MergeRequestDiffRegistry. */
-export type MergeRequestDiffRegistryConnectionCountArgs = {
+export type MergeRequestDiffRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -30702,9 +30701,9 @@ export type MergeRequestMergeabilityCheck = {
 /** New state to apply to a merge request. */
 export enum MergeRequestNewState {
   /** Close the merge request if it is open. */
-  Closed = "CLOSED",
+  CLOSED = "CLOSED",
   /** Open the merge request if it is closed. */
-  Open = "OPEN",
+  OPEN = "OPEN",
 }
 
 /** A user participating in a merge request. */
@@ -30833,7 +30832,7 @@ export type MergeRequestParticipant = Todoable &
   };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantAssignedMergeRequestsArgs = {
+export type MergeRequestParticipantassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -30877,7 +30876,7 @@ export type MergeRequestParticipantAssignedMergeRequestsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantAuthoredMergeRequestsArgs = {
+export type MergeRequestParticipantauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -30924,7 +30923,7 @@ export type MergeRequestParticipantAuthoredMergeRequestsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantCalloutsArgs = {
+export type MergeRequestParticipantcalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30932,7 +30931,7 @@ export type MergeRequestParticipantCalloutsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantContributedProjectsArgs = {
+export type MergeRequestParticipantcontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30945,7 +30944,7 @@ export type MergeRequestParticipantContributedProjectsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantEmailsArgs = {
+export type MergeRequestParticipantemailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30953,7 +30952,7 @@ export type MergeRequestParticipantEmailsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantGroupMembershipsArgs = {
+export type MergeRequestParticipantgroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30961,7 +30960,7 @@ export type MergeRequestParticipantGroupMembershipsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantGroupsArgs = {
+export type MergeRequestParticipantgroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30972,7 +30971,7 @@ export type MergeRequestParticipantGroupsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantNamespaceCommitEmailsArgs = {
+export type MergeRequestParticipantnamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30980,7 +30979,7 @@ export type MergeRequestParticipantNamespaceCommitEmailsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantOrganizationsArgs = {
+export type MergeRequestParticipantorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30990,7 +30989,7 @@ export type MergeRequestParticipantOrganizationsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantProjectMembershipsArgs = {
+export type MergeRequestParticipantprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -30998,7 +30997,7 @@ export type MergeRequestParticipantProjectMembershipsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantReviewRequestedMergeRequestsArgs = {
+export type MergeRequestParticipantreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -31043,7 +31042,7 @@ export type MergeRequestParticipantReviewRequestedMergeRequestsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantSavedRepliesArgs = {
+export type MergeRequestParticipantsavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31051,12 +31050,12 @@ export type MergeRequestParticipantSavedRepliesArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantSavedReplyArgs = {
+export type MergeRequestParticipantsavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantSnippetsArgs = {
+export type MergeRequestParticipantsnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31067,7 +31066,7 @@ export type MergeRequestParticipantSnippetsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantStarredProjectsArgs = {
+export type MergeRequestParticipantstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31079,7 +31078,7 @@ export type MergeRequestParticipantStarredProjectsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantTimelogsArgs = {
+export type MergeRequestParticipanttimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -31095,7 +31094,7 @@ export type MergeRequestParticipantTimelogsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantTodosArgs = {
+export type MergeRequestParticipanttodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -31111,7 +31110,7 @@ export type MergeRequestParticipantTodosArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantUserAchievementsArgs = {
+export type MergeRequestParticipantuserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31120,7 +31119,7 @@ export type MergeRequestParticipantUserAchievementsArgs = {
 };
 
 /** A user participating in a merge request. */
-export type MergeRequestParticipantWorkspacesArgs = {
+export type MergeRequestParticipantworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -31181,17 +31180,17 @@ export type MergeRequestPermissions = {
 /** State of a review of a GitLab merge request. */
 export enum MergeRequestReviewState {
   /** Merge request reviewer has approved the changes. */
-  Approved = "APPROVED",
+  APPROVED = "APPROVED",
   /** Merge request reviewer has requested changes. */
-  RequestedChanges = "REQUESTED_CHANGES",
+  REQUESTED_CHANGES = "REQUESTED_CHANGES",
   /** Merge request reviewer has reviewed. */
-  Reviewed = "REVIEWED",
+  REVIEWED = "REVIEWED",
   /** Merge request reviewer has started a review. */
-  ReviewStarted = "REVIEW_STARTED",
+  REVIEW_STARTED = "REVIEW_STARTED",
   /** Merge request reviewer removed their approval of the changes. */
-  Unapproved = "UNAPPROVED",
+  UNAPPROVED = "UNAPPROVED",
   /** Awaiting review from merge request reviewer. */
-  Unreviewed = "UNREVIEWED",
+  UNREVIEWED = "UNREVIEWED",
 }
 
 /** A user assigned to a merge request as a reviewer. */
@@ -31320,7 +31319,7 @@ export type MergeRequestReviewer = Todoable &
   };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerAssignedMergeRequestsArgs = {
+export type MergeRequestReviewerassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -31364,7 +31363,7 @@ export type MergeRequestReviewerAssignedMergeRequestsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerAuthoredMergeRequestsArgs = {
+export type MergeRequestReviewerauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -31411,7 +31410,7 @@ export type MergeRequestReviewerAuthoredMergeRequestsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerCalloutsArgs = {
+export type MergeRequestReviewercalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31419,7 +31418,7 @@ export type MergeRequestReviewerCalloutsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerContributedProjectsArgs = {
+export type MergeRequestReviewercontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31432,7 +31431,7 @@ export type MergeRequestReviewerContributedProjectsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerEmailsArgs = {
+export type MergeRequestRevieweremailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31440,7 +31439,7 @@ export type MergeRequestReviewerEmailsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerGroupMembershipsArgs = {
+export type MergeRequestReviewergroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31448,7 +31447,7 @@ export type MergeRequestReviewerGroupMembershipsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerGroupsArgs = {
+export type MergeRequestReviewergroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31459,7 +31458,7 @@ export type MergeRequestReviewerGroupsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerNamespaceCommitEmailsArgs = {
+export type MergeRequestReviewernamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31467,7 +31466,7 @@ export type MergeRequestReviewerNamespaceCommitEmailsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerOrganizationsArgs = {
+export type MergeRequestReviewerorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31477,7 +31476,7 @@ export type MergeRequestReviewerOrganizationsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerProjectMembershipsArgs = {
+export type MergeRequestReviewerprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31485,7 +31484,7 @@ export type MergeRequestReviewerProjectMembershipsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerReviewRequestedMergeRequestsArgs = {
+export type MergeRequestReviewerreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -31530,7 +31529,7 @@ export type MergeRequestReviewerReviewRequestedMergeRequestsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerSavedRepliesArgs = {
+export type MergeRequestReviewersavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31538,12 +31537,12 @@ export type MergeRequestReviewerSavedRepliesArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerSavedReplyArgs = {
+export type MergeRequestReviewersavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerSnippetsArgs = {
+export type MergeRequestReviewersnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31554,7 +31553,7 @@ export type MergeRequestReviewerSnippetsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerStarredProjectsArgs = {
+export type MergeRequestReviewerstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31566,7 +31565,7 @@ export type MergeRequestReviewerStarredProjectsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerTimelogsArgs = {
+export type MergeRequestReviewertimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -31582,7 +31581,7 @@ export type MergeRequestReviewerTimelogsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerTodosArgs = {
+export type MergeRequestReviewertodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -31598,7 +31597,7 @@ export type MergeRequestReviewerTodosArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerUserAchievementsArgs = {
+export type MergeRequestRevieweruserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -31607,7 +31606,7 @@ export type MergeRequestReviewerUserAchievementsArgs = {
 };
 
 /** A user assigned to a merge request as a reviewer. */
-export type MergeRequestReviewerWorkspacesArgs = {
+export type MergeRequestReviewerworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -31851,75 +31850,75 @@ export type MergeRequestSetSubscriptionPayload = {
 /** Values for sorting merge requests */
 export enum MergeRequestSort {
   /** Closed time by ascending order. */
-  ClosedAtAsc = "CLOSED_AT_ASC",
+  CLOSED_AT_ASC = "CLOSED_AT_ASC",
   /** Closed time by descending order. */
-  ClosedAtDesc = "CLOSED_AT_DESC",
+  CLOSED_AT_DESC = "CLOSED_AT_DESC",
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Label priority by ascending order. */
-  LabelPriorityAsc = "LABEL_PRIORITY_ASC",
+  LABEL_PRIORITY_ASC = "LABEL_PRIORITY_ASC",
   /** Label priority by descending order. */
-  LabelPriorityDesc = "LABEL_PRIORITY_DESC",
+  LABEL_PRIORITY_DESC = "LABEL_PRIORITY_DESC",
   /** Merge time by ascending order. */
-  MergedAtAsc = "MERGED_AT_ASC",
+  MERGED_AT_ASC = "MERGED_AT_ASC",
   /** Merge time by descending order. */
-  MergedAtDesc = "MERGED_AT_DESC",
+  MERGED_AT_DESC = "MERGED_AT_DESC",
   /** Milestone due date by ascending order. */
-  MilestoneDueAsc = "MILESTONE_DUE_ASC",
+  MILESTONE_DUE_ASC = "MILESTONE_DUE_ASC",
   /** Milestone due date by descending order. */
-  MilestoneDueDesc = "MILESTONE_DUE_DESC",
+  MILESTONE_DUE_DESC = "MILESTONE_DUE_DESC",
   /** Number of upvotes (awarded "thumbs up" emoji) by ascending order. */
-  PopularityAsc = "POPULARITY_ASC",
+  POPULARITY_ASC = "POPULARITY_ASC",
   /** Number of upvotes (awarded "thumbs up" emoji) by descending order. */
-  PopularityDesc = "POPULARITY_DESC",
+  POPULARITY_DESC = "POPULARITY_DESC",
   /** Priority by ascending order. */
-  PriorityAsc = "PRIORITY_ASC",
+  PRIORITY_ASC = "PRIORITY_ASC",
   /** Priority by descending order. */
-  PriorityDesc = "PRIORITY_DESC",
+  PRIORITY_DESC = "PRIORITY_DESC",
   /** Title by ascending order. */
-  TitleAsc = "TITLE_ASC",
+  TITLE_ASC = "TITLE_ASC",
   /** Title by descending order. */
-  TitleDesc = "TITLE_DESC",
+  TITLE_DESC = "TITLE_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** State of a GitLab merge request */
 export enum MergeRequestState {
   /** All available. */
-  All = "all",
+  all = "all",
   /** In closed state. */
-  Closed = "closed",
+  closed = "closed",
   /** Discussion has been locked. */
-  Locked = "locked",
+  locked = "locked",
   /** Merge request has been merged. */
-  Merged = "merged",
+  merged = "merged",
   /** Opened merge request. */
-  Opened = "opened",
+  opened = "opened",
 }
 
 /** Autogenerated input type of MergeRequestUpdateApprovalRule */
@@ -31995,9 +31994,9 @@ export type MergeRequestUpdatePayload = {
 /** Values for merge request dashboard list type */
 export enum MergeRequestsDashboardListType {
   /** Action based list rendering. */
-  ActionBased = "ACTION_BASED",
+  ACTION_BASED = "ACTION_BASED",
   /** Role based list rendering. */
-  RoleBased = "ROLE_BASED",
+  ROLE_BASED = "ROLE_BASED",
 }
 
 export type MergeRequestsResolverNegatedParams = {
@@ -32026,24 +32025,24 @@ export type MergeRequestsResolverNegatedParams = {
 /** Representation of whether a GitLab merge request can be merged. */
 export enum MergeStatus {
   /** There are conflicts between the source and target branches. */
-  CannotBeMerged = "CANNOT_BE_MERGED",
+  CANNOT_BE_MERGED = "CANNOT_BE_MERGED",
   /** Currently unchecked. The previous state was `CANNOT_BE_MERGED`. */
-  CannotBeMergedRecheck = "CANNOT_BE_MERGED_RECHECK",
+  CANNOT_BE_MERGED_RECHECK = "CANNOT_BE_MERGED_RECHECK",
   /** There are no conflicts between the source and target branches. */
-  CanBeMerged = "CAN_BE_MERGED",
+  CAN_BE_MERGED = "CAN_BE_MERGED",
   /** Currently checking for mergeability. */
-  Checking = "CHECKING",
+  CHECKING = "CHECKING",
   /** Merge status has not been checked. */
-  Unchecked = "UNCHECKED",
+  UNCHECKED = "UNCHECKED",
 }
 
 export enum MergeStrategyEnum {
   /** Use the add_to_merge_train_when_checks_pass merge strategy. */
-  AddToMergeTrainWhenChecksPass = "ADD_TO_MERGE_TRAIN_WHEN_CHECKS_PASS",
+  ADD_TO_MERGE_TRAIN_WHEN_CHECKS_PASS = "ADD_TO_MERGE_TRAIN_WHEN_CHECKS_PASS",
   /** Use the merge_train merge strategy. */
-  MergeTrain = "MERGE_TRAIN",
+  MERGE_TRAIN = "MERGE_TRAIN",
   /** Use the merge_when_checks_pass merge strategy. */
-  MergeWhenChecksPass = "MERGE_WHEN_CHECKS_PASS",
+  MERGE_WHEN_CHECKS_PASS = "MERGE_WHEN_CHECKS_PASS",
 }
 
 /** Represents a set of cars/merge_requests queued for merging */
@@ -32059,7 +32058,7 @@ export type MergeTrain = {
 };
 
 /** Represents a set of cars/merge_requests queued for merging */
-export type MergeTrainCarsArgs = {
+export type MergeTraincarsArgs = {
   activityStatus?: MergeTrainStatus;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -32144,9 +32143,9 @@ export type MergeTrainEdge = {
 
 export enum MergeTrainStatus {
   /** Active merge train. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Completed merge train. */
-  Completed = "COMPLETED",
+  COMPLETED = "COMPLETED",
 }
 
 /** Autogenerated input type of MergeTrainsDeleteCar */
@@ -32169,53 +32168,53 @@ export type MergeTrainsDeleteCarPayload = {
 /** Representation of mergeability check identifier. */
 export enum MergeabilityCheckIdentifier {
   /** Checks whether CI has passed */
-  CiMustPass = "CI_MUST_PASS",
+  CI_MUST_PASS = "CI_MUST_PASS",
   /** Checks source branch exists and contains commits. */
-  CommitsStatus = "COMMITS_STATUS",
+  COMMITS_STATUS = "COMMITS_STATUS",
   /** Checks whether the merge request has a conflict */
-  Conflict = "CONFLICT",
+  CONFLICT = "CONFLICT",
   /** Checks whether the merge request has open discussions */
-  DiscussionsNotResolved = "DISCUSSIONS_NOT_RESOLVED",
+  DISCUSSIONS_NOT_RESOLVED = "DISCUSSIONS_NOT_RESOLVED",
   /** Checks whether the merge request is draft */
-  DraftStatus = "DRAFT_STATUS",
+  DRAFT_STATUS = "DRAFT_STATUS",
   /** Checks whether the title or description references a Jira issue. */
-  JiraAssociationMissing = "JIRA_ASSOCIATION_MISSING",
+  JIRA_ASSOCIATION_MISSING = "JIRA_ASSOCIATION_MISSING",
   /** Checks whether the merge request contains locked LFS files that are locked by users other than the merge request author */
-  LockedLfsFiles = "LOCKED_LFS_FILES",
+  LOCKED_LFS_FILES = "LOCKED_LFS_FILES",
   /** Checks whether the merge request contains locked paths */
-  LockedPaths = "LOCKED_PATHS",
+  LOCKED_PATHS = "LOCKED_PATHS",
   /** Checks whether the merge request is blocked */
-  MergeRequestBlocked = "MERGE_REQUEST_BLOCKED",
+  MERGE_REQUEST_BLOCKED = "MERGE_REQUEST_BLOCKED",
   /** Checks whether the merge is blocked due to a scheduled merge time */
-  MergeTime = "MERGE_TIME",
+  MERGE_TIME = "MERGE_TIME",
   /** Checks whether the merge request needs to be rebased */
-  NeedRebase = "NEED_REBASE",
+  NEED_REBASE = "NEED_REBASE",
   /** Checks whether the merge request is approved */
-  NotApproved = "NOT_APPROVED",
+  NOT_APPROVED = "NOT_APPROVED",
   /** Checks whether the merge request is open */
-  NotOpen = "NOT_OPEN",
+  NOT_OPEN = "NOT_OPEN",
   /** Checks whether the merge request has changes requested */
-  RequestedChanges = "REQUESTED_CHANGES",
+  REQUESTED_CHANGES = "REQUESTED_CHANGES",
   /** Checks whether the security policies are satisfied */
-  SecurityPolicyViolations = "SECURITY_POLICY_VIOLATIONS",
+  SECURITY_POLICY_VIOLATIONS = "SECURITY_POLICY_VIOLATIONS",
   /** Checks whether the external status checks pass */
-  StatusChecksMustPass = "STATUS_CHECKS_MUST_PASS",
+  STATUS_CHECKS_MUST_PASS = "STATUS_CHECKS_MUST_PASS",
   /** Checks whether the title matches the expected regex */
-  TitleRegex = "TITLE_REGEX",
+  TITLE_REGEX = "TITLE_REGEX",
 }
 
 /** Representation of whether a mergeability check passed, checking, failed or is inactive. */
 export enum MergeabilityCheckStatus {
   /** Mergeability check is being checked. */
-  Checking = "CHECKING",
+  CHECKING = "CHECKING",
   /** Mergeability check has failed. The merge request cannot be merged. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Mergeability check is disabled via settings. */
-  Inactive = "INACTIVE",
+  INACTIVE = "INACTIVE",
   /** Mergeability check has passed. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
   /** Mergeability check has passed with a warning. */
-  Warning = "WARNING",
+  WARNING = "WARNING",
 }
 
 export type Metadata = {
@@ -32235,7 +32234,7 @@ export type Metadata = {
   version: Scalars["String"]["output"];
 };
 
-export type MetadataFeatureFlagsArgs = {
+export type MetadatafeatureFlagsArgs = {
   names: Array<Scalars["String"]["input"]>;
 };
 
@@ -32314,7 +32313,7 @@ export type Milestone = TimeboxReportInterface & {
 };
 
 /** Represents a milestone */
-export type MilestoneReleasesArgs = {
+export type MilestonereleasesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32322,7 +32321,7 @@ export type MilestoneReleasesArgs = {
 };
 
 /** Represents a milestone */
-export type MilestoneReportArgs = {
+export type MilestonereportArgs = {
   fullPath?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -32349,49 +32348,49 @@ export type MilestoneEdge = {
 /** Values for sorting milestones */
 export enum MilestoneSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Milestone due date by ascending order. */
-  DueDateAsc = "DUE_DATE_ASC",
+  DUE_DATE_ASC = "DUE_DATE_ASC",
   /** Milestone due date by descending order. */
-  DueDateDesc = "DUE_DATE_DESC",
+  DUE_DATE_DESC = "DUE_DATE_DESC",
   /** Group milestones in the order: non-expired milestones with due dates, non-expired milestones without due dates and expired milestones then sort by due date in ascending order. */
-  ExpiredLastDueDateAsc = "EXPIRED_LAST_DUE_DATE_ASC",
+  EXPIRED_LAST_DUE_DATE_ASC = "EXPIRED_LAST_DUE_DATE_ASC",
   /** Group milestones in the order: non-expired milestones with due dates, non-expired milestones without due dates and expired milestones then sort by due date in descending order. */
-  ExpiredLastDueDateDesc = "EXPIRED_LAST_DUE_DATE_DESC",
+  EXPIRED_LAST_DUE_DATE_DESC = "EXPIRED_LAST_DUE_DATE_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Current state of milestone */
 export enum MilestoneStateEnum {
   /** Milestone is currently active. */
-  Active = "active",
+  active = "active",
   /** Milestone is closed. */
-  Closed = "closed",
+  closed = "closed",
 }
 
 /** Contains statistics about a milestone */
@@ -32406,20 +32405,20 @@ export type MilestoneStats = {
 /** Milestone ID wildcard values */
 export enum MilestoneWildcardId {
   /** Milestone is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No milestone is assigned. */
-  None = "NONE",
+  NONE = "NONE",
   /** Milestone assigned is open and started (overlaps current date). This differs from the behavior in the [REST API implementation](https://docs.gitlab.com/api/issues/#list-issues). */
-  Started = "STARTED",
+  STARTED = "STARTED",
   /** Milestone assigned starts in the future (start date > today). This differs from the behavior in the [REST API implementation](https://docs.gitlab.com/api/issues/#list-issues). */
-  Upcoming = "UPCOMING",
+  UPCOMING = "UPCOMING",
 }
 
 /** Candidate for a model version in the model registry */
 export type MlCandidate = {
   __typename?: "MlCandidate";
   /** Map of links to perform actions on the candidate. */
-  _links: MlCandidateLinks;
+  _links: MLCandidateLinks;
   /** CI information about the job that created the candidate. */
   ciJob?: Maybe<CiJob>;
   /** Date of creation. */
@@ -32445,7 +32444,7 @@ export type MlCandidate = {
 };
 
 /** Candidate for a model version in the model registry */
-export type MlCandidateMetadataArgs = {
+export type MlCandidatemetadataArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32453,7 +32452,7 @@ export type MlCandidateMetadataArgs = {
 };
 
 /** Candidate for a model version in the model registry */
-export type MlCandidateMetricsArgs = {
+export type MlCandidatemetricsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32461,7 +32460,7 @@ export type MlCandidateMetricsArgs = {
 };
 
 /** Candidate for a model version in the model registry */
-export type MlCandidateParamsArgs = {
+export type MlCandidateparamsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32482,7 +32481,7 @@ export type MlCandidateConnection = {
 };
 
 /** The connection type for MlCandidate. */
-export type MlCandidateConnectionCountArgs = {
+export type MlCandidateConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32520,7 +32519,7 @@ export type MlCandidateMetadataConnection = {
 };
 
 /** The connection type for MlCandidateMetadata. */
-export type MlCandidateMetadataConnectionCountArgs = {
+export type MlCandidateMetadataConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32560,7 +32559,7 @@ export type MlCandidateMetricConnection = {
 };
 
 /** The connection type for MlCandidateMetric. */
-export type MlCandidateMetricConnectionCountArgs = {
+export type MlCandidateMetricConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32598,7 +32597,7 @@ export type MlCandidateParamConnection = {
 };
 
 /** The connection type for MlCandidateParam. */
-export type MlCandidateParamConnectionCountArgs = {
+export type MlCandidateParamConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32635,7 +32634,7 @@ export type MlExperiment = {
 };
 
 /** Machine learning experiment in model experiments */
-export type MlExperimentCandidatesArgs = {
+export type MlExperimentcandidatesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32656,7 +32655,7 @@ export type MlExperimentConnection = {
 };
 
 /** The connection type for MlExperiment. */
-export type MlExperimentConnectionCountArgs = {
+export type MlExperimentConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32673,7 +32672,7 @@ export type MlExperimentEdge = {
 export type MlModel = {
   __typename?: "MlModel";
   /** Map of links to perform actions on the model. */
-  _links: MlModelLinks;
+  _links: MLModelLinks;
   /** User that created the model. */
   author?: Maybe<UserCore>;
   /** Count of candidates in the model. */
@@ -32703,7 +32702,7 @@ export type MlModel = {
 };
 
 /** Machine learning model in the model registry */
-export type MlModelCandidatesArgs = {
+export type MlModelcandidatesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32711,12 +32710,12 @@ export type MlModelCandidatesArgs = {
 };
 
 /** Machine learning model in the model registry */
-export type MlModelVersionArgs = {
+export type MlModelversionArgs = {
   modelVersionId?: InputMaybe<Scalars["MlModelVersionID"]["input"]>;
 };
 
 /** Machine learning model in the model registry */
-export type MlModelVersionsArgs = {
+export type MlModelversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -32740,7 +32739,7 @@ export type MlModelConnection = {
 };
 
 /** The connection type for MlModel. */
-export type MlModelConnectionCountArgs = {
+export type MlModelConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32849,7 +32848,7 @@ export type MlModelEditPayload = {
 export type MlModelVersion = {
   __typename?: "MlModelVersion";
   /** Map of links to perform actions on the model version. */
-  _links: MlModelVersionLinks;
+  _links: MLModelVersionLinks;
   /** Number of files in the package. */
   artifactsCount?: Maybe<Scalars["Int"]["output"]>;
   /** User that created the model version. */
@@ -32884,7 +32883,7 @@ export type MlModelVersionConnection = {
 };
 
 /** The connection type for MlModelVersion. */
-export type MlModelVersionConnectionCountArgs = {
+export type MlModelVersionConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -32971,23 +32970,23 @@ export type MlModelVersionEditPayload = {
 /** Field names for ordering machine learning model versions */
 export enum MlModelVersionsOrderBy {
   /** Ordered by creation time. */
-  CreatedAt = "CREATED_AT",
+  CREATED_AT = "CREATED_AT",
   /** Ordered by id. */
-  Id = "ID",
+  ID = "ID",
   /** Ordered by name. */
-  Version = "VERSION",
+  VERSION = "VERSION",
 }
 
 /** Values for ordering machine learning models by a specific field */
 export enum MlModelsOrderBy {
   /** Ordered by creation time. */
-  CreatedAt = "CREATED_AT",
+  CREATED_AT = "CREATED_AT",
   /** Ordered by id. */
-  Id = "ID",
+  ID = "ID",
   /** Ordered by name. */
-  Name = "NAME",
+  NAME = "NAME",
   /** Ordered by update time. */
-  UpdatedAt = "UPDATED_AT",
+  UPDATED_AT = "UPDATED_AT",
 }
 
 /** A year and month input for querying product analytics usage data. */
@@ -33012,9 +33011,9 @@ export type MonthlyUsage = {
 /** The position to which the adjacent object should be moved */
 export enum MoveType {
   /** Adjacent object is moved after the object that is being moved. */
-  After = "after",
+  after = "after",
   /** Adjacent object is moved before the object that is being moved. */
-  Before = "before",
+  before = "before",
 }
 
 export type Mutation = {
@@ -33103,9 +33102,9 @@ export type Mutation = {
   alertSetAssignees?: Maybe<AlertSetAssigneesPayload>;
   alertTodoCreate?: Maybe<AlertTodoCreatePayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 16.10. */
-  approvalProjectRuleDelete?: Maybe<ApprovalProjectRuleDeletePayload>;
+  approvalProjectRuleDelete?: Maybe<approvalProjectRuleDeletePayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 16.10. */
-  approvalProjectRuleUpdate?: Maybe<ApprovalProjectRuleUpdatePayload>;
+  approvalProjectRuleUpdate?: Maybe<approvalProjectRuleUpdatePayload>;
   approveDeployment?: Maybe<ApproveDeploymentPayload>;
   artifactDestroy?: Maybe<ArtifactDestroyPayload>;
   auditEventsAmazonS3ConfigurationCreate?: Maybe<AuditEventsAmazonS3ConfigurationCreatePayload>;
@@ -33137,8 +33136,8 @@ export type Mutation = {
   auditEventsStreamingHeadersCreate?: Maybe<AuditEventsStreamingHeadersCreatePayload>;
   auditEventsStreamingHeadersDestroy?: Maybe<AuditEventsStreamingHeadersDestroyPayload>;
   auditEventsStreamingHeadersUpdate?: Maybe<AuditEventsStreamingHeadersUpdatePayload>;
-  auditEventsStreamingHttpNamespaceFiltersAdd?: Maybe<AuditEventsStreamingHttpNamespaceFiltersAddPayload>;
-  auditEventsStreamingHttpNamespaceFiltersDelete?: Maybe<AuditEventsStreamingHttpNamespaceFiltersDeletePayload>;
+  auditEventsStreamingHttpNamespaceFiltersAdd?: Maybe<AuditEventsStreamingHTTPNamespaceFiltersAddPayload>;
+  auditEventsStreamingHttpNamespaceFiltersDelete?: Maybe<AuditEventsStreamingHTTPNamespaceFiltersDeletePayload>;
   auditEventsStreamingInstanceHeadersCreate?: Maybe<AuditEventsStreamingInstanceHeadersCreatePayload>;
   auditEventsStreamingInstanceHeadersDestroy?: Maybe<AuditEventsStreamingInstanceHeadersDestroyPayload>;
   auditEventsStreamingInstanceHeadersUpdate?: Maybe<AuditEventsStreamingInstanceHeadersUpdatePayload>;
@@ -33151,7 +33150,7 @@ export type Mutation = {
   boardListUpdateLimitMetrics?: Maybe<BoardListUpdateLimitMetricsPayload>;
   branchDelete?: Maybe<BranchDeletePayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 16.10. */
-  branchRuleApprovalProjectRuleCreate?: Maybe<BranchRuleApprovalProjectRuleCreatePayload>;
+  branchRuleApprovalProjectRuleCreate?: Maybe<branchRuleApprovalProjectRuleCreatePayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 16.7. */
   branchRuleCreate?: Maybe<BranchRuleCreatePayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 16.9. */
@@ -33272,7 +33271,7 @@ export type Mutation = {
    * Creates a protection rule to control which user roles can modify container image tags matching a specified pattern. Introduced in GitLab 17.8: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.8.
    */
-  createContainerProtectionTagRule?: Maybe<CreateContainerProtectionTagRulePayload>;
+  createContainerProtectionTagRule?: Maybe<createContainerProtectionTagRulePayload>;
   createCustomEmoji?: Maybe<CreateCustomEmojiPayload>;
   createDiffNote?: Maybe<CreateDiffNotePayload>;
   createDiscussion?: Maybe<CreateDiscussionPayload>;
@@ -33511,7 +33510,7 @@ export type Mutation = {
   iterationCadenceCreate?: Maybe<IterationCadenceCreatePayload>;
   iterationCadenceDestroy?: Maybe<IterationCadenceDestroyPayload>;
   iterationCadenceUpdate?: Maybe<IterationCadenceUpdatePayload>;
-  iterationCreate?: Maybe<IterationCreatePayload>;
+  iterationCreate?: Maybe<iterationCreatePayload>;
   iterationDelete?: Maybe<IterationDeletePayload>;
   jiraImportStart?: Maybe<JiraImportStartPayload>;
   jiraImportUsers?: Maybe<JiraImportUsersPayload>;
@@ -33649,7 +33648,7 @@ export type Mutation = {
   processUserBillablePromotionRequest?: Maybe<ProcessUserBillablePromotionRequestPayload>;
   productAnalyticsProjectSettingsUpdate?: Maybe<ProductAnalyticsProjectSettingsUpdatePayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 17.1. */
-  projectBlobsRemove?: Maybe<ProjectBlobsRemovePayload>;
+  projectBlobsRemove?: Maybe<projectBlobsRemovePayload>;
   projectCiCdSettingsUpdate?: Maybe<ProjectCiCdSettingsUpdatePayload>;
   projectInitializeProductAnalytics?: Maybe<ProjectInitializeProductAnalyticsPayload>;
   /** Updates multiple members of a project. To use this mutation, you must have at least the Maintainer role. */
@@ -33688,7 +33687,7 @@ export type Mutation = {
   projectTargetBranchRuleCreate?: Maybe<ProjectTargetBranchRuleCreatePayload>;
   projectTargetBranchRuleDestroy?: Maybe<ProjectTargetBranchRuleDestroyPayload>;
   /** @deprecated **Status**: Experiment. Introduced in GitLab 17.1. */
-  projectTextReplace?: Maybe<ProjectTextReplacePayload>;
+  projectTextReplace?: Maybe<projectTextReplacePayload>;
   /** Update compliance frameworks for a project. */
   projectUpdateComplianceFrameworks?: Maybe<ProjectUpdateComplianceFrameworksPayload>;
   /** @deprecated Use HttpIntegrationCreate. Deprecated in GitLab 18.2. */
@@ -33940,7 +33939,7 @@ export type Mutation = {
   vulnerabilitiesDismiss?: Maybe<VulnerabilitiesDismissPayload>;
   /** Remove all Vulnerabilities and related information from a given project. [Introduced](https://gitlab.com/gitlab-org/gitlab/-/issues/412602) in GitLab 16.7 */
   vulnerabilitiesRemoveAllFromProject?: Maybe<VulnerabilitiesRemoveAllFromProjectPayload>;
-  vulnerabilitiesSeverityOverride?: Maybe<VulnerabilitiesSeverityOverridePayload>;
+  vulnerabilitiesSeverityOverride?: Maybe<vulnerabilitiesSeverityOverridePayload>;
   vulnerabilityConfirm?: Maybe<VulnerabilityConfirmPayload>;
   vulnerabilityCreate?: Maybe<VulnerabilityCreatePayload>;
   vulnerabilityDismiss?: Maybe<VulnerabilityDismissPayload>;
@@ -34025,2156 +34024,2156 @@ export type Mutation = {
    * Reorder a work item in the hierarchy tree. Introduced in GitLab 17.3: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.3.
    */
-  workItemsHierarchyReorder?: Maybe<WorkItemsHierarchyReorderPayload>;
+  workItemsHierarchyReorder?: Maybe<workItemsHierarchyReorderPayload>;
   /**
    * Reorders a project level work item. Introduced in GitLab 18.3: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.3.
    */
-  workItemsReorder?: Maybe<WorkItemsReorderPayload>;
+  workItemsReorder?: Maybe<workItemsReorderPayload>;
   workspaceCreate?: Maybe<WorkspaceCreatePayload>;
   workspaceUpdate?: Maybe<WorkspaceUpdatePayload>;
 };
 
-export type MutationAbuseReportLabelCreateArgs = {
+export type MutationabuseReportLabelCreateArgs = {
   input: AbuseReportLabelCreateInput;
 };
 
-export type MutationAchievementsAwardArgs = {
+export type MutationachievementsAwardArgs = {
   input: AchievementsAwardInput;
 };
 
-export type MutationAchievementsCreateArgs = {
+export type MutationachievementsCreateArgs = {
   input: AchievementsCreateInput;
 };
 
-export type MutationAchievementsDeleteArgs = {
+export type MutationachievementsDeleteArgs = {
   input: AchievementsDeleteInput;
 };
 
-export type MutationAchievementsRevokeArgs = {
+export type MutationachievementsRevokeArgs = {
   input: AchievementsRevokeInput;
 };
 
-export type MutationAchievementsUpdateArgs = {
+export type MutationachievementsUpdateArgs = {
   input: AchievementsUpdateInput;
 };
 
-export type MutationAddProjectToSecurityDashboardArgs = {
+export type MutationaddProjectToSecurityDashboardArgs = {
   input: AddProjectToSecurityDashboardInput;
 };
 
-export type MutationAdminRolesLdapSyncArgs = {
+export type MutationadminRolesLdapSyncArgs = {
   input: AdminRolesLdapSyncInput;
 };
 
-export type MutationAdminSidekiqQueuesDeleteJobsArgs = {
+export type MutationadminSidekiqQueuesDeleteJobsArgs = {
   input: AdminSidekiqQueuesDeleteJobsInput;
 };
 
-export type MutationAiActionArgs = {
+export type MutationaiActionArgs = {
   input: AiActionInput;
 };
 
-export type MutationAiAgentCreateArgs = {
+export type MutationaiAgentCreateArgs = {
   input: AiAgentCreateInput;
 };
 
-export type MutationAiAgentDestroyArgs = {
+export type MutationaiAgentDestroyArgs = {
   input: AiAgentDestroyInput;
 };
 
-export type MutationAiAgentUpdateArgs = {
+export type MutationaiAgentUpdateArgs = {
   input: AiAgentUpdateInput;
 };
 
-export type MutationAiCatalogAgentCreateArgs = {
+export type MutationaiCatalogAgentCreateArgs = {
   input: AiCatalogAgentCreateInput;
 };
 
-export type MutationAiCatalogAgentDeleteArgs = {
+export type MutationaiCatalogAgentDeleteArgs = {
   input: AiCatalogAgentDeleteInput;
 };
 
-export type MutationAiCatalogAgentExecuteArgs = {
+export type MutationaiCatalogAgentExecuteArgs = {
   input: AiCatalogAgentExecuteInput;
 };
 
-export type MutationAiCatalogAgentUpdateArgs = {
+export type MutationaiCatalogAgentUpdateArgs = {
   input: AiCatalogAgentUpdateInput;
 };
 
-export type MutationAiCatalogFlowCreateArgs = {
+export type MutationaiCatalogFlowCreateArgs = {
   input: AiCatalogFlowCreateInput;
 };
 
-export type MutationAiCatalogFlowDeleteArgs = {
+export type MutationaiCatalogFlowDeleteArgs = {
   input: AiCatalogFlowDeleteInput;
 };
 
-export type MutationAiCatalogFlowExecuteArgs = {
+export type MutationaiCatalogFlowExecuteArgs = {
   input: AiCatalogFlowExecuteInput;
 };
 
-export type MutationAiCatalogFlowUpdateArgs = {
+export type MutationaiCatalogFlowUpdateArgs = {
   input: AiCatalogFlowUpdateInput;
 };
 
-export type MutationAiCatalogItemConsumerCreateArgs = {
+export type MutationaiCatalogItemConsumerCreateArgs = {
   input: AiCatalogItemConsumerCreateInput;
 };
 
-export type MutationAiCatalogItemConsumerDeleteArgs = {
+export type MutationaiCatalogItemConsumerDeleteArgs = {
   input: AiCatalogItemConsumerDeleteInput;
 };
 
-export type MutationAiCatalogItemConsumerUpdateArgs = {
+export type MutationaiCatalogItemConsumerUpdateArgs = {
   input: AiCatalogItemConsumerUpdateInput;
 };
 
-export type MutationAiDuoWorkflowCreateArgs = {
+export type MutationaiDuoWorkflowCreateArgs = {
   input: AiDuoWorkflowCreateInput;
 };
 
-export type MutationAiFeatureSettingUpdateArgs = {
+export type MutationaiFeatureSettingUpdateArgs = {
   input: AiFeatureSettingUpdateInput;
 };
 
-export type MutationAiFlowTriggerCreateArgs = {
+export type MutationaiFlowTriggerCreateArgs = {
   input: AiFlowTriggerCreateInput;
 };
 
-export type MutationAiFlowTriggerDeleteArgs = {
+export type MutationaiFlowTriggerDeleteArgs = {
   input: AiFlowTriggerDeleteInput;
 };
 
-export type MutationAiFlowTriggerUpdateArgs = {
+export type MutationaiFlowTriggerUpdateArgs = {
   input: AiFlowTriggerUpdateInput;
 };
 
-export type MutationAiModelSelectionNamespaceUpdateArgs = {
+export type MutationaiModelSelectionNamespaceUpdateArgs = {
   input: AiModelSelectionNamespaceUpdateInput;
 };
 
-export type MutationAiSelfHostedModelConnectionCheckArgs = {
+export type MutationaiSelfHostedModelConnectionCheckArgs = {
   input: AiSelfHostedModelConnectionCheckInput;
 };
 
-export type MutationAiSelfHostedModelCreateArgs = {
+export type MutationaiSelfHostedModelCreateArgs = {
   input: AiSelfHostedModelCreateInput;
 };
 
-export type MutationAiSelfHostedModelDeleteArgs = {
+export type MutationaiSelfHostedModelDeleteArgs = {
   input: AiSelfHostedModelDeleteInput;
 };
 
-export type MutationAiSelfHostedModelUpdateArgs = {
+export type MutationaiSelfHostedModelUpdateArgs = {
   input: AiSelfHostedModelUpdateInput;
 };
 
-export type MutationAlertSetAssigneesArgs = {
+export type MutationalertSetAssigneesArgs = {
   input: AlertSetAssigneesInput;
 };
 
-export type MutationAlertTodoCreateArgs = {
+export type MutationalertTodoCreateArgs = {
   input: AlertTodoCreateInput;
 };
 
-export type MutationApprovalProjectRuleDeleteArgs = {
-  input: ApprovalProjectRuleDeleteInput;
+export type MutationapprovalProjectRuleDeleteArgs = {
+  input: approvalProjectRuleDeleteInput;
 };
 
-export type MutationApprovalProjectRuleUpdateArgs = {
-  input: ApprovalProjectRuleUpdateInput;
+export type MutationapprovalProjectRuleUpdateArgs = {
+  input: approvalProjectRuleUpdateInput;
 };
 
-export type MutationApproveDeploymentArgs = {
+export type MutationapproveDeploymentArgs = {
   input: ApproveDeploymentInput;
 };
 
-export type MutationArtifactDestroyArgs = {
+export type MutationartifactDestroyArgs = {
   input: ArtifactDestroyInput;
 };
 
-export type MutationAuditEventsAmazonS3ConfigurationCreateArgs = {
+export type MutationauditEventsAmazonS3ConfigurationCreateArgs = {
   input: AuditEventsAmazonS3ConfigurationCreateInput;
 };
 
-export type MutationAuditEventsAmazonS3ConfigurationDeleteArgs = {
+export type MutationauditEventsAmazonS3ConfigurationDeleteArgs = {
   input: AuditEventsAmazonS3ConfigurationDeleteInput;
 };
 
-export type MutationAuditEventsAmazonS3ConfigurationUpdateArgs = {
+export type MutationauditEventsAmazonS3ConfigurationUpdateArgs = {
   input: AuditEventsAmazonS3ConfigurationUpdateInput;
 };
 
-export type MutationAuditEventsGroupDestinationEventsAddArgs = {
+export type MutationauditEventsGroupDestinationEventsAddArgs = {
   input: AuditEventsGroupDestinationEventsAddInput;
 };
 
-export type MutationAuditEventsGroupDestinationEventsDeleteArgs = {
+export type MutationauditEventsGroupDestinationEventsDeleteArgs = {
   input: AuditEventsGroupDestinationEventsDeleteInput;
 };
 
-export type MutationAuditEventsGroupDestinationNamespaceFilterCreateArgs = {
+export type MutationauditEventsGroupDestinationNamespaceFilterCreateArgs = {
   input: AuditEventsGroupDestinationNamespaceFilterCreateInput;
 };
 
-export type MutationAuditEventsGroupDestinationNamespaceFilterDeleteArgs = {
+export type MutationauditEventsGroupDestinationNamespaceFilterDeleteArgs = {
   input: AuditEventsGroupDestinationNamespaceFilterDeleteInput;
 };
 
-export type MutationAuditEventsInstanceAmazonS3ConfigurationCreateArgs = {
+export type MutationauditEventsInstanceAmazonS3ConfigurationCreateArgs = {
   input: AuditEventsInstanceAmazonS3ConfigurationCreateInput;
 };
 
-export type MutationAuditEventsInstanceAmazonS3ConfigurationDeleteArgs = {
+export type MutationauditEventsInstanceAmazonS3ConfigurationDeleteArgs = {
   input: AuditEventsInstanceAmazonS3ConfigurationDeleteInput;
 };
 
-export type MutationAuditEventsInstanceAmazonS3ConfigurationUpdateArgs = {
+export type MutationauditEventsInstanceAmazonS3ConfigurationUpdateArgs = {
   input: AuditEventsInstanceAmazonS3ConfigurationUpdateInput;
 };
 
-export type MutationAuditEventsInstanceDestinationEventsAddArgs = {
+export type MutationauditEventsInstanceDestinationEventsAddArgs = {
   input: AuditEventsInstanceDestinationEventsAddInput;
 };
 
-export type MutationAuditEventsInstanceDestinationEventsDeleteArgs = {
+export type MutationauditEventsInstanceDestinationEventsDeleteArgs = {
   input: AuditEventsInstanceDestinationEventsDeleteInput;
 };
 
-export type MutationAuditEventsInstanceDestinationNamespaceFilterCreateArgs = {
+export type MutationauditEventsInstanceDestinationNamespaceFilterCreateArgs = {
   input: AuditEventsInstanceDestinationNamespaceFilterCreateInput;
 };
 
-export type MutationAuditEventsInstanceDestinationNamespaceFilterDeleteArgs = {
+export type MutationauditEventsInstanceDestinationNamespaceFilterDeleteArgs = {
   input: AuditEventsInstanceDestinationNamespaceFilterDeleteInput;
 };
 
-export type MutationAuditEventsStreamingDestinationEventsAddArgs = {
+export type MutationauditEventsStreamingDestinationEventsAddArgs = {
   input: AuditEventsStreamingDestinationEventsAddInput;
 };
 
-export type MutationAuditEventsStreamingDestinationEventsRemoveArgs = {
+export type MutationauditEventsStreamingDestinationEventsRemoveArgs = {
   input: AuditEventsStreamingDestinationEventsRemoveInput;
 };
 
-export type MutationAuditEventsStreamingDestinationInstanceEventsAddArgs = {
+export type MutationauditEventsStreamingDestinationInstanceEventsAddArgs = {
   input: AuditEventsStreamingDestinationInstanceEventsAddInput;
 };
 
-export type MutationAuditEventsStreamingDestinationInstanceEventsRemoveArgs = {
+export type MutationauditEventsStreamingDestinationInstanceEventsRemoveArgs = {
   input: AuditEventsStreamingDestinationInstanceEventsRemoveInput;
 };
 
-export type MutationAuditEventsStreamingHeadersCreateArgs = {
+export type MutationauditEventsStreamingHeadersCreateArgs = {
   input: AuditEventsStreamingHeadersCreateInput;
 };
 
-export type MutationAuditEventsStreamingHeadersDestroyArgs = {
+export type MutationauditEventsStreamingHeadersDestroyArgs = {
   input: AuditEventsStreamingHeadersDestroyInput;
 };
 
-export type MutationAuditEventsStreamingHeadersUpdateArgs = {
+export type MutationauditEventsStreamingHeadersUpdateArgs = {
   input: AuditEventsStreamingHeadersUpdateInput;
 };
 
-export type MutationAuditEventsStreamingHttpNamespaceFiltersAddArgs = {
-  input: AuditEventsStreamingHttpNamespaceFiltersAddInput;
+export type MutationauditEventsStreamingHttpNamespaceFiltersAddArgs = {
+  input: AuditEventsStreamingHTTPNamespaceFiltersAddInput;
 };
 
-export type MutationAuditEventsStreamingHttpNamespaceFiltersDeleteArgs = {
-  input: AuditEventsStreamingHttpNamespaceFiltersDeleteInput;
+export type MutationauditEventsStreamingHttpNamespaceFiltersDeleteArgs = {
+  input: AuditEventsStreamingHTTPNamespaceFiltersDeleteInput;
 };
 
-export type MutationAuditEventsStreamingInstanceHeadersCreateArgs = {
+export type MutationauditEventsStreamingInstanceHeadersCreateArgs = {
   input: AuditEventsStreamingInstanceHeadersCreateInput;
 };
 
-export type MutationAuditEventsStreamingInstanceHeadersDestroyArgs = {
+export type MutationauditEventsStreamingInstanceHeadersDestroyArgs = {
   input: AuditEventsStreamingInstanceHeadersDestroyInput;
 };
 
-export type MutationAuditEventsStreamingInstanceHeadersUpdateArgs = {
+export type MutationauditEventsStreamingInstanceHeadersUpdateArgs = {
   input: AuditEventsStreamingInstanceHeadersUpdateInput;
 };
 
-export type MutationAwardEmojiAddArgs = {
+export type MutationawardEmojiAddArgs = {
   input: AwardEmojiAddInput;
 };
 
-export type MutationAwardEmojiRemoveArgs = {
+export type MutationawardEmojiRemoveArgs = {
   input: AwardEmojiRemoveInput;
 };
 
-export type MutationAwardEmojiToggleArgs = {
+export type MutationawardEmojiToggleArgs = {
   input: AwardEmojiToggleInput;
 };
 
-export type MutationBoardEpicCreateArgs = {
+export type MutationboardEpicCreateArgs = {
   input: BoardEpicCreateInput;
 };
 
-export type MutationBoardListCreateArgs = {
+export type MutationboardListCreateArgs = {
   input: BoardListCreateInput;
 };
 
-export type MutationBoardListUpdateLimitMetricsArgs = {
+export type MutationboardListUpdateLimitMetricsArgs = {
   input: BoardListUpdateLimitMetricsInput;
 };
 
-export type MutationBranchDeleteArgs = {
+export type MutationbranchDeleteArgs = {
   input: BranchDeleteInput;
 };
 
-export type MutationBranchRuleApprovalProjectRuleCreateArgs = {
-  input: BranchRuleApprovalProjectRuleCreateInput;
+export type MutationbranchRuleApprovalProjectRuleCreateArgs = {
+  input: branchRuleApprovalProjectRuleCreateInput;
 };
 
-export type MutationBranchRuleCreateArgs = {
+export type MutationbranchRuleCreateArgs = {
   input: BranchRuleCreateInput;
 };
 
-export type MutationBranchRuleDeleteArgs = {
+export type MutationbranchRuleDeleteArgs = {
   input: BranchRuleDeleteInput;
 };
 
-export type MutationBranchRuleExternalStatusCheckCreateArgs = {
+export type MutationbranchRuleExternalStatusCheckCreateArgs = {
   input: BranchRuleExternalStatusCheckCreateInput;
 };
 
-export type MutationBranchRuleExternalStatusCheckDestroyArgs = {
+export type MutationbranchRuleExternalStatusCheckDestroyArgs = {
   input: BranchRuleExternalStatusCheckDestroyInput;
 };
 
-export type MutationBranchRuleExternalStatusCheckUpdateArgs = {
+export type MutationbranchRuleExternalStatusCheckUpdateArgs = {
   input: BranchRuleExternalStatusCheckUpdateInput;
 };
 
-export type MutationBranchRuleSquashOptionDeleteArgs = {
+export type MutationbranchRuleSquashOptionDeleteArgs = {
   input: BranchRuleSquashOptionDeleteInput;
 };
 
-export type MutationBranchRuleSquashOptionUpdateArgs = {
+export type MutationbranchRuleSquashOptionUpdateArgs = {
   input: BranchRuleSquashOptionUpdateInput;
 };
 
-export type MutationBranchRuleUpdateArgs = {
+export type MutationbranchRuleUpdateArgs = {
   input: BranchRuleUpdateInput;
 };
 
-export type MutationBulkDestroyJobArtifactsArgs = {
+export type MutationbulkDestroyJobArtifactsArgs = {
   input: BulkDestroyJobArtifactsInput;
 };
 
-export type MutationBulkEnableDevopsAdoptionNamespacesArgs = {
+export type MutationbulkEnableDevopsAdoptionNamespacesArgs = {
   input: BulkEnableDevopsAdoptionNamespacesInput;
 };
 
-export type MutationBulkRunnerDeleteArgs = {
+export type MutationbulkRunnerDeleteArgs = {
   input: BulkRunnerDeleteInput;
 };
 
-export type MutationCatalogResourcesCreateArgs = {
+export type MutationcatalogResourcesCreateArgs = {
   input: CatalogResourcesCreateInput;
 };
 
-export type MutationCatalogResourcesDestroyArgs = {
+export type MutationcatalogResourcesDestroyArgs = {
   input: CatalogResourcesDestroyInput;
 };
 
-export type MutationCiJobTokenScopeAddGroupOrProjectArgs = {
+export type MutationciJobTokenScopeAddGroupOrProjectArgs = {
   input: CiJobTokenScopeAddGroupOrProjectInput;
 };
 
-export type MutationCiJobTokenScopeAddProjectArgs = {
+export type MutationciJobTokenScopeAddProjectArgs = {
   input: CiJobTokenScopeAddProjectInput;
 };
 
-export type MutationCiJobTokenScopeAutopopulateAllowlistArgs = {
+export type MutationciJobTokenScopeAutopopulateAllowlistArgs = {
   input: CiJobTokenScopeAutopopulateAllowlistInput;
 };
 
-export type MutationCiJobTokenScopeClearAllowlistAutopopulationsArgs = {
+export type MutationciJobTokenScopeClearAllowlistAutopopulationsArgs = {
   input: CiJobTokenScopeClearAllowlistAutopopulationsInput;
 };
 
-export type MutationCiJobTokenScopeRemoveGroupArgs = {
+export type MutationciJobTokenScopeRemoveGroupArgs = {
   input: CiJobTokenScopeRemoveGroupInput;
 };
 
-export type MutationCiJobTokenScopeRemoveProjectArgs = {
+export type MutationciJobTokenScopeRemoveProjectArgs = {
   input: CiJobTokenScopeRemoveProjectInput;
 };
 
-export type MutationCiJobTokenScopeUpdatePoliciesArgs = {
+export type MutationciJobTokenScopeUpdatePoliciesArgs = {
   input: CiJobTokenScopeUpdatePoliciesInput;
 };
 
-export type MutationCiLintArgs = {
+export type MutationciLintArgs = {
   input: CiLintInput;
 };
 
-export type MutationClusterAgentDeleteArgs = {
+export type MutationclusterAgentDeleteArgs = {
   input: ClusterAgentDeleteInput;
 };
 
-export type MutationClusterAgentTokenCreateArgs = {
+export type MutationclusterAgentTokenCreateArgs = {
   input: ClusterAgentTokenCreateInput;
 };
 
-export type MutationClusterAgentTokenRevokeArgs = {
+export type MutationclusterAgentTokenRevokeArgs = {
   input: ClusterAgentTokenRevokeInput;
 };
 
-export type MutationClusterAgentUrlConfigurationCreateArgs = {
+export type MutationclusterAgentUrlConfigurationCreateArgs = {
   input: ClusterAgentUrlConfigurationCreateInput;
 };
 
-export type MutationClusterAgentUrlConfigurationDeleteArgs = {
+export type MutationclusterAgentUrlConfigurationDeleteArgs = {
   input: ClusterAgentUrlConfigurationDeleteInput;
 };
 
-export type MutationCommitCreateArgs = {
+export type MutationcommitCreateArgs = {
   input: CommitCreateInput;
 };
 
-export type MutationConfigureContainerScanningArgs = {
+export type MutationconfigureContainerScanningArgs = {
   input: ConfigureContainerScanningInput;
 };
 
-export type MutationConfigureDependencyScanningArgs = {
+export type MutationconfigureDependencyScanningArgs = {
   input: ConfigureDependencyScanningInput;
 };
 
-export type MutationConfigureSastArgs = {
+export type MutationconfigureSastArgs = {
   input: ConfigureSastInput;
 };
 
-export type MutationConfigureSastIacArgs = {
+export type MutationconfigureSastIacArgs = {
   input: ConfigureSastIacInput;
 };
 
-export type MutationConfigureSecretDetectionArgs = {
+export type MutationconfigureSecretDetectionArgs = {
   input: ConfigureSecretDetectionInput;
 };
 
-export type MutationCorpusCreateArgs = {
+export type MutationcorpusCreateArgs = {
   input: CorpusCreateInput;
 };
 
-export type MutationCreateAbuseReportNoteArgs = {
+export type MutationcreateAbuseReportNoteArgs = {
   input: CreateAbuseReportNoteInput;
 };
 
-export type MutationCreateAlertIssueArgs = {
+export type MutationcreateAlertIssueArgs = {
   input: CreateAlertIssueInput;
 };
 
-export type MutationCreateAnnotationArgs = {
+export type MutationcreateAnnotationArgs = {
   input: CreateAnnotationInput;
 };
 
-export type MutationCreateBoardArgs = {
+export type MutationcreateBoardArgs = {
   input: CreateBoardInput;
 };
 
-export type MutationCreateBranchArgs = {
+export type MutationcreateBranchArgs = {
   input: CreateBranchInput;
 };
 
-export type MutationCreateClusterAgentArgs = {
+export type MutationcreateClusterAgentArgs = {
   input: CreateClusterAgentInput;
 };
 
-export type MutationCreateComplianceFrameworkArgs = {
+export type MutationcreateComplianceFrameworkArgs = {
   input: CreateComplianceFrameworkInput;
 };
 
-export type MutationCreateComplianceRequirementArgs = {
+export type MutationcreateComplianceRequirementArgs = {
   input: CreateComplianceRequirementInput;
 };
 
-export type MutationCreateComplianceRequirementsControlArgs = {
+export type MutationcreateComplianceRequirementsControlArgs = {
   input: CreateComplianceRequirementsControlInput;
 };
 
-export type MutationCreateContainerProtectionRepositoryRuleArgs = {
+export type MutationcreateContainerProtectionRepositoryRuleArgs = {
   input: CreateContainerProtectionRepositoryRuleInput;
 };
 
-export type MutationCreateContainerProtectionTagRuleArgs = {
-  input: CreateContainerProtectionTagRuleInput;
+export type MutationcreateContainerProtectionTagRuleArgs = {
+  input: createContainerProtectionTagRuleInput;
 };
 
-export type MutationCreateCustomEmojiArgs = {
+export type MutationcreateCustomEmojiArgs = {
   input: CreateCustomEmojiInput;
 };
 
-export type MutationCreateDiffNoteArgs = {
+export type MutationcreateDiffNoteArgs = {
   input: CreateDiffNoteInput;
 };
 
-export type MutationCreateDiscussionArgs = {
+export type MutationcreateDiscussionArgs = {
   input: CreateDiscussionInput;
 };
 
-export type MutationCreateEpicArgs = {
+export type MutationcreateEpicArgs = {
   input: CreateEpicInput;
 };
 
-export type MutationCreateImageDiffNoteArgs = {
+export type MutationcreateImageDiffNoteArgs = {
   input: CreateImageDiffNoteInput;
 };
 
-export type MutationCreateIssueArgs = {
+export type MutationcreateIssueArgs = {
   input: CreateIssueInput;
 };
 
-export type MutationCreateIterationArgs = {
+export type MutationcreateIterationArgs = {
   input: CreateIterationInput;
 };
 
-export type MutationCreateNoteArgs = {
+export type MutationcreateNoteArgs = {
   input: CreateNoteInput;
 };
 
-export type MutationCreatePackagesProtectionRuleArgs = {
+export type MutationcreatePackagesProtectionRuleArgs = {
   input: CreatePackagesProtectionRuleInput;
 };
 
-export type MutationCreateRequirementArgs = {
+export type MutationcreateRequirementArgs = {
   input: CreateRequirementInput;
 };
 
-export type MutationCreateSnippetArgs = {
+export type MutationcreateSnippetArgs = {
   input: CreateSnippetInput;
 };
 
-export type MutationCreateTestCaseArgs = {
+export type MutationcreateTestCaseArgs = {
   input: CreateTestCaseInput;
 };
 
-export type MutationCustomFieldArchiveArgs = {
+export type MutationcustomFieldArchiveArgs = {
   input: CustomFieldArchiveInput;
 };
 
-export type MutationCustomFieldCreateArgs = {
+export type MutationcustomFieldCreateArgs = {
   input: CustomFieldCreateInput;
 };
 
-export type MutationCustomFieldUnarchiveArgs = {
+export type MutationcustomFieldUnarchiveArgs = {
   input: CustomFieldUnarchiveInput;
 };
 
-export type MutationCustomFieldUpdateArgs = {
+export type MutationcustomFieldUpdateArgs = {
   input: CustomFieldUpdateInput;
 };
 
-export type MutationCustomerRelationsContactCreateArgs = {
+export type MutationcustomerRelationsContactCreateArgs = {
   input: CustomerRelationsContactCreateInput;
 };
 
-export type MutationCustomerRelationsContactUpdateArgs = {
+export type MutationcustomerRelationsContactUpdateArgs = {
   input: CustomerRelationsContactUpdateInput;
 };
 
-export type MutationCustomerRelationsOrganizationCreateArgs = {
+export type MutationcustomerRelationsOrganizationCreateArgs = {
   input: CustomerRelationsOrganizationCreateInput;
 };
 
-export type MutationCustomerRelationsOrganizationUpdateArgs = {
+export type MutationcustomerRelationsOrganizationUpdateArgs = {
   input: CustomerRelationsOrganizationUpdateInput;
 };
 
-export type MutationDastOnDemandScanCreateArgs = {
+export type MutationdastOnDemandScanCreateArgs = {
   input: DastOnDemandScanCreateInput;
 };
 
-export type MutationDastProfileCreateArgs = {
+export type MutationdastProfileCreateArgs = {
   input: DastProfileCreateInput;
 };
 
-export type MutationDastProfileDeleteArgs = {
+export type MutationdastProfileDeleteArgs = {
   input: DastProfileDeleteInput;
 };
 
-export type MutationDastProfileRunArgs = {
+export type MutationdastProfileRunArgs = {
   input: DastProfileRunInput;
 };
 
-export type MutationDastProfileUpdateArgs = {
+export type MutationdastProfileUpdateArgs = {
   input: DastProfileUpdateInput;
 };
 
-export type MutationDastScannerProfileCreateArgs = {
+export type MutationdastScannerProfileCreateArgs = {
   input: DastScannerProfileCreateInput;
 };
 
-export type MutationDastScannerProfileDeleteArgs = {
+export type MutationdastScannerProfileDeleteArgs = {
   input: DastScannerProfileDeleteInput;
 };
 
-export type MutationDastScannerProfileUpdateArgs = {
+export type MutationdastScannerProfileUpdateArgs = {
   input: DastScannerProfileUpdateInput;
 };
 
-export type MutationDastSiteProfileCreateArgs = {
+export type MutationdastSiteProfileCreateArgs = {
   input: DastSiteProfileCreateInput;
 };
 
-export type MutationDastSiteProfileDeleteArgs = {
+export type MutationdastSiteProfileDeleteArgs = {
   input: DastSiteProfileDeleteInput;
 };
 
-export type MutationDastSiteProfileUpdateArgs = {
+export type MutationdastSiteProfileUpdateArgs = {
   input: DastSiteProfileUpdateInput;
 };
 
-export type MutationDastSiteTokenCreateArgs = {
+export type MutationdastSiteTokenCreateArgs = {
   input: DastSiteTokenCreateInput;
 };
 
-export type MutationDastSiteValidationCreateArgs = {
+export type MutationdastSiteValidationCreateArgs = {
   input: DastSiteValidationCreateInput;
 };
 
-export type MutationDastSiteValidationRevokeArgs = {
+export type MutationdastSiteValidationRevokeArgs = {
   input: DastSiteValidationRevokeInput;
 };
 
-export type MutationDeleteAnnotationArgs = {
+export type MutationdeleteAnnotationArgs = {
   input: DeleteAnnotationInput;
 };
 
-export type MutationDeleteContainerProtectionRepositoryRuleArgs = {
+export type MutationdeleteContainerProtectionRepositoryRuleArgs = {
   input: DeleteContainerProtectionRepositoryRuleInput;
 };
 
-export type MutationDeleteContainerProtectionTagRuleArgs = {
+export type MutationdeleteContainerProtectionTagRuleArgs = {
   input: DeleteContainerProtectionTagRuleInput;
 };
 
-export type MutationDeleteConversationThreadArgs = {
+export type MutationdeleteConversationThreadArgs = {
   input: DeleteConversationThreadInput;
 };
 
-export type MutationDeleteDuoWorkflowsWorkflowArgs = {
+export type MutationdeleteDuoWorkflowsWorkflowArgs = {
   input: DeleteDuoWorkflowsWorkflowInput;
 };
 
-export type MutationDeletePackagesProtectionRuleArgs = {
+export type MutationdeletePackagesProtectionRuleArgs = {
   input: DeletePackagesProtectionRuleInput;
 };
 
-export type MutationDeletePagesDeploymentArgs = {
+export type MutationdeletePagesDeploymentArgs = {
   input: DeletePagesDeploymentInput;
 };
 
-export type MutationDesignManagementDeleteArgs = {
+export type MutationdesignManagementDeleteArgs = {
   input: DesignManagementDeleteInput;
 };
 
-export type MutationDesignManagementMoveArgs = {
+export type MutationdesignManagementMoveArgs = {
   input: DesignManagementMoveInput;
 };
 
-export type MutationDesignManagementUpdateArgs = {
+export type MutationdesignManagementUpdateArgs = {
   input: DesignManagementUpdateInput;
 };
 
-export type MutationDesignManagementUploadArgs = {
+export type MutationdesignManagementUploadArgs = {
   input: DesignManagementUploadInput;
 };
 
-export type MutationDestroyBoardArgs = {
+export type MutationdestroyBoardArgs = {
   input: DestroyBoardInput;
 };
 
-export type MutationDestroyBoardListArgs = {
+export type MutationdestroyBoardListArgs = {
   input: DestroyBoardListInput;
 };
 
-export type MutationDestroyComplianceFrameworkArgs = {
+export type MutationdestroyComplianceFrameworkArgs = {
   input: DestroyComplianceFrameworkInput;
 };
 
-export type MutationDestroyComplianceRequirementArgs = {
+export type MutationdestroyComplianceRequirementArgs = {
   input: DestroyComplianceRequirementInput;
 };
 
-export type MutationDestroyComplianceRequirementsControlArgs = {
+export type MutationdestroyComplianceRequirementsControlArgs = {
   input: DestroyComplianceRequirementsControlInput;
 };
 
-export type MutationDestroyContainerRepositoryArgs = {
+export type MutationdestroyContainerRepositoryArgs = {
   input: DestroyContainerRepositoryInput;
 };
 
-export type MutationDestroyContainerRepositoryTagsArgs = {
+export type MutationdestroyContainerRepositoryTagsArgs = {
   input: DestroyContainerRepositoryTagsInput;
 };
 
-export type MutationDestroyCustomEmojiArgs = {
+export type MutationdestroyCustomEmojiArgs = {
   input: DestroyCustomEmojiInput;
 };
 
-export type MutationDestroyEpicBoardArgs = {
+export type MutationdestroyEpicBoardArgs = {
   input: DestroyEpicBoardInput;
 };
 
-export type MutationDestroyNoteArgs = {
+export type MutationdestroyNoteArgs = {
   input: DestroyNoteInput;
 };
 
-export type MutationDestroyPackageArgs = {
+export type MutationdestroyPackageArgs = {
   input: DestroyPackageInput;
 };
 
-export type MutationDestroyPackageFileArgs = {
+export type MutationdestroyPackageFileArgs = {
   input: DestroyPackageFileInput;
 };
 
-export type MutationDestroyPackageFilesArgs = {
+export type MutationdestroyPackageFilesArgs = {
   input: DestroyPackageFilesInput;
 };
 
-export type MutationDestroyPackagesArgs = {
+export type MutationdestroyPackagesArgs = {
   input: DestroyPackagesInput;
 };
 
-export type MutationDestroySnippetArgs = {
+export type MutationdestroySnippetArgs = {
   input: DestroySnippetInput;
 };
 
-export type MutationDevfileValidateArgs = {
+export type MutationdevfileValidateArgs = {
   input: DevfileValidateInput;
 };
 
-export type MutationDisableDevopsAdoptionNamespaceArgs = {
+export type MutationdisableDevopsAdoptionNamespaceArgs = {
   input: DisableDevopsAdoptionNamespaceInput;
 };
 
-export type MutationDiscussionToggleResolveArgs = {
+export type MutationdiscussionToggleResolveArgs = {
   input: DiscussionToggleResolveInput;
 };
 
-export type MutationDismissPolicyViolationsArgs = {
+export type MutationdismissPolicyViolationsArgs = {
   input: DismissPolicyViolationsInput;
 };
 
-export type MutationDuoSettingsUpdateArgs = {
+export type MutationduoSettingsUpdateArgs = {
   input: DuoSettingsUpdateInput;
 };
 
-export type MutationDuoUserFeedbackArgs = {
+export type MutationduoUserFeedbackArgs = {
   input: DuoUserFeedbackInput;
 };
 
-export type MutationEchoCreateArgs = {
+export type MutationechoCreateArgs = {
   input: EchoCreateInput;
 };
 
-export type MutationEnableDevopsAdoptionNamespaceArgs = {
+export type MutationenableDevopsAdoptionNamespaceArgs = {
   input: EnableDevopsAdoptionNamespaceInput;
 };
 
-export type MutationEnvironmentCreateArgs = {
+export type MutationenvironmentCreateArgs = {
   input: EnvironmentCreateInput;
 };
 
-export type MutationEnvironmentDeleteArgs = {
+export type MutationenvironmentDeleteArgs = {
   input: EnvironmentDeleteInput;
 };
 
-export type MutationEnvironmentStopArgs = {
+export type MutationenvironmentStopArgs = {
   input: EnvironmentStopInput;
 };
 
-export type MutationEnvironmentUpdateArgs = {
+export type MutationenvironmentUpdateArgs = {
   input: EnvironmentUpdateInput;
 };
 
-export type MutationEnvironmentsCanaryIngressUpdateArgs = {
+export type MutationenvironmentsCanaryIngressUpdateArgs = {
   input: EnvironmentsCanaryIngressUpdateInput;
 };
 
-export type MutationEpicAddIssueArgs = {
+export type MutationepicAddIssueArgs = {
   input: EpicAddIssueInput;
 };
 
-export type MutationEpicBoardCreateArgs = {
+export type MutationepicBoardCreateArgs = {
   input: EpicBoardCreateInput;
 };
 
-export type MutationEpicBoardListCreateArgs = {
+export type MutationepicBoardListCreateArgs = {
   input: EpicBoardListCreateInput;
 };
 
-export type MutationEpicBoardListDestroyArgs = {
+export type MutationepicBoardListDestroyArgs = {
   input: EpicBoardListDestroyInput;
 };
 
-export type MutationEpicBoardUpdateArgs = {
+export type MutationepicBoardUpdateArgs = {
   input: EpicBoardUpdateInput;
 };
 
-export type MutationEpicMoveListArgs = {
+export type MutationepicMoveListArgs = {
   input: EpicMoveListInput;
 };
 
-export type MutationEpicSetSubscriptionArgs = {
+export type MutationepicSetSubscriptionArgs = {
   input: EpicSetSubscriptionInput;
 };
 
-export type MutationEpicTreeReorderArgs = {
+export type MutationepicTreeReorderArgs = {
   input: EpicTreeReorderInput;
 };
 
-export type MutationEscalationPolicyCreateArgs = {
+export type MutationescalationPolicyCreateArgs = {
   input: EscalationPolicyCreateInput;
 };
 
-export type MutationEscalationPolicyDestroyArgs = {
+export type MutationescalationPolicyDestroyArgs = {
   input: EscalationPolicyDestroyInput;
 };
 
-export type MutationEscalationPolicyUpdateArgs = {
+export type MutationescalationPolicyUpdateArgs = {
   input: EscalationPolicyUpdateInput;
 };
 
-export type MutationExportRequirementsArgs = {
+export type MutationexportRequirementsArgs = {
   input: ExportRequirementsInput;
 };
 
-export type MutationExternalAuditEventDestinationCreateArgs = {
+export type MutationexternalAuditEventDestinationCreateArgs = {
   input: ExternalAuditEventDestinationCreateInput;
 };
 
-export type MutationExternalAuditEventDestinationDestroyArgs = {
+export type MutationexternalAuditEventDestinationDestroyArgs = {
   input: ExternalAuditEventDestinationDestroyInput;
 };
 
-export type MutationExternalAuditEventDestinationUpdateArgs = {
+export type MutationexternalAuditEventDestinationUpdateArgs = {
   input: ExternalAuditEventDestinationUpdateInput;
 };
 
-export type MutationGeoRegistriesBulkUpdateArgs = {
+export type MutationgeoRegistriesBulkUpdateArgs = {
   input: GeoRegistriesBulkUpdateInput;
 };
 
-export type MutationGeoRegistriesUpdateArgs = {
+export type MutationgeoRegistriesUpdateArgs = {
   input: GeoRegistriesUpdateInput;
 };
 
-export type MutationGitlabSubscriptionActivateArgs = {
+export type MutationgitlabSubscriptionActivateArgs = {
   input: GitlabSubscriptionActivateInput;
 };
 
-export type MutationGoogleCloudLoggingConfigurationCreateArgs = {
+export type MutationgoogleCloudLoggingConfigurationCreateArgs = {
   input: GoogleCloudLoggingConfigurationCreateInput;
 };
 
-export type MutationGoogleCloudLoggingConfigurationDestroyArgs = {
+export type MutationgoogleCloudLoggingConfigurationDestroyArgs = {
   input: GoogleCloudLoggingConfigurationDestroyInput;
 };
 
-export type MutationGoogleCloudLoggingConfigurationUpdateArgs = {
+export type MutationgoogleCloudLoggingConfigurationUpdateArgs = {
   input: GoogleCloudLoggingConfigurationUpdateInput;
 };
 
-export type MutationGroupAuditEventStreamingDestinationsCreateArgs = {
+export type MutationgroupAuditEventStreamingDestinationsCreateArgs = {
   input: GroupAuditEventStreamingDestinationsCreateInput;
 };
 
-export type MutationGroupAuditEventStreamingDestinationsDeleteArgs = {
+export type MutationgroupAuditEventStreamingDestinationsDeleteArgs = {
   input: GroupAuditEventStreamingDestinationsDeleteInput;
 };
 
-export type MutationGroupAuditEventStreamingDestinationsUpdateArgs = {
+export type MutationgroupAuditEventStreamingDestinationsUpdateArgs = {
   input: GroupAuditEventStreamingDestinationsUpdateInput;
 };
 
-export type MutationGroupMemberBulkUpdateArgs = {
+export type MutationgroupMemberBulkUpdateArgs = {
   input: GroupMemberBulkUpdateInput;
 };
 
-export type MutationGroupMembersExportArgs = {
+export type MutationgroupMembersExportArgs = {
   input: GroupMembersExportInput;
 };
 
-export type MutationGroupSavedReplyCreateArgs = {
+export type MutationgroupSavedReplyCreateArgs = {
   input: GroupSavedReplyCreateInput;
 };
 
-export type MutationGroupSavedReplyDestroyArgs = {
+export type MutationgroupSavedReplyDestroyArgs = {
   input: GroupSavedReplyDestroyInput;
 };
 
-export type MutationGroupSavedReplyUpdateArgs = {
+export type MutationgroupSavedReplyUpdateArgs = {
   input: GroupSavedReplyUpdateInput;
 };
 
-export type MutationGroupUpdateArgs = {
+export type MutationgroupUpdateArgs = {
   input: GroupUpdateInput;
 };
 
-export type MutationHttpIntegrationCreateArgs = {
+export type MutationhttpIntegrationCreateArgs = {
   input: HttpIntegrationCreateInput;
 };
 
-export type MutationHttpIntegrationDestroyArgs = {
+export type MutationhttpIntegrationDestroyArgs = {
   input: HttpIntegrationDestroyInput;
 };
 
-export type MutationHttpIntegrationResetTokenArgs = {
+export type MutationhttpIntegrationResetTokenArgs = {
   input: HttpIntegrationResetTokenInput;
 };
 
-export type MutationHttpIntegrationUpdateArgs = {
+export type MutationhttpIntegrationUpdateArgs = {
   input: HttpIntegrationUpdateInput;
 };
 
-export type MutationImportSourceUserCancelReassignmentArgs = {
+export type MutationimportSourceUserCancelReassignmentArgs = {
   input: ImportSourceUserCancelReassignmentInput;
 };
 
-export type MutationImportSourceUserKeepAllAsPlaceholderArgs = {
+export type MutationimportSourceUserKeepAllAsPlaceholderArgs = {
   input: ImportSourceUserKeepAllAsPlaceholderInput;
 };
 
-export type MutationImportSourceUserKeepAsPlaceholderArgs = {
+export type MutationimportSourceUserKeepAsPlaceholderArgs = {
   input: ImportSourceUserKeepAsPlaceholderInput;
 };
 
-export type MutationImportSourceUserReassignArgs = {
+export type MutationimportSourceUserReassignArgs = {
   input: ImportSourceUserReassignInput;
 };
 
-export type MutationImportSourceUserResendNotificationArgs = {
+export type MutationimportSourceUserResendNotificationArgs = {
   input: ImportSourceUserResendNotificationInput;
 };
 
-export type MutationImportSourceUserUndoKeepAsPlaceholderArgs = {
+export type MutationimportSourceUserUndoKeepAsPlaceholderArgs = {
   input: ImportSourceUserUndoKeepAsPlaceholderInput;
 };
 
-export type MutationInstanceAuditEventStreamingDestinationsCreateArgs = {
+export type MutationinstanceAuditEventStreamingDestinationsCreateArgs = {
   input: InstanceAuditEventStreamingDestinationsCreateInput;
 };
 
-export type MutationInstanceAuditEventStreamingDestinationsDeleteArgs = {
+export type MutationinstanceAuditEventStreamingDestinationsDeleteArgs = {
   input: InstanceAuditEventStreamingDestinationsDeleteInput;
 };
 
-export type MutationInstanceAuditEventStreamingDestinationsUpdateArgs = {
+export type MutationinstanceAuditEventStreamingDestinationsUpdateArgs = {
   input: InstanceAuditEventStreamingDestinationsUpdateInput;
 };
 
-export type MutationInstanceExternalAuditEventDestinationCreateArgs = {
+export type MutationinstanceExternalAuditEventDestinationCreateArgs = {
   input: InstanceExternalAuditEventDestinationCreateInput;
 };
 
-export type MutationInstanceExternalAuditEventDestinationDestroyArgs = {
+export type MutationinstanceExternalAuditEventDestinationDestroyArgs = {
   input: InstanceExternalAuditEventDestinationDestroyInput;
 };
 
-export type MutationInstanceExternalAuditEventDestinationUpdateArgs = {
+export type MutationinstanceExternalAuditEventDestinationUpdateArgs = {
   input: InstanceExternalAuditEventDestinationUpdateInput;
 };
 
-export type MutationInstanceGoogleCloudLoggingConfigurationCreateArgs = {
+export type MutationinstanceGoogleCloudLoggingConfigurationCreateArgs = {
   input: InstanceGoogleCloudLoggingConfigurationCreateInput;
 };
 
-export type MutationInstanceGoogleCloudLoggingConfigurationDestroyArgs = {
+export type MutationinstanceGoogleCloudLoggingConfigurationDestroyArgs = {
   input: InstanceGoogleCloudLoggingConfigurationDestroyInput;
 };
 
-export type MutationInstanceGoogleCloudLoggingConfigurationUpdateArgs = {
+export type MutationinstanceGoogleCloudLoggingConfigurationUpdateArgs = {
   input: InstanceGoogleCloudLoggingConfigurationUpdateInput;
 };
 
-export type MutationIntegrationExclusionCreateArgs = {
+export type MutationintegrationExclusionCreateArgs = {
   input: IntegrationExclusionCreateInput;
 };
 
-export type MutationIntegrationExclusionDeleteArgs = {
+export type MutationintegrationExclusionDeleteArgs = {
   input: IntegrationExclusionDeleteInput;
 };
 
-export type MutationIssuableResourceLinkCreateArgs = {
+export type MutationissuableResourceLinkCreateArgs = {
   input: IssuableResourceLinkCreateInput;
 };
 
-export type MutationIssuableResourceLinkDestroyArgs = {
+export type MutationissuableResourceLinkDestroyArgs = {
   input: IssuableResourceLinkDestroyInput;
 };
 
-export type MutationIssueLinkAlertsArgs = {
+export type MutationissueLinkAlertsArgs = {
   input: IssueLinkAlertsInput;
 };
 
-export type MutationIssueMoveArgs = {
+export type MutationissueMoveArgs = {
   input: IssueMoveInput;
 };
 
-export type MutationIssueMoveListArgs = {
+export type MutationissueMoveListArgs = {
   input: IssueMoveListInput;
 };
 
-export type MutationIssueSetAssigneesArgs = {
+export type MutationissueSetAssigneesArgs = {
   input: IssueSetAssigneesInput;
 };
 
-export type MutationIssueSetConfidentialArgs = {
+export type MutationissueSetConfidentialArgs = {
   input: IssueSetConfidentialInput;
 };
 
-export type MutationIssueSetCrmContactsArgs = {
+export type MutationissueSetCrmContactsArgs = {
   input: IssueSetCrmContactsInput;
 };
 
-export type MutationIssueSetDueDateArgs = {
+export type MutationissueSetDueDateArgs = {
   input: IssueSetDueDateInput;
 };
 
-export type MutationIssueSetEpicArgs = {
+export type MutationissueSetEpicArgs = {
   input: IssueSetEpicInput;
 };
 
-export type MutationIssueSetEscalationPolicyArgs = {
+export type MutationissueSetEscalationPolicyArgs = {
   input: IssueSetEscalationPolicyInput;
 };
 
-export type MutationIssueSetEscalationStatusArgs = {
+export type MutationissueSetEscalationStatusArgs = {
   input: IssueSetEscalationStatusInput;
 };
 
-export type MutationIssueSetIterationArgs = {
+export type MutationissueSetIterationArgs = {
   input: IssueSetIterationInput;
 };
 
-export type MutationIssueSetLockedArgs = {
+export type MutationissueSetLockedArgs = {
   input: IssueSetLockedInput;
 };
 
-export type MutationIssueSetSeverityArgs = {
+export type MutationissueSetSeverityArgs = {
   input: IssueSetSeverityInput;
 };
 
-export type MutationIssueSetSubscriptionArgs = {
+export type MutationissueSetSubscriptionArgs = {
   input: IssueSetSubscriptionInput;
 };
 
-export type MutationIssueSetWeightArgs = {
+export type MutationissueSetWeightArgs = {
   input: IssueSetWeightInput;
 };
 
-export type MutationIssueUnlinkAlertArgs = {
+export type MutationissueUnlinkAlertArgs = {
   input: IssueUnlinkAlertInput;
 };
 
-export type MutationIterationCadenceCreateArgs = {
+export type MutationiterationCadenceCreateArgs = {
   input: IterationCadenceCreateInput;
 };
 
-export type MutationIterationCadenceDestroyArgs = {
+export type MutationiterationCadenceDestroyArgs = {
   input: IterationCadenceDestroyInput;
 };
 
-export type MutationIterationCadenceUpdateArgs = {
+export type MutationiterationCadenceUpdateArgs = {
   input: IterationCadenceUpdateInput;
 };
 
-export type MutationIterationCreateArgs = {
-  input: IterationCreateInput;
+export type MutationiterationCreateArgs = {
+  input: iterationCreateInput;
 };
 
-export type MutationIterationDeleteArgs = {
+export type MutationiterationDeleteArgs = {
   input: IterationDeleteInput;
 };
 
-export type MutationJiraImportStartArgs = {
+export type MutationjiraImportStartArgs = {
   input: JiraImportStartInput;
 };
 
-export type MutationJiraImportUsersArgs = {
+export type MutationjiraImportUsersArgs = {
   input: JiraImportUsersInput;
 };
 
-export type MutationJobArtifactsDestroyArgs = {
+export type MutationjobArtifactsDestroyArgs = {
   input: JobArtifactsDestroyInput;
 };
 
-export type MutationJobCancelArgs = {
+export type MutationjobCancelArgs = {
   input: JobCancelInput;
 };
 
-export type MutationJobPlayArgs = {
+export type MutationjobPlayArgs = {
   input: JobPlayInput;
 };
 
-export type MutationJobRetryArgs = {
+export type MutationjobRetryArgs = {
   input: JobRetryInput;
 };
 
-export type MutationJobUnscheduleArgs = {
+export type MutationjobUnscheduleArgs = {
   input: JobUnscheduleInput;
 };
 
-export type MutationLabelCreateArgs = {
+export type MutationlabelCreateArgs = {
   input: LabelCreateInput;
 };
 
-export type MutationLabelUpdateArgs = {
+export type MutationlabelUpdateArgs = {
   input: LabelUpdateInput;
 };
 
-export type MutationLdapAdminRoleLinkCreateArgs = {
+export type MutationldapAdminRoleLinkCreateArgs = {
   input: LdapAdminRoleLinkCreateInput;
 };
 
-export type MutationLdapAdminRoleLinkDestroyArgs = {
+export type MutationldapAdminRoleLinkDestroyArgs = {
   input: LdapAdminRoleLinkDestroyInput;
 };
 
-export type MutationLifecycleAttachWorkItemTypeArgs = {
+export type MutationlifecycleAttachWorkItemTypeArgs = {
   input: LifecycleAttachWorkItemTypeInput;
 };
 
-export type MutationLifecycleCreateArgs = {
+export type MutationlifecycleCreateArgs = {
   input: LifecycleCreateInput;
 };
 
-export type MutationLifecycleDeleteArgs = {
+export type MutationlifecycleDeleteArgs = {
   input: LifecycleDeleteInput;
 };
 
-export type MutationLifecycleUpdateArgs = {
+export type MutationlifecycleUpdateArgs = {
   input: LifecycleUpdateInput;
 };
 
-export type MutationLinkProjectComplianceViolationIssueArgs = {
+export type MutationlinkProjectComplianceViolationIssueArgs = {
   input: LinkProjectComplianceViolationIssueInput;
 };
 
-export type MutationMarkAsSpamSnippetArgs = {
+export type MutationmarkAsSpamSnippetArgs = {
   input: MarkAsSpamSnippetInput;
 };
 
-export type MutationMavenUpstreamCreateArgs = {
+export type MutationmavenUpstreamCreateArgs = {
   input: MavenUpstreamCreateInput;
 };
 
-export type MutationMemberRoleAdminCreateArgs = {
+export type MutationmemberRoleAdminCreateArgs = {
   input: MemberRoleAdminCreateInput;
 };
 
-export type MutationMemberRoleAdminDeleteArgs = {
+export type MutationmemberRoleAdminDeleteArgs = {
   input: MemberRoleAdminDeleteInput;
 };
 
-export type MutationMemberRoleAdminUpdateArgs = {
+export type MutationmemberRoleAdminUpdateArgs = {
   input: MemberRoleAdminUpdateInput;
 };
 
-export type MutationMemberRoleCreateArgs = {
+export type MutationmemberRoleCreateArgs = {
   input: MemberRoleCreateInput;
 };
 
-export type MutationMemberRoleDeleteArgs = {
+export type MutationmemberRoleDeleteArgs = {
   input: MemberRoleDeleteInput;
 };
 
-export type MutationMemberRoleToUserAssignArgs = {
+export type MutationmemberRoleToUserAssignArgs = {
   input: MemberRoleToUserAssignInput;
 };
 
-export type MutationMemberRoleUpdateArgs = {
+export type MutationmemberRoleUpdateArgs = {
   input: MemberRoleUpdateInput;
 };
 
-export type MutationMergeRequestAcceptArgs = {
+export type MutationmergeRequestAcceptArgs = {
   input: MergeRequestAcceptInput;
 };
 
-export type MutationMergeRequestBypassSecurityPolicyArgs = {
+export type MutationmergeRequestBypassSecurityPolicyArgs = {
   input: MergeRequestBypassSecurityPolicyInput;
 };
 
-export type MutationMergeRequestCreateArgs = {
+export type MutationmergeRequestCreateArgs = {
   input: MergeRequestCreateInput;
 };
 
-export type MutationMergeRequestDestroyRequestedChangesArgs = {
+export type MutationmergeRequestDestroyRequestedChangesArgs = {
   input: MergeRequestDestroyRequestedChangesInput;
 };
 
-export type MutationMergeRequestReviewerRereviewArgs = {
+export type MutationmergeRequestReviewerRereviewArgs = {
   input: MergeRequestReviewerRereviewInput;
 };
 
-export type MutationMergeRequestSetAssigneesArgs = {
+export type MutationmergeRequestSetAssigneesArgs = {
   input: MergeRequestSetAssigneesInput;
 };
 
-export type MutationMergeRequestSetDraftArgs = {
+export type MutationmergeRequestSetDraftArgs = {
   input: MergeRequestSetDraftInput;
 };
 
-export type MutationMergeRequestSetLabelsArgs = {
+export type MutationmergeRequestSetLabelsArgs = {
   input: MergeRequestSetLabelsInput;
 };
 
-export type MutationMergeRequestSetLockedArgs = {
+export type MutationmergeRequestSetLockedArgs = {
   input: MergeRequestSetLockedInput;
 };
 
-export type MutationMergeRequestSetMilestoneArgs = {
+export type MutationmergeRequestSetMilestoneArgs = {
   input: MergeRequestSetMilestoneInput;
 };
 
-export type MutationMergeRequestSetReviewersArgs = {
+export type MutationmergeRequestSetReviewersArgs = {
   input: MergeRequestSetReviewersInput;
 };
 
-export type MutationMergeRequestSetSubscriptionArgs = {
+export type MutationmergeRequestSetSubscriptionArgs = {
   input: MergeRequestSetSubscriptionInput;
 };
 
-export type MutationMergeRequestUpdateArgs = {
+export type MutationmergeRequestUpdateArgs = {
   input: MergeRequestUpdateInput;
 };
 
-export type MutationMergeRequestUpdateApprovalRuleArgs = {
+export type MutationmergeRequestUpdateApprovalRuleArgs = {
   input: MergeRequestUpdateApprovalRuleInput;
 };
 
-export type MutationMergeTrainsDeleteCarArgs = {
+export type MutationmergeTrainsDeleteCarArgs = {
   input: MergeTrainsDeleteCarInput;
 };
 
-export type MutationMlModelCreateArgs = {
+export type MutationmlModelCreateArgs = {
   input: MlModelCreateInput;
 };
 
-export type MutationMlModelDeleteArgs = {
+export type MutationmlModelDeleteArgs = {
   input: MlModelDeleteInput;
 };
 
-export type MutationMlModelDestroyArgs = {
+export type MutationmlModelDestroyArgs = {
   input: MlModelDestroyInput;
 };
 
-export type MutationMlModelEditArgs = {
+export type MutationmlModelEditArgs = {
   input: MlModelEditInput;
 };
 
-export type MutationMlModelVersionCreateArgs = {
+export type MutationmlModelVersionCreateArgs = {
   input: MlModelVersionCreateInput;
 };
 
-export type MutationMlModelVersionDeleteArgs = {
+export type MutationmlModelVersionDeleteArgs = {
   input: MlModelVersionDeleteInput;
 };
 
-export type MutationMlModelVersionEditArgs = {
+export type MutationmlModelVersionEditArgs = {
   input: MlModelVersionEditInput;
 };
 
-export type MutationNamespaceBanDestroyArgs = {
+export type MutationnamespaceBanDestroyArgs = {
   input: NamespaceBanDestroyInput;
 };
 
-export type MutationNamespaceCiCdSettingsUpdateArgs = {
+export type MutationnamespaceCiCdSettingsUpdateArgs = {
   input: NamespaceCiCdSettingsUpdateInput;
 };
 
-export type MutationNamespaceCreateRemoteDevelopmentClusterAgentMappingArgs = {
+export type MutationnamespaceCreateRemoteDevelopmentClusterAgentMappingArgs = {
   input: NamespaceCreateRemoteDevelopmentClusterAgentMappingInput;
 };
 
-export type MutationNamespaceDeleteRemoteDevelopmentClusterAgentMappingArgs = {
+export type MutationnamespaceDeleteRemoteDevelopmentClusterAgentMappingArgs = {
   input: NamespaceDeleteRemoteDevelopmentClusterAgentMappingInput;
 };
 
-export type MutationNamespaceSettingsUpdateArgs = {
+export type MutationnamespaceSettingsUpdateArgs = {
   input: NamespaceSettingsUpdateInput;
 };
 
-export type MutationNamespacesRegenerateNewWorkItemEmailAddressArgs = {
+export type MutationnamespacesRegenerateNewWorkItemEmailAddressArgs = {
   input: NamespacesRegenerateNewWorkItemEmailAddressInput;
 };
 
-export type MutationNoteConvertToThreadArgs = {
+export type MutationnoteConvertToThreadArgs = {
   input: NoteConvertToThreadInput;
 };
 
-export type MutationOncallRotationCreateArgs = {
+export type MutationoncallRotationCreateArgs = {
   input: OncallRotationCreateInput;
 };
 
-export type MutationOncallRotationDestroyArgs = {
+export type MutationoncallRotationDestroyArgs = {
   input: OncallRotationDestroyInput;
 };
 
-export type MutationOncallRotationUpdateArgs = {
+export type MutationoncallRotationUpdateArgs = {
   input: OncallRotationUpdateInput;
 };
 
-export type MutationOncallScheduleCreateArgs = {
+export type MutationoncallScheduleCreateArgs = {
   input: OncallScheduleCreateInput;
 };
 
-export type MutationOncallScheduleDestroyArgs = {
+export type MutationoncallScheduleDestroyArgs = {
   input: OncallScheduleDestroyInput;
 };
 
-export type MutationOncallScheduleUpdateArgs = {
+export type MutationoncallScheduleUpdateArgs = {
   input: OncallScheduleUpdateInput;
 };
 
-export type MutationOrganizationCreateArgs = {
+export type MutationorganizationCreateArgs = {
   input: OrganizationCreateInput;
 };
 
-export type MutationOrganizationCreateClusterAgentMappingArgs = {
+export type MutationorganizationCreateClusterAgentMappingArgs = {
   input: OrganizationCreateClusterAgentMappingInput;
 };
 
-export type MutationOrganizationDeleteClusterAgentMappingArgs = {
+export type MutationorganizationDeleteClusterAgentMappingArgs = {
   input: OrganizationDeleteClusterAgentMappingInput;
 };
 
-export type MutationOrganizationUpdateArgs = {
+export type MutationorganizationUpdateArgs = {
   input: OrganizationUpdateInput;
 };
 
-export type MutationOrganizationUserUpdateArgs = {
+export type MutationorganizationUserUpdateArgs = {
   input: OrganizationUserUpdateInput;
 };
 
-export type MutationPagesMarkOnboardingCompleteArgs = {
+export type MutationpagesMarkOnboardingCompleteArgs = {
   input: PagesMarkOnboardingCompleteInput;
 };
 
-export type MutationPipelineCancelArgs = {
+export type MutationpipelineCancelArgs = {
   input: PipelineCancelInput;
 };
 
-export type MutationPipelineCreateArgs = {
+export type MutationpipelineCreateArgs = {
   input: PipelineCreateInput;
 };
 
-export type MutationPipelineDestroyArgs = {
+export type MutationpipelineDestroyArgs = {
   input: PipelineDestroyInput;
 };
 
-export type MutationPipelineRetryArgs = {
+export type MutationpipelineRetryArgs = {
   input: PipelineRetryInput;
 };
 
-export type MutationPipelineScheduleCreateArgs = {
+export type MutationpipelineScheduleCreateArgs = {
   input: PipelineScheduleCreateInput;
 };
 
-export type MutationPipelineScheduleDeleteArgs = {
+export type MutationpipelineScheduleDeleteArgs = {
   input: PipelineScheduleDeleteInput;
 };
 
-export type MutationPipelineSchedulePlayArgs = {
+export type MutationpipelineSchedulePlayArgs = {
   input: PipelineSchedulePlayInput;
 };
 
-export type MutationPipelineScheduleTakeOwnershipArgs = {
+export type MutationpipelineScheduleTakeOwnershipArgs = {
   input: PipelineScheduleTakeOwnershipInput;
 };
 
-export type MutationPipelineScheduleUpdateArgs = {
+export type MutationpipelineScheduleUpdateArgs = {
   input: PipelineScheduleUpdateInput;
 };
 
-export type MutationPipelineTriggerCreateArgs = {
+export type MutationpipelineTriggerCreateArgs = {
   input: PipelineTriggerCreateInput;
 };
 
-export type MutationPipelineTriggerDeleteArgs = {
+export type MutationpipelineTriggerDeleteArgs = {
   input: PipelineTriggerDeleteInput;
 };
 
-export type MutationPipelineTriggerUpdateArgs = {
+export type MutationpipelineTriggerUpdateArgs = {
   input: PipelineTriggerUpdateInput;
 };
 
-export type MutationProcessUserBillablePromotionRequestArgs = {
+export type MutationprocessUserBillablePromotionRequestArgs = {
   input: ProcessUserBillablePromotionRequestInput;
 };
 
-export type MutationProductAnalyticsProjectSettingsUpdateArgs = {
+export type MutationproductAnalyticsProjectSettingsUpdateArgs = {
   input: ProductAnalyticsProjectSettingsUpdateInput;
 };
 
-export type MutationProjectBlobsRemoveArgs = {
-  input: ProjectBlobsRemoveInput;
+export type MutationprojectBlobsRemoveArgs = {
+  input: projectBlobsRemoveInput;
 };
 
-export type MutationProjectCiCdSettingsUpdateArgs = {
+export type MutationprojectCiCdSettingsUpdateArgs = {
   input: ProjectCiCdSettingsUpdateInput;
 };
 
-export type MutationProjectInitializeProductAnalyticsArgs = {
+export type MutationprojectInitializeProductAnalyticsArgs = {
   input: ProjectInitializeProductAnalyticsInput;
 };
 
-export type MutationProjectMemberBulkUpdateArgs = {
+export type MutationprojectMemberBulkUpdateArgs = {
   input: ProjectMemberBulkUpdateInput;
 };
 
-export type MutationProjectSavedReplyCreateArgs = {
+export type MutationprojectSavedReplyCreateArgs = {
   input: ProjectSavedReplyCreateInput;
 };
 
-export type MutationProjectSavedReplyDestroyArgs = {
+export type MutationprojectSavedReplyDestroyArgs = {
   input: ProjectSavedReplyDestroyInput;
 };
 
-export type MutationProjectSavedReplyUpdateArgs = {
+export type MutationprojectSavedReplyUpdateArgs = {
   input: ProjectSavedReplyUpdateInput;
 };
 
-export type MutationProjectSecretCreateArgs = {
+export type MutationprojectSecretCreateArgs = {
   input: ProjectSecretCreateInput;
 };
 
-export type MutationProjectSecretDeleteArgs = {
+export type MutationprojectSecretDeleteArgs = {
   input: ProjectSecretDeleteInput;
 };
 
-export type MutationProjectSecretUpdateArgs = {
+export type MutationprojectSecretUpdateArgs = {
   input: ProjectSecretUpdateInput;
 };
 
-export type MutationProjectSecretsManagerDeprovisionArgs = {
+export type MutationprojectSecretsManagerDeprovisionArgs = {
   input: ProjectSecretsManagerDeprovisionInput;
 };
 
-export type MutationProjectSecretsManagerInitializeArgs = {
+export type MutationprojectSecretsManagerInitializeArgs = {
   input: ProjectSecretsManagerInitializeInput;
 };
 
-export type MutationProjectSecurityExclusionCreateArgs = {
+export type MutationprojectSecurityExclusionCreateArgs = {
   input: ProjectSecurityExclusionCreateInput;
 };
 
-export type MutationProjectSecurityExclusionDeleteArgs = {
+export type MutationprojectSecurityExclusionDeleteArgs = {
   input: ProjectSecurityExclusionDeleteInput;
 };
 
-export type MutationProjectSecurityExclusionUpdateArgs = {
+export type MutationprojectSecurityExclusionUpdateArgs = {
   input: ProjectSecurityExclusionUpdateInput;
 };
 
-export type MutationProjectSetComplianceFrameworkArgs = {
+export type MutationprojectSetComplianceFrameworkArgs = {
   input: ProjectSetComplianceFrameworkInput;
 };
 
-export type MutationProjectSetContinuousVulnerabilityScanningArgs = {
+export type MutationprojectSetContinuousVulnerabilityScanningArgs = {
   input: ProjectSetContinuousVulnerabilityScanningInput;
 };
 
-export type MutationProjectSetLockedArgs = {
+export type MutationprojectSetLockedArgs = {
   input: ProjectSetLockedInput;
 };
 
-export type MutationProjectSettingsUpdateArgs = {
+export type MutationprojectSettingsUpdateArgs = {
   input: ProjectSettingsUpdateInput;
 };
 
-export type MutationProjectSubscriptionCreateArgs = {
+export type MutationprojectSubscriptionCreateArgs = {
   input: ProjectSubscriptionCreateInput;
 };
 
-export type MutationProjectSubscriptionDeleteArgs = {
+export type MutationprojectSubscriptionDeleteArgs = {
   input: ProjectSubscriptionDeleteInput;
 };
 
-export type MutationProjectSyncForkArgs = {
+export type MutationprojectSyncForkArgs = {
   input: ProjectSyncForkInput;
 };
 
-export type MutationProjectTargetBranchRuleCreateArgs = {
+export type MutationprojectTargetBranchRuleCreateArgs = {
   input: ProjectTargetBranchRuleCreateInput;
 };
 
-export type MutationProjectTargetBranchRuleDestroyArgs = {
+export type MutationprojectTargetBranchRuleDestroyArgs = {
   input: ProjectTargetBranchRuleDestroyInput;
 };
 
-export type MutationProjectTextReplaceArgs = {
-  input: ProjectTextReplaceInput;
+export type MutationprojectTextReplaceArgs = {
+  input: projectTextReplaceInput;
 };
 
-export type MutationProjectUpdateComplianceFrameworksArgs = {
+export type MutationprojectUpdateComplianceFrameworksArgs = {
   input: ProjectUpdateComplianceFrameworksInput;
 };
 
-export type MutationPrometheusIntegrationCreateArgs = {
+export type MutationprometheusIntegrationCreateArgs = {
   input: PrometheusIntegrationCreateInput;
 };
 
-export type MutationPrometheusIntegrationResetTokenArgs = {
+export type MutationprometheusIntegrationResetTokenArgs = {
   input: PrometheusIntegrationResetTokenInput;
 };
 
-export type MutationPrometheusIntegrationUpdateArgs = {
+export type MutationprometheusIntegrationUpdateArgs = {
   input: PrometheusIntegrationUpdateInput;
 };
 
-export type MutationPromoteToEpicArgs = {
+export type MutationpromoteToEpicArgs = {
   input: PromoteToEpicInput;
 };
 
-export type MutationRefreshFindingTokenStatusArgs = {
+export type MutationrefreshFindingTokenStatusArgs = {
   input: RefreshFindingTokenStatusInput;
 };
 
-export type MutationRefreshSecurityFindingTokenStatusArgs = {
+export type MutationrefreshSecurityFindingTokenStatusArgs = {
   input: RefreshSecurityFindingTokenStatusInput;
 };
 
-export type MutationRefreshStandardsAdherenceChecksArgs = {
+export type MutationrefreshStandardsAdherenceChecksArgs = {
   input: RefreshStandardsAdherenceChecksInput;
 };
 
-export type MutationRefreshVulnerabilityFindingTokenStatusArgs = {
+export type MutationrefreshVulnerabilityFindingTokenStatusArgs = {
   input: RefreshVulnerabilityFindingTokenStatusInput;
 };
 
-export type MutationReleaseAssetLinkCreateArgs = {
+export type MutationreleaseAssetLinkCreateArgs = {
   input: ReleaseAssetLinkCreateInput;
 };
 
-export type MutationReleaseAssetLinkDeleteArgs = {
+export type MutationreleaseAssetLinkDeleteArgs = {
   input: ReleaseAssetLinkDeleteInput;
 };
 
-export type MutationReleaseAssetLinkUpdateArgs = {
+export type MutationreleaseAssetLinkUpdateArgs = {
   input: ReleaseAssetLinkUpdateInput;
 };
 
-export type MutationReleaseCreateArgs = {
+export type MutationreleaseCreateArgs = {
   input: ReleaseCreateInput;
 };
 
-export type MutationReleaseDeleteArgs = {
+export type MutationreleaseDeleteArgs = {
   input: ReleaseDeleteInput;
 };
 
-export type MutationReleaseUpdateArgs = {
+export type MutationreleaseUpdateArgs = {
   input: ReleaseUpdateInput;
 };
 
-export type MutationRemoveProjectFromSecurityDashboardArgs = {
+export type MutationremoveProjectFromSecurityDashboardArgs = {
   input: RemoveProjectFromSecurityDashboardInput;
 };
 
-export type MutationRepositionImageDiffNoteArgs = {
+export type MutationrepositionImageDiffNoteArgs = {
   input: RepositionImageDiffNoteInput;
 };
 
-export type MutationRestorePagesDeploymentArgs = {
+export type MutationrestorePagesDeploymentArgs = {
   input: RestorePagesDeploymentInput;
 };
 
-export type MutationResyncSecurityPoliciesArgs = {
+export type MutationresyncSecurityPoliciesArgs = {
   input: ResyncSecurityPoliciesInput;
 };
 
-export type MutationRunnerAssignToProjectArgs = {
+export type MutationrunnerAssignToProjectArgs = {
   input: RunnerAssignToProjectInput;
 };
 
-export type MutationRunnerBulkPauseArgs = {
+export type MutationrunnerBulkPauseArgs = {
   input: RunnerBulkPauseInput;
 };
 
-export type MutationRunnerCacheClearArgs = {
+export type MutationrunnerCacheClearArgs = {
   input: RunnerCacheClearInput;
 };
 
-export type MutationRunnerCreateArgs = {
+export type MutationrunnerCreateArgs = {
   input: RunnerCreateInput;
 };
 
-export type MutationRunnerDeleteArgs = {
+export type MutationrunnerDeleteArgs = {
   input: RunnerDeleteInput;
 };
 
-export type MutationRunnerUnassignFromProjectArgs = {
+export type MutationrunnerUnassignFromProjectArgs = {
   input: RunnerUnassignFromProjectInput;
 };
 
-export type MutationRunnerUpdateArgs = {
+export type MutationrunnerUpdateArgs = {
   input: RunnerUpdateInput;
 };
 
-export type MutationRunnersExportUsageArgs = {
+export type MutationrunnersExportUsageArgs = {
   input: RunnersExportUsageInput;
 };
 
-export type MutationRunnersRegistrationTokenResetArgs = {
+export type MutationrunnersRegistrationTokenResetArgs = {
   input: RunnersRegistrationTokenResetInput;
 };
 
-export type MutationSafeDisablePipelineVariablesArgs = {
+export type MutationsafeDisablePipelineVariablesArgs = {
   input: SafeDisablePipelineVariablesInput;
 };
 
-export type MutationSavedReplyCreateArgs = {
+export type MutationsavedReplyCreateArgs = {
   input: SavedReplyCreateInput;
 };
 
-export type MutationSavedReplyDestroyArgs = {
+export type MutationsavedReplyDestroyArgs = {
   input: SavedReplyDestroyInput;
 };
 
-export type MutationSavedReplyUpdateArgs = {
+export type MutationsavedReplyUpdateArgs = {
   input: SavedReplyUpdateInput;
 };
 
-export type MutationScanExecutionPolicyCommitArgs = {
+export type MutationscanExecutionPolicyCommitArgs = {
   input: ScanExecutionPolicyCommitInput;
 };
 
-export type MutationSecretPermissionDeleteArgs = {
+export type MutationsecretPermissionDeleteArgs = {
   input: SecretPermissionDeleteInput;
 };
 
-export type MutationSecretPermissionUpdateArgs = {
+export type MutationsecretPermissionUpdateArgs = {
   input: SecretPermissionUpdateInput;
 };
 
-export type MutationSecurityAttributeCreateArgs = {
+export type MutationsecurityAttributeCreateArgs = {
   input: SecurityAttributeCreateInput;
 };
 
-export type MutationSecurityAttributeProjectUpdateArgs = {
+export type MutationsecurityAttributeProjectUpdateArgs = {
   input: SecurityAttributeProjectUpdateInput;
 };
 
-export type MutationSecurityAttributeUpdateArgs = {
+export type MutationsecurityAttributeUpdateArgs = {
   input: SecurityAttributeUpdateInput;
 };
 
-export type MutationSecurityCategoryCreateArgs = {
+export type MutationsecurityCategoryCreateArgs = {
   input: SecurityCategoryCreateInput;
 };
 
-export type MutationSecurityCategoryUpdateArgs = {
+export type MutationsecurityCategoryUpdateArgs = {
   input: SecurityCategoryUpdateInput;
 };
 
-export type MutationSecurityFindingCreateIssueArgs = {
+export type MutationsecurityFindingCreateIssueArgs = {
   input: SecurityFindingCreateIssueInput;
 };
 
-export type MutationSecurityFindingCreateMergeRequestArgs = {
+export type MutationsecurityFindingCreateMergeRequestArgs = {
   input: SecurityFindingCreateMergeRequestInput;
 };
 
-export type MutationSecurityFindingCreateVulnerabilityArgs = {
+export type MutationsecurityFindingCreateVulnerabilityArgs = {
   input: SecurityFindingCreateVulnerabilityInput;
 };
 
-export type MutationSecurityFindingDismissArgs = {
+export type MutationsecurityFindingDismissArgs = {
   input: SecurityFindingDismissInput;
 };
 
-export type MutationSecurityFindingExternalIssueLinkCreateArgs = {
+export type MutationsecurityFindingExternalIssueLinkCreateArgs = {
   input: SecurityFindingExternalIssueLinkCreateInput;
 };
 
-export type MutationSecurityFindingRevertToDetectedArgs = {
+export type MutationsecurityFindingRevertToDetectedArgs = {
   input: SecurityFindingRevertToDetectedInput;
 };
 
-export type MutationSecurityFindingSeverityOverrideArgs = {
+export type MutationsecurityFindingSeverityOverrideArgs = {
   input: SecurityFindingSeverityOverrideInput;
 };
 
-export type MutationSecurityPolicyProjectAssignArgs = {
+export type MutationsecurityPolicyProjectAssignArgs = {
   input: SecurityPolicyProjectAssignInput;
 };
 
-export type MutationSecurityPolicyProjectCreateArgs = {
+export type MutationsecurityPolicyProjectCreateArgs = {
   input: SecurityPolicyProjectCreateInput;
 };
 
-export type MutationSecurityPolicyProjectCreateAsyncArgs = {
+export type MutationsecurityPolicyProjectCreateAsyncArgs = {
   input: SecurityPolicyProjectCreateAsyncInput;
 };
 
-export type MutationSecurityPolicyProjectUnassignArgs = {
+export type MutationsecurityPolicyProjectUnassignArgs = {
   input: SecurityPolicyProjectUnassignInput;
 };
 
-export type MutationSecurityTrainingUpdateArgs = {
+export type MutationsecurityTrainingUpdateArgs = {
   input: SecurityTrainingUpdateInput;
 };
 
-export type MutationSetContainerScanningForRegistryArgs = {
+export type MutationsetContainerScanningForRegistryArgs = {
   input: SetContainerScanningForRegistryInput;
 };
 
-export type MutationSetGroupSecretPushProtectionArgs = {
+export type MutationsetGroupSecretPushProtectionArgs = {
   input: SetGroupSecretPushProtectionInput;
 };
 
-export type MutationSetGroupValidityChecksArgs = {
+export type MutationsetGroupValidityChecksArgs = {
   input: SetGroupValidityChecksInput;
 };
 
-export type MutationSetLicenseConfigurationSourceArgs = {
+export type MutationsetLicenseConfigurationSourceArgs = {
   input: SetLicenseConfigurationSourceInput;
 };
 
-export type MutationSetPagesForceHttpsArgs = {
+export type MutationsetPagesForceHttpsArgs = {
   input: SetPagesForceHttpsInput;
 };
 
-export type MutationSetPagesUseUniqueDomainArgs = {
+export type MutationsetPagesUseUniqueDomainArgs = {
   input: SetPagesUseUniqueDomainInput;
 };
 
-export type MutationSetPreReceiveSecretDetectionArgs = {
+export type MutationsetPreReceiveSecretDetectionArgs = {
   input: SetPreReceiveSecretDetectionInput;
 };
 
-export type MutationSetSecretPushProtectionArgs = {
+export type MutationsetSecretPushProtectionArgs = {
   input: SetSecretPushProtectionInput;
 };
 
-export type MutationSetValidityChecksArgs = {
+export type MutationsetValidityChecksArgs = {
   input: SetValidityChecksInput;
 };
 
-export type MutationStarProjectArgs = {
+export type MutationstarProjectArgs = {
   input: StarProjectInput;
 };
 
-export type MutationTagCreateArgs = {
+export type MutationtagCreateArgs = {
   input: TagCreateInput;
 };
 
-export type MutationTagDeleteArgs = {
+export type MutationtagDeleteArgs = {
   input: TagDeleteInput;
 };
 
-export type MutationTerraformStateDeleteArgs = {
+export type MutationterraformStateDeleteArgs = {
   input: TerraformStateDeleteInput;
 };
 
-export type MutationTerraformStateLockArgs = {
+export type MutationterraformStateLockArgs = {
   input: TerraformStateLockInput;
 };
 
-export type MutationTerraformStateUnlockArgs = {
+export type MutationterraformStateUnlockArgs = {
   input: TerraformStateUnlockInput;
 };
 
-export type MutationTimelineEventCreateArgs = {
+export type MutationtimelineEventCreateArgs = {
   input: TimelineEventCreateInput;
 };
 
-export type MutationTimelineEventDestroyArgs = {
+export type MutationtimelineEventDestroyArgs = {
   input: TimelineEventDestroyInput;
 };
 
-export type MutationTimelineEventPromoteFromNoteArgs = {
+export type MutationtimelineEventPromoteFromNoteArgs = {
   input: TimelineEventPromoteFromNoteInput;
 };
 
-export type MutationTimelineEventTagCreateArgs = {
+export type MutationtimelineEventTagCreateArgs = {
   input: TimelineEventTagCreateInput;
 };
 
-export type MutationTimelineEventUpdateArgs = {
+export type MutationtimelineEventUpdateArgs = {
   input: TimelineEventUpdateInput;
 };
 
-export type MutationTimelogCreateArgs = {
+export type MutationtimelogCreateArgs = {
   input: TimelogCreateInput;
 };
 
-export type MutationTimelogDeleteArgs = {
+export type MutationtimelogDeleteArgs = {
   input: TimelogDeleteInput;
 };
 
-export type MutationTodoCreateArgs = {
+export type MutationtodoCreateArgs = {
   input: TodoCreateInput;
 };
 
-export type MutationTodoDeleteAllDoneArgs = {
+export type MutationtodoDeleteAllDoneArgs = {
   input: TodoDeleteAllDoneInput;
 };
 
-export type MutationTodoDeleteManyArgs = {
+export type MutationtodoDeleteManyArgs = {
   input: TodoDeleteManyInput;
 };
 
-export type MutationTodoMarkDoneArgs = {
+export type MutationtodoMarkDoneArgs = {
   input: TodoMarkDoneInput;
 };
 
-export type MutationTodoResolveManyArgs = {
+export type MutationtodoResolveManyArgs = {
   input: TodoResolveManyInput;
 };
 
-export type MutationTodoRestoreArgs = {
+export type MutationtodoRestoreArgs = {
   input: TodoRestoreInput;
 };
 
-export type MutationTodoRestoreManyArgs = {
+export type MutationtodoRestoreManyArgs = {
   input: TodoRestoreManyInput;
 };
 
-export type MutationTodoSnoozeArgs = {
+export type MutationtodoSnoozeArgs = {
   input: TodoSnoozeInput;
 };
 
-export type MutationTodoSnoozeManyArgs = {
+export type MutationtodoSnoozeManyArgs = {
   input: TodoSnoozeManyInput;
 };
 
-export type MutationTodoUnSnoozeArgs = {
+export type MutationtodoUnSnoozeArgs = {
   input: TodoUnSnoozeInput;
 };
 
-export type MutationTodoUnsnoozeManyArgs = {
+export type MutationtodoUnsnoozeManyArgs = {
   input: TodoUnsnoozeManyInput;
 };
 
-export type MutationTodosMarkAllDoneArgs = {
+export type MutationtodosMarkAllDoneArgs = {
   input: TodosMarkAllDoneInput;
 };
 
-export type MutationUnlinkProjectComplianceViolationIssueArgs = {
+export type MutationunlinkProjectComplianceViolationIssueArgs = {
   input: UnlinkProjectComplianceViolationIssueInput;
 };
 
-export type MutationUpdateAbuseReportNoteArgs = {
+export type MutationupdateAbuseReportNoteArgs = {
   input: UpdateAbuseReportNoteInput;
 };
 
-export type MutationUpdateAlertStatusArgs = {
+export type MutationupdateAlertStatusArgs = {
   input: UpdateAlertStatusInput;
 };
 
-export type MutationUpdateBoardArgs = {
+export type MutationupdateBoardArgs = {
   input: UpdateBoardInput;
 };
 
-export type MutationUpdateBoardEpicUserPreferencesArgs = {
+export type MutationupdateBoardEpicUserPreferencesArgs = {
   input: UpdateBoardEpicUserPreferencesInput;
 };
 
-export type MutationUpdateBoardListArgs = {
+export type MutationupdateBoardListArgs = {
   input: UpdateBoardListInput;
 };
 
-export type MutationUpdateComplianceFrameworkArgs = {
+export type MutationupdateComplianceFrameworkArgs = {
   input: UpdateComplianceFrameworkInput;
 };
 
-export type MutationUpdateComplianceRequirementArgs = {
+export type MutationupdateComplianceRequirementArgs = {
   input: UpdateComplianceRequirementInput;
 };
 
-export type MutationUpdateComplianceRequirementsControlArgs = {
+export type MutationupdateComplianceRequirementsControlArgs = {
   input: UpdateComplianceRequirementsControlInput;
 };
 
-export type MutationUpdateContainerExpirationPolicyArgs = {
+export type MutationupdateContainerExpirationPolicyArgs = {
   input: UpdateContainerExpirationPolicyInput;
 };
 
-export type MutationUpdateContainerProtectionRepositoryRuleArgs = {
+export type MutationupdateContainerProtectionRepositoryRuleArgs = {
   input: UpdateContainerProtectionRepositoryRuleInput;
 };
 
-export type MutationUpdateContainerProtectionTagRuleArgs = {
+export type MutationupdateContainerProtectionTagRuleArgs = {
   input: UpdateContainerProtectionTagRuleInput;
 };
 
-export type MutationUpdateDependencyProxyImageTtlGroupPolicyArgs = {
+export type MutationupdateDependencyProxyImageTtlGroupPolicyArgs = {
   input: UpdateDependencyProxyImageTtlGroupPolicyInput;
 };
 
-export type MutationUpdateDependencyProxyPackagesSettingsArgs = {
+export type MutationupdateDependencyProxyPackagesSettingsArgs = {
   input: UpdateDependencyProxyPackagesSettingsInput;
 };
 
-export type MutationUpdateDependencyProxySettingsArgs = {
+export type MutationupdateDependencyProxySettingsArgs = {
   input: UpdateDependencyProxySettingsInput;
 };
 
-export type MutationUpdateEpicArgs = {
+export type MutationupdateEpicArgs = {
   input: UpdateEpicInput;
 };
 
-export type MutationUpdateEpicBoardListArgs = {
+export type MutationupdateEpicBoardListArgs = {
   input: UpdateEpicBoardListInput;
 };
 
-export type MutationUpdateImageDiffNoteArgs = {
+export type MutationupdateImageDiffNoteArgs = {
   input: UpdateImageDiffNoteInput;
 };
 
-export type MutationUpdateIssueArgs = {
+export type MutationupdateIssueArgs = {
   input: UpdateIssueInput;
 };
 
-export type MutationUpdateIterationArgs = {
+export type MutationupdateIterationArgs = {
   input: UpdateIterationInput;
 };
 
-export type MutationUpdateNamespacePackageSettingsArgs = {
+export type MutationupdateNamespacePackageSettingsArgs = {
   input: UpdateNamespacePackageSettingsInput;
 };
 
-export type MutationUpdateNoteArgs = {
+export type MutationupdateNoteArgs = {
   input: UpdateNoteInput;
 };
 
-export type MutationUpdatePackagesCleanupPolicyArgs = {
+export type MutationupdatePackagesCleanupPolicyArgs = {
   input: UpdatePackagesCleanupPolicyInput;
 };
 
-export type MutationUpdatePackagesProtectionRuleArgs = {
+export type MutationupdatePackagesProtectionRuleArgs = {
   input: UpdatePackagesProtectionRuleInput;
 };
 
-export type MutationUpdateProjectComplianceViolationArgs = {
+export type MutationupdateProjectComplianceViolationArgs = {
   input: UpdateProjectComplianceViolationInput;
 };
 
-export type MutationUpdateRequirementArgs = {
+export type MutationupdateRequirementArgs = {
   input: UpdateRequirementInput;
 };
 
-export type MutationUpdateSnippetArgs = {
+export type MutationupdateSnippetArgs = {
   input: UpdateSnippetInput;
 };
 
-export type MutationUploadDeleteArgs = {
+export type MutationuploadDeleteArgs = {
   input: UploadDeleteInput;
 };
 
-export type MutationUserAchievementPrioritiesUpdateArgs = {
+export type MutationuserAchievementPrioritiesUpdateArgs = {
   input: UserAchievementPrioritiesUpdateInput;
 };
 
-export type MutationUserAchievementsDeleteArgs = {
+export type MutationuserAchievementsDeleteArgs = {
   input: UserAchievementsDeleteInput;
 };
 
-export type MutationUserAchievementsUpdateArgs = {
+export type MutationuserAchievementsUpdateArgs = {
   input: UserAchievementsUpdateInput;
 };
 
-export type MutationUserAddOnAssignmentBulkCreateArgs = {
+export type MutationuserAddOnAssignmentBulkCreateArgs = {
   input: UserAddOnAssignmentBulkCreateInput;
 };
 
-export type MutationUserAddOnAssignmentBulkRemoveArgs = {
+export type MutationuserAddOnAssignmentBulkRemoveArgs = {
   input: UserAddOnAssignmentBulkRemoveInput;
 };
 
-export type MutationUserAddOnAssignmentCreateArgs = {
+export type MutationuserAddOnAssignmentCreateArgs = {
   input: UserAddOnAssignmentCreateInput;
 };
 
-export type MutationUserAddOnAssignmentRemoveArgs = {
+export type MutationuserAddOnAssignmentRemoveArgs = {
   input: UserAddOnAssignmentRemoveInput;
 };
 
-export type MutationUserCalloutCreateArgs = {
+export type MutationuserCalloutCreateArgs = {
   input: UserCalloutCreateInput;
 };
 
-export type MutationUserPreferencesUpdateArgs = {
+export type MutationuserPreferencesUpdateArgs = {
   input: UserPreferencesUpdateInput;
 };
 
-export type MutationUserSetNamespaceCommitEmailArgs = {
+export type MutationuserSetNamespaceCommitEmailArgs = {
   input: UserSetNamespaceCommitEmailInput;
 };
 
-export type MutationValueStreamCreateArgs = {
+export type MutationvalueStreamCreateArgs = {
   input: ValueStreamCreateInput;
 };
 
-export type MutationValueStreamDestroyArgs = {
+export type MutationvalueStreamDestroyArgs = {
   input: ValueStreamDestroyInput;
 };
 
-export type MutationValueStreamUpdateArgs = {
+export type MutationvalueStreamUpdateArgs = {
   input: ValueStreamUpdateInput;
 };
 
-export type MutationVerifiedNamespaceCreateArgs = {
+export type MutationverifiedNamespaceCreateArgs = {
   input: VerifiedNamespaceCreateInput;
 };
 
-export type MutationVulnerabilitiesArchiveArgs = {
+export type MutationvulnerabilitiesArchiveArgs = {
   input: VulnerabilitiesArchiveInput;
 };
 
-export type MutationVulnerabilitiesCreateIssueArgs = {
+export type MutationvulnerabilitiesCreateIssueArgs = {
   input: VulnerabilitiesCreateIssueInput;
 };
 
-export type MutationVulnerabilitiesDismissArgs = {
+export type MutationvulnerabilitiesDismissArgs = {
   input: VulnerabilitiesDismissInput;
 };
 
-export type MutationVulnerabilitiesRemoveAllFromProjectArgs = {
+export type MutationvulnerabilitiesRemoveAllFromProjectArgs = {
   input: VulnerabilitiesRemoveAllFromProjectInput;
 };
 
-export type MutationVulnerabilitiesSeverityOverrideArgs = {
-  input: VulnerabilitiesSeverityOverrideInput;
+export type MutationvulnerabilitiesSeverityOverrideArgs = {
+  input: vulnerabilitiesSeverityOverrideInput;
 };
 
-export type MutationVulnerabilityConfirmArgs = {
+export type MutationvulnerabilityConfirmArgs = {
   input: VulnerabilityConfirmInput;
 };
 
-export type MutationVulnerabilityCreateArgs = {
+export type MutationvulnerabilityCreateArgs = {
   input: VulnerabilityCreateInput;
 };
 
-export type MutationVulnerabilityDismissArgs = {
+export type MutationvulnerabilityDismissArgs = {
   input: VulnerabilityDismissInput;
 };
 
-export type MutationVulnerabilityExternalIssueLinkCreateArgs = {
+export type MutationvulnerabilityExternalIssueLinkCreateArgs = {
   input: VulnerabilityExternalIssueLinkCreateInput;
 };
 
-export type MutationVulnerabilityExternalIssueLinkDestroyArgs = {
+export type MutationvulnerabilityExternalIssueLinkDestroyArgs = {
   input: VulnerabilityExternalIssueLinkDestroyInput;
 };
 
-export type MutationVulnerabilityIssueLinkCreateArgs = {
+export type MutationvulnerabilityIssueLinkCreateArgs = {
   input: VulnerabilityIssueLinkCreateInput;
 };
 
-export type MutationVulnerabilityLinkMergeRequestArgs = {
+export type MutationvulnerabilityLinkMergeRequestArgs = {
   input: VulnerabilityLinkMergeRequestInput;
 };
 
-export type MutationVulnerabilityResolveArgs = {
+export type MutationvulnerabilityResolveArgs = {
   input: VulnerabilityResolveInput;
 };
 
-export type MutationVulnerabilityRevertToDetectedArgs = {
+export type MutationvulnerabilityRevertToDetectedArgs = {
   input: VulnerabilityRevertToDetectedInput;
 };
 
-export type MutationWikiPageSubscribeArgs = {
+export type MutationwikiPageSubscribeArgs = {
   input: WikiPageSubscribeInput;
 };
 
-export type MutationWorkItemAddClosingMergeRequestArgs = {
+export type MutationworkItemAddClosingMergeRequestArgs = {
   input: WorkItemAddClosingMergeRequestInput;
 };
 
-export type MutationWorkItemAddLinkedItemsArgs = {
+export type MutationworkItemAddLinkedItemsArgs = {
   input: WorkItemAddLinkedItemsInput;
 };
 
-export type MutationWorkItemBulkMoveArgs = {
+export type MutationworkItemBulkMoveArgs = {
   input: WorkItemBulkMoveInput;
 };
 
-export type MutationWorkItemBulkUpdateArgs = {
+export type MutationworkItemBulkUpdateArgs = {
   input: WorkItemBulkUpdateInput;
 };
 
-export type MutationWorkItemConvertArgs = {
+export type MutationworkItemConvertArgs = {
   input: WorkItemConvertInput;
 };
 
-export type MutationWorkItemCreateArgs = {
+export type MutationworkItemCreateArgs = {
   input: WorkItemCreateInput;
 };
 
-export type MutationWorkItemCreateFromTaskArgs = {
+export type MutationworkItemCreateFromTaskArgs = {
   input: WorkItemCreateFromTaskInput;
 };
 
-export type MutationWorkItemDeleteArgs = {
+export type MutationworkItemDeleteArgs = {
   input: WorkItemDeleteInput;
 };
 
-export type MutationWorkItemExportArgs = {
+export type MutationworkItemExportArgs = {
   input: WorkItemExportInput;
 };
 
-export type MutationWorkItemHierarchyAddChildrenItemsArgs = {
+export type MutationworkItemHierarchyAddChildrenItemsArgs = {
   input: WorkItemHierarchyAddChildrenItemsInput;
 };
 
-export type MutationWorkItemRemoveLinkedItemsArgs = {
+export type MutationworkItemRemoveLinkedItemsArgs = {
   input: WorkItemRemoveLinkedItemsInput;
 };
 
-export type MutationWorkItemSubscribeArgs = {
+export type MutationworkItemSubscribeArgs = {
   input: WorkItemSubscribeInput;
 };
 
-export type MutationWorkItemUpdateArgs = {
+export type MutationworkItemUpdateArgs = {
   input: WorkItemUpdateInput;
 };
 
-export type MutationWorkItemUserPreferenceUpdateArgs = {
+export type MutationworkItemUserPreferenceUpdateArgs = {
   input: WorkItemUserPreferenceUpdateInput;
 };
 
-export type MutationWorkItemsCsvExportArgs = {
+export type MutationworkItemsCsvExportArgs = {
   input: WorkItemsCsvExportInput;
 };
 
-export type MutationWorkItemsCsvImportArgs = {
+export type MutationworkItemsCsvImportArgs = {
   input: WorkItemsCsvImportInput;
 };
 
-export type MutationWorkItemsHierarchyReorderArgs = {
-  input: WorkItemsHierarchyReorderInput;
+export type MutationworkItemsHierarchyReorderArgs = {
+  input: workItemsHierarchyReorderInput;
 };
 
-export type MutationWorkItemsReorderArgs = {
-  input: WorkItemsReorderInput;
+export type MutationworkItemsReorderArgs = {
+  input: workItemsReorderInput;
 };
 
-export type MutationWorkspaceCreateArgs = {
+export type MutationworkspaceCreateArgs = {
   input: WorkspaceCreateInput;
 };
 
-export type MutationWorkspaceUpdateArgs = {
+export type MutationworkspaceUpdateArgs = {
   input: WorkspaceUpdateInput;
 };
 
 /** Different toggles for changing mutator behavior */
 export enum MutationOperationMode {
   /** Performs an append operation. */
-  Append = "APPEND",
+  APPEND = "APPEND",
   /** Performs a removal operation. */
-  Remove = "REMOVE",
+  REMOVE = "REMOVE",
   /** Performs a replace operation. */
-  Replace = "REPLACE",
+  REPLACE = "REPLACE",
 }
 
 export type Namespace = Todoable & {
@@ -36402,7 +36401,7 @@ export type Namespace = Todoable & {
   workspacesClusterAgents?: Maybe<ClusterAgentConnection>;
 };
 
-export type NamespaceAchievementsArgs = {
+export type NamespaceachievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -36410,7 +36409,7 @@ export type NamespaceAchievementsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespaceAddOnEligibleUsersArgs = {
+export type NamespaceaddOnEligibleUsersArgs = {
   addOnPurchaseIds: Array<Scalars["GitlabSubscriptionsAddOnPurchaseID"]["input"]>;
   addOnType: GitlabSubscriptionsAddOnType;
   after?: InputMaybe<Scalars["String"]["input"]>;
@@ -36422,7 +36421,7 @@ export type NamespaceAddOnEligibleUsersArgs = {
   sort?: InputMaybe<GitlabSubscriptionsUserSort>;
 };
 
-export type NamespaceApprovalPoliciesArgs = {
+export type NamespaceapprovalPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -36432,7 +36431,7 @@ export type NamespaceApprovalPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type NamespaceComplianceFrameworksArgs = {
+export type NamespacecomplianceFrameworksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -36443,7 +36442,7 @@ export type NamespaceComplianceFrameworksArgs = {
   sort?: InputMaybe<ComplianceFrameworkSort>;
 };
 
-export type NamespaceCustomFieldsArgs = {
+export type NamespacecustomFieldsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -36454,7 +36453,7 @@ export type NamespaceCustomFieldsArgs = {
   workItemTypeId?: InputMaybe<Scalars["WorkItemsTypeID"]["input"]>;
 };
 
-export type NamespaceImportSourceUsersArgs = {
+export type NamespaceimportSourceUsersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -36464,14 +36463,14 @@ export type NamespaceImportSourceUsersArgs = {
   statuses?: InputMaybe<Array<ImportSourceUserStatus>>;
 };
 
-export type NamespaceLifecyclesArgs = {
+export type NamespacelifecyclesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespacePagesDeploymentsArgs = {
+export type NamespacepagesDeploymentsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -36481,7 +36480,7 @@ export type NamespacePagesDeploymentsArgs = {
   versioned?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type NamespacePipelineExecutionPoliciesArgs = {
+export type NamespacepipelineExecutionPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -36491,7 +36490,7 @@ export type NamespacePipelineExecutionPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type NamespacePipelineExecutionSchedulePoliciesArgs = {
+export type NamespacepipelineExecutionSchedulePoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -36501,7 +36500,7 @@ export type NamespacePipelineExecutionSchedulePoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type NamespaceProjectsArgs = {
+export type NamespaceprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   archivedOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -36522,7 +36521,7 @@ export type NamespaceProjectsArgs = {
   withNamespaceDomainPages?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type NamespaceRemoteDevelopmentClusterAgentsArgs = {
+export type NamespaceremoteDevelopmentClusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter: NamespaceClusterAgentFilter;
@@ -36530,7 +36529,7 @@ export type NamespaceRemoteDevelopmentClusterAgentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespaceScanExecutionPoliciesArgs = {
+export type NamespacescanExecutionPoliciesArgs = {
   actionScanTypes?: InputMaybe<Array<SecurityReportTypeEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -36541,7 +36540,7 @@ export type NamespaceScanExecutionPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type NamespaceScanResultPoliciesArgs = {
+export type NamespacescanResultPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -36551,7 +36550,7 @@ export type NamespaceScanResultPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type NamespaceSecurityPoliciesArgs = {
+export type NamespacesecurityPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -36561,28 +36560,28 @@ export type NamespaceSecurityPoliciesArgs = {
   type?: InputMaybe<PolicyType>;
 };
 
-export type NamespaceStatusesArgs = {
+export type NamespacestatusesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespaceSubscriptionHistoryArgs = {
+export type NamespacesubscriptionHistoryArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespaceTimelogCategoriesArgs = {
+export type NamespacetimelogCategoriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespaceVulnerabilityManagementPoliciesArgs = {
+export type NamespacevulnerabilityManagementPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -36592,18 +36591,18 @@ export type NamespaceVulnerabilityManagementPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type NamespaceWorkItemArgs = {
+export type NamespaceworkItemArgs = {
   iid: Scalars["String"]["input"];
 };
 
-export type NamespaceWorkItemDescriptionTemplatesArgs = {
+export type NamespaceworkItemDescriptionTemplatesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NamespaceWorkItemStateCountsArgs = {
+export type NamespaceworkItemStateCountsArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
@@ -36647,7 +36646,7 @@ export type NamespaceWorkItemStateCountsArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type NamespaceWorkItemTypesArgs = {
+export type NamespaceworkItemTypesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -36655,7 +36654,7 @@ export type NamespaceWorkItemTypesArgs = {
   name?: InputMaybe<IssueType>;
 };
 
-export type NamespaceWorkItemsArgs = {
+export type NamespaceworkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
@@ -36703,12 +36702,12 @@ export type NamespaceWorkItemsArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type NamespaceWorkItemsWidgetsArgs = {
+export type NamespaceworkItemsWidgetsArgs = {
   ids: Array<Scalars["WorkItemsTypeID"]["input"]>;
   union?: Scalars["Boolean"]["input"];
 };
 
-export type NamespaceWorkspacesClusterAgentsArgs = {
+export type NamespaceworkspacesClusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter: NamespaceClusterAgentFilter;
@@ -36851,13 +36850,13 @@ export type NamespaceCiCdSettingsUpdatePayload = {
 /** Possible filter types for remote development cluster agents in a namespace */
 export enum NamespaceClusterAgentFilter {
   /** All cluster agents in the namespace that can be used for hosting worksapces. */
-  All = "ALL",
+  ALL = "ALL",
   /** Cluster agents in the namespace that can be used for hosting workspaces. */
-  Available = "AVAILABLE",
+  AVAILABLE = "AVAILABLE",
   /** Cluster agents that are directly mapped to the given namespace. */
-  DirectlyMapped = "DIRECTLY_MAPPED",
+  DIRECTLY_MAPPED = "DIRECTLY_MAPPED",
   /** Cluster agents within a namespace that are not directly mapped to it. */
-  Unmapped = "UNMAPPED",
+  UNMAPPED = "UNMAPPED",
 }
 
 /** Represents a namespace-cluster-agent mapping. */
@@ -37021,51 +37020,51 @@ export type NamespacePlan = {
 /** Values for sorting projects */
 export enum NamespaceProjectSort {
   /** Sort by latest activity, descending order. */
-  ActivityDesc = "ACTIVITY_DESC",
+  ACTIVITY_DESC = "ACTIVITY_DESC",
   /** Sort by total build artifact size, ascending order. */
-  BuildArtifactsSizeAsc = "BUILD_ARTIFACTS_SIZE_ASC",
+  BUILD_ARTIFACTS_SIZE_ASC = "BUILD_ARTIFACTS_SIZE_ASC",
   /** Sort by total build artifact size, descending order. */
-  BuildArtifactsSizeDesc = "BUILD_ARTIFACTS_SIZE_DESC",
+  BUILD_ARTIFACTS_SIZE_DESC = "BUILD_ARTIFACTS_SIZE_DESC",
   /** Sort by total container registry size, ascending order. */
-  ContainerRegistrySizeAsc = "CONTAINER_REGISTRY_SIZE_ASC",
+  CONTAINER_REGISTRY_SIZE_ASC = "CONTAINER_REGISTRY_SIZE_ASC",
   /** Sort by total container registry size, descending order. */
-  ContainerRegistrySizeDesc = "CONTAINER_REGISTRY_SIZE_DESC",
+  CONTAINER_REGISTRY_SIZE_DESC = "CONTAINER_REGISTRY_SIZE_DESC",
   /** Sort by excess repository storage size, descending order. */
-  ExcessRepoStorageSizeDesc = "EXCESS_REPO_STORAGE_SIZE_DESC",
+  EXCESS_REPO_STORAGE_SIZE_DESC = "EXCESS_REPO_STORAGE_SIZE_DESC",
   /** Sort by full path, ascending order. */
-  FullPathAsc = "FULL_PATH_ASC",
+  FULL_PATH_ASC = "FULL_PATH_ASC",
   /** Sort by full path, descending order. */
-  FullPathDesc = "FULL_PATH_DESC",
+  FULL_PATH_DESC = "FULL_PATH_DESC",
   /** Sort by total LFS object size, ascending order. */
-  LfsObjectsSizeAsc = "LFS_OBJECTS_SIZE_ASC",
+  LFS_OBJECTS_SIZE_ASC = "LFS_OBJECTS_SIZE_ASC",
   /** Sort by total LFS object size, descending order. */
-  LfsObjectsSizeDesc = "LFS_OBJECTS_SIZE_DESC",
+  LFS_OBJECTS_SIZE_DESC = "LFS_OBJECTS_SIZE_DESC",
   /** Sort by total package size, ascending order. */
-  PackagesSizeAsc = "PACKAGES_SIZE_ASC",
+  PACKAGES_SIZE_ASC = "PACKAGES_SIZE_ASC",
   /** Sort by total package size, descending order. */
-  PackagesSizeDesc = "PACKAGES_SIZE_DESC",
+  PACKAGES_SIZE_DESC = "PACKAGES_SIZE_DESC",
   /** Sort by path, ascending order. */
-  PathAsc = "PATH_ASC",
+  PATH_ASC = "PATH_ASC",
   /** Sort by path, descending order. */
-  PathDesc = "PATH_DESC",
+  PATH_DESC = "PATH_DESC",
   /** Sort by total repository size, ascending order. */
-  RepositorySizeAsc = "REPOSITORY_SIZE_ASC",
+  REPOSITORY_SIZE_ASC = "REPOSITORY_SIZE_ASC",
   /** Sort by total repository size, descending order. */
-  RepositorySizeDesc = "REPOSITORY_SIZE_DESC",
+  REPOSITORY_SIZE_DESC = "REPOSITORY_SIZE_DESC",
   /** Most similar to the search query. */
-  Similarity = "SIMILARITY",
+  SIMILARITY = "SIMILARITY",
   /** Sort by total snippet size, ascending order. */
-  SnippetsSizeAsc = "SNIPPETS_SIZE_ASC",
+  SNIPPETS_SIZE_ASC = "SNIPPETS_SIZE_ASC",
   /** Sort by total snippet size, descending order. */
-  SnippetsSizeDesc = "SNIPPETS_SIZE_DESC",
+  SNIPPETS_SIZE_DESC = "SNIPPETS_SIZE_DESC",
   /** Sort by total storage size, ascending order. */
-  StorageSizeAsc = "STORAGE_SIZE_ASC",
+  STORAGE_SIZE_ASC = "STORAGE_SIZE_ASC",
   /** Sort by total storage size, descending order. */
-  StorageSizeDesc = "STORAGE_SIZE_DESC",
+  STORAGE_SIZE_DESC = "STORAGE_SIZE_DESC",
   /** Sort by total wiki size, ascending order. */
-  WikiSizeAsc = "WIKI_SIZE_ASC",
+  WIKI_SIZE_ASC = "WIKI_SIZE_ASC",
   /** Sort by total wiki size, descending order. */
-  WikiSizeDesc = "WIKI_SIZE_DESC",
+  WIKI_SIZE_DESC = "WIKI_SIZE_DESC",
 }
 
 export type NamespaceProjectStatistics = {
@@ -37289,15 +37288,15 @@ export type NegatedIssueFilterInput = {
 /** Negated Iteration ID wildcard values */
 export enum NegatedIterationWildcardId {
   /** Current iteration. */
-  Current = "CURRENT",
+  CURRENT = "CURRENT",
 }
 
 /** Negated Milestone ID wildcard values */
 export enum NegatedMilestoneWildcardId {
   /** Milestone assigned is open and yet to be started (start date > today). */
-  Started = "STARTED",
+  STARTED = "STARTED",
   /** Milestone assigned is open but starts in the past (start date <= today). This differs from the behavior in the [REST API implementation](https://docs.gitlab.com/api/issues/#list-issues). */
-  Upcoming = "UPCOMING",
+  UPCOMING = "UPCOMING",
 }
 
 export type NegatedValueStreamAnalyticsIssuableFilterInput = {
@@ -37447,7 +37446,7 @@ export type Note = BaseNoteInterface &
     userPermissions: NotePermissions;
   };
 
-export type NoteAwardEmojiArgs = {
+export type NoteawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -37522,21 +37521,21 @@ export type NoteableInterface = {
   notes: NoteConnection;
 };
 
-export type NoteableInterfaceCommentersArgs = {
+export type NoteableInterfacecommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NoteableInterfaceDiscussionsArgs = {
+export type NoteableInterfacediscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type NoteableInterfaceNotesArgs = {
+export type NoteableInterfacenotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -37550,11 +37549,11 @@ export type NoteableType = Design | Issue | MergeRequest;
 /** Work item notes collection type. */
 export enum NotesFilterType {
   /** Show all activity */
-  AllNotes = "ALL_NOTES",
+  ALL_NOTES = "ALL_NOTES",
   /** Show history only */
-  OnlyActivity = "ONLY_ACTIVITY",
+  ONLY_ACTIVITY = "ONLY_ACTIVITY",
   /** Show comments only */
-  OnlyComments = "ONLY_COMMENTS",
+  ONLY_COMMENTS = "ONLY_COMMENTS",
 }
 
 /** Nuget dependency link metadata */
@@ -37807,11 +37806,11 @@ export type OncallRotationLengthInputType = {
 /** Rotation length unit of an on-call rotation */
 export enum OncallRotationUnitEnum {
   /** Days */
-  Days = "DAYS",
+  DAYS = "DAYS",
   /** Hours */
-  Hours = "HOURS",
+  HOURS = "HOURS",
   /** Weeks */
-  Weeks = "WEEKS",
+  WEEKS = "WEEKS",
 }
 
 /** Autogenerated input type of OncallRotationUpdate */
@@ -37931,13 +37930,13 @@ export type OncallUserInputType = {
 /** Enum defining the type of OpenTelemetry metric */
 export enum OpenTelemetryMetricType {
   /** Exponential Histogram Type type. */
-  ExponentialHistogramType = "EXPONENTIAL_HISTOGRAM_TYPE",
+  EXPONENTIAL_HISTOGRAM_TYPE = "EXPONENTIAL_HISTOGRAM_TYPE",
   /** Gauge Type type. */
-  GaugeType = "GAUGE_TYPE",
+  GAUGE_TYPE = "GAUGE_TYPE",
   /** Histogram Type type. */
-  HistogramType = "HISTOGRAM_TYPE",
+  HISTOGRAM_TYPE = "HISTOGRAM_TYPE",
   /** Sum Type type. */
-  SumType = "SUM_TYPE",
+  SUM_TYPE = "SUM_TYPE",
 }
 
 export type OrchestrationPolicy = {
@@ -38021,7 +38020,7 @@ export type Organization = {
   workspacesClusterAgents?: Maybe<ClusterAgentConnection>;
 };
 
-export type OrganizationGroupsArgs = {
+export type OrganizationgroupsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   allAvailable?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -38037,14 +38036,14 @@ export type OrganizationGroupsArgs = {
   topLevelOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type OrganizationOrganizationUsersArgs = {
+export type OrganizationorganizationUsersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type OrganizationProjectsArgs = {
+export type OrganizationprojectsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   aimedForDeletion?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -38073,7 +38072,7 @@ export type OrganizationProjectsArgs = {
   withMergeRequestsEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type OrganizationWorkspacesClusterAgentsArgs = {
+export type OrganizationworkspacesClusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter: OrganizationClusterAgentFilter;
@@ -38084,9 +38083,9 @@ export type OrganizationWorkspacesClusterAgentsArgs = {
 /** Possible filter types for remote development cluster agents in an organization */
 export enum OrganizationClusterAgentFilter {
   /** All cluster agents in the organization that can be used for hosting workspaces. */
-  All = "ALL",
+  ALL = "ALL",
   /** Cluster agents that are directly mapped to the given organization. */
-  DirectlyMapped = "DIRECTLY_MAPPED",
+  DIRECTLY_MAPPED = "DIRECTLY_MAPPED",
 }
 
 /** The connection type for Organization. */
@@ -38180,98 +38179,98 @@ export enum OrganizationGroupProjectDisplay {
    * Display organization groups list. Introduced in GitLab 17.2: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.2.
    */
-  Groups = "GROUPS",
+  GROUPS = "GROUPS",
   /**
    * Display organization projects list. Introduced in GitLab 17.2: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.2.
    */
-  Projects = "PROJECTS",
+  PROJECTS = "PROJECTS",
 }
 
 /** Values for sorting organization groups and projects. */
 export enum OrganizationGroupProjectSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /**
    * Name ascending order. Introduced in GitLab 17.2: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.2.
    */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /**
    * Name descending order. Introduced in GitLab 17.2: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.2.
    */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Values for sorting organizations */
 export enum OrganizationSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Default Rate in ascending order. */
-  DefaultRateAsc = "DEFAULT_RATE_ASC",
+  DEFAULT_RATE_ASC = "DEFAULT_RATE_ASC",
   /** Default Rate in descending order. */
-  DefaultRateDesc = "DEFAULT_RATE_DESC",
+  DEFAULT_RATE_DESC = "DEFAULT_RATE_DESC",
   /** Description in ascending order. */
-  DescriptionAsc = "DESCRIPTION_ASC",
+  DESCRIPTION_ASC = "DESCRIPTION_ASC",
   /** Description in descending order. */
-  DescriptionDesc = "DESCRIPTION_DESC",
+  DESCRIPTION_DESC = "DESCRIPTION_DESC",
   /** Name in ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Name in descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Represents the total number of organizations for the represented states. */
@@ -38365,12 +38364,12 @@ export enum OrganizationUserAccessLevel {
    * Guest access. Introduced in GitLab 16.11: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 16.11.
    */
-  Default = "DEFAULT",
+  DEFAULT = "DEFAULT",
   /**
    * Owner access. Introduced in GitLab 16.11: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 16.11.
    */
-  Owner = "OWNER",
+  OWNER = "OWNER",
 }
 
 /** An organization user badge. */
@@ -38475,7 +38474,7 @@ export type Package = {
 };
 
 /** Represents a package with pipelines in the package registry */
-export type PackagePipelinesArgs = {
+export type PackagepipelinesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38483,7 +38482,7 @@ export type PackagePipelinesArgs = {
 };
 
 /** Represents a package with pipelines in the package registry */
-export type PackageTagsArgs = {
+export type PackagetagsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38524,7 +38523,7 @@ export type PackageBase = {
 };
 
 /** Represents a package in the package registry */
-export type PackageBaseTagsArgs = {
+export type PackageBasetagsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38625,13 +38624,13 @@ export type PackageDependencyLinkEdge = {
 
 export enum PackageDependencyType {
   /** bundleDependencies dependency type */
-  BundleDependencies = "BUNDLE_DEPENDENCIES",
+  BUNDLE_DEPENDENCIES = "BUNDLE_DEPENDENCIES",
   /** dependencies dependency type */
-  Dependencies = "DEPENDENCIES",
+  DEPENDENCIES = "DEPENDENCIES",
   /** devDependencies dependency type */
-  DevDependencies = "DEV_DEPENDENCIES",
+  DEV_DEPENDENCIES = "DEV_DEPENDENCIES",
   /** peerDependencies dependency type */
-  PeerDependencies = "PEER_DEPENDENCIES",
+  PEER_DEPENDENCIES = "PEER_DEPENDENCIES",
 }
 
 /** Represents a package details in the Package Registry */
@@ -38699,7 +38698,7 @@ export type PackageDetailsType = {
 };
 
 /** Represents a package details in the Package Registry */
-export type PackageDetailsTypeDependencyLinksArgs = {
+export type PackageDetailsTypedependencyLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38707,7 +38706,7 @@ export type PackageDetailsTypeDependencyLinksArgs = {
 };
 
 /** Represents a package details in the Package Registry */
-export type PackageDetailsTypePackageFilesArgs = {
+export type PackageDetailsTypepackageFilesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38715,7 +38714,7 @@ export type PackageDetailsTypePackageFilesArgs = {
 };
 
 /** Represents a package details in the Package Registry */
-export type PackageDetailsTypePipelinesArgs = {
+export type PackageDetailsTypepipelinesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38723,7 +38722,7 @@ export type PackageDetailsTypePipelinesArgs = {
 };
 
 /** Represents a package details in the Package Registry */
-export type PackageDetailsTypeTagsArgs = {
+export type PackageDetailsTypetagsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38731,7 +38730,7 @@ export type PackageDetailsTypeTagsArgs = {
 };
 
 /** Represents a package details in the Package Registry */
-export type PackageDetailsTypeVersionsArgs = {
+export type PackageDetailsTypeversionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -38862,7 +38861,7 @@ export type PackageFileRegistryConnection = {
 };
 
 /** The connection type for PackageFileRegistry. */
-export type PackageFileRegistryConnectionCountArgs = {
+export type PackageFileRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -38878,25 +38877,25 @@ export type PackageFileRegistryEdge = {
 /** Values for sorting group packages */
 export enum PackageGroupSort {
   /** Ordered by created_at in ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Ordered by created_at in descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Ordered by name in ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Ordered by name in descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Ordered by project path in ascending order. */
-  ProjectPathAsc = "PROJECT_PATH_ASC",
+  PROJECT_PATH_ASC = "PROJECT_PATH_ASC",
   /** Ordered by project path in descending order. */
-  ProjectPathDesc = "PROJECT_PATH_DESC",
+  PROJECT_PATH_DESC = "PROJECT_PATH_DESC",
   /** Ordered by type in ascending order. */
-  TypeAsc = "TYPE_ASC",
+  TYPE_ASC = "TYPE_ASC",
   /** Ordered by type in descending order. */
-  TypeDesc = "TYPE_DESC",
+  TYPE_DESC = "TYPE_DESC",
   /** Ordered by version in ascending order. */
-  VersionAsc = "VERSION_ASC",
+  VERSION_ASC = "VERSION_ASC",
   /** Ordered by version in descending order. */
-  VersionDesc = "VERSION_DESC",
+  VERSION_DESC = "VERSION_DESC",
 }
 
 /** Represents a Helm dependency */
@@ -38980,43 +38979,43 @@ export type PackageLinks = {
 /** Values for package manager */
 export enum PackageManager {
   /** Package manager: apk. */
-  Apk = "APK",
+  APK = "APK",
   /** Package manager: bundler. */
-  Bundler = "BUNDLER",
+  BUNDLER = "BUNDLER",
   /** Package manager: cargo. */
-  Cargo = "CARGO",
+  CARGO = "CARGO",
   /** Package manager: composer. */
-  Composer = "COMPOSER",
+  COMPOSER = "COMPOSER",
   /** Package manager: conan. */
-  Conan = "CONAN",
+  CONAN = "CONAN",
   /** Package manager: conda. */
-  Conda = "CONDA",
+  CONDA = "CONDA",
   /** Package manager: go. */
-  Go = "GO",
+  GO = "GO",
   /** Package manager: gradle. */
-  Gradle = "GRADLE",
+  GRADLE = "GRADLE",
   /** Package manager: maven. */
-  Maven = "MAVEN",
+  MAVEN = "MAVEN",
   /** Package manager: npm. */
-  Npm = "NPM",
+  NPM = "NPM",
   /** Package manager: nuget. */
-  Nuget = "NUGET",
+  NUGET = "NUGET",
   /** Package manager: pip. */
-  Pip = "PIP",
+  PIP = "PIP",
   /** Package manager: pipenv. */
-  Pipenv = "PIPENV",
+  PIPENV = "PIPENV",
   /** Package manager: pnpm. */
-  Pnpm = "PNPM",
+  PNPM = "PNPM",
   /** Package manager: poetry. */
-  Poetry = "POETRY",
+  POETRY = "POETRY",
   /** Package manager: pub. */
-  Pub = "PUB",
+  PUB = "PUB",
   /** Package manager: sbt. */
-  Sbt = "SBT",
+  SBT = "SBT",
   /** Package manager: setuptools. */
-  Setuptools = "SETUPTOOLS",
+  SETUPTOOLS = "SETUPTOOLS",
   /** Package manager: yarn. */
-  Yarn = "YARN",
+  YARN = "YARN",
 }
 
 /** Represents metadata associated with a Package */
@@ -39074,36 +39073,36 @@ export type PackageSettings = {
 /** Values for sorting package */
 export enum PackageSort {
   /** Ordered by created_at in ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Ordered by created_at in descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Ordered by name in ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Ordered by name in descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Ordered by type in ascending order. */
-  TypeAsc = "TYPE_ASC",
+  TYPE_ASC = "TYPE_ASC",
   /** Ordered by type in descending order. */
-  TypeDesc = "TYPE_DESC",
+  TYPE_DESC = "TYPE_DESC",
   /** Ordered by version in ascending order. */
-  VersionAsc = "VERSION_ASC",
+  VERSION_ASC = "VERSION_ASC",
   /** Ordered by version in descending order. */
-  VersionDesc = "VERSION_DESC",
+  VERSION_DESC = "VERSION_DESC",
 }
 
 export enum PackageStatus {
   /** Packages with a default status */
-  Default = "DEFAULT",
+  DEFAULT = "DEFAULT",
   /** Packages with a deprecated status */
-  Deprecated = "DEPRECATED",
+  DEPRECATED = "DEPRECATED",
   /** Packages with a error status */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** Packages with a hidden status */
-  Hidden = "HIDDEN",
+  HIDDEN = "HIDDEN",
   /** Packages with a pending_destruction status */
-  PendingDestruction = "PENDING_DESTRUCTION",
+  PENDING_DESTRUCTION = "PENDING_DESTRUCTION",
   /** Packages with a processing status */
-  Processing = "PROCESSING",
+  PROCESSING = "PROCESSING",
 }
 
 /** Represents a package tag */
@@ -39141,52 +39140,52 @@ export type PackageTagEdge = {
 
 export enum PackageTypeEnum {
   /** Packages from the Cargo package manager */
-  Cargo = "CARGO",
+  CARGO = "CARGO",
   /** Packages from the Composer package manager */
-  Composer = "COMPOSER",
+  COMPOSER = "COMPOSER",
   /** Packages from the Conan package manager */
-  Conan = "CONAN",
+  CONAN = "CONAN",
   /** Packages from the Debian package manager */
-  Debian = "DEBIAN",
+  DEBIAN = "DEBIAN",
   /** Packages from the Generic package manager */
-  Generic = "GENERIC",
+  GENERIC = "GENERIC",
   /** Packages from the Golang package manager */
-  Golang = "GOLANG",
+  GOLANG = "GOLANG",
   /** Packages from the Helm package manager */
-  Helm = "HELM",
+  HELM = "HELM",
   /** Packages from the Maven package manager */
-  Maven = "MAVEN",
+  MAVEN = "MAVEN",
   /** Packages from the Ml_model package manager */
-  MlModel = "ML_MODEL",
+  ML_MODEL = "ML_MODEL",
   /** Packages from the npm package manager */
-  Npm = "NPM",
+  NPM = "NPM",
   /** Packages from the Nuget package manager */
-  Nuget = "NUGET",
+  NUGET = "NUGET",
   /** Packages from the PyPI package manager */
-  Pypi = "PYPI",
+  PYPI = "PYPI",
   /** Packages from the Rpm package manager */
-  Rpm = "RPM",
+  RPM = "RPM",
   /** Packages from the Rubygems package manager */
-  Rubygems = "RUBYGEMS",
+  RUBYGEMS = "RUBYGEMS",
   /** Packages from the Terraform Module package manager */
-  TerraformModule = "TERRAFORM_MODULE",
+  TERRAFORM_MODULE = "TERRAFORM_MODULE",
 }
 
 export enum PackagesCleanupKeepDuplicatedPackageFilesEnum {
   /** Value to keep all package files */
-  AllPackageFiles = "ALL_PACKAGE_FILES",
+  ALL_PACKAGE_FILES = "ALL_PACKAGE_FILES",
   /** Value to keep 50 package files */
-  FiftyPackageFiles = "FIFTY_PACKAGE_FILES",
+  FIFTY_PACKAGE_FILES = "FIFTY_PACKAGE_FILES",
   /** Value to keep 40 package files */
-  FortyPackageFiles = "FORTY_PACKAGE_FILES",
+  FORTY_PACKAGE_FILES = "FORTY_PACKAGE_FILES",
   /** Value to keep 1 package files */
-  OnePackageFile = "ONE_PACKAGE_FILE",
+  ONE_PACKAGE_FILE = "ONE_PACKAGE_FILE",
   /** Value to keep 10 package files */
-  TenPackageFiles = "TEN_PACKAGE_FILES",
+  TEN_PACKAGE_FILES = "TEN_PACKAGE_FILES",
   /** Value to keep 30 package files */
-  ThirtyPackageFiles = "THIRTY_PACKAGE_FILES",
+  THIRTY_PACKAGE_FILES = "THIRTY_PACKAGE_FILES",
   /** Value to keep 20 package files */
-  TwentyPackageFiles = "TWENTY_PACKAGE_FILES",
+  TWENTY_PACKAGE_FILES = "TWENTY_PACKAGE_FILES",
 }
 
 /** A packages cleanup policy designed to keep only packages and packages assets that matter most */
@@ -39219,19 +39218,19 @@ export type PackagesProtectionRule = {
 /** Access level of a package protection rule resource */
 export enum PackagesProtectionRuleAccessLevel {
   /** Admin access. */
-  Admin = "ADMIN",
+  ADMIN = "ADMIN",
   /** Maintainer access. */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** Owner access. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
 }
 
 /** Access level for the deletion of a package protection rule resource. */
 export enum PackagesProtectionRuleAccessLevelForDelete {
   /** Admin access. Available only when feature flag `packages_protected_packages_delete` is enabled. */
-  Admin = "ADMIN",
+  ADMIN = "ADMIN",
   /** Owner access. Available only when feature flag `packages_protected_packages_delete` is enabled. */
-  Owner = "OWNER",
+  OWNER = "OWNER",
 }
 
 /** The connection type for PackagesProtectionRule. */
@@ -39257,19 +39256,19 @@ export type PackagesProtectionRuleEdge = {
 /** Package type of a package protection rule resource */
 export enum PackagesProtectionRulePackageType {
   /** Packages of the Conan format. */
-  Conan = "CONAN",
+  CONAN = "CONAN",
   /** Packages of the Generic format. */
-  Generic = "GENERIC",
+  GENERIC = "GENERIC",
   /** Packages of the Helm format. */
-  Helm = "HELM",
+  HELM = "HELM",
   /** Packages of the Maven format. */
-  Maven = "MAVEN",
+  MAVEN = "MAVEN",
   /** Packages of the npm format. */
-  Npm = "NPM",
+  NPM = "NPM",
   /** Packages of the NuGet format. */
-  Nuget = "NUGET",
+  NUGET = "NUGET",
   /** Packages of the PyPI format. */
-  Pypi = "PYPI",
+  PYPI = "PYPI",
 }
 
 /** Information about pagination in a connection. */
@@ -39400,7 +39399,7 @@ export type PagesDeploymentRegistryConnection = {
 };
 
 /** The connection type for PagesDeploymentRegistry. */
-export type PagesDeploymentRegistryConnectionCountArgs = {
+export type PagesDeploymentRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -39508,7 +39507,7 @@ export type PendingGroupMember = MemberInterface &
   };
 
 /** Represents a Pending Group Membership */
-export type PendingGroupMemberMergeRequestInteractionArgs = {
+export type PendingGroupMembermergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
@@ -39545,7 +39544,7 @@ export type PendingMemberInterface = {
   webUrl?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type PendingMemberInterfaceMergeRequestInteractionArgs = {
+export type PendingMemberInterfacemergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
@@ -39606,7 +39605,7 @@ export type PendingProjectMember = MemberInterface &
   };
 
 /** Represents a Pending Project Membership */
-export type PendingProjectMemberMergeRequestInteractionArgs = {
+export type PendingProjectMembermergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
@@ -39752,33 +39751,33 @@ export type Pipeline = PipelineInterface & {
   yamlErrors: Scalars["Boolean"]["output"];
 };
 
-export type PipelineCodeQualityReportsArgs = {
+export type PipelinecodeQualityReportsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PipelineDownstreamArgs = {
+export type PipelinedownstreamArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PipelineErrorMessagesArgs = {
+export type PipelineerrorMessagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PipelineJobArgs = {
+export type PipelinejobArgs = {
   id?: InputMaybe<Scalars["JobID"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type PipelineJobsArgs = {
+export type PipelinejobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -39790,18 +39789,18 @@ export type PipelineJobsArgs = {
   whenExecuted?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type PipelineManualVariablesArgs = {
+export type PipelinemanualVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PipelineSecurityReportFindingArgs = {
+export type PipelinesecurityReportFindingArgs = {
   uuid: Scalars["String"]["input"];
 };
 
-export type PipelineSecurityReportFindingsArgs = {
+export type PipelinesecurityReportFindingsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -39813,22 +39812,22 @@ export type PipelineSecurityReportFindingsArgs = {
   state?: InputMaybe<Array<VulnerabilityState>>;
 };
 
-export type PipelineShaArgs = {
+export type PipelineshaArgs = {
   format?: InputMaybe<ShaFormat>;
 };
 
-export type PipelineStagesArgs = {
+export type PipelinestagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PipelineTestSuiteArgs = {
+export type PipelinetestSuiteArgs = {
   buildIds: Array<Scalars["ID"]["input"]>;
 };
 
-export type PipelineWarningMessagesArgs = {
+export type PipelinewarningMessagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -39871,19 +39870,19 @@ export type PipelineAnalytics = {
   yearPipelinesTotals?: Maybe<Array<Scalars["Int"]["output"]>>;
 };
 
-export type PipelineAnalyticsTimeSeriesArgs = {
+export type PipelineAnalyticstimeSeriesArgs = {
   period: AnalyticsAggregationPeriod;
 };
 
 export enum PipelineAnalyticsJobStatus {
   /** Jobs with any status. */
-  Any = "ANY",
+  ANY = "ANY",
   /** Job that failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Job that was canceled or skipped. */
-  Other = "OTHER",
+  OTHER = "OTHER",
   /** Job that succeeded. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 export type PipelineAnalyticsPeriod = {
@@ -39905,7 +39904,7 @@ export type PipelineAnalyticsPeriod = {
   label?: Maybe<Scalars["Date"]["output"]>;
 };
 
-export type PipelineAnalyticsPeriodCountArgs = {
+export type PipelineAnalyticsPeriodcountArgs = {
   status?: PipelineAnalyticsJobStatus;
 };
 
@@ -39971,7 +39970,7 @@ export type PipelineArtifactRegistryConnection = {
 };
 
 /** The connection type for PipelineArtifactRegistry. */
-export type PipelineArtifactRegistryConnectionCountArgs = {
+export type PipelineArtifactRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -40003,27 +40002,27 @@ export type PipelineCancelPayload = {
 
 export enum PipelineConfigSourceEnum {
   /** Auto DevOps source. */
-  AutoDevopsSource = "AUTO_DEVOPS_SOURCE",
+  AUTO_DEVOPS_SOURCE = "AUTO_DEVOPS_SOURCE",
   /** Bridge source. */
-  BridgeSource = "BRIDGE_SOURCE",
+  BRIDGE_SOURCE = "BRIDGE_SOURCE",
   /** Compliance source. */
-  ComplianceSource = "COMPLIANCE_SOURCE",
+  COMPLIANCE_SOURCE = "COMPLIANCE_SOURCE",
   /** External project source. */
-  ExternalProjectSource = "EXTERNAL_PROJECT_SOURCE",
+  EXTERNAL_PROJECT_SOURCE = "EXTERNAL_PROJECT_SOURCE",
   /** Parameter source. */
-  ParameterSource = "PARAMETER_SOURCE",
+  PARAMETER_SOURCE = "PARAMETER_SOURCE",
   /** Pipeline execution policy forced. */
-  PipelineExecutionPolicyForced = "PIPELINE_EXECUTION_POLICY_FORCED",
+  PIPELINE_EXECUTION_POLICY_FORCED = "PIPELINE_EXECUTION_POLICY_FORCED",
   /** Remote source. */
-  RemoteSource = "REMOTE_SOURCE",
+  REMOTE_SOURCE = "REMOTE_SOURCE",
   /** Repository source. */
-  RepositorySource = "REPOSITORY_SOURCE",
+  REPOSITORY_SOURCE = "REPOSITORY_SOURCE",
   /** Security policies default source. */
-  SecurityPoliciesDefaultSource = "SECURITY_POLICIES_DEFAULT_SOURCE",
+  SECURITY_POLICIES_DEFAULT_SOURCE = "SECURITY_POLICIES_DEFAULT_SOURCE",
   /** Unknown source. */
-  UnknownSource = "UNKNOWN_SOURCE",
+  UNKNOWN_SOURCE = "UNKNOWN_SOURCE",
   /** Webide source. */
-  WebideSource = "WEBIDE_SOURCE",
+  WEBIDE_SOURCE = "WEBIDE_SOURCE",
 }
 
 /** The connection type for Pipeline. */
@@ -40275,11 +40274,11 @@ export type PipelineManualVariableEdge = {
 /** Event type of the pipeline associated with a merge request */
 export enum PipelineMergeRequestEventType {
   /** Pipeline run on the changes in the merge request source branch. */
-  Detached = "DETACHED",
+  DETACHED = "DETACHED",
   /** Pipeline run on the changes from the source branch combined with the target branch. */
-  MergedResult = "MERGED_RESULT",
+  MERGED_RESULT = "MERGED_RESULT",
   /** Pipeline ran as part of a merge train. */
-  MergeTrain = "MERGE_TRAIN",
+  MERGE_TRAIN = "MERGE_TRAIN",
 }
 
 export type PipelineMessage = {
@@ -40404,7 +40403,7 @@ export type PipelineSchedule = {
 };
 
 /** Represents a pipeline schedule */
-export type PipelineScheduleInputsArgs = {
+export type PipelineScheduleinputsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -40412,7 +40411,7 @@ export type PipelineScheduleInputsArgs = {
 };
 
 /** Represents a pipeline schedule */
-export type PipelineScheduleVariablesArgs = {
+export type PipelineSchedulevariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -40530,36 +40529,36 @@ export type PipelineSchedulePlayPayload = {
 /** Values for sorting pipeline schedules. */
 export enum PipelineScheduleSort {
   /** Sort pipeline schedules by created date in ascending order. */
-  CreatedAtAsc = "CREATED_AT_ASC",
+  CREATED_AT_ASC = "CREATED_AT_ASC",
   /** Sort pipeline schedules by created date in descending order. */
-  CreatedAtDesc = "CREATED_AT_DESC",
+  CREATED_AT_DESC = "CREATED_AT_DESC",
   /** Sort pipeline schedules by description in ascending order. */
-  DescriptionAsc = "DESCRIPTION_ASC",
+  DESCRIPTION_ASC = "DESCRIPTION_ASC",
   /** Sort pipeline schedules by description in descending order. */
-  DescriptionDesc = "DESCRIPTION_DESC",
+  DESCRIPTION_DESC = "DESCRIPTION_DESC",
   /** Sort pipeline schedules by ID in ascending order. */
-  IdAsc = "ID_ASC",
+  ID_ASC = "ID_ASC",
   /** Sort pipeline schedules by ID in descending order. */
-  IdDesc = "ID_DESC",
+  ID_DESC = "ID_DESC",
   /** Sort pipeline schedules by next run in ascending order. */
-  NextRunAtAsc = "NEXT_RUN_AT_ASC",
+  NEXT_RUN_AT_ASC = "NEXT_RUN_AT_ASC",
   /** Sort pipeline schedules by next run in descending order. */
-  NextRunAtDesc = "NEXT_RUN_AT_DESC",
+  NEXT_RUN_AT_DESC = "NEXT_RUN_AT_DESC",
   /** Sort pipeline schedules by target in ascending order. */
-  RefAsc = "REF_ASC",
+  REF_ASC = "REF_ASC",
   /** Sort pipeline schedules by target in descending order. */
-  RefDesc = "REF_DESC",
+  REF_DESC = "REF_DESC",
   /** Sort pipeline schedules by updated date in ascending order. */
-  UpdatedAtAsc = "UPDATED_AT_ASC",
+  UPDATED_AT_ASC = "UPDATED_AT_ASC",
   /** Sort pipeline schedules by updated date in descending order. */
-  UpdatedAtDesc = "UPDATED_AT_DESC",
+  UPDATED_AT_DESC = "UPDATED_AT_DESC",
 }
 
 export enum PipelineScheduleStatus {
   /** Active pipeline schedules. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Inactive pipeline schedules. */
-  Inactive = "INACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 /** Autogenerated input type of PipelineScheduleTakeOwnership */
@@ -40666,15 +40665,15 @@ export type PipelineScheduleVariableInput = {
 
 export enum PipelineScopeEnum {
   /** Branches. */
-  Branches = "BRANCHES",
+  BRANCHES = "BRANCHES",
   /** Pipeline has completed. */
-  Finished = "FINISHED",
+  FINISHED = "FINISHED",
   /** Pipeline has not started running yet. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
   /** Pipeline is running. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** Tags. */
-  Tags = "TAGS",
+  TAGS = "TAGS",
 }
 
 /** Represents vulnerability finding of a security report on the pipeline. */
@@ -40747,7 +40746,7 @@ export type PipelineSecurityReportFinding = {
 };
 
 /** Represents vulnerability finding of a security report on the pipeline. */
-export type PipelineSecurityReportFindingIssueLinksArgs = {
+export type PipelineSecurityReportFindingissueLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -40755,7 +40754,7 @@ export type PipelineSecurityReportFindingIssueLinksArgs = {
 };
 
 /** Represents vulnerability finding of a security report on the pipeline. */
-export type PipelineSecurityReportFindingSeverityOverridesArgs = {
+export type PipelineSecurityReportFindingseverityOverridesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -40794,38 +40793,38 @@ export type PipelineSecurityReportFindingPermissions = {
 /** Pipeline security report finding sort values */
 export enum PipelineSecurityReportFindingSort {
   /** Severity in ascending order. */
-  SeverityAsc = "severity_asc",
+  severity_asc = "severity_asc",
   /** Severity in descending order. */
-  SeverityDesc = "severity_desc",
+  severity_desc = "severity_desc",
 }
 
 export enum PipelineStatusEnum {
   /** Pipeline was canceled before completion. */
-  Canceled = "CANCELED",
+  CANCELED = "CANCELED",
   /** Pipeline is in the process of canceling. */
-  Canceling = "CANCELING",
+  CANCELING = "CANCELING",
   /** Pipeline has been created. */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** At least one stage of the pipeline failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Pipeline needs to be manually started. */
-  Manual = "MANUAL",
+  MANUAL = "MANUAL",
   /** Pipeline has not started running yet. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
   /** Pipeline is preparing to run. */
-  Preparing = "PREPARING",
+  PREPARING = "PREPARING",
   /** Pipeline is running. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** Pipeline is scheduled to run. */
-  Scheduled = "SCHEDULED",
+  SCHEDULED = "SCHEDULED",
   /** Pipeline was skipped. */
-  Skipped = "SKIPPED",
+  SKIPPED = "SKIPPED",
   /** Pipeline completed successfully. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
   /** Pipeline is waiting for an external action. */
-  WaitingForCallback = "WAITING_FOR_CALLBACK",
+  WAITING_FOR_CALLBACK = "WAITING_FOR_CALLBACK",
   /** A resource (for example, a runner) that the pipeline requires to run is unavailable. */
-  WaitingForResource = "WAITING_FOR_RESOURCE",
+  WAITING_FOR_RESOURCE = "WAITING_FOR_RESOURCE",
 }
 
 export type PipelineTrigger = {
@@ -40934,13 +40933,13 @@ export type PipelineTriggerUpdatePayload = {
 /** Pipeline variables minimum override roles. */
 export enum PipelineVariablesDefaultRoleType {
   /** Developer */
-  Developer = "DEVELOPER",
+  DEVELOPER = "DEVELOPER",
   /** Maintainer */
-  Maintainer = "MAINTAINER",
+  MAINTAINER = "MAINTAINER",
   /** No one allowed */
-  NoOneAllowed = "NO_ONE_ALLOWED",
+  NO_ONE_ALLOWED = "NO_ONE_ALLOWED",
   /** Owner */
-  Owner = "OWNER",
+  OWNER = "OWNER",
 }
 
 /** Security policy state synchronization update. Returns `null` if the `security_policy_sync_propagation_tracking` feature flag is disabled. */
@@ -41032,9 +41031,9 @@ export type PolicyComparisonPipeline = {
 
 export enum PolicyEnforcementType {
   /** Represents an enforced policy type. */
-  Enforce = "ENFORCE",
+  ENFORCE = "ENFORCE",
   /** Represents a warn mode policy type. */
-  Warn = "WARN",
+  WARN = "WARN",
 }
 
 /** Represents an error that can occur during policy evaluation. */
@@ -41080,9 +41079,9 @@ export type PolicyProjectCreated = {
 /** Types of security policy project created status. */
 export enum PolicyProjectCreatedStatus {
   /** Creating the security policy project faild. */
-  Error = "ERROR",
+  ERROR = "ERROR",
   /** Creating the security policy project was successful. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 /** Represents policy violation for `scan_finding` report_type */
@@ -41114,35 +41113,35 @@ export type PolicyScope = {
   includingProjects: ProjectConnection;
 };
 
-export type PolicyScopeComplianceFrameworksArgs = {
+export type PolicyScopecomplianceFrameworksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PolicyScopeExcludingGroupsArgs = {
+export type PolicyScopeexcludingGroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PolicyScopeExcludingProjectsArgs = {
+export type PolicyScopeexcludingProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PolicyScopeIncludingGroupsArgs = {
+export type PolicyScopeincludingGroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type PolicyScopeIncludingProjectsArgs = {
+export type PolicyScopeincludingProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -41151,15 +41150,15 @@ export type PolicyScopeIncludingProjectsArgs = {
 
 export enum PolicyType {
   /** Approval policy. */
-  ApprovalPolicy = "APPROVAL_POLICY",
+  APPROVAL_POLICY = "APPROVAL_POLICY",
   /** Pipeline execution policy. */
-  PipelineExecutionPolicy = "PIPELINE_EXECUTION_POLICY",
+  PIPELINE_EXECUTION_POLICY = "PIPELINE_EXECUTION_POLICY",
   /** Pipeline execution schedule policy. */
-  PipelineExecutionSchedulePolicy = "PIPELINE_EXECUTION_SCHEDULE_POLICY",
+  PIPELINE_EXECUTION_SCHEDULE_POLICY = "PIPELINE_EXECUTION_SCHEDULE_POLICY",
   /** Scan execution policy. */
-  ScanExecutionPolicy = "SCAN_EXECUTION_POLICY",
+  SCAN_EXECUTION_POLICY = "SCAN_EXECUTION_POLICY",
   /** Vulnerability management policy. */
-  VulnerabilityManagementPolicy = "VULNERABILITY_MANAGEMENT_POLICY",
+  VULNERABILITY_MANAGEMENT_POLICY = "VULNERABILITY_MANAGEMENT_POLICY",
 }
 
 /** Represents the details of merge request approval policy violations. */
@@ -41185,11 +41184,11 @@ export type PolicyViolationDetails = {
 
 export enum PolicyViolationErrorType {
   /** Represents error which occurs when pipeline is misconfigured and does not include necessary artifacts to evaluate a policy. */
-  ArtifactsMissing = "ARTIFACTS_MISSING",
+  ARTIFACTS_MISSING = "ARTIFACTS_MISSING",
   /** Represents mismatch between the scans of the source and target pipelines. */
-  ScanRemoved = "SCAN_REMOVED",
+  SCAN_REMOVED = "SCAN_REMOVED",
   /** Represents unknown error. */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** Represents generic policy violation information. */
@@ -41211,11 +41210,11 @@ export type PolicyViolationInfo = {
 
 export enum PolicyViolationStatus {
   /** Represents a failed policy violation. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Represents a running policy violation. */
-  Running = "RUNNING",
+  RUNNING = "RUNNING",
   /** Represents a policy violation warning. */
-  Warning = "WARNING",
+  WARNING = "WARNING",
 }
 
 export type PreviewBillableUserChange = {
@@ -41254,13 +41253,13 @@ export type PrincipalInput = {
 /** Types of principal that can have secret permissions */
 export enum PrincipalType {
   /** group. */
-  Group = "GROUP",
+  GROUP = "GROUP",
   /** member role. */
-  MemberRole = "MEMBER_ROLE",
+  MEMBER_ROLE = "MEMBER_ROLE",
   /** predefined role. */
-  Role = "ROLE",
+  ROLE = "ROLE",
   /** user. */
-  User = "USER",
+  USER = "USER",
 }
 
 /** Autogenerated input type of ProcessUserBillablePromotionRequest */
@@ -41333,13 +41332,13 @@ export type ProductAnalyticsProjectSettingsUpdatePayload = {
 /** Current state of the product analytics stack. */
 export enum ProductAnalyticsState {
   /** Stack has been initialized and has data. */
-  Complete = "COMPLETE",
+  COMPLETE = "COMPLETE",
   /** Stack has not been created yet. */
-  CreateInstance = "CREATE_INSTANCE",
+  CREATE_INSTANCE = "CREATE_INSTANCE",
   /** Stack is currently initializing. */
-  LoadingInstance = "LOADING_INSTANCE",
+  LOADING_INSTANCE = "LOADING_INSTANCE",
   /** Stack is waiting for events from users. */
-  WaitingForEvents = "WAITING_FOR_EVENTS",
+  WAITING_FOR_EVENTS = "WAITING_FOR_EVENTS",
 }
 
 export type Project = ProjectInterface &
@@ -42116,25 +42115,25 @@ export type Project = ProjectInterface &
     workItems?: Maybe<WorkItemConnection>;
   };
 
-export type ProjectAgentConfigurationsArgs = {
+export type ProjectagentConfigurationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectAiAgentArgs = {
+export type ProjectaiAgentArgs = {
   id: Scalars["AiAgentID"]["input"];
 };
 
-export type ProjectAiAgentsArgs = {
+export type ProjectaiAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectAiFlowTriggersArgs = {
+export type ProjectaiFlowTriggersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42142,12 +42141,12 @@ export type ProjectAiFlowTriggersArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectAiMetricsArgs = {
+export type ProjectaiMetricsArgs = {
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
   startDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type ProjectAiUserMetricsArgs = {
+export type ProjectaiUserMetricsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Date"]["input"]>;
@@ -42156,14 +42155,14 @@ export type ProjectAiUserMetricsArgs = {
   startDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type ProjectAiXrayReportsArgs = {
+export type ProjectaiXrayReportsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectAlertManagementAlertArgs = {
+export type ProjectalertManagementAlertArgs = {
   assigneeUsername?: InputMaybe<Scalars["String"]["input"]>;
   domain?: AlertManagementDomainFilter;
   iid?: InputMaybe<Scalars["String"]["input"]>;
@@ -42172,12 +42171,12 @@ export type ProjectAlertManagementAlertArgs = {
   statuses?: InputMaybe<Array<AlertManagementStatus>>;
 };
 
-export type ProjectAlertManagementAlertStatusCountsArgs = {
+export type ProjectalertManagementAlertStatusCountsArgs = {
   assigneeUsername?: InputMaybe<Scalars["String"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectAlertManagementAlertsArgs = {
+export type ProjectalertManagementAlertsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsername?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -42190,7 +42189,7 @@ export type ProjectAlertManagementAlertsArgs = {
   statuses?: InputMaybe<Array<AlertManagementStatus>>;
 };
 
-export type ProjectAlertManagementHttpIntegrationsArgs = {
+export type ProjectalertManagementHttpIntegrationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42199,7 +42198,7 @@ export type ProjectAlertManagementHttpIntegrationsArgs = {
   types?: InputMaybe<Array<AlertManagementIntegrationType>>;
 };
 
-export type ProjectAlertManagementIntegrationsArgs = {
+export type ProjectalertManagementIntegrationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42207,11 +42206,11 @@ export type ProjectAlertManagementIntegrationsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectAlertManagementPayloadFieldsArgs = {
+export type ProjectalertManagementPayloadFieldsArgs = {
   payloadExample: Scalars["String"]["input"];
 };
 
-export type ProjectApprovalPoliciesArgs = {
+export type ProjectapprovalPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -42221,11 +42220,11 @@ export type ProjectApprovalPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type ProjectAutocompleteUsersArgs = {
+export type ProjectautocompleteUsersArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectAvailableDeployKeysArgs = {
+export type ProjectavailableDeployKeysArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42233,11 +42232,11 @@ export type ProjectAvailableDeployKeysArgs = {
   titleQuery?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectBoardArgs = {
+export type ProjectboardArgs = {
   id: Scalars["BoardID"]["input"];
 };
 
-export type ProjectBoardsArgs = {
+export type ProjectboardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42245,7 +42244,7 @@ export type ProjectBoardsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectBranchRulesArgs = {
+export type ProjectbranchRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   buildMissing?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -42253,65 +42252,65 @@ export type ProjectBranchRulesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiAccessAuthorizedAgentsArgs = {
+export type ProjectciAccessAuthorizedAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiConfigVariablesArgs = {
+export type ProjectciConfigVariablesArgs = {
   ref: Scalars["String"]["input"];
 };
 
-export type ProjectCiDownstreamProjectSubscriptionsArgs = {
+export type ProjectciDownstreamProjectSubscriptionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiJobTokenAuthLogsArgs = {
+export type ProjectciJobTokenAuthLogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiPipelineCreationInputsArgs = {
+export type ProjectciPipelineCreationInputsArgs = {
   ref: Scalars["String"]["input"];
 };
 
-export type ProjectCiPipelineCreationRequestArgs = {
+export type ProjectciPipelineCreationRequestArgs = {
   requestId: Scalars["String"]["input"];
 };
 
-export type ProjectCiSubscribedProjectsArgs = {
+export type ProjectciSubscribedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiSubscriptionsProjectsArgs = {
+export type ProjectciSubscriptionsProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiTemplateArgs = {
+export type ProjectciTemplateArgs = {
   name: Scalars["String"]["input"];
 };
 
-export type ProjectCiUpstreamProjectSubscriptionsArgs = {
+export type ProjectciUpstreamProjectSubscriptionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCiVariablesArgs = {
+export type ProjectciVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42319,14 +42318,14 @@ export type ProjectCiVariablesArgs = {
   sort?: InputMaybe<CiVariableSort>;
 };
 
-export type ProjectClusterAgentArgs = {
+export type ProjectclusterAgentArgs = {
   hasRemoteDevelopmentEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   hasVulnerabilities?: InputMaybe<Scalars["Boolean"]["input"]>;
   hasWorkspacesAgentConfig?: InputMaybe<Scalars["Boolean"]["input"]>;
   name: Scalars["String"]["input"];
 };
 
-export type ProjectClusterAgentsArgs = {
+export type ProjectclusterAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42336,11 +42335,11 @@ export type ProjectClusterAgentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCommitReferencesArgs = {
+export type ProjectcommitReferencesArgs = {
   commitSha: Scalars["String"]["input"];
 };
 
-export type ProjectComplianceControlStatusArgs = {
+export type ProjectcomplianceControlStatusArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<ProjectComplianceControlStatusInput>;
@@ -42348,7 +42347,7 @@ export type ProjectComplianceControlStatusArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectComplianceFrameworksArgs = {
+export type ProjectcomplianceFrameworksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42356,7 +42355,7 @@ export type ProjectComplianceFrameworksArgs = {
   sort?: InputMaybe<ComplianceFrameworkSort>;
 };
 
-export type ProjectComplianceRequirementStatusesArgs = {
+export type ProjectcomplianceRequirementStatusesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<ProjectRequirementComplianceStatusInput>;
@@ -42365,7 +42364,7 @@ export type ProjectComplianceRequirementStatusesArgs = {
   orderBy?: InputMaybe<ProjectComplianceRequirementStatusOrderBy>;
 };
 
-export type ProjectComplianceStandardsAdherenceArgs = {
+export type ProjectcomplianceStandardsAdherenceArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<ComplianceStandardsProjectAdherenceInput>;
@@ -42373,14 +42372,14 @@ export type ProjectComplianceStandardsAdherenceArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectComponentUsagesArgs = {
+export type ProjectcomponentUsagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectComponentVersionsArgs = {
+export type ProjectcomponentVersionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentName: Scalars["String"]["input"];
@@ -42388,25 +42387,25 @@ export type ProjectComponentVersionsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectComponentsArgs = {
+export type ProjectcomponentsArgs = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectContainerProtectionRepositoryRulesArgs = {
+export type ProjectcontainerProtectionRepositoryRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectContainerProtectionTagRulesArgs = {
+export type ProjectcontainerProtectionTagRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectContainerRepositoriesArgs = {
+export type ProjectcontainerRepositoriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42415,14 +42414,14 @@ export type ProjectContainerRepositoriesArgs = {
   sort?: InputMaybe<ContainerRepositorySort>;
 };
 
-export type ProjectCorpusesArgs = {
+export type ProjectcorpusesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectCustomizableDashboardVisualizationsArgs = {
+export type ProjectcustomizableDashboardVisualizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42430,7 +42429,7 @@ export type ProjectCustomizableDashboardVisualizationsArgs = {
   slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectCustomizableDashboardsArgs = {
+export type ProjectcustomizableDashboardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   category?: InputMaybe<CustomizableDashboardCategory>;
@@ -42439,12 +42438,12 @@ export type ProjectCustomizableDashboardsArgs = {
   slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectDastProfileArgs = {
+export type ProjectdastProfileArgs = {
   hasDastProfileSchedule?: InputMaybe<Scalars["Boolean"]["input"]>;
   id: Scalars["DastProfileID"]["input"];
 };
 
-export type ProjectDastProfilesArgs = {
+export type ProjectdastProfilesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42452,25 +42451,25 @@ export type ProjectDastProfilesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectDastScannerProfilesArgs = {
+export type ProjectdastScannerProfilesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectDastSiteProfileArgs = {
+export type ProjectdastSiteProfileArgs = {
   id: Scalars["DastSiteProfileID"]["input"];
 };
 
-export type ProjectDastSiteProfilesArgs = {
+export type ProjectdastSiteProfilesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectDastSiteValidationsArgs = {
+export type ProjectdastSiteValidationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42479,12 +42478,12 @@ export type ProjectDastSiteValidationsArgs = {
   status?: InputMaybe<DastSiteValidationStatusEnum>;
 };
 
-export type ProjectDataTransferArgs = {
+export type ProjectdataTransferArgs = {
   from?: InputMaybe<Scalars["Date"]["input"]>;
   to?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type ProjectDependenciesArgs = {
+export type ProjectdependenciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentIds?: InputMaybe<Array<Scalars["SbomComponentID"]["input"]>>;
@@ -42497,18 +42496,18 @@ export type ProjectDependenciesArgs = {
   sourceTypes?: InputMaybe<Array<SbomSourceType>>;
 };
 
-export type ProjectDependencyPathsArgs = {
+export type ProjectdependencyPathsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   occurrence: Scalars["SbomOccurrenceID"]["input"];
 };
 
-export type ProjectDeploymentArgs = {
+export type ProjectdeploymentArgs = {
   iid: Scalars["ID"]["input"];
 };
 
-export type ProjectDuoWorkflowEventsArgs = {
+export type ProjectduoWorkflowEventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42516,7 +42515,7 @@ export type ProjectDuoWorkflowEventsArgs = {
   workflowId: Scalars["AiDuoWorkflowsWorkflowID"]["input"];
 };
 
-export type ProjectDuoWorkflowWorkflowsArgs = {
+export type ProjectduoWorkflowWorkflowsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   environment?: InputMaybe<WorkflowEnvironment>;
@@ -42529,14 +42528,14 @@ export type ProjectDuoWorkflowWorkflowsArgs = {
   workflowId?: InputMaybe<Scalars["AiDuoWorkflowsWorkflowID"]["input"]>;
 };
 
-export type ProjectEnvironmentArgs = {
+export type ProjectenvironmentArgs = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   search?: InputMaybe<Scalars["String"]["input"]>;
   states?: InputMaybe<Array<Scalars["String"]["input"]>>;
   type?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectEnvironmentsArgs = {
+export type ProjectenvironmentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42547,11 +42546,11 @@ export type ProjectEnvironmentsArgs = {
   type?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectForkDetailsArgs = {
+export type ProjectforkDetailsArgs = {
   ref?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectForkTargetsArgs = {
+export type ProjectforkTargetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42559,7 +42558,7 @@ export type ProjectForkTargetsArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectGitlabSubscriptionsPreviewBillableUserChangeArgs = {
+export type ProjectgitlabSubscriptionsPreviewBillableUserChangeArgs = {
   addGroupId?: InputMaybe<Scalars["Int"]["input"]>;
   addUserEmails?: InputMaybe<Array<Scalars["String"]["input"]>>;
   addUserIds?: InputMaybe<Array<Scalars["Int"]["input"]>>;
@@ -42567,7 +42566,7 @@ export type ProjectGitlabSubscriptionsPreviewBillableUserChangeArgs = {
   role: GitlabSubscriptionsUserRole;
 };
 
-export type ProjectIncidentManagementEscalationPoliciesArgs = {
+export type ProjectincidentManagementEscalationPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42575,12 +42574,12 @@ export type ProjectIncidentManagementEscalationPoliciesArgs = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectIncidentManagementEscalationPolicyArgs = {
+export type ProjectincidentManagementEscalationPolicyArgs = {
   id: Scalars["IncidentManagementEscalationPolicyID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectIncidentManagementOncallSchedulesArgs = {
+export type ProjectincidentManagementOncallSchedulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42588,12 +42587,12 @@ export type ProjectIncidentManagementOncallSchedulesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectIncidentManagementTimelineEventArgs = {
+export type ProjectincidentManagementTimelineEventArgs = {
   id: Scalars["IncidentManagementTimelineEventID"]["input"];
   incidentId: Scalars["IssueID"]["input"];
 };
 
-export type ProjectIncidentManagementTimelineEventsArgs = {
+export type ProjectincidentManagementTimelineEventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42601,7 +42600,7 @@ export type ProjectIncidentManagementTimelineEventsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectInheritedCiVariablesArgs = {
+export type ProjectinheritedCiVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42609,7 +42608,7 @@ export type ProjectInheritedCiVariablesArgs = {
   sort?: InputMaybe<CiGroupVariablesSort>;
 };
 
-export type ProjectIssueArgs = {
+export type ProjectissueArgs = {
   assigneeId?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
@@ -42653,7 +42652,7 @@ export type ProjectIssueArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type ProjectIssueStatusCountsArgs = {
+export type ProjectissueStatusCountsArgs = {
   assigneeId?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
@@ -42695,7 +42694,7 @@ export type ProjectIssueStatusCountsArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type ProjectIssuesArgs = {
+export type ProjectissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeId?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -42743,7 +42742,7 @@ export type ProjectIssuesArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type ProjectIterationCadencesArgs = {
+export type ProjectiterationCadencesArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   automatic?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -42756,7 +42755,7 @@ export type ProjectIterationCadencesArgs = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectIterationsArgs = {
+export type ProjectiterationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42773,18 +42772,18 @@ export type ProjectIterationsArgs = {
   timeframe?: InputMaybe<Timeframe>;
 };
 
-export type ProjectJiraImportsArgs = {
+export type ProjectjiraImportsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectJobArgs = {
+export type ProjectjobArgs = {
   id: Scalars["JobID"]["input"];
 };
 
-export type ProjectJobsArgs = {
+export type ProjectjobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42794,11 +42793,11 @@ export type ProjectJobsArgs = {
   withArtifacts?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type ProjectLabelArgs = {
+export type ProjectlabelArgs = {
   title: Scalars["String"]["input"];
 };
 
-export type ProjectLabelsArgs = {
+export type ProjectlabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   archived?: InputMaybe<Scalars["Boolean"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -42810,7 +42809,7 @@ export type ProjectLabelsArgs = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectMemberRolesArgs = {
+export type ProjectmemberRolesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42821,11 +42820,11 @@ export type ProjectMemberRolesArgs = {
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type ProjectMergeRequestArgs = {
+export type ProjectmergeRequestArgs = {
   iid: Scalars["String"]["input"];
 };
 
-export type ProjectMergeRequestViolationsArgs = {
+export type ProjectmergeRequestViolationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filters?: InputMaybe<ComplianceViolationProjectInput>;
@@ -42834,7 +42833,7 @@ export type ProjectMergeRequestViolationsArgs = {
   sort?: InputMaybe<ComplianceViolationSort>;
 };
 
-export type ProjectMergeRequestsArgs = {
+export type ProjectmergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -42876,7 +42875,7 @@ export type ProjectMergeRequestsArgs = {
   updatedBefore?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type ProjectMergeTrainsArgs = {
+export type ProjectmergeTrainsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42885,7 +42884,7 @@ export type ProjectMergeTrainsArgs = {
   targetBranches?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type ProjectMilestonesArgs = {
+export type ProjectmilestonesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   containingDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -42900,7 +42899,7 @@ export type ProjectMilestonesArgs = {
   title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectMlExperimentsArgs = {
+export type ProjectmlExperimentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42910,7 +42909,7 @@ export type ProjectMlExperimentsArgs = {
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type ProjectMlModelsArgs = {
+export type ProjectmlModelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42920,7 +42919,7 @@ export type ProjectMlModelsArgs = {
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type ProjectNestedEnvironmentsArgs = {
+export type ProjectnestedEnvironmentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42931,7 +42930,7 @@ export type ProjectNestedEnvironmentsArgs = {
   type?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectObservabilityLogsLinksArgs = {
+export type ProjectobservabilityLogsLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   fingerprint?: InputMaybe<Scalars["String"]["input"]>;
@@ -42943,7 +42942,7 @@ export type ProjectObservabilityLogsLinksArgs = {
   traceIdentifier?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectObservabilityMetricsLinksArgs = {
+export type ProjectobservabilityMetricsLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42952,7 +42951,7 @@ export type ProjectObservabilityMetricsLinksArgs = {
   type?: InputMaybe<OpenTelemetryMetricType>;
 };
 
-export type ProjectObservabilityTracesLinksArgs = {
+export type ProjectobservabilityTracesLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42960,7 +42959,7 @@ export type ProjectObservabilityTracesLinksArgs = {
   traceIdentifier?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectPackagesArgs = {
+export type ProjectpackagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -42973,14 +42972,14 @@ export type ProjectPackagesArgs = {
   status?: InputMaybe<PackageStatus>;
 };
 
-export type ProjectPackagesProtectionRulesArgs = {
+export type ProjectpackagesProtectionRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectPagesDeploymentsArgs = {
+export type ProjectpagesDeploymentsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -42990,40 +42989,40 @@ export type ProjectPagesDeploymentsArgs = {
   versioned?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type ProjectPathLocksArgs = {
+export type ProjectpathLocksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectPendingMemberApprovalsArgs = {
+export type ProjectpendingMemberApprovalsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectPipelineArgs = {
+export type ProjectpipelineArgs = {
   id?: InputMaybe<Scalars["CiPipelineID"]["input"]>;
   iid?: InputMaybe<Scalars["ID"]["input"]>;
   sha?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectPipelineAnalyticsArgs = {
+export type ProjectpipelineAnalyticsArgs = {
   fromTime?: InputMaybe<Scalars["Time"]["input"]>;
   ref?: InputMaybe<Scalars["String"]["input"]>;
   source?: InputMaybe<CiPipelineSources>;
   toTime?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type ProjectPipelineCountsArgs = {
+export type ProjectpipelineCountsArgs = {
   ref?: InputMaybe<Scalars["String"]["input"]>;
   sha?: InputMaybe<Scalars["String"]["input"]>;
   source?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectPipelineExecutionPoliciesArgs = {
+export type ProjectpipelineExecutionPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -43033,7 +43032,7 @@ export type ProjectPipelineExecutionPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type ProjectPipelineExecutionSchedulePoliciesArgs = {
+export type ProjectpipelineExecutionSchedulePoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -43043,7 +43042,7 @@ export type ProjectPipelineExecutionSchedulePoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type ProjectPipelineSchedulesArgs = {
+export type ProjectpipelineSchedulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43053,14 +43052,14 @@ export type ProjectPipelineSchedulesArgs = {
   status?: InputMaybe<PipelineScheduleStatus>;
 };
 
-export type ProjectPipelineTriggersArgs = {
+export type ProjectpipelineTriggersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectPipelinesArgs = {
+export type ProjectpipelinesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43075,11 +43074,11 @@ export type ProjectPipelinesArgs = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectProductAnalyticsEventsStoredArgs = {
+export type ProjectproductAnalyticsEventsStoredArgs = {
   monthSelection: Array<MonthSelectionInput>;
 };
 
-export type ProjectProjectMembersArgs = {
+export type ProjectprojectMembersArgs = {
   accessLevels?: InputMaybe<Array<AccessLevelEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -43090,18 +43089,18 @@ export type ProjectProjectMembersArgs = {
   sort?: InputMaybe<MemberSort>;
 };
 
-export type ProjectRecentIssueBoardsArgs = {
+export type ProjectrecentIssueBoardsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectReleaseArgs = {
+export type ProjectreleaseArgs = {
   tagName: Scalars["String"]["input"];
 };
 
-export type ProjectReleasesArgs = {
+export type ProjectreleasesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43109,7 +43108,7 @@ export type ProjectReleasesArgs = {
   sort?: InputMaybe<ReleaseSort>;
 };
 
-export type ProjectRequirementArgs = {
+export type ProjectrequirementArgs = {
   authorUsername?: InputMaybe<Array<Scalars["String"]["input"]>>;
   lastTestReportState?: InputMaybe<RequirementStatusFilter>;
   search?: InputMaybe<Scalars["String"]["input"]>;
@@ -43119,7 +43118,7 @@ export type ProjectRequirementArgs = {
   workItemIids?: InputMaybe<Array<Scalars["ID"]["input"]>>;
 };
 
-export type ProjectRequirementsArgs = {
+export type ProjectrequirementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorUsername?: InputMaybe<Array<Scalars["String"]["input"]>>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -43133,12 +43132,12 @@ export type ProjectRequirementsArgs = {
   workItemIids?: InputMaybe<Array<Scalars["ID"]["input"]>>;
 };
 
-export type ProjectRunnerCloudProvisioningArgs = {
+export type ProjectrunnerCloudProvisioningArgs = {
   cloudProjectId: Scalars["GoogleCloudProject"]["input"];
   provider: CiRunnerCloudProvider;
 };
 
-export type ProjectRunnersArgs = {
+export type ProjectrunnersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   creatorId?: InputMaybe<Scalars["UserID"]["input"]>;
@@ -43155,18 +43154,18 @@ export type ProjectRunnersArgs = {
   versionPrefix?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectSavedRepliesArgs = {
+export type ProjectsavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectSavedReplyArgs = {
+export type ProjectsavedReplyArgs = {
   id: Scalars["ProjectsSavedReplyID"]["input"];
 };
 
-export type ProjectScanExecutionPoliciesArgs = {
+export type ProjectscanExecutionPoliciesArgs = {
   actionScanTypes?: InputMaybe<Array<SecurityReportTypeEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -43177,7 +43176,7 @@ export type ProjectScanExecutionPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type ProjectScanResultPoliciesArgs = {
+export type ProjectscanResultPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -43187,14 +43186,14 @@ export type ProjectScanResultPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type ProjectSecurityExclusionArgs = {
+export type ProjectsecurityExclusionArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   id: Scalars["SecurityProjectSecurityExclusionID"]["input"];
   scanner?: InputMaybe<ExclusionScannerEnum>;
   type?: InputMaybe<ExclusionTypeEnum>;
 };
 
-export type ProjectSecurityExclusionsArgs = {
+export type ProjectsecurityExclusionsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -43204,12 +43203,12 @@ export type ProjectSecurityExclusionsArgs = {
   type?: InputMaybe<ExclusionTypeEnum>;
 };
 
-export type ProjectSecurityMetricsArgs = {
+export type ProjectsecurityMetricsArgs = {
   projectId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
   reportType?: InputMaybe<Array<VulnerabilityReportType>>;
 };
 
-export type ProjectSecurityPoliciesArgs = {
+export type ProjectsecurityPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43219,7 +43218,7 @@ export type ProjectSecurityPoliciesArgs = {
   type?: InputMaybe<PolicyType>;
 };
 
-export type ProjectSecurityPolicyProjectLinkedGroupsArgs = {
+export type ProjectsecurityPolicyProjectLinkedGroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43229,21 +43228,21 @@ export type ProjectSecurityPolicyProjectLinkedGroupsArgs = {
   topLevelOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type ProjectSecurityPolicyProjectLinkedNamespacesArgs = {
+export type ProjectsecurityPolicyProjectLinkedNamespacesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectSecurityPolicyProjectLinkedProjectsArgs = {
+export type ProjectsecurityPolicyProjectLinkedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectSecurityPolicyProjectSuggestionsArgs = {
+export type ProjectsecurityPolicyProjectSuggestionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43252,20 +43251,20 @@ export type ProjectSecurityPolicyProjectSuggestionsArgs = {
   search: Scalars["String"]["input"];
 };
 
-export type ProjectSecurityTrainingProvidersArgs = {
+export type ProjectsecurityTrainingProvidersArgs = {
   onlyEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type ProjectSecurityTrainingUrlsArgs = {
+export type ProjectsecurityTrainingUrlsArgs = {
   filename?: InputMaybe<Scalars["String"]["input"]>;
   identifierExternalIds: Array<Scalars["String"]["input"]>;
 };
 
-export type ProjectSentryDetailedErrorArgs = {
+export type ProjectsentryDetailedErrorArgs = {
   id: Scalars["GitlabErrorTrackingDetailedErrorID"]["input"];
 };
 
-export type ProjectServicesArgs = {
+export type ProjectservicesArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -43274,7 +43273,7 @@ export type ProjectServicesArgs = {
   type?: InputMaybe<ServiceType>;
 };
 
-export type ProjectSnippetsArgs = {
+export type ProjectsnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43283,32 +43282,32 @@ export type ProjectSnippetsArgs = {
   visibility?: InputMaybe<VisibilityScopesEnum>;
 };
 
-export type ProjectTargetBranchRulesArgs = {
+export type ProjecttargetBranchRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectTerraformStateArgs = {
+export type ProjectterraformStateArgs = {
   name: Scalars["String"]["input"];
 };
 
-export type ProjectTerraformStatesArgs = {
+export type ProjectterraformStatesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectTimelogCategoriesArgs = {
+export type ProjecttimelogCategoriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectTimelogsArgs = {
+export type ProjecttimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -43323,19 +43322,19 @@ export type ProjectTimelogsArgs = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectUserAccessAuthorizedAgentsArgs = {
+export type ProjectuserAccessAuthorizedAgentsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectValueStreamDashboardUsageOverviewArgs = {
+export type ProjectvalueStreamDashboardUsageOverviewArgs = {
   identifier: ValueStreamDashboardProjectLevelMetric;
   timeframe: Timeframe;
 };
 
-export type ProjectValueStreamsArgs = {
+export type ProjectvalueStreamsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43343,7 +43342,7 @@ export type ProjectValueStreamsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectVisibleForksArgs = {
+export type ProjectvisibleForksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43351,7 +43350,7 @@ export type ProjectVisibleForksArgs = {
   minimumAccessLevel?: InputMaybe<AccessLevelEnum>;
 };
 
-export type ProjectVulnerabilitiesArgs = {
+export type ProjectvulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   clusterAgentId?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -43376,7 +43375,7 @@ export type ProjectVulnerabilitiesArgs = {
   state?: InputMaybe<Array<VulnerabilityState>>;
 };
 
-export type ProjectVulnerabilitiesCountByDayArgs = {
+export type ProjectvulnerabilitiesCountByDayArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate: Scalars["ISO8601Date"]["input"];
@@ -43385,18 +43384,18 @@ export type ProjectVulnerabilitiesCountByDayArgs = {
   startDate: Scalars["ISO8601Date"]["input"];
 };
 
-export type ProjectVulnerabilityIdentifierSearchArgs = {
+export type ProjectvulnerabilityIdentifierSearchArgs = {
   name: Scalars["String"]["input"];
 };
 
-export type ProjectVulnerabilityImagesArgs = {
+export type ProjectvulnerabilityImagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectVulnerabilityManagementPoliciesArgs = {
+export type ProjectvulnerabilityManagementPoliciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   deduplicatePolicies?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -43406,14 +43405,14 @@ export type ProjectVulnerabilityManagementPoliciesArgs = {
   relationship?: InputMaybe<SecurityPolicyRelationType>;
 };
 
-export type ProjectVulnerabilityScannersArgs = {
+export type ProjectvulnerabilityScannersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type ProjectVulnerabilitySeveritiesCountArgs = {
+export type ProjectvulnerabilitySeveritiesCountArgs = {
   capped?: InputMaybe<Scalars["Boolean"]["input"]>;
   clusterAgentId?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
   dismissalReason?: InputMaybe<Array<VulnerabilityDismissalReason>>;
@@ -43432,7 +43431,7 @@ export type ProjectVulnerabilitySeveritiesCountArgs = {
   state?: InputMaybe<Array<VulnerabilityState>>;
 };
 
-export type ProjectWorkItemStateCountsArgs = {
+export type ProjectworkItemStateCountsArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
@@ -43473,7 +43472,7 @@ export type ProjectWorkItemStateCountsArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type ProjectWorkItemTypesArgs = {
+export type ProjectworkItemTypesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43481,7 +43480,7 @@ export type ProjectWorkItemTypesArgs = {
   name?: InputMaybe<IssueType>;
 };
 
-export type ProjectWorkItemsArgs = {
+export type ProjectworkItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   assigneeWildcardId?: InputMaybe<AssigneeWildcardId>;
@@ -43529,11 +43528,11 @@ export type ProjectWorkItemsArgs = {
 /** Values for the archived argument */
 export enum ProjectArchived {
   /** Exclude archived projects. */
-  Exclude = "EXCLUDE",
+  EXCLUDE = "EXCLUDE",
   /** Include archived projects. */
-  Include = "INCLUDE",
+  INCLUDE = "INCLUDE",
   /** Only archived projects. */
-  Only = "ONLY",
+  ONLY = "ONLY",
 }
 
 export type ProjectCiCdSetting = {
@@ -43606,11 +43605,11 @@ export type ProjectCiCdSettingsUpdatePayload = {
 /** Compliance status of the project control. */
 export enum ProjectComplianceControlStatus {
   /** Fail */
-  Fail = "FAIL",
+  FAIL = "FAIL",
   /** Pass */
-  Pass = "PASS",
+  PASS = "PASS",
   /** Pending */
-  Pending = "PENDING",
+  PENDING = "PENDING",
 }
 
 export type ProjectComplianceControlStatusInput = {
@@ -43695,11 +43694,11 @@ export type ProjectComplianceRequirementStatusEdge = {
 /** Values for order_by field for project requirement statuses. */
 export enum ProjectComplianceRequirementStatusOrderBy {
   /** Order by frameworks. */
-  Framework = "FRAMEWORK",
+  FRAMEWORK = "FRAMEWORK",
   /** Order by projects. */
-  Project = "PROJECT",
+  PROJECT = "PROJECT",
   /** Order by requirements. */
-  Requirement = "REQUIREMENT",
+  REQUIREMENT = "REQUIREMENT",
 }
 
 /** Compliance violation for a project. */
@@ -43733,7 +43732,7 @@ export type ProjectComplianceViolation = NoteableInterface &
   };
 
 /** Compliance violation for a project. */
-export type ProjectComplianceViolationCommentersArgs = {
+export type ProjectComplianceViolationcommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43741,7 +43740,7 @@ export type ProjectComplianceViolationCommentersArgs = {
 };
 
 /** Compliance violation for a project. */
-export type ProjectComplianceViolationDiscussionsArgs = {
+export type ProjectComplianceViolationdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43749,7 +43748,7 @@ export type ProjectComplianceViolationDiscussionsArgs = {
 };
 
 /** Compliance violation for a project. */
-export type ProjectComplianceViolationIssuesArgs = {
+export type ProjectComplianceViolationissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43757,7 +43756,7 @@ export type ProjectComplianceViolationIssuesArgs = {
 };
 
 /** Compliance violation for a project. */
-export type ProjectComplianceViolationNotesArgs = {
+export type ProjectComplianceViolationnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -43806,7 +43805,7 @@ export type ProjectDataTransfer = {
   totalEgress?: Maybe<Scalars["BigInt"]["output"]>;
 };
 
-export type ProjectDataTransferEgressNodesArgs = {
+export type ProjectDataTransferegressNodesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43834,11 +43833,11 @@ export type ProjectFeatureAccess = {
 /** Access level of a project feature */
 export enum ProjectFeatureAccessLevel {
   /** Not enabled for anyone. */
-  Disabled = "DISABLED",
+  DISABLED = "DISABLED",
   /** Enabled for everyone able to access the project. */
-  Enabled = "ENABLED",
+  ENABLED = "ENABLED",
   /** Enabled only for team members. */
-  Private = "PRIVATE",
+  PRIVATE = "PRIVATE",
 }
 
 /** Project selector with optional path prefix for narrowing the search. */
@@ -43935,7 +43934,7 @@ export type ProjectMember = MemberInterface & {
 };
 
 /** Represents a Project Membership */
-export type ProjectMemberMergeRequestInteractionArgs = {
+export type ProjectMembermergeRequestInteractionArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
@@ -43967,7 +43966,7 @@ export type ProjectMemberBulkUpdatePayload = {
 };
 
 /** Autogenerated return type of ProjectMemberBulkUpdate. */
-export type ProjectMemberBulkUpdatePayloadQueuedMemberApprovalsArgs = {
+export type ProjectMemberBulkUpdatePayloadqueuedMemberApprovalsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -43997,15 +43996,15 @@ export type ProjectMemberEdge = {
 /** Project member relation */
 export enum ProjectMemberRelation {
   /** Descendants members */
-  Descendants = "DESCENDANTS",
+  DESCENDANTS = "DESCENDANTS",
   /** Direct members */
-  Direct = "DIRECT",
+  DIRECT = "DIRECT",
   /** Inherited members */
-  Inherited = "INHERITED",
+  INHERITED = "INHERITED",
   /** Invited Groups members */
-  InvitedGroups = "INVITED_GROUPS",
+  INVITED_GROUPS = "INVITED_GROUPS",
   /** Shared Into Ancestors members */
-  SharedIntoAncestors = "SHARED_INTO_ANCESTORS",
+  SHARED_INTO_ANCESTORS = "SHARED_INTO_ANCESTORS",
 }
 
 export type ProjectMinimalAccess = ProjectInterface & {
@@ -44093,12 +44092,12 @@ export type ProjectNamespaceMarkdownPaths = MarkdownPaths & {
   uploadsPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type ProjectNamespaceMarkdownPathsAutocompleteSourcesPathArgs = {
+export type ProjectNamespaceMarkdownPathsautocompleteSourcesPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
   workItemTypeId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ProjectNamespaceMarkdownPathsMarkdownPreviewPathArgs = {
+export type ProjectNamespaceMarkdownPathsmarkdownPreviewPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -44314,7 +44313,7 @@ export type ProjectRepositoryRegistryConnection = {
 };
 
 /** The connection type for ProjectRepositoryRegistry. */
-export type ProjectRepositoryRegistryConnectionCountArgs = {
+export type ProjectRepositoryRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -44607,11 +44606,11 @@ export type ProjectSecretsManagerInitializePayload = {
 /** Values for the project secrets manager status */
 export enum ProjectSecretsManagerStatus {
   /** Secrets manager has been provisioned and enabled. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Secrets manager has is being deprovisioned. */
-  Deprovisioning = "DEPROVISIONING",
+  DEPROVISIONING = "DEPROVISIONING",
   /** Secrets manager is being provisioned. */
-  Provisioning = "PROVISIONING",
+  PROVISIONING = "PROVISIONING",
 }
 
 /** Represents a project-level security scanner exclusion */
@@ -44861,57 +44860,57 @@ export type ProjectSettingsUpdatePayload = {
 /** Values for sorting projects */
 export enum ProjectSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** ID by ascending order. */
-  IdAsc = "ID_ASC",
+  ID_ASC = "ID_ASC",
   /** ID by descending order. */
-  IdDesc = "ID_DESC",
+  ID_DESC = "ID_DESC",
   /** Latest activity by ascending order. */
-  LatestActivityAsc = "LATEST_ACTIVITY_ASC",
+  LATEST_ACTIVITY_ASC = "LATEST_ACTIVITY_ASC",
   /** Latest activity by descending order. */
-  LatestActivityDesc = "LATEST_ACTIVITY_DESC",
+  LATEST_ACTIVITY_DESC = "LATEST_ACTIVITY_DESC",
   /** Name by ascending order. */
-  NameAsc = "NAME_ASC",
+  NAME_ASC = "NAME_ASC",
   /** Name by descending order. */
-  NameDesc = "NAME_DESC",
+  NAME_DESC = "NAME_DESC",
   /** Path by ascending order. */
-  PathAsc = "PATH_ASC",
+  PATH_ASC = "PATH_ASC",
   /** Path by descending order. */
-  PathDesc = "PATH_DESC",
+  PATH_DESC = "PATH_DESC",
   /** Stars by ascending order. */
-  StarsAsc = "STARS_ASC",
+  STARS_ASC = "STARS_ASC",
   /** Stars by descending order. */
-  StarsDesc = "STARS_DESC",
+  STARS_DESC = "STARS_DESC",
   /** Storage size by ascending order. */
-  StorageSizeAsc = "STORAGE_SIZE_ASC",
+  STORAGE_SIZE_ASC = "STORAGE_SIZE_ASC",
   /** Storage size by descending order. */
-  StorageSizeDesc = "STORAGE_SIZE_DESC",
+  STORAGE_SIZE_DESC = "STORAGE_SIZE_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 export type ProjectStatistics = {
@@ -45165,7 +45164,7 @@ export type ProjectValueStreamAnalyticsFlowMetrics = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type ProjectValueStreamAnalyticsFlowMetricsCycleTimeArgs = {
+export type ProjectValueStreamAnalyticsFlowMetricscycleTimeArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -45180,13 +45179,13 @@ export type ProjectValueStreamAnalyticsFlowMetricsCycleTimeArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type ProjectValueStreamAnalyticsFlowMetricsDeploymentCountArgs = {
+export type ProjectValueStreamAnalyticsFlowMetricsdeploymentCountArgs = {
   from: Scalars["Time"]["input"];
   to: Scalars["Time"]["input"];
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type ProjectValueStreamAnalyticsFlowMetricsIssueCountArgs = {
+export type ProjectValueStreamAnalyticsFlowMetricsissueCountArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -45201,7 +45200,7 @@ export type ProjectValueStreamAnalyticsFlowMetricsIssueCountArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type ProjectValueStreamAnalyticsFlowMetricsIssuesCompletedCountArgs = {
+export type ProjectValueStreamAnalyticsFlowMetricsissuesCompletedCountArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -45216,7 +45215,7 @@ export type ProjectValueStreamAnalyticsFlowMetricsIssuesCompletedCountArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type ProjectValueStreamAnalyticsFlowMetricsLeadTimeArgs = {
+export type ProjectValueStreamAnalyticsFlowMetricsleadTimeArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -45231,7 +45230,7 @@ export type ProjectValueStreamAnalyticsFlowMetricsLeadTimeArgs = {
 };
 
 /** Exposes aggregated value stream flow metrics */
-export type ProjectValueStreamAnalyticsFlowMetricsTimeToMergeArgs = {
+export type ProjectValueStreamAnalyticsFlowMetricstimeToMergeArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   from: Scalars["Time"]["input"];
@@ -45302,7 +45301,7 @@ export type ProjectWikiRepositoryRegistryConnection = {
 };
 
 /** The connection type for ProjectWikiRepositoryRegistry. */
-export type ProjectWikiRepositoryRegistryConnectionCountArgs = {
+export type ProjectWikiRepositoryRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -45442,7 +45441,7 @@ export type ProtectedEnvironment = {
 };
 
 /** Protected Environments of the environment. */
-export type ProtectedEnvironmentApprovalRulesArgs = {
+export type ProtectedEnvironmentapprovalRulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -45450,7 +45449,7 @@ export type ProtectedEnvironmentApprovalRulesArgs = {
 };
 
 /** Protected Environments of the environment. */
-export type ProtectedEnvironmentDeployAccessLevelsArgs = {
+export type ProtectedEnvironmentdeployAccessLevelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46073,11 +46072,11 @@ export type Query = {
   workspaces?: Maybe<WorkspaceConnection>;
 };
 
-export type QueryAbuseReportArgs = {
+export type QueryabuseReportArgs = {
   id: Scalars["AbuseReportID"]["input"];
 };
 
-export type QueryAbuseReportLabelsArgs = {
+export type QueryabuseReportLabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46085,11 +46084,11 @@ export type QueryAbuseReportLabelsArgs = {
   searchTerm?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryAddOnPurchasesArgs = {
+export type QueryaddOnPurchasesArgs = {
   namespaceId?: InputMaybe<Scalars["NamespaceID"]["input"]>;
 };
 
-export type QueryAdminGroupsArgs = {
+export type QueryadminGroupsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   allAvailable?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -46105,21 +46104,21 @@ export type QueryAdminGroupsArgs = {
   topLevelOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type QueryAdminMemberRoleArgs = {
+export type QueryadminMemberRoleArgs = {
   id?: InputMaybe<Scalars["MemberRoleID"]["input"]>;
   ids?: InputMaybe<Array<Scalars["MemberRoleID"]["input"]>>;
   orderBy?: InputMaybe<MemberRolesOrderBy>;
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type QueryAdminMemberRolePermissionsArgs = {
+export type QueryadminMemberRolePermissionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAdminMemberRolesArgs = {
+export type QueryadminMemberRolesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46130,7 +46129,7 @@ export type QueryAdminMemberRolesArgs = {
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type QueryAdminProjectsArgs = {
+export type QueryadminProjectsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   aimedForDeletion?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -46159,19 +46158,19 @@ export type QueryAdminProjectsArgs = {
   withMergeRequestsEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type QueryAiCatalogAgentFlowConfigArgs = {
+export type QueryaiCatalogAgentFlowConfigArgs = {
   agentVersionId: Scalars["AiCatalogItemVersionID"]["input"];
   flowConfigType: AiCatalogFlowConfigType;
 };
 
-export type QueryAiCatalogBuiltInToolsArgs = {
+export type QueryaiCatalogBuiltInToolsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAiCatalogConfiguredItemsArgs = {
+export type QueryaiCatalogConfiguredItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46183,15 +46182,15 @@ export type QueryAiCatalogConfiguredItemsArgs = {
   projectId?: InputMaybe<Scalars["ProjectID"]["input"]>;
 };
 
-export type QueryAiCatalogItemArgs = {
+export type QueryaiCatalogItemArgs = {
   id: Scalars["AiCatalogItemID"]["input"];
 };
 
-export type QueryAiCatalogItemConsumerArgs = {
+export type QueryaiCatalogItemConsumerArgs = {
   id: Scalars["AiCatalogItemConsumerID"]["input"];
 };
 
-export type QueryAiCatalogItemsArgs = {
+export type QueryaiCatalogItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46200,18 +46199,18 @@ export type QueryAiCatalogItemsArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryAiChatAvailableModelsArgs = {
+export type QueryaiChatAvailableModelsArgs = {
   rootNamespaceId: Scalars["GroupID"]["input"];
 };
 
-export type QueryAiChatContextPresetsArgs = {
+export type QueryaiChatContextPresetsArgs = {
   projectId?: InputMaybe<Scalars["ProjectID"]["input"]>;
   questionCount?: InputMaybe<Scalars["Int"]["input"]>;
   resourceId?: InputMaybe<Scalars["AiModelID"]["input"]>;
   url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryAiConversationThreadsArgs = {
+export type QueryaiConversationThreadsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   conversationType?: InputMaybe<AiConversationsThreadsConversationType>;
@@ -46220,7 +46219,7 @@ export type QueryAiConversationThreadsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAiFeatureSettingsArgs = {
+export type QueryaiFeatureSettingsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46228,7 +46227,7 @@ export type QueryAiFeatureSettingsArgs = {
   selfHostedModelId?: InputMaybe<Scalars["AiSelfHostedModelID"]["input"]>;
 };
 
-export type QueryAiMessagesArgs = {
+export type QueryaiMessagesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentVersionId?: InputMaybe<Scalars["AiAgentVersionID"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -46240,7 +46239,7 @@ export type QueryAiMessagesArgs = {
   threadId?: InputMaybe<Scalars["AiConversationThreadID"]["input"]>;
 };
 
-export type QueryAiModelSelectionNamespaceSettingsArgs = {
+export type QueryaiModelSelectionNamespaceSettingsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46248,7 +46247,7 @@ export type QueryAiModelSelectionNamespaceSettingsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAiSelfHostedModelsArgs = {
+export type QueryaiSelfHostedModelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46256,46 +46255,46 @@ export type QueryAiSelfHostedModelsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAiSlashCommandsArgs = {
+export type QueryaiSlashCommandsArgs = {
   url: Scalars["String"]["input"];
 };
 
-export type QueryAuditEventDefinitionsArgs = {
+export type QueryauditEventDefinitionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAuditEventsInstanceAmazonS3ConfigurationsArgs = {
+export type QueryauditEventsInstanceAmazonS3ConfigurationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryAuditEventsInstanceStreamingDestinationsArgs = {
+export type QueryauditEventsInstanceStreamingDestinationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryBlobSearchArgs = {
+export type QueryblobSearchArgs = {
   search: Scalars["String"]["input"];
 };
 
-export type QueryBoardListArgs = {
+export type QueryboardListArgs = {
   id: Scalars["ListID"]["input"];
   issueFilters?: InputMaybe<BoardIssueInput>;
 };
 
-export type QueryCiCatalogResourceArgs = {
+export type QueryciCatalogResourceArgs = {
   fullPath?: InputMaybe<Scalars["ID"]["input"]>;
   id?: InputMaybe<Scalars["CiCatalogResourceID"]["input"]>;
 };
 
-export type QueryCiCatalogResourcesArgs = {
+export type QueryciCatalogResourcesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46307,14 +46306,14 @@ export type QueryCiCatalogResourcesArgs = {
   verificationLevel?: InputMaybe<CiCatalogResourceVerificationLevel>;
 };
 
-export type QueryCiConfigArgs = {
+export type QueryciConfigArgs = {
   content: Scalars["String"]["input"];
   dryRun?: InputMaybe<Scalars["Boolean"]["input"]>;
   projectPath: Scalars["ID"]["input"];
   sha?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryCiDedicatedHostedRunnerUsageArgs = {
+export type QueryciDedicatedHostedRunnerUsageArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   billingMonth?: InputMaybe<Scalars["Date"]["input"]>;
@@ -46325,7 +46324,7 @@ export type QueryCiDedicatedHostedRunnerUsageArgs = {
   year?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryCiMinutesUsageArgs = {
+export type QueryciMinutesUsageArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   date?: InputMaybe<Scalars["Date"]["input"]>;
@@ -46334,17 +46333,17 @@ export type QueryCiMinutesUsageArgs = {
   namespaceId?: InputMaybe<Scalars["NamespaceID"]["input"]>;
 };
 
-export type QueryCiPipelineStageArgs = {
+export type QueryciPipelineStageArgs = {
   id: Scalars["CiStageID"]["input"];
 };
 
-export type QueryCiQueueingHistoryArgs = {
+export type QueryciQueueingHistoryArgs = {
   fromTime?: InputMaybe<Scalars["Time"]["input"]>;
   runnerType?: InputMaybe<CiRunnerType>;
   toTime?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type QueryCiVariablesArgs = {
+export type QueryciVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46352,19 +46351,19 @@ export type QueryCiVariablesArgs = {
   sort?: InputMaybe<CiVariableSort>;
 };
 
-export type QueryContainerRepositoryArgs = {
+export type QuerycontainerRepositoryArgs = {
   id: Scalars["ContainerRepositoryID"]["input"];
 };
 
-export type QueryCustomFieldArgs = {
+export type QuerycustomFieldArgs = {
   id: Scalars["IssuablesCustomFieldID"]["input"];
 };
 
-export type QueryDependencyArgs = {
+export type QuerydependencyArgs = {
   id: Scalars["SbomOccurrenceID"]["input"];
 };
 
-export type QueryDevopsAdoptionEnabledNamespacesArgs = {
+export type QuerydevopsAdoptionEnabledNamespacesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   displayNamespaceId?: InputMaybe<Scalars["NamespaceID"]["input"]>;
@@ -46372,7 +46371,7 @@ export type QueryDevopsAdoptionEnabledNamespacesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryDuoWorkflowEventsArgs = {
+export type QueryduoWorkflowEventsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46380,7 +46379,7 @@ export type QueryDuoWorkflowEventsArgs = {
   workflowId: Scalars["AiDuoWorkflowsWorkflowID"]["input"];
 };
 
-export type QueryDuoWorkflowWorkflowsArgs = {
+export type QueryduoWorkflowWorkflowsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   environment?: InputMaybe<WorkflowEnvironment>;
@@ -46393,24 +46392,24 @@ export type QueryDuoWorkflowWorkflowsArgs = {
   workflowId?: InputMaybe<Scalars["AiDuoWorkflowsWorkflowID"]["input"]>;
 };
 
-export type QueryEchoArgs = {
+export type QueryechoArgs = {
   text: Scalars["String"]["input"];
 };
 
-export type QueryEpicBoardListArgs = {
+export type QueryepicBoardListArgs = {
   epicFilters?: InputMaybe<EpicFilters>;
   id: Scalars["BoardsEpicListID"]["input"];
 };
 
-export type QueryFeatureFlagEnabledArgs = {
+export type QueryfeatureFlagEnabledArgs = {
   name: Scalars["String"]["input"];
 };
 
-export type QueryGeoNodeArgs = {
+export type QuerygeoNodeArgs = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryGoogleCloudArtifactRegistryRepositoryArtifactArgs = {
+export type QuerygoogleCloudArtifactRegistryRepositoryArtifactArgs = {
   googleCloudProjectId: Scalars["String"]["input"];
   image: Scalars["String"]["input"];
   location: Scalars["String"]["input"];
@@ -46418,11 +46417,11 @@ export type QueryGoogleCloudArtifactRegistryRepositoryArtifactArgs = {
   repository: Scalars["String"]["input"];
 };
 
-export type QueryGroupArgs = {
+export type QuerygroupArgs = {
   fullPath: Scalars["ID"]["input"];
 };
 
-export type QueryGroupsArgs = {
+export type QuerygroupsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   allAvailable?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -46438,21 +46437,21 @@ export type QueryGroupsArgs = {
   topLevelOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type QueryInstanceExternalAuditEventDestinationsArgs = {
+export type QueryinstanceExternalAuditEventDestinationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryInstanceGoogleCloudLoggingConfigurationsArgs = {
+export type QueryinstanceGoogleCloudLoggingConfigurationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryIntegrationExclusionsArgs = {
+export type QueryintegrationExclusionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46460,11 +46459,11 @@ export type QueryIntegrationExclusionsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryIssueArgs = {
+export type QueryissueArgs = {
   id: Scalars["IssueID"]["input"];
 };
 
-export type QueryIssuesArgs = {
+export type QueryissuesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   assigneeId?: InputMaybe<Scalars["String"]["input"]>;
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -46511,11 +46510,11 @@ export type QueryIssuesArgs = {
   weightWildcardId?: InputMaybe<WeightWildcardId>;
 };
 
-export type QueryIterationArgs = {
+export type QueryiterationArgs = {
   id: Scalars["IterationID"]["input"];
 };
 
-export type QueryJobsArgs = {
+export type QueryjobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46523,43 +46522,43 @@ export type QueryJobsArgs = {
   statuses?: InputMaybe<Array<CiJobStatus>>;
 };
 
-export type QueryLdapAdminRoleLinksArgs = {
+export type QueryldapAdminRoleLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryLicenseHistoryEntriesArgs = {
+export type QuerylicenseHistoryEntriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryMavenUpstreamRegistryArgs = {
+export type QuerymavenUpstreamRegistryArgs = {
   id: Scalars["VirtualRegistriesPackagesMavenUpstreamID"]["input"];
 };
 
-export type QueryMavenVirtualRegistryArgs = {
+export type QuerymavenVirtualRegistryArgs = {
   id: Scalars["VirtualRegistriesPackagesMavenRegistryID"]["input"];
 };
 
-export type QueryMemberRoleArgs = {
+export type QuerymemberRoleArgs = {
   id?: InputMaybe<Scalars["MemberRoleID"]["input"]>;
   ids?: InputMaybe<Array<Scalars["MemberRoleID"]["input"]>>;
   orderBy?: InputMaybe<MemberRolesOrderBy>;
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type QueryMemberRolePermissionsArgs = {
+export type QuerymemberRolePermissionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryMemberRolesArgs = {
+export type QuerymemberRolesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46570,27 +46569,27 @@ export type QueryMemberRolesArgs = {
   sort?: InputMaybe<SortDirectionEnum>;
 };
 
-export type QueryMergeRequestArgs = {
+export type QuerymergeRequestArgs = {
   id: Scalars["MergeRequestID"]["input"];
 };
 
-export type QueryMilestoneArgs = {
+export type QuerymilestoneArgs = {
   id: Scalars["MilestoneID"]["input"];
 };
 
-export type QueryMlExperimentArgs = {
+export type QuerymlExperimentArgs = {
   id: Scalars["MlExperimentID"]["input"];
 };
 
-export type QueryMlModelArgs = {
+export type QuerymlModelArgs = {
   id: Scalars["MlModelID"]["input"];
 };
 
-export type QueryNamespaceArgs = {
+export type QuerynamespaceArgs = {
   fullPath: Scalars["ID"]["input"];
 };
 
-export type QueryNamespaceSecurityProjectsArgs = {
+export type QuerynamespaceSecurityProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46602,39 +46601,39 @@ export type QueryNamespaceSecurityProjectsArgs = {
   vulnerabilityCountFilters?: InputMaybe<Array<VulnerabilityCountFilterInput>>;
 };
 
-export type QueryNoteArgs = {
+export type QuerynoteArgs = {
   id: Scalars["NoteID"]["input"];
 };
 
-export type QueryOrganizationArgs = {
+export type QueryorganizationArgs = {
   id: Scalars["OrganizationsOrganizationID"]["input"];
 };
 
-export type QueryOrganizationsArgs = {
+export type QueryorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryPackageArgs = {
+export type QuerypackageArgs = {
   id: Scalars["PackagesPackageID"]["input"];
 };
 
-export type QueryProjectArgs = {
+export type QueryprojectArgs = {
   fullPath: Scalars["ID"]["input"];
 };
 
-export type QueryProjectComplianceViolationArgs = {
+export type QueryprojectComplianceViolationArgs = {
   id: Scalars["ComplianceManagementProjectsComplianceViolationID"]["input"];
 };
 
-export type QueryProjectSecretArgs = {
+export type QueryprojectSecretArgs = {
   name: Scalars["String"]["input"];
   projectPath: Scalars["ID"]["input"];
 };
 
-export type QueryProjectSecretsArgs = {
+export type QueryprojectSecretsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46642,11 +46641,11 @@ export type QueryProjectSecretsArgs = {
   projectPath: Scalars["ID"]["input"];
 };
 
-export type QueryProjectSecretsManagerArgs = {
+export type QueryprojectSecretsManagerArgs = {
   projectPath: Scalars["ID"]["input"];
 };
 
-export type QueryProjectSecretsNeedingRotationArgs = {
+export type QueryprojectSecretsNeedingRotationArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46654,7 +46653,7 @@ export type QueryProjectSecretsNeedingRotationArgs = {
   projectPath: Scalars["ID"]["input"];
 };
 
-export type QueryProjectsArgs = {
+export type QueryprojectsArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   aimedForDeletion?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -46683,23 +46682,23 @@ export type QueryProjectsArgs = {
   withMergeRequestsEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type QueryRunnerArgs = {
+export type QueryrunnerArgs = {
   id: Scalars["CiRunnerID"]["input"];
 };
 
-export type QueryRunnerPlatformsArgs = {
+export type QueryrunnerPlatformsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryRunnerSetupArgs = {
+export type QueryrunnerSetupArgs = {
   architecture: Scalars["String"]["input"];
   platform: Scalars["String"]["input"];
 };
 
-export type QueryRunnerUsageArgs = {
+export type QueryrunnerUsageArgs = {
   fromDate?: InputMaybe<Scalars["Date"]["input"]>;
   fullPath?: InputMaybe<Scalars["ID"]["input"]>;
   runnerType?: InputMaybe<CiRunnerType>;
@@ -46707,7 +46706,7 @@ export type QueryRunnerUsageArgs = {
   toDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type QueryRunnerUsageByProjectArgs = {
+export type QueryrunnerUsageByProjectArgs = {
   fromDate?: InputMaybe<Scalars["Date"]["input"]>;
   fullPath?: InputMaybe<Scalars["ID"]["input"]>;
   projectsLimit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46715,7 +46714,7 @@ export type QueryRunnerUsageByProjectArgs = {
   toDate?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
-export type QueryRunnersArgs = {
+export type QueryrunnersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   creatorId?: InputMaybe<Scalars["UserID"]["input"]>;
@@ -46732,7 +46731,7 @@ export type QueryRunnersArgs = {
   versionPrefix?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QuerySecretPermissionsArgs = {
+export type QuerysecretPermissionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46740,11 +46739,11 @@ export type QuerySecretPermissionsArgs = {
   projectPath: Scalars["ID"]["input"];
 };
 
-export type QuerySecurityPoliciesSyncStatusArgs = {
+export type QuerysecurityPoliciesSyncStatusArgs = {
   policyConfigurationId: Scalars["SecurityOrchestrationPolicyConfigurationID"]["input"];
 };
 
-export type QuerySelfManagedAddOnEligibleUsersArgs = {
+export type QueryselfManagedAddOnEligibleUsersArgs = {
   addOnPurchaseIds: Array<Scalars["GitlabSubscriptionsAddOnPurchaseID"]["input"]>;
   addOnType: GitlabSubscriptionsAddOnType;
   after?: InputMaybe<Scalars["String"]["input"]>;
@@ -46756,21 +46755,21 @@ export type QuerySelfManagedAddOnEligibleUsersArgs = {
   sort?: InputMaybe<GitlabSubscriptionsUserSort>;
 };
 
-export type QuerySelfManagedUsersQueuedForRolePromotionArgs = {
+export type QueryselfManagedUsersQueuedForRolePromotionArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QuerySemanticCodeSearchArgs = {
+export type QuerysemanticCodeSearchArgs = {
   knn?: InputMaybe<Scalars["Int"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   project: ProjectInfoInput;
   searchTerm: Scalars["String"]["input"];
 };
 
-export type QuerySnippetsArgs = {
+export type QuerysnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Scalars["UserID"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -46783,11 +46782,11 @@ export type QuerySnippetsArgs = {
   visibility?: InputMaybe<VisibilityScopesEnum>;
 };
 
-export type QueryStandardRoleArgs = {
+export type QuerystandardRoleArgs = {
   accessLevel?: InputMaybe<Array<MemberAccessLevel>>;
 };
 
-export type QueryStandardRolesArgs = {
+export type QuerystandardRolesArgs = {
   accessLevel?: InputMaybe<Array<MemberAccessLevel>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
@@ -46795,19 +46794,19 @@ export type QueryStandardRolesArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QuerySubscriptionFutureEntriesArgs = {
+export type QuerysubscriptionFutureEntriesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QuerySyntheticNoteArgs = {
+export type QuerysyntheticNoteArgs = {
   noteableId: Scalars["NoteableID"]["input"];
   sha: Scalars["String"]["input"];
 };
 
-export type QueryTimelogsArgs = {
+export type QuerytimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -46822,11 +46821,11 @@ export type QueryTimelogsArgs = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryTodoArgs = {
+export type QuerytodoArgs = {
   id: Scalars["TodoID"]["input"];
 };
 
-export type QueryTopicsArgs = {
+export type QuerytopicsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46834,7 +46833,7 @@ export type QueryTopicsArgs = {
   search?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryUsageTrendsMeasurementsArgs = {
+export type QueryusageTrendsMeasurementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46844,12 +46843,12 @@ export type QueryUsageTrendsMeasurementsArgs = {
   recordedBefore?: InputMaybe<Scalars["Time"]["input"]>;
 };
 
-export type QueryUserArgs = {
+export type QueryuserArgs = {
   id?: InputMaybe<Scalars["UserID"]["input"]>;
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryUsersArgs = {
+export type QueryusersArgs = {
   active?: InputMaybe<Scalars["Boolean"]["input"]>;
   admins?: InputMaybe<Scalars["Boolean"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
@@ -46864,7 +46863,7 @@ export type QueryUsersArgs = {
   usernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
-export type QueryVulnerabilitiesArgs = {
+export type QueryvulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   clusterAgentId?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -46889,7 +46888,7 @@ export type QueryVulnerabilitiesArgs = {
   state?: InputMaybe<Array<VulnerabilityState>>;
 };
 
-export type QueryVulnerabilitiesCountByDayArgs = {
+export type QueryvulnerabilitiesCountByDayArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate: Scalars["ISO8601Date"]["input"];
@@ -46898,21 +46897,21 @@ export type QueryVulnerabilitiesCountByDayArgs = {
   startDate: Scalars["ISO8601Date"]["input"];
 };
 
-export type QueryVulnerabilityArgs = {
+export type QueryvulnerabilityArgs = {
   id: Scalars["VulnerabilityID"]["input"];
 };
 
-export type QueryWikiPageArgs = {
+export type QuerywikiPageArgs = {
   namespaceId?: InputMaybe<Scalars["NamespaceID"]["input"]>;
   projectId?: InputMaybe<Scalars["ProjectID"]["input"]>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryWorkItemArgs = {
+export type QueryworkItemArgs = {
   id: Scalars["WorkItemID"]["input"];
 };
 
-export type QueryWorkItemAllowedStatusesArgs = {
+export type QueryworkItemAllowedStatusesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -46920,11 +46919,11 @@ export type QueryWorkItemAllowedStatusesArgs = {
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type QueryWorkItemDescriptionTemplateContentArgs = {
+export type QueryworkItemDescriptionTemplateContentArgs = {
   templateContentInput: WorkItemDescriptionTemplateContentInput;
 };
 
-export type QueryWorkItemsByReferenceArgs = {
+export type QueryworkItemsByReferenceArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   contextNamespacePath?: InputMaybe<Scalars["ID"]["input"]>;
@@ -46933,11 +46932,11 @@ export type QueryWorkItemsByReferenceArgs = {
   refs: Array<Scalars["String"]["input"]>;
 };
 
-export type QueryWorkspaceArgs = {
+export type QueryworkspaceArgs = {
   id: Scalars["RemoteDevelopmentWorkspaceID"]["input"];
 };
 
-export type QueryWorkspacesArgs = {
+export type QueryworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -46996,11 +46995,11 @@ export type QuickActionsStatus = {
 /** Dependency reachability status */
 export enum ReachabilityType {
   /** Dependency is imported and in use. */
-  InUse = "IN_USE",
+  IN_USE = "IN_USE",
   /** Dependency is not in use. */
-  NotFound = "NOT_FOUND",
+  NOT_FOUND = "NOT_FOUND",
   /** Dependency reachability status is not available. */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** Recent failure history of a test case. */
@@ -47025,9 +47024,9 @@ export type RecentlyViewedItemUnion = Epic | Issue | MergeRequest;
 /** Type of ref */
 export enum RefType {
   /** Ref type for branches. */
-  Heads = "HEADS",
+  HEADS = "HEADS",
   /** Ref type for tags. */
-  Tags = "TAGS",
+  TAGS = "TAGS",
 }
 
 /** Autogenerated input type of RefreshFindingTokenStatus */
@@ -47127,29 +47126,29 @@ export type Registrable =
 /** State of a Geo registry */
 export enum RegistryState {
   /** Registry that failed to sync. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Registry waiting to be synced. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
   /** Registry currently syncing. */
-  Started = "STARTED",
+  STARTED = "STARTED",
   /** Registry that is synced. */
-  Synced = "SYNCED",
+  SYNCED = "SYNCED",
 }
 
 /** Relationship of the policies to resync. */
 export enum RelationshipType {
   /** Policies defined for the project/group only. */
-  Direct = "DIRECT",
+  DIRECT = "DIRECT",
   /** Policies defined for the project/group and ancestor groups. */
-  Inherited = "INHERITED",
+  INHERITED = "INHERITED",
 }
 
 /** The position to which the object should be moved */
 export enum RelativePositionType {
   /** Object is moved after an adjacent object. */
-  After = "AFTER",
+  AFTER = "AFTER",
   /** Object is moved before an adjacent object. */
-  Before = "BEFORE",
+  BEFORE = "BEFORE",
 }
 
 /** Represents a release */
@@ -47190,7 +47189,7 @@ export type Release = {
 };
 
 /** Represents a release */
-export type ReleaseEvidencesArgs = {
+export type ReleaseevidencesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47198,7 +47197,7 @@ export type ReleaseEvidencesArgs = {
 };
 
 /** Represents a release */
-export type ReleaseMilestonesArgs = {
+export type ReleasemilestonesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47305,13 +47304,13 @@ export type ReleaseAssetLinkInput = {
 /** Type of the link: `other`, `runbook`, `image`, `package` */
 export enum ReleaseAssetLinkType {
   /** Image link type */
-  Image = "IMAGE",
+  IMAGE = "IMAGE",
   /** Other link type */
-  Other = "OTHER",
+  OTHER = "OTHER",
   /** Package link type */
-  Package = "PACKAGE",
+  PACKAGE = "PACKAGE",
   /** Runbook link type */
-  Runbook = "RUNBOOK",
+  RUNBOOK = "RUNBOOK",
 }
 
 /** Autogenerated input type of ReleaseAssetLinkUpdate */
@@ -47353,7 +47352,7 @@ export type ReleaseAssets = {
 };
 
 /** A container for all assets associated with a release */
-export type ReleaseAssetsLinksArgs = {
+export type ReleaseAssetslinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47361,7 +47360,7 @@ export type ReleaseAssetsLinksArgs = {
 };
 
 /** A container for all assets associated with a release */
-export type ReleaseAssetsSourcesArgs = {
+export type ReleaseAssetssourcesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47506,13 +47505,13 @@ export type ReleaseLinks = {
 /** Values for sorting releases */
 export enum ReleaseSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Released at by ascending order. */
-  ReleasedAtAsc = "RELEASED_AT_ASC",
+  RELEASED_AT_ASC = "RELEASED_AT_ASC",
   /** Released at by descending order. */
-  ReleasedAtDesc = "RELEASED_AT_DESC",
+  RELEASED_AT_DESC = "RELEASED_AT_DESC",
 }
 
 /** Represents the source code attached to a release in a particular format */
@@ -47547,9 +47546,9 @@ export type ReleaseSourceEdge = {
 /** Release tag ID wildcard values */
 export enum ReleaseTagWildcardId {
   /** Release tag is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No release tag is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Autogenerated input type of ReleaseUpdate */
@@ -47600,13 +47599,13 @@ export type RemoveProjectFromSecurityDashboardPayload = {
 
 export enum ReplicationStateEnum {
   /** Replication process finished but failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Replication process has not started. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
   /** Replication process is in progress. */
-  Started = "STARTED",
+  STARTED = "STARTED",
   /** Replication process finished successfully. */
-  Synced = "SYNCED",
+  SYNCED = "SYNCED",
 }
 
 /** Autogenerated input type of RepositionImageDiffNote */
@@ -47665,7 +47664,7 @@ export type Repository = {
   validateCodeownerFile?: Maybe<RepositoryCodeownerValidation>;
 };
 
-export type RepositoryBlobsArgs = {
+export type RepositoryblobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47675,21 +47674,21 @@ export type RepositoryBlobsArgs = {
   refType?: InputMaybe<RefType>;
 };
 
-export type RepositoryBranchNamesArgs = {
+export type RepositorybranchNamesArgs = {
   limit: Scalars["Int"]["input"];
   offset: Scalars["Int"]["input"];
   searchPattern: Scalars["String"]["input"];
 };
 
-export type RepositoryCodeOwnersPathArgs = {
+export type RepositorycodeOwnersPathArgs = {
   ref?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type RepositoryCommitArgs = {
+export type RepositorycommitArgs = {
   ref: Scalars["String"]["input"];
 };
 
-export type RepositoryCommitsArgs = {
+export type RepositorycommitsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   author?: InputMaybe<Scalars["String"]["input"]>;
   committedAfter?: InputMaybe<Scalars["Time"]["input"]>;
@@ -47699,13 +47698,13 @@ export type RepositoryCommitsArgs = {
   ref: Scalars["String"]["input"];
 };
 
-export type RepositoryLastCommitArgs = {
+export type RepositorylastCommitArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
   ref?: InputMaybe<Scalars["String"]["input"]>;
   refType?: InputMaybe<RefType>;
 };
 
-export type RepositoryPaginatedTreeArgs = {
+export type RepositorypaginatedTreeArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47716,14 +47715,14 @@ export type RepositoryPaginatedTreeArgs = {
   refType?: InputMaybe<RefType>;
 };
 
-export type RepositoryTreeArgs = {
+export type RepositorytreeArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
   recursive?: InputMaybe<Scalars["Boolean"]["input"]>;
   ref?: InputMaybe<Scalars["String"]["input"]>;
   refType?: InputMaybe<RefType>;
 };
 
-export type RepositoryValidateCodeownerFileArgs = {
+export type RepositoryvalidateCodeownerFileArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
   ref?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -47826,7 +47825,7 @@ export type RepositoryBlob = {
   webPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type RepositoryBlobBlameArgs = {
+export type RepositoryBlobblameArgs = {
   fromLine?: InputMaybe<Scalars["Int"]["input"]>;
   toLine?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -47918,7 +47917,7 @@ export type Requirement = {
 };
 
 /** Represents a requirement */
-export type RequirementTestReportsArgs = {
+export type RequirementtestReportsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -47991,9 +47990,9 @@ export type RequirementPermissions = {
 /** State of a requirement */
 export enum RequirementState {
   /** Archived requirement. */
-  Archived = "ARCHIVED",
+  ARCHIVED = "ARCHIVED",
   /** Open requirement. */
-  Opened = "OPENED",
+  OPENED = "OPENED",
 }
 
 /** Counts of requirements by their state */
@@ -48008,11 +48007,11 @@ export type RequirementStatesCount = {
 /** Status of a requirement based on last test report */
 export enum RequirementStatusFilter {
   /** Failed test report. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Requirements without any test report. */
-  Missing = "MISSING",
+  MISSING = "MISSING",
   /** Passed test report. */
-  Passed = "PASSED",
+  PASSED = "PASSED",
 }
 
 export type ResolvableInterface = {
@@ -48029,13 +48028,13 @@ export type ResolvableInterface = {
 /** Process mode for resource groups */
 export enum ResourceGroupsProcessMode {
   /** Newest first. */
-  NewestFirst = "NEWEST_FIRST",
+  NEWEST_FIRST = "NEWEST_FIRST",
   /** Newest ready first. */
-  NewestReadyFirst = "NEWEST_READY_FIRST",
+  NEWEST_READY_FIRST = "NEWEST_READY_FIRST",
   /** Oldest first. */
-  OldestFirst = "OLDEST_FIRST",
+  OLDEST_FIRST = "OLDEST_FIRST",
   /** Unordered. */
-  Unordered = "UNORDERED",
+  UNORDERED = "UNORDERED",
 }
 
 /** Resource quotas of a workspace. */
@@ -48088,9 +48087,9 @@ export type ResyncSecurityPoliciesPayload = {
 /** Reviewer ID wildcard values */
 export enum ReviewerWildcardId {
   /** Any reviewer is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No reviewer is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Risk factors contributing to the total risk score */
@@ -48106,15 +48105,15 @@ export type RiskFactors = {
 /** Risk rating levels based on score ranges */
 export enum RiskRating {
   /** Critical risk (76–100). */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** High risk (51–75). */
-  High = "HIGH",
+  HIGH = "HIGH",
   /** Low risk (0–25). */
-  Low = "LOW",
+  LOW = "LOW",
   /** Medium risk (26–50). */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
   /** Unknown risk level. */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** Total risk score information */
@@ -48143,7 +48142,7 @@ export type RiskScore = {
 };
 
 /** Total risk score information */
-export type RiskScoreByProjectArgs = {
+export type RiskScorebyProjectArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48407,7 +48406,7 @@ export type RunnerPlatform = {
   name: Scalars["String"]["output"];
 };
 
-export type RunnerPlatformArchitecturesArgs = {
+export type RunnerPlatformarchitecturesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48578,7 +48577,7 @@ export type SastCiConfiguration = {
 };
 
 /** Represents a CI configuration of SAST */
-export type SastCiConfigurationAnalyzersArgs = {
+export type SastCiConfigurationanalyzersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48586,7 +48585,7 @@ export type SastCiConfigurationAnalyzersArgs = {
 };
 
 /** Represents a CI configuration of SAST */
-export type SastCiConfigurationGlobalArgs = {
+export type SastCiConfigurationglobalArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48594,7 +48593,7 @@ export type SastCiConfigurationGlobalArgs = {
 };
 
 /** Represents a CI configuration of SAST */
-export type SastCiConfigurationPipelineArgs = {
+export type SastCiConfigurationpipelineArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48617,7 +48616,7 @@ export type SastCiConfigurationAnalyzersEntity = {
 };
 
 /** Represents an analyzer entity in SAST CI configuration */
-export type SastCiConfigurationAnalyzersEntityVariablesArgs = {
+export type SastCiConfigurationAnalyzersEntityvariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48676,7 +48675,7 @@ export type SastCiConfigurationEntity = {
 };
 
 /** Represents an entity in SAST CI configuration */
-export type SastCiConfigurationEntityOptionsArgs = {
+export type SastCiConfigurationEntityoptionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -48755,11 +48754,11 @@ export type SastCiConfigurationOptionsEntityEdge = {
 /** Size of UI component in SAST configuration page */
 export enum SastUiComponentSize {
   /** Size of UI component in SAST configuration page is large. */
-  Large = "LARGE",
+  LARGE = "LARGE",
   /** Size of UI component in SAST configuration page is medium. */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
   /** Size of UI component in SAST configuration page is small. */
-  Small = "SMALL",
+  SMALL = "SMALL",
 }
 
 export type SavedReply = {
@@ -48860,13 +48859,13 @@ export type SavedReplyUpdatePayload = {
 /** Values for sbom source types */
 export enum SbomSourceType {
   /** Source Type: container_scanning. */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** Source Type: container_scanning_for_registry. */
-  ContainerScanningForRegistry = "CONTAINER_SCANNING_FOR_REGISTRY",
+  CONTAINER_SCANNING_FOR_REGISTRY = "CONTAINER_SCANNING_FOR_REGISTRY",
   /** Source Type: dependency_scanning. */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** Enum source nil. */
-  NilSource = "NIL_SOURCE",
+  NIL_SOURCE = "NIL_SOURCE",
 }
 
 /** Represents the security scan information */
@@ -48995,11 +48994,11 @@ export type ScanExecutionPolicyEdge = {
 /** Options for filtering by scan mode. */
 export enum ScanModeEnum {
   /** Return results from all scans. */
-  All = "ALL",
+  ALL = "ALL",
   /** Return results from full scans. */
-  Full = "FULL",
+  FULL = "FULL",
   /** Return results from partial scans. */
-  Partial = "PARTIAL",
+  PARTIAL = "PARTIAL",
 }
 
 /** Represents the scan result policy */
@@ -49066,19 +49065,19 @@ export type ScanResultPolicyEdge = {
 /** The status of the security scan */
 export enum ScanStatus {
   /** The scan has been created. */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** The related CI build failed. */
-  JobFailed = "JOB_FAILED",
+  JOB_FAILED = "JOB_FAILED",
   /** Report couldn't be prepared. */
-  PreparationFailed = "PREPARATION_FAILED",
+  PREPARATION_FAILED = "PREPARATION_FAILED",
   /** Preparing the report for the scan. */
-  Preparing = "PREPARING",
+  PREPARING = "PREPARING",
   /** Report for the scan has been removed from the database. */
-  Purged = "PURGED",
+  PURGED = "PURGED",
   /** The report artifact provided by the CI build couldn't be parsed. */
-  ReportError = "REPORT_ERROR",
+  REPORT_ERROR = "REPORT_ERROR",
   /** The report has been successfully prepared. */
-  Succeeded = "SUCCEEDED",
+  SUCCEEDED = "SUCCEEDED",
 }
 
 /** Represents a resource scanned by a security scan */
@@ -49193,21 +49192,21 @@ export type SearchBlobLine = {
 /** Level of search */
 export enum SearchLevel {
   /** Global search including all groups and projects. */
-  Global = "GLOBAL",
+  GLOBAL = "GLOBAL",
   /** Group search. */
-  Group = "GROUP",
+  GROUP = "GROUP",
   /** Project search. */
-  Project = "PROJECT",
+  PROJECT = "PROJECT",
 }
 
 /** Type of search */
 export enum SearchType {
   /** Advanced search. */
-  Advanced = "ADVANCED",
+  ADVANCED = "ADVANCED",
   /** Basic search. */
-  Basic = "BASIC",
+  BASIC = "BASIC",
   /** Exact code search. */
-  Zoekt = "ZOEKT",
+  ZOEKT = "ZOEKT",
 }
 
 /** Representation of a secrets permission. */
@@ -49311,11 +49310,11 @@ export type SecretRotationInfo = {
 /** Status of secret rotation */
 export enum SecretRotationStatus {
   /** Rotation is due within 7 days. */
-  Approaching = "APPROACHING",
+  APPROACHING = "APPROACHING",
   /** Rotation is not due soon. */
-  Ok = "OK",
+  OK = "OK",
   /** Rotation is overdue (reminder was sent). */
-  Overdue = "OVERDUE",
+  OVERDUE = "OVERDUE",
 }
 
 /** A security attribute */
@@ -49402,15 +49401,15 @@ export type SecurityAttributeProjectUpdatePayload = {
 /** Template type for predefined security attributes */
 export enum SecurityAttributeTemplateType {
   /** Business administrative attribute. */
-  BusinessAdministrative = "BUSINESS_ADMINISTRATIVE",
+  BUSINESS_ADMINISTRATIVE = "BUSINESS_ADMINISTRATIVE",
   /** Business critical attribute. */
-  BusinessCritical = "BUSINESS_CRITICAL",
+  BUSINESS_CRITICAL = "BUSINESS_CRITICAL",
   /** Business operational attribute. */
-  BusinessOperational = "BUSINESS_OPERATIONAL",
+  BUSINESS_OPERATIONAL = "BUSINESS_OPERATIONAL",
   /** Mission critical attribute. */
-  MissionCritical = "MISSION_CRITICAL",
+  MISSION_CRITICAL = "MISSION_CRITICAL",
   /** Non essential attribute. */
-  NonEssential = "NON_ESSENTIAL",
+  NON_ESSENTIAL = "NON_ESSENTIAL",
 }
 
 /** Autogenerated input type of SecurityAttributeUpdate */
@@ -49485,23 +49484,23 @@ export type SecurityCategoryCreatePayload = {
 /** Editable state for security categories and attributes */
 export enum SecurityCategoryEditableState {
   /** Editable state. */
-  Editable = "EDITABLE",
+  EDITABLE = "EDITABLE",
   /** Editable attributes state. */
-  EditableAttributes = "EDITABLE_ATTRIBUTES",
+  EDITABLE_ATTRIBUTES = "EDITABLE_ATTRIBUTES",
   /** Locked state. */
-  Locked = "LOCKED",
+  LOCKED = "LOCKED",
 }
 
 /** Template type for predefined security categories */
 export enum SecurityCategoryTemplateType {
   /** Application category. */
-  Application = "APPLICATION",
+  APPLICATION = "APPLICATION",
   /** Business impact category. */
-  BusinessImpact = "BUSINESS_IMPACT",
+  BUSINESS_IMPACT = "BUSINESS_IMPACT",
   /** Business unit category. */
-  BusinessUnit = "BUSINESS_UNIT",
+  BUSINESS_UNIT = "BUSINESS_UNIT",
   /** Exposure category. */
-  Exposure = "EXPOSURE",
+  EXPOSURE = "EXPOSURE",
 }
 
 /** Autogenerated input type of SecurityCategoryUpdate */
@@ -49719,7 +49718,7 @@ export type SecurityMetrics = {
 };
 
 /** Represents security metrics */
-export type SecurityMetricsVulnerabilitiesOverTimeArgs = {
+export type SecurityMetricsvulnerabilitiesOverTimeArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate: Scalars["ISO8601Date"]["input"];
@@ -49803,13 +49802,13 @@ export type SecurityPolicyProjectUnassignPayload = {
 
 export enum SecurityPolicyRelationType {
   /** Policies defined for the group's descendant projects/groups only. Only valid for group-level policies. */
-  Descendant = "DESCENDANT",
+  DESCENDANT = "DESCENDANT",
   /** Policies defined for the project/group only. */
-  Direct = "DIRECT",
+  DIRECT = "DIRECT",
   /** Policies defined for the project/group and ancestor groups. */
-  Inherited = "INHERITED",
+  INHERITED = "INHERITED",
   /** Policies defined for the project/group's ancestor groups only. */
-  InheritedOnly = "INHERITED_ONLY",
+  INHERITED_ONLY = "INHERITED_ONLY",
 }
 
 /** Represents a policy source. Its fields depend on the source type. */
@@ -49880,9 +49879,9 @@ export type SecurityPolicyValidationError = {
 
 export enum SecurityPreferredLicenseSourceConfiguration {
   /** Use internal instance license database as a source of license information for dependencies. */
-  Pmdb = "PMDB",
+  PMDB = "PMDB",
   /** Use the SBOM as a source of license information for dependencies. */
-  Sbom = "SBOM",
+  SBOM = "SBOM",
 }
 
 /** Represents summary of a security report */
@@ -49926,7 +49925,7 @@ export type SecurityReportSummarySection = {
 };
 
 /** Represents a section of a summary of a security report */
-export type SecurityReportSummarySectionScannedResourcesArgs = {
+export type SecurityReportSummarySectionscannedResourcesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -49934,7 +49933,7 @@ export type SecurityReportSummarySectionScannedResourcesArgs = {
 };
 
 /** Represents a section of a summary of a security report */
-export type SecurityReportSummarySectionScansArgs = {
+export type SecurityReportSummarySectionscansArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -49943,49 +49942,49 @@ export type SecurityReportSummarySectionScansArgs = {
 
 export enum SecurityReportTypeEnum {
   /** API FUZZING scan report */
-  ApiFuzzing = "API_FUZZING",
+  API_FUZZING = "API_FUZZING",
   /** CLUSTER IMAGE SCANNING scan report */
-  ClusterImageScanning = "CLUSTER_IMAGE_SCANNING",
+  CLUSTER_IMAGE_SCANNING = "CLUSTER_IMAGE_SCANNING",
   /** CONTAINER SCANNING scan report */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** COVERAGE FUZZING scan report */
-  CoverageFuzzing = "COVERAGE_FUZZING",
+  COVERAGE_FUZZING = "COVERAGE_FUZZING",
   /** DAST scan report */
-  Dast = "DAST",
+  DAST = "DAST",
   /** DEPENDENCY SCANNING scan report */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** SAST scan report */
-  Sast = "SAST",
+  SAST = "SAST",
   /** SAST ADVANCED scan report */
-  SastAdvanced = "SAST_ADVANCED",
+  SAST_ADVANCED = "SAST_ADVANCED",
   /** SAST IAC scan report */
-  SastIac = "SAST_IAC",
+  SAST_IAC = "SAST_IAC",
   /** SECRET DETECTION scan report */
-  SecretDetection = "SECRET_DETECTION",
+  SECRET_DETECTION = "SECRET_DETECTION",
 }
 
 /** The type of the security scanner */
 export enum SecurityScannerType {
   /** API Fuzzing scanner */
-  ApiFuzzing = "API_FUZZING",
+  API_FUZZING = "API_FUZZING",
   /** Cluster Image Scanning scanner */
-  ClusterImageScanning = "CLUSTER_IMAGE_SCANNING",
+  CLUSTER_IMAGE_SCANNING = "CLUSTER_IMAGE_SCANNING",
   /** Container Scanning scanner */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** Coverage Fuzzing scanner */
-  CoverageFuzzing = "COVERAGE_FUZZING",
+  COVERAGE_FUZZING = "COVERAGE_FUZZING",
   /** DAST scanner */
-  Dast = "DAST",
+  DAST = "DAST",
   /** Dependency Scanning scanner */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** SAST scanner */
-  Sast = "SAST",
+  SAST = "SAST",
   /** Sast Advanced scanner */
-  SastAdvanced = "SAST_ADVANCED",
+  SAST_ADVANCED = "SAST_ADVANCED",
   /** Sast Iac scanner */
-  SastIac = "SAST_IAC",
+  SAST_IAC = "SAST_IAC",
   /** Secret Detection scanner */
-  SecretDetection = "SECRET_DETECTION",
+  SECRET_DETECTION = "SECRET_DETECTION",
 }
 
 /** Represents a list of security scanners */
@@ -50162,17 +50161,17 @@ export type SentryErrorCollection = {
 };
 
 /** An object containing a collection of Sentry errors, and a detailed error */
-export type SentryErrorCollectionDetailedErrorArgs = {
+export type SentryErrorCollectiondetailedErrorArgs = {
   id: Scalars["GitlabErrorTrackingDetailedErrorID"]["input"];
 };
 
 /** An object containing a collection of Sentry errors, and a detailed error */
-export type SentryErrorCollectionErrorStackTraceArgs = {
+export type SentryErrorCollectionerrorStackTraceArgs = {
   id: Scalars["GitlabErrorTrackingDetailedErrorID"]["input"];
 };
 
 /** An object containing a collection of Sentry errors, and a detailed error */
-export type SentryErrorCollectionErrorsArgs = {
+export type SentryErrorCollectionerrorsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -50247,13 +50246,13 @@ export type SentryErrorStackTraceEntry = {
 /** State of a Sentry error */
 export enum SentryErrorStatus {
   /** Error has been ignored. */
-  Ignored = "IGNORED",
+  IGNORED = "IGNORED",
   /** Error has been resolved. */
-  Resolved = "RESOLVED",
+  RESOLVED = "RESOLVED",
   /** Error has been ignored until next release. */
-  ResolvedInNextRelease = "RESOLVED_IN_NEXT_RELEASE",
+  RESOLVED_IN_NEXT_RELEASE = "RESOLVED_IN_NEXT_RELEASE",
   /** Error is unresolved. */
-  Unresolved = "UNRESOLVED",
+  UNRESOLVED = "UNRESOLVED",
 }
 
 /** State of a Sentry error */
@@ -50296,107 +50295,107 @@ export type ServiceEdge = {
 
 export enum ServiceType {
   /** Apple App Store Connect integration */
-  AppleAppStoreService = "APPLE_APP_STORE_SERVICE",
+  APPLE_APP_STORE_SERVICE = "APPLE_APP_STORE_SERVICE",
   /** Asana integration */
-  AsanaService = "ASANA_SERVICE",
+  ASANA_SERVICE = "ASANA_SERVICE",
   /** Assembla integration */
-  AssemblaService = "ASSEMBLA_SERVICE",
+  ASSEMBLA_SERVICE = "ASSEMBLA_SERVICE",
   /** Atlassian Bamboo integration */
-  BambooService = "BAMBOO_SERVICE",
+  BAMBOO_SERVICE = "BAMBOO_SERVICE",
   /** Bugzilla integration */
-  BugzillaService = "BUGZILLA_SERVICE",
+  BUGZILLA_SERVICE = "BUGZILLA_SERVICE",
   /** Buildkite integration */
-  BuildkiteService = "BUILDKITE_SERVICE",
+  BUILDKITE_SERVICE = "BUILDKITE_SERVICE",
   /** Campfire integration */
-  CampfireService = "CAMPFIRE_SERVICE",
+  CAMPFIRE_SERVICE = "CAMPFIRE_SERVICE",
   /** ClickUp integration */
-  ClickupService = "CLICKUP_SERVICE",
+  CLICKUP_SERVICE = "CLICKUP_SERVICE",
   /** Confluence Workspace integration */
-  ConfluenceService = "CONFLUENCE_SERVICE",
+  CONFLUENCE_SERVICE = "CONFLUENCE_SERVICE",
   /** Custom issue tracker integration */
-  CustomIssueTrackerService = "CUSTOM_ISSUE_TRACKER_SERVICE",
+  CUSTOM_ISSUE_TRACKER_SERVICE = "CUSTOM_ISSUE_TRACKER_SERVICE",
   /** Datadog integration */
-  DatadogService = "DATADOG_SERVICE",
+  DATADOG_SERVICE = "DATADOG_SERVICE",
   /** Diffblue Cover integration */
-  DiffblueCoverService = "DIFFBLUE_COVER_SERVICE",
+  DIFFBLUE_COVER_SERVICE = "DIFFBLUE_COVER_SERVICE",
   /** Discord Notifications integration */
-  DiscordService = "DISCORD_SERVICE",
+  DISCORD_SERVICE = "DISCORD_SERVICE",
   /** Drone integration */
-  DroneCiService = "DRONE_CI_SERVICE",
+  DRONE_CI_SERVICE = "DRONE_CI_SERVICE",
   /** Emails on push integration */
-  EmailsOnPushService = "EMAILS_ON_PUSH_SERVICE",
+  EMAILS_ON_PUSH_SERVICE = "EMAILS_ON_PUSH_SERVICE",
   /** EWM integration */
-  EwmService = "EWM_SERVICE",
+  EWM_SERVICE = "EWM_SERVICE",
   /** External wiki integration */
-  ExternalWikiService = "EXTERNAL_WIKI_SERVICE",
+  EXTERNAL_WIKI_SERVICE = "EXTERNAL_WIKI_SERVICE",
   /** GitHub integration */
-  GithubService = "GITHUB_SERVICE",
+  GITHUB_SERVICE = "GITHUB_SERVICE",
   /** GitLab for Slack app integration */
-  GitlabSlackApplicationService = "GITLAB_SLACK_APPLICATION_SERVICE",
+  GITLAB_SLACK_APPLICATION_SERVICE = "GITLAB_SLACK_APPLICATION_SERVICE",
   /** GitGuardian integration */
-  GitGuardianService = "GIT_GUARDIAN_SERVICE",
+  GIT_GUARDIAN_SERVICE = "GIT_GUARDIAN_SERVICE",
   /** Google Artifact Management integration (SaaS only) */
-  GoogleCloudPlatformArtifactRegistryService = "GOOGLE_CLOUD_PLATFORM_ARTIFACT_REGISTRY_SERVICE",
+  GOOGLE_CLOUD_PLATFORM_ARTIFACT_REGISTRY_SERVICE = "GOOGLE_CLOUD_PLATFORM_ARTIFACT_REGISTRY_SERVICE",
   /** Google Cloud IAM integration (SaaS only) */
-  GoogleCloudPlatformWorkloadIdentityFederationService = "GOOGLE_CLOUD_PLATFORM_WORKLOAD_IDENTITY_FEDERATION_SERVICE",
+  GOOGLE_CLOUD_PLATFORM_WORKLOAD_IDENTITY_FEDERATION_SERVICE = "GOOGLE_CLOUD_PLATFORM_WORKLOAD_IDENTITY_FEDERATION_SERVICE",
   /** Google Play integration */
-  GooglePlayService = "GOOGLE_PLAY_SERVICE",
+  GOOGLE_PLAY_SERVICE = "GOOGLE_PLAY_SERVICE",
   /** Google Chat integration */
-  HangoutsChatService = "HANGOUTS_CHAT_SERVICE",
+  HANGOUTS_CHAT_SERVICE = "HANGOUTS_CHAT_SERVICE",
   /** Harbor integration */
-  HarborService = "HARBOR_SERVICE",
+  HARBOR_SERVICE = "HARBOR_SERVICE",
   /** irker (IRC gateway) integration */
-  IrkerService = "IRKER_SERVICE",
+  IRKER_SERVICE = "IRKER_SERVICE",
   /** Jenkins integration */
-  JenkinsService = "JENKINS_SERVICE",
+  JENKINS_SERVICE = "JENKINS_SERVICE",
   /** GitLab for Jira Cloud app integration */
-  JiraCloudAppService = "JIRA_CLOUD_APP_SERVICE",
+  JIRA_CLOUD_APP_SERVICE = "JIRA_CLOUD_APP_SERVICE",
   /** Jira issues integration */
-  JiraService = "JIRA_SERVICE",
+  JIRA_SERVICE = "JIRA_SERVICE",
   /** Linear integration */
-  LinearService = "LINEAR_SERVICE",
+  LINEAR_SERVICE = "LINEAR_SERVICE",
   /** Matrix notifications integration */
-  MatrixService = "MATRIX_SERVICE",
+  MATRIX_SERVICE = "MATRIX_SERVICE",
   /** Mattermost notifications integration */
-  MattermostService = "MATTERMOST_SERVICE",
+  MATTERMOST_SERVICE = "MATTERMOST_SERVICE",
   /** Mattermost slash commands integration */
-  MattermostSlashCommandsService = "MATTERMOST_SLASH_COMMANDS_SERVICE",
+  MATTERMOST_SLASH_COMMANDS_SERVICE = "MATTERMOST_SLASH_COMMANDS_SERVICE",
   /** Microsoft Teams notifications integration */
-  MicrosoftTeamsService = "MICROSOFT_TEAMS_SERVICE",
+  MICROSOFT_TEAMS_SERVICE = "MICROSOFT_TEAMS_SERVICE",
   /** Packagist integration */
-  PackagistService = "PACKAGIST_SERVICE",
+  PACKAGIST_SERVICE = "PACKAGIST_SERVICE",
   /** Phorge integration */
-  PhorgeService = "PHORGE_SERVICE",
+  PHORGE_SERVICE = "PHORGE_SERVICE",
   /** Pipeline status emails integration */
-  PipelinesEmailService = "PIPELINES_EMAIL_SERVICE",
+  PIPELINES_EMAIL_SERVICE = "PIPELINES_EMAIL_SERVICE",
   /** Pivotal Tracker integration */
-  PivotaltrackerService = "PIVOTALTRACKER_SERVICE",
+  PIVOTALTRACKER_SERVICE = "PIVOTALTRACKER_SERVICE",
   /** Prometheus integration */
-  PrometheusService = "PROMETHEUS_SERVICE",
+  PROMETHEUS_SERVICE = "PROMETHEUS_SERVICE",
   /** Pumble integration */
-  PumbleService = "PUMBLE_SERVICE",
+  PUMBLE_SERVICE = "PUMBLE_SERVICE",
   /** Pushover integration */
-  PushoverService = "PUSHOVER_SERVICE",
+  PUSHOVER_SERVICE = "PUSHOVER_SERVICE",
   /** Redmine integration */
-  RedmineService = "REDMINE_SERVICE",
+  REDMINE_SERVICE = "REDMINE_SERVICE",
   /** Slack notifications integration */
-  SlackService = "SLACK_SERVICE",
+  SLACK_SERVICE = "SLACK_SERVICE",
   /** Slack slash commands integration */
-  SlackSlashCommandsService = "SLACK_SLASH_COMMANDS_SERVICE",
+  SLACK_SLASH_COMMANDS_SERVICE = "SLACK_SLASH_COMMANDS_SERVICE",
   /** Squash TM integration */
-  SquashTmService = "SQUASH_TM_SERVICE",
+  SQUASH_TM_SERVICE = "SQUASH_TM_SERVICE",
   /** JetBrains TeamCity integration */
-  TeamcityService = "TEAMCITY_SERVICE",
+  TEAMCITY_SERVICE = "TEAMCITY_SERVICE",
   /** Telegram integration */
-  TelegramService = "TELEGRAM_SERVICE",
+  TELEGRAM_SERVICE = "TELEGRAM_SERVICE",
   /** Unify Circuit integration */
-  UnifyCircuitService = "UNIFY_CIRCUIT_SERVICE",
+  UNIFY_CIRCUIT_SERVICE = "UNIFY_CIRCUIT_SERVICE",
   /** Webex Teams integration */
-  WebexTeamsService = "WEBEX_TEAMS_SERVICE",
+  WEBEX_TEAMS_SERVICE = "WEBEX_TEAMS_SERVICE",
   /** JetBrains YouTrack integration */
-  YoutrackService = "YOUTRACK_SERVICE",
+  YOUTRACK_SERVICE = "YOUTRACK_SERVICE",
   /** ZenTao integration */
-  ZentaoService = "ZENTAO_SERVICE",
+  ZENTAO_SERVICE = "ZENTAO_SERVICE",
 }
 
 /** Autogenerated input type of SetContainerScanningForRegistry */
@@ -50630,18 +50629,18 @@ export type SeverityOverrideEdge = {
 /** How to format SHA strings. */
 export enum ShaFormat {
   /** Unabbreviated format. */
-  Long = "LONG",
+  LONG = "LONG",
   /** Abbreviated format. Short SHAs are typically eight characters long. */
-  Short = "SHORT",
+  SHORT = "SHORT",
 }
 
 export enum SharedRunnersSetting {
   /** Sharing of runners is disabled and overridable. */
-  DisabledAndOverridable = "DISABLED_AND_OVERRIDABLE",
+  DISABLED_AND_OVERRIDABLE = "DISABLED_AND_OVERRIDABLE",
   /** Sharing of runners is disabled and unoverridable. */
-  DisabledAndUnoverridable = "DISABLED_AND_UNOVERRIDABLE",
+  DISABLED_AND_UNOVERRIDABLE = "DISABLED_AND_UNOVERRIDABLE",
   /** Sharing of runners is enabled. */
-  Enabled = "ENABLED",
+  ENABLED = "ENABLED",
 }
 
 /** Duo Chat slash command */
@@ -50705,7 +50704,7 @@ export type Snippet = NoteableInterface & {
 };
 
 /** Represents a snippet entry */
-export type SnippetBlobsArgs = {
+export type SnippetblobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -50714,7 +50713,7 @@ export type SnippetBlobsArgs = {
 };
 
 /** Represents a snippet entry */
-export type SnippetCommentersArgs = {
+export type SnippetcommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -50722,7 +50721,7 @@ export type SnippetCommentersArgs = {
 };
 
 /** Represents a snippet entry */
-export type SnippetDiscussionsArgs = {
+export type SnippetdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -50730,7 +50729,7 @@ export type SnippetDiscussionsArgs = {
 };
 
 /** Represents a snippet entry */
-export type SnippetNotesArgs = {
+export type SnippetnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -50772,13 +50771,13 @@ export type SnippetBlob = {
 /** Type of a snippet blob input action */
 export enum SnippetBlobActionEnum {
   /** Create a snippet blob. */
-  Create = "create",
+  create = "create",
   /** Delete a snippet blob. */
-  Delete = "delete",
+  delete = "delete",
   /** Move a snippet blob. */
-  Move = "move",
+  move = "move",
   /** Update a snippet blob. */
-  Update = "update",
+  update = "update",
 }
 
 /** Represents an action to perform over a snippet file */
@@ -50932,7 +50931,7 @@ export type SnippetRepositoryRegistryConnection = {
 };
 
 /** The connection type for SnippetRepositoryRegistry. */
-export type SnippetRepositoryRegistryConnectionCountArgs = {
+export type SnippetRepositoryRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -50948,57 +50947,57 @@ export type SnippetRepositoryRegistryEdge = {
 /** Common sort values */
 export enum Sort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Values for sort direction */
 export enum SortDirectionEnum {
   /** Ascending order. */
-  Asc = "ASC",
+  ASC = "ASC",
   /** Descending order. */
-  Desc = "DESC",
+  DESC = "DESC",
 }
 
 /** Values for sorting the mapping of users on source instance to users on destination instance. */
 export enum SourceUserSort {
   /** ID of the source user by ascending order. */
-  IdAsc = "ID_ASC",
+  ID_ASC = "ID_ASC",
   /** ID of the source user by descending order. */
-  IdDesc = "ID_DESC",
+  ID_DESC = "ID_DESC",
   /** Instance source name by ascending order. */
-  SourceNameAsc = "SOURCE_NAME_ASC",
+  SOURCE_NAME_ASC = "SOURCE_NAME_ASC",
   /** Instance source name by descending order. */
-  SourceNameDesc = "SOURCE_NAME_DESC",
+  SOURCE_NAME_DESC = "SOURCE_NAME_DESC",
   /** Status of the mapping by ascending order. */
-  StatusAsc = "STATUS_ASC",
+  STATUS_ASC = "STATUS_ASC",
   /** Status of the mapping by descending order. */
-  StatusDesc = "STATUS_DESC",
+  STATUS_DESC = "STATUS_DESC",
 }
 
 /** Squash option overrides for a protected branch */
@@ -51013,13 +51012,13 @@ export type SquashOption = {
 /** Options for default squash behaviour for merge requests */
 export enum SquashOptionSetting {
   /** Allow. */
-  Allowed = "ALLOWED",
+  ALLOWED = "ALLOWED",
   /** Require. */
-  Always = "ALWAYS",
+  ALWAYS = "ALWAYS",
   /** Encourage. */
-  Encouraged = "ENCOURAGED",
+  ENCOURAGED = "ENCOURAGED",
   /** Do not allow. */
-  Never = "NEVER",
+  NEVER = "NEVER",
 }
 
 /** SSH signature for a signed commit */
@@ -51292,7 +51291,7 @@ export type Subscription = {
   workflowEventsUpdated?: Maybe<DuoWorkflowEvent>;
 };
 
-export type SubscriptionAiCompletionResponseArgs = {
+export type SubscriptionaiCompletionResponseArgs = {
   agentVersionId?: InputMaybe<Scalars["AiAgentVersionID"]["input"]>;
   aiAction?: InputMaybe<AiAction>;
   clientSubscriptionId?: InputMaybe<Scalars["String"]["input"]>;
@@ -51300,115 +51299,115 @@ export type SubscriptionAiCompletionResponseArgs = {
   userId?: InputMaybe<Scalars["UserID"]["input"]>;
 };
 
-export type SubscriptionCiJobCreatedArgs = {
+export type SubscriptionciJobCreatedArgs = {
   projectId: Scalars["ProjectID"]["input"];
 };
 
-export type SubscriptionCiJobStatusUpdatedArgs = {
+export type SubscriptionciJobStatusUpdatedArgs = {
   jobId: Scalars["CiBuildID"]["input"];
 };
 
-export type SubscriptionCiPipelineScheduleStatusUpdatedArgs = {
+export type SubscriptionciPipelineScheduleStatusUpdatedArgs = {
   projectId: Scalars["ProjectID"]["input"];
 };
 
-export type SubscriptionCiPipelineStatusUpdatedArgs = {
+export type SubscriptionciPipelineStatusUpdatedArgs = {
   pipelineId: Scalars["CiPipelineID"]["input"];
 };
 
-export type SubscriptionIssuableAssigneesUpdatedArgs = {
+export type SubscriptionissuableAssigneesUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableDatesUpdatedArgs = {
+export type SubscriptionissuableDatesUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableDescriptionUpdatedArgs = {
+export type SubscriptionissuableDescriptionUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableEpicUpdatedArgs = {
+export type SubscriptionissuableEpicUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableHealthStatusUpdatedArgs = {
+export type SubscriptionissuableHealthStatusUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableIterationUpdatedArgs = {
+export type SubscriptionissuableIterationUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableLabelsUpdatedArgs = {
+export type SubscriptionissuableLabelsUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableMilestoneUpdatedArgs = {
+export type SubscriptionissuableMilestoneUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableTitleUpdatedArgs = {
+export type SubscriptionissuableTitleUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableTodoUpdatedArgs = {
+export type SubscriptionissuableTodoUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssuableWeightUpdatedArgs = {
+export type SubscriptionissuableWeightUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionIssueCrmContactsUpdatedArgs = {
+export type SubscriptionissueCrmContactsUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionMergeRequestApprovalStateUpdatedArgs = {
+export type SubscriptionmergeRequestApprovalStateUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionMergeRequestDiffGeneratedArgs = {
+export type SubscriptionmergeRequestDiffGeneratedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionMergeRequestMergeStatusUpdatedArgs = {
+export type SubscriptionmergeRequestMergeStatusUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionMergeRequestReviewersUpdatedArgs = {
+export type SubscriptionmergeRequestReviewersUpdatedArgs = {
   issuableId: Scalars["IssuableID"]["input"];
 };
 
-export type SubscriptionSecurityPoliciesSyncUpdatedArgs = {
+export type SubscriptionsecurityPoliciesSyncUpdatedArgs = {
   policyConfigurationId: Scalars["SecurityOrchestrationPolicyConfigurationID"]["input"];
 };
 
-export type SubscriptionSecurityPolicyProjectCreatedArgs = {
+export type SubscriptionsecurityPolicyProjectCreatedArgs = {
   fullPath: Scalars["String"]["input"];
 };
 
-export type SubscriptionUserMergeRequestUpdatedArgs = {
+export type SubscriptionuserMergeRequestUpdatedArgs = {
   userId: Scalars["UserID"]["input"];
 };
 
-export type SubscriptionWorkItemNoteCreatedArgs = {
+export type SubscriptionworkItemNoteCreatedArgs = {
   noteableId?: InputMaybe<Scalars["NoteableID"]["input"]>;
 };
 
-export type SubscriptionWorkItemNoteDeletedArgs = {
+export type SubscriptionworkItemNoteDeletedArgs = {
   noteableId?: InputMaybe<Scalars["NoteableID"]["input"]>;
 };
 
-export type SubscriptionWorkItemNoteUpdatedArgs = {
+export type SubscriptionworkItemNoteUpdatedArgs = {
   noteableId?: InputMaybe<Scalars["NoteableID"]["input"]>;
 };
 
-export type SubscriptionWorkItemUpdatedArgs = {
+export type SubscriptionworkItemUpdatedArgs = {
   workItemId: Scalars["WorkItemID"]["input"];
 };
 
-export type SubscriptionWorkflowEventsUpdatedArgs = {
+export type SubscriptionworkflowEventsUpdatedArgs = {
   workflowId: Scalars["AiDuoWorkflowsWorkflowID"]["input"];
 };
 
@@ -51456,17 +51455,17 @@ export type SubscriptionFutureEntryEdge = {
 /** Types of change for a subscription history record */
 export enum SubscriptionHistoryChangeType {
   /** This was the previous state before the subscription was destroyed. */
-  GitlabSubscriptionDestroyed = "GITLAB_SUBSCRIPTION_DESTROYED",
+  GITLAB_SUBSCRIPTION_DESTROYED = "GITLAB_SUBSCRIPTION_DESTROYED",
   /** This was the previous state before the subscription was updated. */
-  GitlabSubscriptionUpdated = "GITLAB_SUBSCRIPTION_UPDATED",
+  GITLAB_SUBSCRIPTION_UPDATED = "GITLAB_SUBSCRIPTION_UPDATED",
 }
 
 /** Status of the subscription to an issuable. */
 export enum SubscriptionStatus {
   /** User is explicitly subscribed to the issuable. */
-  ExplicitlySubscribed = "EXPLICITLY_SUBSCRIBED",
+  EXPLICITLY_SUBSCRIBED = "EXPLICITLY_SUBSCRIBED",
   /** User is explicitly unsubscribed from the issuable. */
-  ExplicitlyUnsubscribed = "EXPLICITLY_UNSUBSCRIBED",
+  EXPLICITLY_UNSUBSCRIBED = "EXPLICITLY_UNSUBSCRIBED",
 }
 
 /** Represents a Suggested Reviewers result set */
@@ -51858,7 +51857,7 @@ export type TerraformStateVersionRegistryConnection = {
 };
 
 /** The connection type for TerraformStateVersionRegistry. */
-export type TerraformStateVersionRegistryConnectionCountArgs = {
+export type TerraformStateVersionRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -51918,13 +51917,13 @@ export type TestCaseEdge = {
 
 export enum TestCaseStatus {
   /** Test case that has a status of error. */
-  Error = "error",
+  error = "error",
   /** Test case that has a status of failed. */
-  Failed = "failed",
+  failed = "failed",
   /** Test case that has a status of skipped. */
-  Skipped = "skipped",
+  skipped = "skipped",
   /** Test case that has a status of success. */
-  Success = "success",
+  success = "success",
 }
 
 /** Represents a requirement test report */
@@ -51965,9 +51964,9 @@ export type TestReportEdge = {
 /** State of a test report */
 export enum TestReportState {
   /** Failed test report. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Passed test report. */
-  Passed = "PASSED",
+  PASSED = "PASSED",
 }
 
 /** Test report for a pipeline */
@@ -51980,7 +51979,7 @@ export type TestReportSummary = {
 };
 
 /** Test report for a pipeline */
-export type TestReportSummaryTestSuitesArgs = {
+export type TestReportSummarytestSuitesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -52030,7 +52029,7 @@ export type TestSuite = {
 };
 
 /** Test suite in a pipeline test report. */
-export type TestSuiteTestCasesArgs = {
+export type TestSuitetestCasesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -52165,51 +52164,51 @@ export type TimeboxReportError = {
 /** Category of error. */
 export enum TimeboxReportErrorReason {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Label priority by ascending order. */
-  LabelPriorityAsc = "LABEL_PRIORITY_ASC",
+  LABEL_PRIORITY_ASC = "LABEL_PRIORITY_ASC",
   /** Label priority by descending order. */
-  LabelPriorityDesc = "LABEL_PRIORITY_DESC",
+  LABEL_PRIORITY_DESC = "LABEL_PRIORITY_DESC",
   /** Milestone due date by ascending order. */
-  MilestoneDueAsc = "MILESTONE_DUE_ASC",
+  MILESTONE_DUE_ASC = "MILESTONE_DUE_ASC",
   /** Milestone due date by descending order. */
-  MilestoneDueDesc = "MILESTONE_DUE_DESC",
+  MILESTONE_DUE_DESC = "MILESTONE_DUE_DESC",
   /** One or both of start_date and due_date is missing. */
-  MissingDates = "MISSING_DATES",
+  MISSING_DATES = "MISSING_DATES",
   /** Priority by ascending order. */
-  PriorityAsc = "PRIORITY_ASC",
+  PRIORITY_ASC = "PRIORITY_ASC",
   /** Priority by descending order. */
-  PriorityDesc = "PRIORITY_DESC",
+  PRIORITY_DESC = "PRIORITY_DESC",
   /** There are too many events. */
-  TooManyEvents = "TOO_MANY_EVENTS",
+  TOO_MANY_EVENTS = "TOO_MANY_EVENTS",
   /** This type does not support timebox reports. */
-  Unsupported = "UNSUPPORTED",
+  UNSUPPORTED = "UNSUPPORTED",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 export type TimeboxReportInterface = {
@@ -52217,7 +52216,7 @@ export type TimeboxReportInterface = {
   report?: Maybe<TimeboxReport>;
 };
 
-export type TimeboxReportInterfaceReportArgs = {
+export type TimeboxReportInterfacereportArgs = {
   fullPath?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -52374,7 +52373,7 @@ export type TimelineEventType = {
 };
 
 /** Describes an incident management timeline event */
-export type TimelineEventTypeTimelineEventTagsArgs = {
+export type TimelineEventTypetimelineEventTagsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -52527,41 +52526,41 @@ export type TimelogPermissions = {
 /** Values for sorting timelogs */
 export enum TimelogSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** Spent at ascending order. */
-  SpentAtAsc = "SPENT_AT_ASC",
+  SPENT_AT_ASC = "SPENT_AT_ASC",
   /** Spent at descending order. */
-  SpentAtDesc = "SPENT_AT_DESC",
+  SPENT_AT_DESC = "SPENT_AT_DESC",
   /** Time spent ascending order. */
-  TimeSpentAsc = "TIME_SPENT_ASC",
+  TIME_SPENT_ASC = "TIME_SPENT_ASC",
   /** Time spent descending order. */
-  TimeSpentDesc = "TIME_SPENT_DESC",
+  TIME_SPENT_DESC = "TIME_SPENT_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** Representing a to-do entry */
@@ -52604,41 +52603,41 @@ export type Todo = {
 
 export enum TodoActionEnum {
   /** Todo action name for added_approver. */
-  AddedApprover = "added_approver",
+  added_approver = "added_approver",
   /** Todo action name for approval_required. */
-  ApprovalRequired = "approval_required",
+  approval_required = "approval_required",
   /** Todo action name for assigned. */
-  Assigned = "assigned",
+  assigned = "assigned",
   /** Todo action name for build_failed. */
-  BuildFailed = "build_failed",
+  build_failed = "build_failed",
   /** Todo action name for directly_addressed. */
-  DirectlyAddressed = "directly_addressed",
+  directly_addressed = "directly_addressed",
   /** Todo action name for duo_core_access_granted. */
-  DuoCoreAccessGranted = "duo_core_access_granted",
+  duo_core_access_granted = "duo_core_access_granted",
   /** Todo action name for duo_enterprise_access_granted. */
-  DuoEnterpriseAccessGranted = "duo_enterprise_access_granted",
+  duo_enterprise_access_granted = "duo_enterprise_access_granted",
   /** Todo action name for duo_pro_access_granted. */
-  DuoProAccessGranted = "duo_pro_access_granted",
+  duo_pro_access_granted = "duo_pro_access_granted",
   /** Todo action name for marked. */
-  Marked = "marked",
+  marked = "marked",
   /** Todo action name for member_access_requested. */
-  MemberAccessRequested = "member_access_requested",
+  member_access_requested = "member_access_requested",
   /** Todo action name for mentioned. */
-  Mentioned = "mentioned",
+  mentioned = "mentioned",
   /** Todo action name for merge_train_removed. */
-  MergeTrainRemoved = "merge_train_removed",
+  merge_train_removed = "merge_train_removed",
   /** Todo action name for okr_checkin_requested. */
-  OkrCheckinRequested = "okr_checkin_requested",
+  okr_checkin_requested = "okr_checkin_requested",
   /** Todo action name for review_requested. */
-  ReviewRequested = "review_requested",
+  review_requested = "review_requested",
   /** Todo action name for review_submitted. */
-  ReviewSubmitted = "review_submitted",
+  review_submitted = "review_submitted",
   /** Todo action name for ssh_key_expired. */
-  SshKeyExpired = "ssh_key_expired",
+  ssh_key_expired = "ssh_key_expired",
   /** Todo action name for ssh_key_expiring_soon. */
-  SshKeyExpiringSoon = "ssh_key_expiring_soon",
+  ssh_key_expiring_soon = "ssh_key_expiring_soon",
   /** Todo action name for unmergeable. */
-  Unmergeable = "unmergeable",
+  unmergeable = "unmergeable",
 }
 
 /** The connection type for Todo. */
@@ -52837,75 +52836,75 @@ export type TodoSnoozePayload = {
 /** Sort options for todos. */
 export enum TodoSort {
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /** By label priority in ascending order. */
-  LabelPriorityAsc = "LABEL_PRIORITY_ASC",
+  LABEL_PRIORITY_ASC = "LABEL_PRIORITY_ASC",
   /** By label priority in descending order. */
-  LabelPriorityDesc = "LABEL_PRIORITY_DESC",
+  LABEL_PRIORITY_DESC = "LABEL_PRIORITY_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 export enum TodoStateEnum {
   /** State of the todo is done. */
-  Done = "done",
+  done = "done",
   /** State of the todo is pending. */
-  Pending = "pending",
+  pending = "pending",
 }
 
 export enum TodoTargetEnum {
   /** Alert. */
-  Alert = "ALERT",
+  ALERT = "ALERT",
   /** Commit. */
-  Commit = "COMMIT",
+  COMMIT = "COMMIT",
   /** Project Compliance Violation. */
-  ComplianceViolation = "COMPLIANCE_VIOLATION",
+  COMPLIANCE_VIOLATION = "COMPLIANCE_VIOLATION",
   /** Design. */
-  Design = "DESIGN",
+  DESIGN = "DESIGN",
   /** An Epic. */
-  Epic = "EPIC",
+  EPIC = "EPIC",
   /** Issue. */
-  Issue = "ISSUE",
+  ISSUE = "ISSUE",
   /** SSH key. */
-  Key = "KEY",
+  KEY = "KEY",
   /** Merge request. */
-  Mergerequest = "MERGEREQUEST",
+  MERGEREQUEST = "MERGEREQUEST",
   /** Namespace. */
-  Namespace = "NAMESPACE",
+  NAMESPACE = "NAMESPACE",
   /** Project. */
-  Project = "PROJECT",
+  PROJECT = "PROJECT",
   /** User. */
-  User = "USER",
+  USER = "USER",
   /** Vulnerability. */
-  Vulnerability = "VULNERABILITY",
+  VULNERABILITY = "VULNERABILITY",
   /** Wiki page. */
-  Wikipagemeta = "WIKIPAGEMETA",
+  WIKIPAGEMETA = "WIKIPAGEMETA",
   /** Work item. */
-  Workitem = "WORKITEM",
+  WORKITEM = "WORKITEM",
 }
 
 /** Autogenerated input type of TodoUnSnooze */
@@ -53037,9 +53036,9 @@ export type TrackingEventInput = {
 /** Status of the request to the training provider. The URL of a TrainingUrl is calculated asynchronously. When PENDING, the URL of the TrainingUrl will be null. When COMPLETED, the URL of the TrainingUrl will be available. */
 export enum TrainingUrlRequestStatus {
   /** Completed request. */
-  Completed = "COMPLETED",
+  COMPLETED = "COMPLETED",
   /** Pending request. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
 }
 
 export type Tree = {
@@ -53059,27 +53058,27 @@ export type Tree = {
   trees: TreeEntryConnection;
 };
 
-export type TreeBlobsArgs = {
+export type TreeblobsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type TreeLastCommitArgs = {
+export type TreelastCommitArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
   ref?: InputMaybe<Scalars["String"]["input"]>;
   refType?: InputMaybe<RefType>;
 };
 
-export type TreeSubmodulesArgs = {
+export type TreesubmodulesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type TreeTreesArgs = {
+export type TreetreesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -53149,9 +53148,9 @@ export type TreeEntryEdge = {
 
 export enum TypeEnum {
   /** Snippet created independent of any project. */
-  Personal = "personal",
+  personal = "personal",
   /** Snippet related to a specific project. */
-  Project = "project",
+  project = "project",
 }
 
 export type UnionedEpicFilterInput = {
@@ -54084,7 +54083,7 @@ export type UploadRegistryConnection = {
 };
 
 /** The connection type for UploadRegistry. */
-export type UploadRegistryConnectionCountArgs = {
+export type UploadRegistryConnectioncountArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -54248,7 +54247,7 @@ export type User = {
 };
 
 /** Representation of a GitLab user. */
-export type UserAssignedMergeRequestsArgs = {
+export type UserassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -54292,7 +54291,7 @@ export type UserAssignedMergeRequestsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserAuthoredMergeRequestsArgs = {
+export type UserauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -54339,7 +54338,7 @@ export type UserAuthoredMergeRequestsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserCalloutsArgs = {
+export type UsercalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54347,7 +54346,7 @@ export type UserCalloutsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserContributedProjectsArgs = {
+export type UsercontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54360,7 +54359,7 @@ export type UserContributedProjectsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserEmailsArgs = {
+export type UseremailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54368,7 +54367,7 @@ export type UserEmailsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserGroupMembershipsArgs = {
+export type UsergroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54376,7 +54375,7 @@ export type UserGroupMembershipsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserGroupsArgs = {
+export type UsergroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54387,7 +54386,7 @@ export type UserGroupsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserNamespaceCommitEmailsArgs = {
+export type UsernamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54395,7 +54394,7 @@ export type UserNamespaceCommitEmailsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserOrganizationsArgs = {
+export type UserorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54405,7 +54404,7 @@ export type UserOrganizationsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserProjectMembershipsArgs = {
+export type UserprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54413,7 +54412,7 @@ export type UserProjectMembershipsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserReviewRequestedMergeRequestsArgs = {
+export type UserreviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -54458,7 +54457,7 @@ export type UserReviewRequestedMergeRequestsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserSavedRepliesArgs = {
+export type UsersavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54466,12 +54465,12 @@ export type UserSavedRepliesArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserSavedReplyArgs = {
+export type UsersavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** Representation of a GitLab user. */
-export type UserSnippetsArgs = {
+export type UsersnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54482,7 +54481,7 @@ export type UserSnippetsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserStarredProjectsArgs = {
+export type UserstarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54494,7 +54493,7 @@ export type UserStarredProjectsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserTimelogsArgs = {
+export type UsertimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -54510,7 +54509,7 @@ export type UserTimelogsArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserTodosArgs = {
+export type UsertodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -54526,7 +54525,7 @@ export type UserTodosArgs = {
 };
 
 /** Representation of a GitLab user. */
-export type UserUserAchievementsArgs = {
+export type UseruserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54670,7 +54669,7 @@ export type UserAddOnAssignmentBulkCreatePayload = {
 };
 
 /** Autogenerated return type of UserAddOnAssignmentBulkCreate. */
-export type UserAddOnAssignmentBulkCreatePayloadUsersArgs = {
+export type UserAddOnAssignmentBulkCreatePayloadusersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54701,7 +54700,7 @@ export type UserAddOnAssignmentBulkRemovePayload = {
 };
 
 /** Autogenerated return type of UserAddOnAssignmentBulkRemove. */
-export type UserAddOnAssignmentBulkRemovePayloadUsersArgs = {
+export type UserAddOnAssignmentBulkRemovePayloadusersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -54824,161 +54823,161 @@ export type UserCalloutEdge = {
 /** Name of the feature that the callout is for. */
 export enum UserCalloutFeatureNameEnum {
   /** Callout feature name for active_user_count_threshold. */
-  ActiveUserCountThreshold = "ACTIVE_USER_COUNT_THRESHOLD",
+  ACTIVE_USER_COUNT_THRESHOLD = "ACTIVE_USER_COUNT_THRESHOLD",
   /** Callout feature name for branch_rules_info_callout. */
-  BranchRulesInfoCallout = "BRANCH_RULES_INFO_CALLOUT",
+  BRANCH_RULES_INFO_CALLOUT = "BRANCH_RULES_INFO_CALLOUT",
   /** Callout feature name for branch_rules_tip_callout. */
-  BranchRulesTipCallout = "BRANCH_RULES_TIP_CALLOUT",
+  BRANCH_RULES_TIP_CALLOUT = "BRANCH_RULES_TIP_CALLOUT",
   /** Callout feature name for buy_pipeline_minutes_notification_dot. */
-  BuyPipelineMinutesNotificationDot = "BUY_PIPELINE_MINUTES_NOTIFICATION_DOT",
+  BUY_PIPELINE_MINUTES_NOTIFICATION_DOT = "BUY_PIPELINE_MINUTES_NOTIFICATION_DOT",
   /** Callout feature name for canary_deployment. */
-  CanaryDeployment = "CANARY_DEPLOYMENT",
+  CANARY_DEPLOYMENT = "CANARY_DEPLOYMENT",
   /** Callout feature name for ci_deprecation_warning_for_types_keyword. */
-  CiDeprecationWarningForTypesKeyword = "CI_DEPRECATION_WARNING_FOR_TYPES_KEYWORD",
+  CI_DEPRECATION_WARNING_FOR_TYPES_KEYWORD = "CI_DEPRECATION_WARNING_FOR_TYPES_KEYWORD",
   /** Callout feature name for ci_minutes_limit_alert_danger_stage. */
-  CiMinutesLimitAlertDangerStage = "CI_MINUTES_LIMIT_ALERT_DANGER_STAGE",
+  CI_MINUTES_LIMIT_ALERT_DANGER_STAGE = "CI_MINUTES_LIMIT_ALERT_DANGER_STAGE",
   /** Callout feature name for ci_minutes_limit_alert_exceeded_stage. */
-  CiMinutesLimitAlertExceededStage = "CI_MINUTES_LIMIT_ALERT_EXCEEDED_STAGE",
+  CI_MINUTES_LIMIT_ALERT_EXCEEDED_STAGE = "CI_MINUTES_LIMIT_ALERT_EXCEEDED_STAGE",
   /** Callout feature name for ci_minutes_limit_alert_warning_stage. */
-  CiMinutesLimitAlertWarningStage = "CI_MINUTES_LIMIT_ALERT_WARNING_STAGE",
+  CI_MINUTES_LIMIT_ALERT_WARNING_STAGE = "CI_MINUTES_LIMIT_ALERT_WARNING_STAGE",
   /** Callout feature name for cluster_security_warning. */
-  ClusterSecurityWarning = "CLUSTER_SECURITY_WARNING",
+  CLUSTER_SECURITY_WARNING = "CLUSTER_SECURITY_WARNING",
   /** Callout feature name for deployment_approvals_empty_state. */
-  DeploymentApprovalsEmptyState = "DEPLOYMENT_APPROVALS_EMPTY_STATE",
+  DEPLOYMENT_APPROVALS_EMPTY_STATE = "DEPLOYMENT_APPROVALS_EMPTY_STATE",
   /** Callout feature name for deployment_details_feedback. */
-  DeploymentDetailsFeedback = "DEPLOYMENT_DETAILS_FEEDBACK",
+  DEPLOYMENT_DETAILS_FEEDBACK = "DEPLOYMENT_DETAILS_FEEDBACK",
   /** Callout feature name for dora_dashboard_migration_group. */
-  DoraDashboardMigrationGroup = "DORA_DASHBOARD_MIGRATION_GROUP",
+  DORA_DASHBOARD_MIGRATION_GROUP = "DORA_DASHBOARD_MIGRATION_GROUP",
   /** Callout feature name for dora_dashboard_migration_project. */
-  DoraDashboardMigrationProject = "DORA_DASHBOARD_MIGRATION_PROJECT",
+  DORA_DASHBOARD_MIGRATION_PROJECT = "DORA_DASHBOARD_MIGRATION_PROJECT",
   /** Callout feature name for duo_agent_platform_requested. */
-  DuoAgentPlatformRequested = "DUO_AGENT_PLATFORM_REQUESTED",
+  DUO_AGENT_PLATFORM_REQUESTED = "DUO_AGENT_PLATFORM_REQUESTED",
   /** Callout feature name for duo_amazon_q_alert. */
-  DuoAmazonQAlert = "DUO_AMAZON_Q_ALERT",
+  DUO_AMAZON_Q_ALERT = "DUO_AMAZON_Q_ALERT",
   /** Callout feature name for duo_chat_callout. */
-  DuoChatCallout = "DUO_CHAT_CALLOUT",
+  DUO_CHAT_CALLOUT = "DUO_CHAT_CALLOUT",
   /** Callout feature name for email_otp_enrollment_callout. */
-  EmailOtpEnrollmentCallout = "EMAIL_OTP_ENROLLMENT_CALLOUT",
+  EMAIL_OTP_ENROLLMENT_CALLOUT = "EMAIL_OTP_ENROLLMENT_CALLOUT",
   /** Callout feature name for explore_duo_core_banner. */
-  ExploreDuoCoreBanner = "EXPLORE_DUO_CORE_BANNER",
+  EXPLORE_DUO_CORE_BANNER = "EXPLORE_DUO_CORE_BANNER",
   /** Callout feature name for feature_flags_new_version. */
-  FeatureFlagsNewVersion = "FEATURE_FLAGS_NEW_VERSION",
+  FEATURE_FLAGS_NEW_VERSION = "FEATURE_FLAGS_NEW_VERSION",
   /** Callout feature name for gcp_signup_offer. */
-  GcpSignupOffer = "GCP_SIGNUP_OFFER",
+  GCP_SIGNUP_OFFER = "GCP_SIGNUP_OFFER",
   /** Callout feature name for geo_enable_hashed_storage. */
-  GeoEnableHashedStorage = "GEO_ENABLE_HASHED_STORAGE",
+  GEO_ENABLE_HASHED_STORAGE = "GEO_ENABLE_HASHED_STORAGE",
   /** Callout feature name for geo_migrate_hashed_storage. */
-  GeoMigrateHashedStorage = "GEO_MIGRATE_HASHED_STORAGE",
+  GEO_MIGRATE_HASHED_STORAGE = "GEO_MIGRATE_HASHED_STORAGE",
   /** Callout feature name for gke_cluster_integration. */
-  GkeClusterIntegration = "GKE_CLUSTER_INTEGRATION",
+  GKE_CLUSTER_INTEGRATION = "GKE_CLUSTER_INTEGRATION",
   /** Callout feature name for gold_trial_billings. */
-  GoldTrialBillings = "GOLD_TRIAL_BILLINGS",
+  GOLD_TRIAL_BILLINGS = "GOLD_TRIAL_BILLINGS",
   /** Callout feature name for joining_a_project_alert. */
-  JoiningAProjectAlert = "JOINING_A_PROJECT_ALERT",
+  JOINING_A_PROJECT_ALERT = "JOINING_A_PROJECT_ALERT",
   /** Callout feature name for merge_request_dashboard_display_preferences_popover. */
-  MergeRequestDashboardDisplayPreferencesPopover = "MERGE_REQUEST_DASHBOARD_DISPLAY_PREFERENCES_POPOVER",
+  MERGE_REQUEST_DASHBOARD_DISPLAY_PREFERENCES_POPOVER = "MERGE_REQUEST_DASHBOARD_DISPLAY_PREFERENCES_POPOVER",
   /** Callout feature name for merge_request_dashboard_show_drafts. */
-  MergeRequestDashboardShowDrafts = "MERGE_REQUEST_DASHBOARD_SHOW_DRAFTS",
+  MERGE_REQUEST_DASHBOARD_SHOW_DRAFTS = "MERGE_REQUEST_DASHBOARD_SHOW_DRAFTS",
   /** Callout feature name for namespace_over_storage_users_combined_alert. */
-  NamespaceOverStorageUsersCombinedAlert = "NAMESPACE_OVER_STORAGE_USERS_COMBINED_ALERT",
+  NAMESPACE_OVER_STORAGE_USERS_COMBINED_ALERT = "NAMESPACE_OVER_STORAGE_USERS_COMBINED_ALERT",
   /** Callout feature name for namespace_storage_limit_alert_alert_threshold. */
-  NamespaceStorageLimitAlertAlertThreshold = "NAMESPACE_STORAGE_LIMIT_ALERT_ALERT_THRESHOLD",
+  NAMESPACE_STORAGE_LIMIT_ALERT_ALERT_THRESHOLD = "NAMESPACE_STORAGE_LIMIT_ALERT_ALERT_THRESHOLD",
   /** Callout feature name for namespace_storage_limit_alert_error_threshold. */
-  NamespaceStorageLimitAlertErrorThreshold = "NAMESPACE_STORAGE_LIMIT_ALERT_ERROR_THRESHOLD",
+  NAMESPACE_STORAGE_LIMIT_ALERT_ERROR_THRESHOLD = "NAMESPACE_STORAGE_LIMIT_ALERT_ERROR_THRESHOLD",
   /** Callout feature name for namespace_storage_limit_alert_warning_threshold. */
-  NamespaceStorageLimitAlertWarningThreshold = "NAMESPACE_STORAGE_LIMIT_ALERT_WARNING_THRESHOLD",
+  NAMESPACE_STORAGE_LIMIT_ALERT_WARNING_THRESHOLD = "NAMESPACE_STORAGE_LIMIT_ALERT_WARNING_THRESHOLD",
   /** Callout feature name for namespace_storage_pre_enforcement_banner. */
-  NamespaceStoragePreEnforcementBanner = "NAMESPACE_STORAGE_PRE_ENFORCEMENT_BANNER",
+  NAMESPACE_STORAGE_PRE_ENFORCEMENT_BANNER = "NAMESPACE_STORAGE_PRE_ENFORCEMENT_BANNER",
   /** Callout feature name for new_merge_request_dashboard_welcome. */
-  NewMergeRequestDashboardWelcome = "NEW_MERGE_REQUEST_DASHBOARD_WELCOME",
+  NEW_MERGE_REQUEST_DASHBOARD_WELCOME = "NEW_MERGE_REQUEST_DASHBOARD_WELCOME",
   /** Callout feature name for new_mr_dashboard_banner. */
-  NewMrDashboardBanner = "NEW_MR_DASHBOARD_BANNER",
+  NEW_MR_DASHBOARD_BANNER = "NEW_MR_DASHBOARD_BANNER",
   /** Callout feature name for new_top_level_group_alert. */
-  NewTopLevelGroupAlert = "NEW_TOP_LEVEL_GROUP_ALERT",
+  NEW_TOP_LEVEL_GROUP_ALERT = "NEW_TOP_LEVEL_GROUP_ALERT",
   /** Callout feature name for new_user_signups_cap_reached. */
-  NewUserSignupsCapReached = "NEW_USER_SIGNUPS_CAP_REACHED",
+  NEW_USER_SIGNUPS_CAP_REACHED = "NEW_USER_SIGNUPS_CAP_REACHED",
   /** Callout feature name for openssl_callout. */
-  OpensslCallout = "OPENSSL_CALLOUT",
+  OPENSSL_CALLOUT = "OPENSSL_CALLOUT",
   /** Callout feature name for period_in_terraform_state_name_alert. */
-  PeriodInTerraformStateNameAlert = "PERIOD_IN_TERRAFORM_STATE_NAME_ALERT",
+  PERIOD_IN_TERRAFORM_STATE_NAME_ALERT = "PERIOD_IN_TERRAFORM_STATE_NAME_ALERT",
   /** Callout feature name for personal_access_token_expiry. */
-  PersonalAccessTokenExpiry = "PERSONAL_ACCESS_TOKEN_EXPIRY",
+  PERSONAL_ACCESS_TOKEN_EXPIRY = "PERSONAL_ACCESS_TOKEN_EXPIRY",
   /** Callout feature name for personal_homepage_preferences_banner. */
-  PersonalHomepagePreferencesBanner = "PERSONAL_HOMEPAGE_PREFERENCES_BANNER",
+  PERSONAL_HOMEPAGE_PREFERENCES_BANNER = "PERSONAL_HOMEPAGE_PREFERENCES_BANNER",
   /** Callout feature name for personal_project_limitations_banner. */
-  PersonalProjectLimitationsBanner = "PERSONAL_PROJECT_LIMITATIONS_BANNER",
+  PERSONAL_PROJECT_LIMITATIONS_BANNER = "PERSONAL_PROJECT_LIMITATIONS_BANNER",
   /** Callout feature name for pipeline_inputs_announcement_banner. */
-  PipelineInputsAnnouncementBanner = "PIPELINE_INPUTS_ANNOUNCEMENT_BANNER",
+  PIPELINE_INPUTS_ANNOUNCEMENT_BANNER = "PIPELINE_INPUTS_ANNOUNCEMENT_BANNER",
   /** Callout feature name for pipeline_needs_banner. */
-  PipelineNeedsBanner = "PIPELINE_NEEDS_BANNER",
+  PIPELINE_NEEDS_BANNER = "PIPELINE_NEEDS_BANNER",
   /** Callout feature name for pipeline_needs_hover_tip. */
-  PipelineNeedsHoverTip = "PIPELINE_NEEDS_HOVER_TIP",
+  PIPELINE_NEEDS_HOVER_TIP = "PIPELINE_NEEDS_HOVER_TIP",
   /** Callout feature name for pipeline_new_inputs_adoption_banner. */
-  PipelineNewInputsAdoptionBanner = "PIPELINE_NEW_INPUTS_ADOPTION_BANNER",
+  PIPELINE_NEW_INPUTS_ADOPTION_BANNER = "PIPELINE_NEW_INPUTS_ADOPTION_BANNER",
   /** Callout feature name for pipeline_schedules_inputs_adoption_banner. */
-  PipelineSchedulesInputsAdoptionBanner = "PIPELINE_SCHEDULES_INPUTS_ADOPTION_BANNER",
+  PIPELINE_SCHEDULES_INPUTS_ADOPTION_BANNER = "PIPELINE_SCHEDULES_INPUTS_ADOPTION_BANNER",
   /** Callout feature name for pipl_compliance_alert. */
-  PiplComplianceAlert = "PIPL_COMPLIANCE_ALERT",
+  PIPL_COMPLIANCE_ALERT = "PIPL_COMPLIANCE_ALERT",
   /** Callout feature name for preview_user_over_limit_free_plan_alert. */
-  PreviewUserOverLimitFreePlanAlert = "PREVIEW_USER_OVER_LIMIT_FREE_PLAN_ALERT",
+  PREVIEW_USER_OVER_LIMIT_FREE_PLAN_ALERT = "PREVIEW_USER_OVER_LIMIT_FREE_PLAN_ALERT",
   /** Callout feature name for product_usage_data_collection_changes. */
-  ProductUsageDataCollectionChanges = "PRODUCT_USAGE_DATA_COLLECTION_CHANGES",
+  PRODUCT_USAGE_DATA_COLLECTION_CHANGES = "PRODUCT_USAGE_DATA_COLLECTION_CHANGES",
   /** Callout feature name for profile_personal_access_token_expiry. */
-  ProfilePersonalAccessTokenExpiry = "PROFILE_PERSONAL_ACCESS_TOKEN_EXPIRY",
+  PROFILE_PERSONAL_ACCESS_TOKEN_EXPIRY = "PROFILE_PERSONAL_ACCESS_TOKEN_EXPIRY",
   /** Callout feature name for project_repository_limit_alert_warning_threshold. */
-  ProjectRepositoryLimitAlertWarningThreshold = "PROJECT_REPOSITORY_LIMIT_ALERT_WARNING_THRESHOLD",
+  PROJECT_REPOSITORY_LIMIT_ALERT_WARNING_THRESHOLD = "PROJECT_REPOSITORY_LIMIT_ALERT_WARNING_THRESHOLD",
   /** Callout feature name for registration_enabled_callout. */
-  RegistrationEnabledCallout = "REGISTRATION_ENABLED_CALLOUT",
+  REGISTRATION_ENABLED_CALLOUT = "REGISTRATION_ENABLED_CALLOUT",
   /** Callout feature name for security_configuration_devops_alert. */
-  SecurityConfigurationDevopsAlert = "SECURITY_CONFIGURATION_DEVOPS_ALERT",
+  SECURITY_CONFIGURATION_DEVOPS_ALERT = "SECURITY_CONFIGURATION_DEVOPS_ALERT",
   /** Callout feature name for security_configuration_upgrade_banner. */
-  SecurityConfigurationUpgradeBanner = "SECURITY_CONFIGURATION_UPGRADE_BANNER",
+  SECURITY_CONFIGURATION_UPGRADE_BANNER = "SECURITY_CONFIGURATION_UPGRADE_BANNER",
   /** Callout feature name for security_newsletter_callout. */
-  SecurityNewsletterCallout = "SECURITY_NEWSLETTER_CALLOUT",
+  SECURITY_NEWSLETTER_CALLOUT = "SECURITY_NEWSLETTER_CALLOUT",
   /** Callout feature name for security_policy_protected_branch_modification. */
-  SecurityPolicyProtectedBranchModification = "SECURITY_POLICY_PROTECTED_BRANCH_MODIFICATION",
+  SECURITY_POLICY_PROTECTED_BRANCH_MODIFICATION = "SECURITY_POLICY_PROTECTED_BRANCH_MODIFICATION",
   /** Callout feature name for security_training_feature_promotion. */
-  SecurityTrainingFeaturePromotion = "SECURITY_TRAINING_FEATURE_PROMOTION",
+  SECURITY_TRAINING_FEATURE_PROMOTION = "SECURITY_TRAINING_FEATURE_PROMOTION",
   /** Callout feature name for submit_license_usage_data_banner. */
-  SubmitLicenseUsageDataBanner = "SUBMIT_LICENSE_USAGE_DATA_BANNER",
+  SUBMIT_LICENSE_USAGE_DATA_BANNER = "SUBMIT_LICENSE_USAGE_DATA_BANNER",
   /** Callout feature name for suggest_pipeline. */
-  SuggestPipeline = "SUGGEST_PIPELINE",
+  SUGGEST_PIPELINE = "SUGGEST_PIPELINE",
   /** Callout feature name for suggest_popover_dismissed. */
-  SuggestPopoverDismissed = "SUGGEST_POPOVER_DISMISSED",
+  SUGGEST_POPOVER_DISMISSED = "SUGGEST_POPOVER_DISMISSED",
   /** Callout feature name for tabs_position_highlight. */
-  TabsPositionHighlight = "TABS_POSITION_HIGHLIGHT",
+  TABS_POSITION_HIGHLIGHT = "TABS_POSITION_HIGHLIGHT",
   /** Callout feature name for terraform_notification_dismissed. */
-  TerraformNotificationDismissed = "TERRAFORM_NOTIFICATION_DISMISSED",
+  TERRAFORM_NOTIFICATION_DISMISSED = "TERRAFORM_NOTIFICATION_DISMISSED",
   /** Callout feature name for threat_monitoring_info. */
-  ThreatMonitoringInfo = "THREAT_MONITORING_INFO",
+  THREAT_MONITORING_INFO = "THREAT_MONITORING_INFO",
   /** Callout feature name for transition_to_jihu_callout. */
-  TransitionToJihuCallout = "TRANSITION_TO_JIHU_CALLOUT",
+  TRANSITION_TO_JIHU_CALLOUT = "TRANSITION_TO_JIHU_CALLOUT",
   /** Callout feature name for trial_status_reminder_d3. */
-  TrialStatusReminderD3 = "TRIAL_STATUS_REMINDER_D3",
+  TRIAL_STATUS_REMINDER_D3 = "TRIAL_STATUS_REMINDER_D3",
   /** Callout feature name for trial_status_reminder_d14. */
-  TrialStatusReminderD14 = "TRIAL_STATUS_REMINDER_D14",
+  TRIAL_STATUS_REMINDER_D14 = "TRIAL_STATUS_REMINDER_D14",
   /** Callout feature name for two_factor_auth_recovery_settings_check. */
-  TwoFactorAuthRecoverySettingsCheck = "TWO_FACTOR_AUTH_RECOVERY_SETTINGS_CHECK",
+  TWO_FACTOR_AUTH_RECOVERY_SETTINGS_CHECK = "TWO_FACTOR_AUTH_RECOVERY_SETTINGS_CHECK",
   /** Callout feature name for ultimate_trial. */
-  UltimateTrial = "ULTIMATE_TRIAL",
+  ULTIMATE_TRIAL = "ULTIMATE_TRIAL",
   /** Callout feature name for unfinished_tag_cleanup_callout. */
-  UnfinishedTagCleanupCallout = "UNFINISHED_TAG_CLEANUP_CALLOUT",
+  UNFINISHED_TAG_CLEANUP_CALLOUT = "UNFINISHED_TAG_CLEANUP_CALLOUT",
   /** Callout feature name for user_reached_limit_free_plan_alert. */
-  UserReachedLimitFreePlanAlert = "USER_REACHED_LIMIT_FREE_PLAN_ALERT",
+  USER_REACHED_LIMIT_FREE_PLAN_ALERT = "USER_REACHED_LIMIT_FREE_PLAN_ALERT",
   /** Callout feature name for verification_reminder. */
-  VerificationReminder = "VERIFICATION_REMINDER",
+  VERIFICATION_REMINDER = "VERIFICATION_REMINDER",
   /** Callout feature name for vsd_feedback_banner. */
-  VsdFeedbackBanner = "VSD_FEEDBACK_BANNER",
+  VSD_FEEDBACK_BANNER = "VSD_FEEDBACK_BANNER",
   /** Callout feature name for vulnerability_archival. */
-  VulnerabilityArchival = "VULNERABILITY_ARCHIVAL",
+  VULNERABILITY_ARCHIVAL = "VULNERABILITY_ARCHIVAL",
   /** Callout feature name for vulnerability_report_grouping. */
-  VulnerabilityReportGrouping = "VULNERABILITY_REPORT_GROUPING",
+  VULNERABILITY_REPORT_GROUPING = "VULNERABILITY_REPORT_GROUPING",
   /** Callout feature name for web_ide_alert_dismissed. */
-  WebIdeAlertDismissed = "WEB_IDE_ALERT_DISMISSED",
+  WEB_IDE_ALERT_DISMISSED = "WEB_IDE_ALERT_DISMISSED",
   /** Callout feature name for web_ide_ci_environments_guidance. */
-  WebIdeCiEnvironmentsGuidance = "WEB_IDE_CI_ENVIRONMENTS_GUIDANCE",
+  WEB_IDE_CI_ENVIRONMENTS_GUIDANCE = "WEB_IDE_CI_ENVIRONMENTS_GUIDANCE",
   /** Callout feature name for work_item_epic_feedback. */
-  WorkItemEpicFeedback = "WORK_ITEM_EPIC_FEEDBACK",
+  WORK_ITEM_EPIC_FEEDBACK = "WORK_ITEM_EPIC_FEEDBACK",
 }
 
 /** Core representation of a GitLab user. */
@@ -55105,7 +55104,7 @@ export type UserCore = Todoable &
   };
 
 /** Core representation of a GitLab user. */
-export type UserCoreAssignedMergeRequestsArgs = {
+export type UserCoreassignedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -55149,7 +55148,7 @@ export type UserCoreAssignedMergeRequestsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreAuthoredMergeRequestsArgs = {
+export type UserCoreauthoredMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -55196,7 +55195,7 @@ export type UserCoreAuthoredMergeRequestsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreCalloutsArgs = {
+export type UserCorecalloutsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55204,7 +55203,7 @@ export type UserCoreCalloutsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreContributedProjectsArgs = {
+export type UserCorecontributedProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55217,7 +55216,7 @@ export type UserCoreContributedProjectsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreEmailsArgs = {
+export type UserCoreemailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55225,7 +55224,7 @@ export type UserCoreEmailsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreGroupMembershipsArgs = {
+export type UserCoregroupMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55233,7 +55232,7 @@ export type UserCoreGroupMembershipsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreGroupsArgs = {
+export type UserCoregroupsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55244,7 +55243,7 @@ export type UserCoreGroupsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreNamespaceCommitEmailsArgs = {
+export type UserCorenamespaceCommitEmailsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55252,7 +55251,7 @@ export type UserCoreNamespaceCommitEmailsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreOrganizationsArgs = {
+export type UserCoreorganizationsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55262,7 +55261,7 @@ export type UserCoreOrganizationsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreProjectMembershipsArgs = {
+export type UserCoreprojectMembershipsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55270,7 +55269,7 @@ export type UserCoreProjectMembershipsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreReviewRequestedMergeRequestsArgs = {
+export type UserCorereviewRequestedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   approvedBy?: InputMaybe<Array<Scalars["String"]["input"]>>;
   approver?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -55315,7 +55314,7 @@ export type UserCoreReviewRequestedMergeRequestsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreSavedRepliesArgs = {
+export type UserCoresavedRepliesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55323,12 +55322,12 @@ export type UserCoreSavedRepliesArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreSavedReplyArgs = {
+export type UserCoresavedReplyArgs = {
   id: Scalars["UsersSavedReplyID"]["input"];
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreSnippetsArgs = {
+export type UserCoresnippetsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55339,7 +55338,7 @@ export type UserCoreSnippetsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreStarredProjectsArgs = {
+export type UserCorestarredProjectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55351,7 +55350,7 @@ export type UserCoreStarredProjectsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreTimelogsArgs = {
+export type UserCoretimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["Time"]["input"]>;
@@ -55367,7 +55366,7 @@ export type UserCoreTimelogsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreTodosArgs = {
+export type UserCoretodosArgs = {
   action?: InputMaybe<Array<TodoActionEnum>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   authorId?: InputMaybe<Array<Scalars["ID"]["input"]>>;
@@ -55383,7 +55382,7 @@ export type UserCoreTodosArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreUserAchievementsArgs = {
+export type UserCoreuserAchievementsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -55392,7 +55391,7 @@ export type UserCoreUserAchievementsArgs = {
 };
 
 /** Core representation of a GitLab user. */
-export type UserCoreWorkspacesArgs = {
+export type UserCoreworkspacesArgs = {
   actualStates?: InputMaybe<Array<Scalars["String"]["input"]>>;
   after?: InputMaybe<Scalars["String"]["input"]>;
   agentIds?: InputMaybe<Array<Scalars["ClustersAgentID"]["input"]>>;
@@ -55517,12 +55516,12 @@ export type UserNamespaceMarkdownPaths = MarkdownPaths & {
   uploadsPath?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type UserNamespaceMarkdownPathsAutocompleteSourcesPathArgs = {
+export type UserNamespaceMarkdownPathsautocompleteSourcesPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
   workItemTypeId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type UserNamespaceMarkdownPathsMarkdownPreviewPathArgs = {
+export type UserNamespaceMarkdownPathsmarkdownPreviewPathArgs = {
   iid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -55608,11 +55607,11 @@ export type UserPreferencesUpdatePayload = {
 /** Types of User Promotion States. */
 export enum UserPromotionStatusType {
   /** Failed to apply promotion requests for user. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** User promotion was successful, but all promotion requests were not successfully applied. */
-  PartialSuccess = "PARTIAL_SUCCESS",
+  PARTIAL_SUCCESS = "PARTIAL_SUCCESS",
   /** Successfully applied all promotion requests for user. */
-  Success = "SUCCESS",
+  SUCCESS = "SUCCESS",
 }
 
 /** Autogenerated input type of UserSetNamespaceCommitEmail */
@@ -55639,17 +55638,17 @@ export type UserSetNamespaceCommitEmailPayload = {
 /** Possible states of a user */
 export enum UserState {
   /** User is active and can use the system. */
-  Active = "active",
+  active = "active",
   /** User is blocked, and their contributions are hidden. */
-  Banned = "banned",
+  banned = "banned",
   /** User has been blocked by an administrator and cannot use the system. */
-  Blocked = "blocked",
+  blocked = "blocked",
   /** User is blocked and pending approval. */
-  BlockedPendingApproval = "blocked_pending_approval",
+  blocked_pending_approval = "blocked_pending_approval",
   /** User is no longer active and cannot use the system. */
-  Deactivated = "deactivated",
+  deactivated = "deactivated",
   /** User has been blocked by the system. */
-  LdapBlocked = "ldap_blocked",
+  ldap_blocked = "ldap_blocked",
 }
 
 export type UserStatus = {
@@ -55669,37 +55668,37 @@ export type UserStatus = {
 /** Possible types of user */
 export enum UserType {
   /** Admin bot */
-  AdminBot = "ADMIN_BOT",
+  ADMIN_BOT = "ADMIN_BOT",
   /** Alert bot */
-  AlertBot = "ALERT_BOT",
+  ALERT_BOT = "ALERT_BOT",
   /** Automation bot */
-  AutomationBot = "AUTOMATION_BOT",
+  AUTOMATION_BOT = "AUTOMATION_BOT",
   /** Duo code review bot */
-  DuoCodeReviewBot = "DUO_CODE_REVIEW_BOT",
+  DUO_CODE_REVIEW_BOT = "DUO_CODE_REVIEW_BOT",
   /** Ghost */
-  Ghost = "GHOST",
+  GHOST = "GHOST",
   /** Human */
-  Human = "HUMAN",
+  HUMAN = "HUMAN",
   /** Import user */
-  ImportUser = "IMPORT_USER",
+  IMPORT_USER = "IMPORT_USER",
   /** Migration bot */
-  MigrationBot = "MIGRATION_BOT",
+  MIGRATION_BOT = "MIGRATION_BOT",
   /** Placeholder */
-  Placeholder = "PLACEHOLDER",
+  PLACEHOLDER = "PLACEHOLDER",
   /** Project bot */
-  ProjectBot = "PROJECT_BOT",
+  PROJECT_BOT = "PROJECT_BOT",
   /** Security bot */
-  SecurityBot = "SECURITY_BOT",
+  SECURITY_BOT = "SECURITY_BOT",
   /** Security policy bot */
-  SecurityPolicyBot = "SECURITY_POLICY_BOT",
+  SECURITY_POLICY_BOT = "SECURITY_POLICY_BOT",
   /** Service account */
-  ServiceAccount = "SERVICE_ACCOUNT",
+  SERVICE_ACCOUNT = "SERVICE_ACCOUNT",
   /** Service user */
-  ServiceUser = "SERVICE_USER",
+  SERVICE_USER = "SERVICE_USER",
   /** Support bot */
-  SupportBot = "SUPPORT_BOT",
+  SUPPORT_BOT = "SUPPORT_BOT",
   /** Visual review bot */
-  VisualReviewBot = "VISUAL_REVIEW_BOT",
+  VISUAL_REVIEW_BOT = "VISUAL_REVIEW_BOT",
 }
 
 /** Represents a Pending Member Approval Queued for Role Promotion */
@@ -55750,7 +55749,7 @@ export type ValueStream = {
   stages?: Maybe<Array<ValueStreamStage>>;
 };
 
-export type ValueStreamStagesArgs = {
+export type ValueStreamstagesArgs = {
   id?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
@@ -55840,31 +55839,31 @@ export type ValueStreamDashboardCount = {
 /** Possible identifier types for a measurement */
 export enum ValueStreamDashboardMetric {
   /** Contributor count. EXPERIMENTAL: Only available on the SaaS version of GitLab when the ClickHouse database backend is enabled. */
-  Contributors = "CONTRIBUTORS",
+  CONTRIBUTORS = "CONTRIBUTORS",
   /** Group count. */
-  Groups = "GROUPS",
+  GROUPS = "GROUPS",
   /** Issue count. */
-  Issues = "ISSUES",
+  ISSUES = "ISSUES",
   /** Merge request count. */
-  MergeRequests = "MERGE_REQUESTS",
+  MERGE_REQUESTS = "MERGE_REQUESTS",
   /** Pipeline count. */
-  Pipelines = "PIPELINES",
+  PIPELINES = "PIPELINES",
   /** Project count. */
-  Projects = "PROJECTS",
+  PROJECTS = "PROJECTS",
   /** User count. */
-  Users = "USERS",
+  USERS = "USERS",
 }
 
 /** Possible identifier types for project-level measurement */
 export enum ValueStreamDashboardProjectLevelMetric {
   /** Contributor count. EXPERIMENTAL: Only available on the SaaS version of GitLab when the ClickHouse database backend is enabled. */
-  Contributors = "CONTRIBUTORS",
+  CONTRIBUTORS = "CONTRIBUTORS",
   /** Issue count. */
-  Issues = "ISSUES",
+  ISSUES = "ISSUES",
   /** Merge request count. */
-  MergeRequests = "MERGE_REQUESTS",
+  MERGE_REQUESTS = "MERGE_REQUESTS",
   /** Pipeline count. */
-  Pipelines = "PIPELINES",
+  PIPELINES = "PIPELINES",
 }
 
 /** Autogenerated input type of ValueStreamDestroy */
@@ -55939,7 +55938,7 @@ export type ValueStreamStage = {
   startEventLabel?: Maybe<Label>;
 };
 
-export type ValueStreamStageMetricsArgs = {
+export type ValueStreamStagemetricsArgs = {
   assigneeUsernames?: InputMaybe<Array<Scalars["String"]["input"]>>;
   authorUsername?: InputMaybe<Scalars["String"]["input"]>;
   epicId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -55956,71 +55955,71 @@ export type ValueStreamStageMetricsArgs = {
 /** Stage event identifiers */
 export enum ValueStreamStageEvent {
   /** Code stage start event. */
-  CodeStageStart = "CODE_STAGE_START",
+  CODE_STAGE_START = "CODE_STAGE_START",
   /** Issue closed event. */
-  IssueClosed = "ISSUE_CLOSED",
+  ISSUE_CLOSED = "ISSUE_CLOSED",
   /** Issue created event. */
-  IssueCreated = "ISSUE_CREATED",
+  ISSUE_CREATED = "ISSUE_CREATED",
   /** Issue deployed to production event. */
-  IssueDeployedToProduction = "ISSUE_DEPLOYED_TO_PRODUCTION",
+  ISSUE_DEPLOYED_TO_PRODUCTION = "ISSUE_DEPLOYED_TO_PRODUCTION",
   /** Issue first added to board event. */
-  IssueFirstAddedToBoard = "ISSUE_FIRST_ADDED_TO_BOARD",
+  ISSUE_FIRST_ADDED_TO_BOARD = "ISSUE_FIRST_ADDED_TO_BOARD",
   /** Issue first added to iteration event. */
-  IssueFirstAddedToIteration = "ISSUE_FIRST_ADDED_TO_ITERATION",
+  ISSUE_FIRST_ADDED_TO_ITERATION = "ISSUE_FIRST_ADDED_TO_ITERATION",
   /** Issue first assigned at event. */
-  IssueFirstAssignedAt = "ISSUE_FIRST_ASSIGNED_AT",
+  ISSUE_FIRST_ASSIGNED_AT = "ISSUE_FIRST_ASSIGNED_AT",
   /** Issue first associated with milestone event. */
-  IssueFirstAssociatedWithMilestone = "ISSUE_FIRST_ASSOCIATED_WITH_MILESTONE",
+  ISSUE_FIRST_ASSOCIATED_WITH_MILESTONE = "ISSUE_FIRST_ASSOCIATED_WITH_MILESTONE",
   /** Issue first mentioned in commit event. */
-  IssueFirstMentionedInCommit = "ISSUE_FIRST_MENTIONED_IN_COMMIT",
+  ISSUE_FIRST_MENTIONED_IN_COMMIT = "ISSUE_FIRST_MENTIONED_IN_COMMIT",
   /** Issue label added event. */
-  IssueLabelAdded = "ISSUE_LABEL_ADDED",
+  ISSUE_LABEL_ADDED = "ISSUE_LABEL_ADDED",
   /** Issue label removed event. */
-  IssueLabelRemoved = "ISSUE_LABEL_REMOVED",
+  ISSUE_LABEL_REMOVED = "ISSUE_LABEL_REMOVED",
   /** Issue last edited event. */
-  IssueLastEdited = "ISSUE_LAST_EDITED",
+  ISSUE_LAST_EDITED = "ISSUE_LAST_EDITED",
   /** Issue stage end event. */
-  IssueStageEnd = "ISSUE_STAGE_END",
+  ISSUE_STAGE_END = "ISSUE_STAGE_END",
   /** Merge request closed event. */
-  MergeRequestClosed = "MERGE_REQUEST_CLOSED",
+  MERGE_REQUEST_CLOSED = "MERGE_REQUEST_CLOSED",
   /** Merge request created event. */
-  MergeRequestCreated = "MERGE_REQUEST_CREATED",
+  MERGE_REQUEST_CREATED = "MERGE_REQUEST_CREATED",
   /** Merge request first assigned at event. */
-  MergeRequestFirstAssignedAt = "MERGE_REQUEST_FIRST_ASSIGNED_AT",
+  MERGE_REQUEST_FIRST_ASSIGNED_AT = "MERGE_REQUEST_FIRST_ASSIGNED_AT",
   /** Merge request first commit at event. */
-  MergeRequestFirstCommitAt = "MERGE_REQUEST_FIRST_COMMIT_AT",
+  MERGE_REQUEST_FIRST_COMMIT_AT = "MERGE_REQUEST_FIRST_COMMIT_AT",
   /** Merge request first deployed to production event. */
-  MergeRequestFirstDeployedToProduction = "MERGE_REQUEST_FIRST_DEPLOYED_TO_PRODUCTION",
+  MERGE_REQUEST_FIRST_DEPLOYED_TO_PRODUCTION = "MERGE_REQUEST_FIRST_DEPLOYED_TO_PRODUCTION",
   /** Merge request label added event. */
-  MergeRequestLabelAdded = "MERGE_REQUEST_LABEL_ADDED",
+  MERGE_REQUEST_LABEL_ADDED = "MERGE_REQUEST_LABEL_ADDED",
   /** Merge request label removed event. */
-  MergeRequestLabelRemoved = "MERGE_REQUEST_LABEL_REMOVED",
+  MERGE_REQUEST_LABEL_REMOVED = "MERGE_REQUEST_LABEL_REMOVED",
   /** Merge request last approved at event. */
-  MergeRequestLastApprovedAt = "MERGE_REQUEST_LAST_APPROVED_AT",
+  MERGE_REQUEST_LAST_APPROVED_AT = "MERGE_REQUEST_LAST_APPROVED_AT",
   /** Merge request last build finished event. */
-  MergeRequestLastBuildFinished = "MERGE_REQUEST_LAST_BUILD_FINISHED",
+  MERGE_REQUEST_LAST_BUILD_FINISHED = "MERGE_REQUEST_LAST_BUILD_FINISHED",
   /** Merge request last build started event. */
-  MergeRequestLastBuildStarted = "MERGE_REQUEST_LAST_BUILD_STARTED",
+  MERGE_REQUEST_LAST_BUILD_STARTED = "MERGE_REQUEST_LAST_BUILD_STARTED",
   /** Merge request last edited event. */
-  MergeRequestLastEdited = "MERGE_REQUEST_LAST_EDITED",
+  MERGE_REQUEST_LAST_EDITED = "MERGE_REQUEST_LAST_EDITED",
   /** Merge request merged event. */
-  MergeRequestMerged = "MERGE_REQUEST_MERGED",
+  MERGE_REQUEST_MERGED = "MERGE_REQUEST_MERGED",
   /** Merge request reviewer first assigned event. */
-  MergeRequestReviewerFirstAssigned = "MERGE_REQUEST_REVIEWER_FIRST_ASSIGNED",
+  MERGE_REQUEST_REVIEWER_FIRST_ASSIGNED = "MERGE_REQUEST_REVIEWER_FIRST_ASSIGNED",
   /** Plan stage start event. */
-  PlanStageStart = "PLAN_STAGE_START",
+  PLAN_STAGE_START = "PLAN_STAGE_START",
 }
 
 /** Sorting values available to value stream stage items */
 export enum ValueStreamStageItemSort {
   /** Duration by ascending order. */
-  DurationAsc = "DURATION_ASC",
+  DURATION_ASC = "DURATION_ASC",
   /** Duration by ascending order. */
-  DurationDesc = "DURATION_DESC",
+  DURATION_DESC = "DURATION_DESC",
   /** Stage end event time by ascending order. */
-  EndEventAsc = "END_EVENT_ASC",
+  END_EVENT_ASC = "END_EVENT_ASC",
   /** Stage end event time by descending order. */
-  EndEventDesc = "END_EVENT_DESC",
+  END_EVENT_DESC = "END_EVENT_DESC",
 }
 
 export type ValueStreamStageItems = {
@@ -56075,7 +56074,7 @@ export type ValueStreamStageMetrics = {
   series: ValueStreamStageSeries;
 };
 
-export type ValueStreamStageMetricsItemsArgs = {
+export type ValueStreamStageMetricsitemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56116,41 +56115,41 @@ export type ValueStreamUpdatePayload = {
 
 export enum VerificationStateEnum {
   /** Verification process is disabled. */
-  Disabled = "DISABLED",
+  DISABLED = "DISABLED",
   /** Verification process finished but failed. */
-  Failed = "FAILED",
+  FAILED = "FAILED",
   /** Verification process has not started. */
-  Pending = "PENDING",
+  PENDING = "PENDING",
   /** Verification process is in progress. */
-  Started = "STARTED",
+  STARTED = "STARTED",
   /** Verification process finished successfully. */
-  Succeeded = "SUCCEEDED",
+  SUCCEEDED = "SUCCEEDED",
 }
 
 /** Verification status of a GPG, X.509 or SSH signature for a commit. */
 export enum VerificationStatus {
   /** multiple_signatures verification status. */
-  MultipleSignatures = "MULTIPLE_SIGNATURES",
+  MULTIPLE_SIGNATURES = "MULTIPLE_SIGNATURES",
   /** other_user verification status. */
-  OtherUser = "OTHER_USER",
+  OTHER_USER = "OTHER_USER",
   /** revoked_key verification status. */
-  RevokedKey = "REVOKED_KEY",
+  REVOKED_KEY = "REVOKED_KEY",
   /** same_user_different_email verification status. */
-  SameUserDifferentEmail = "SAME_USER_DIFFERENT_EMAIL",
+  SAME_USER_DIFFERENT_EMAIL = "SAME_USER_DIFFERENT_EMAIL",
   /** unknown_key verification status. */
-  UnknownKey = "UNKNOWN_KEY",
+  UNKNOWN_KEY = "UNKNOWN_KEY",
   /** unverified verification status. */
-  Unverified = "UNVERIFIED",
+  UNVERIFIED = "UNVERIFIED",
   /** unverified_author_email verification status. */
-  UnverifiedAuthorEmail = "UNVERIFIED_AUTHOR_EMAIL",
+  UNVERIFIED_AUTHOR_EMAIL = "UNVERIFIED_AUTHOR_EMAIL",
   /** unverified_key verification status. */
-  UnverifiedKey = "UNVERIFIED_KEY",
+  UNVERIFIED_KEY = "UNVERIFIED_KEY",
   /** verified verification status. */
-  Verified = "VERIFIED",
+  VERIFIED = "VERIFIED",
   /** verified_ca verification status. */
-  VerifiedCa = "VERIFIED_CA",
+  VERIFIED_CA = "VERIFIED_CA",
   /** verified_system verification status. */
-  VerifiedSystem = "VERIFIED_SYSTEM",
+  VERIFIED_SYSTEM = "VERIFIED_SYSTEM",
 }
 
 export type VerificationStatusFilterInput = {
@@ -56184,28 +56183,28 @@ export type VerifiedNamespaceCreatePayload = {
 
 export enum VisibilityLevelsEnum {
   /** Internal visibility level. */
-  Internal = "internal",
+  internal = "internal",
   /** Private visibility level. */
-  Private = "private",
+  private = "private",
   /** Public visibility level. */
-  Public = "public",
+  public = "public",
 }
 
 /** Determines whether the pipeline list shows ID or IID */
 export enum VisibilityPipelineIdType {
   /** Display pipeline ID. */
-  Id = "ID",
+  ID = "ID",
   /** Display pipeline IID. */
-  Iid = "IID",
+  IID = "IID",
 }
 
 export enum VisibilityScopesEnum {
   /** Snippet is visible for any logged in user except external users. */
-  Internal = "internal",
+  internal = "internal",
   /** Snippet is visible only to the snippet creator. */
-  Private = "private",
+  private = "private",
   /** Snippet can be accessed without any authentication. */
-  Public = "public",
+  public = "public",
 }
 
 /** Autogenerated input type of VulnerabilitiesArchive */
@@ -56525,7 +56524,7 @@ export type Vulnerability = NoteableInterface &
   };
 
 /** Represents a vulnerability */
-export type VulnerabilityCommentersArgs = {
+export type VulnerabilitycommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56533,7 +56532,7 @@ export type VulnerabilityCommentersArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityDependenciesArgs = {
+export type VulnerabilitydependenciesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   componentIds?: InputMaybe<Array<Scalars["SbomComponentID"]["input"]>>;
@@ -56547,7 +56546,7 @@ export type VulnerabilityDependenciesArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityDiscussionsArgs = {
+export type VulnerabilitydiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56555,7 +56554,7 @@ export type VulnerabilityDiscussionsArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityExternalIssueLinksArgs = {
+export type VulnerabilityexternalIssueLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56563,7 +56562,7 @@ export type VulnerabilityExternalIssueLinksArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityIssueLinksArgs = {
+export type VulnerabilityissueLinksArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56572,7 +56571,7 @@ export type VulnerabilityIssueLinksArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityMergeRequestsArgs = {
+export type VulnerabilitymergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56580,7 +56579,7 @@ export type VulnerabilityMergeRequestsArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityNotesArgs = {
+export type VulnerabilitynotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -56589,7 +56588,7 @@ export type VulnerabilityNotesArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilitySeverityOverridesArgs = {
+export type VulnerabilityseverityOverridesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -56597,7 +56596,7 @@ export type VulnerabilitySeverityOverridesArgs = {
 };
 
 /** Represents a vulnerability */
-export type VulnerabilityStateTransitionsArgs = {
+export type VulnerabilitystateTransitionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -57042,15 +57041,15 @@ export type VulnerabilityDismissPayload = {
 /** The dismissal reason of the Vulnerability */
 export enum VulnerabilityDismissalReason {
   /** The vulnerability is known, and has not been remediated or mitigated, but is considered to be an acceptable business risk. */
-  AcceptableRisk = "ACCEPTABLE_RISK",
+  ACCEPTABLE_RISK = "ACCEPTABLE_RISK",
   /** An error in reporting in which a test result incorrectly indicates the presence of a vulnerability in a system when the vulnerability is not present. */
-  FalsePositive = "FALSE_POSITIVE",
+  FALSE_POSITIVE = "FALSE_POSITIVE",
   /** A management, operational, or technical control (that is, safeguard or countermeasure) employed by an organization that provides equivalent or comparable protection for an information system. */
-  MitigatingControl = "MITIGATING_CONTROL",
+  MITIGATING_CONTROL = "MITIGATING_CONTROL",
   /** The vulnerability is known, and has not been remediated or mitigated, but is considered to be in a part of the application that will not be updated. */
-  NotApplicable = "NOT_APPLICABLE",
+  NOT_APPLICABLE = "NOT_APPLICABLE",
   /** The finding is not a vulnerability because it is part of a test or is test data. */
-  UsedInTests = "USED_IN_TESTS",
+  USED_IN_TESTS = "USED_IN_TESTS",
 }
 
 /** An edge in a connection. */
@@ -57173,13 +57172,13 @@ export type VulnerabilityExternalIssueLinkEdge = {
 /** The external tracker of the external issue link related to a vulnerability */
 export enum VulnerabilityExternalIssueLinkExternalTracker {
   /** Jira external tracker */
-  Jira = "JIRA",
+  JIRA = "JIRA",
 }
 
 /** The type of the external issue link related to a vulnerability */
 export enum VulnerabilityExternalIssueLinkType {
   /** Created link type. */
-  Created = "CREATED",
+  CREATED = "CREATED",
 }
 
 /** Represents the status of a secret token found in a vulnerability */
@@ -57200,11 +57199,11 @@ export type VulnerabilityFindingTokenStatus = {
 /** Status of a secret token found in a vulnerability */
 export enum VulnerabilityFindingTokenStatusState {
   /** Token is active and can be exploited. */
-  Active = "ACTIVE",
+  ACTIVE = "ACTIVE",
   /** Token is inactive and cannot be exploited. */
-  Inactive = "INACTIVE",
+  INACTIVE = "INACTIVE",
   /** Token status is unknown. */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** The grade of the vulnerable project */
@@ -57300,9 +57299,9 @@ export type VulnerabilityIssueLinkEdge = {
 /** The type of the issue link related to a vulnerability */
 export enum VulnerabilityIssueLinkType {
   /** Issue is created for the vulnerability */
-  Created = "CREATED",
+  CREATED = "CREATED",
   /** Has a related issue */
-  Related = "RELATED",
+  RELATED = "RELATED",
 }
 
 /** Represents a link related to a vulnerability */
@@ -57634,7 +57633,7 @@ export enum VulnerabilityOwasp2021Top10 {
    */
   A10_2021 = "A10_2021",
   /** No OWASP top 10 category. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** OwaspTop10 category of the vulnerability */
@@ -57660,7 +57659,7 @@ export enum VulnerabilityOwaspTop10 {
   /** A10:2017-Insufficient Logging & Monitoring, OWASP top 10 2017 category. */
   A10_2017 = "A10_2017",
   /** No OWASP top 10 2017 category. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Check permissions for the current user on a vulnerability */
@@ -57698,25 +57697,25 @@ export type VulnerabilityRemediationType = {
 /** The type of the security scan that found the vulnerability */
 export enum VulnerabilityReportType {
   /** API Fuzzing report */
-  ApiFuzzing = "API_FUZZING",
+  API_FUZZING = "API_FUZZING",
   /** Cluster Image Scanning report */
-  ClusterImageScanning = "CLUSTER_IMAGE_SCANNING",
+  CLUSTER_IMAGE_SCANNING = "CLUSTER_IMAGE_SCANNING",
   /** Container Scanning report */
-  ContainerScanning = "CONTAINER_SCANNING",
+  CONTAINER_SCANNING = "CONTAINER_SCANNING",
   /** Container Scanning For Registry report */
-  ContainerScanningForRegistry = "CONTAINER_SCANNING_FOR_REGISTRY",
+  CONTAINER_SCANNING_FOR_REGISTRY = "CONTAINER_SCANNING_FOR_REGISTRY",
   /** Coverage Fuzzing report */
-  CoverageFuzzing = "COVERAGE_FUZZING",
+  COVERAGE_FUZZING = "COVERAGE_FUZZING",
   /** DAST report */
-  Dast = "DAST",
+  DAST = "DAST",
   /** Dependency Scanning report */
-  DependencyScanning = "DEPENDENCY_SCANNING",
+  DEPENDENCY_SCANNING = "DEPENDENCY_SCANNING",
   /** Generic report */
-  Generic = "GENERIC",
+  GENERIC = "GENERIC",
   /** SAST report */
-  Sast = "SAST",
+  SAST = "SAST",
   /** Secret Detection report */
-  SecretDetection = "SECRET_DETECTION",
+  SECRET_DETECTION = "SECRET_DETECTION",
 }
 
 /** Represents a count of vulnerabilities for a specific report type */
@@ -57887,17 +57886,17 @@ export type VulnerabilitySeveritiesCount = {
 /** The severity of the vulnerability */
 export enum VulnerabilitySeverity {
   /** Critical severity */
-  Critical = "CRITICAL",
+  CRITICAL = "CRITICAL",
   /** High severity */
-  High = "HIGH",
+  HIGH = "HIGH",
   /** Info severity */
-  Info = "INFO",
+  INFO = "INFO",
   /** Low severity */
-  Low = "LOW",
+  LOW = "LOW",
   /** Medium severity */
-  Medium = "MEDIUM",
+  MEDIUM = "MEDIUM",
   /** Unknown severity */
-  Unknown = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 /** Represents a count of vulnerabilities for a specific severity level */
@@ -57912,25 +57911,25 @@ export type VulnerabilitySeverityCount = {
 /** Vulnerability sort values */
 export enum VulnerabilitySort {
   /** Detection timestamp in ascending order. */
-  DetectedAsc = "detected_asc",
+  detected_asc = "detected_asc",
   /** Detection timestamp in descending order. */
-  DetectedDesc = "detected_desc",
+  detected_desc = "detected_desc",
   /** Severity in ascending order. */
-  SeverityAsc = "severity_asc",
+  severity_asc = "severity_asc",
   /** Severity in descending order. */
-  SeverityDesc = "severity_desc",
+  severity_desc = "severity_desc",
 }
 
 /** The state of the vulnerability */
 export enum VulnerabilityState {
   /** For details, see [vulnerability status values](https://docs.gitlab.com/ee/user/application_security/vulnerabilities/#vulnerability-status-values). */
-  Confirmed = "CONFIRMED",
+  CONFIRMED = "CONFIRMED",
   /** For details, see [vulnerability status values](https://docs.gitlab.com/ee/user/application_security/vulnerabilities/#vulnerability-status-values). */
-  Detected = "DETECTED",
+  DETECTED = "DETECTED",
   /** For details, see [vulnerability status values](https://docs.gitlab.com/ee/user/application_security/vulnerabilities/#vulnerability-status-values). */
-  Dismissed = "DISMISSED",
+  DISMISSED = "DISMISSED",
   /** For details, see [vulnerability status values](https://docs.gitlab.com/ee/user/application_security/vulnerabilities/#vulnerability-status-values). */
-  Resolved = "RESOLVED",
+  RESOLVED = "RESOLVED",
 }
 
 /** Represents a state transition of a vulnerability */
@@ -58061,7 +58060,7 @@ export type VulnerableProjectsByGrade = {
 };
 
 /** Represents vulnerability letter grades with associated projects */
-export type VulnerableProjectsByGradeProjectsArgs = {
+export type VulnerableProjectsByGradeprojectsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -58071,9 +58070,9 @@ export type VulnerableProjectsByGradeProjectsArgs = {
 /** Weight ID wildcard values */
 export enum WeightWildcardId {
   /** Weight is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No weight is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** A wiki page */
@@ -58101,7 +58100,7 @@ export type WikiPage = NoteableInterface &
   };
 
 /** A wiki page */
-export type WikiPageCommentersArgs = {
+export type WikiPagecommentersArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -58109,7 +58108,7 @@ export type WikiPageCommentersArgs = {
 };
 
 /** A wiki page */
-export type WikiPageDiscussionsArgs = {
+export type WikiPagediscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -58117,7 +58116,7 @@ export type WikiPageDiscussionsArgs = {
 };
 
 /** A wiki page */
-export type WikiPageNotesArgs = {
+export type WikiPagenotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -58237,11 +58236,11 @@ export type WorkItem = Todoable & {
   workItemType: WorkItemType;
 };
 
-export type WorkItemReferenceArgs = {
+export type WorkItemreferenceArgs = {
   full?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type WorkItemWidgetsArgs = {
+export type WorkItemwidgetsArgs = {
   exceptTypes?: InputMaybe<Array<WorkItemWidgetType>>;
   onlyTypes?: InputMaybe<Array<WorkItemWidgetType>>;
 };
@@ -58299,11 +58298,11 @@ export type WorkItemAddLinkedItemsPayload = {
 /** Values for work item award emoji update enum */
 export enum WorkItemAwardEmojiUpdateAction {
   /** Adds the emoji. */
-  Add = "ADD",
+  ADD = "ADD",
   /** Removes the emoji. */
-  Remove = "REMOVE",
+  REMOVE = "REMOVE",
   /** Toggles the status of the emoji. */
-  Toggle = "TOGGLE",
+  TOGGLE = "TOGGLE",
 }
 
 /** Autogenerated input type of WorkItemBulkMove */
@@ -58588,9 +58587,9 @@ export type WorkItemDescriptionTemplateEdge = {
 /** Values for sorting work item discussions */
 export enum WorkItemDiscussionsSort {
   /** Created at in ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at in descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
 }
 
 /** An edge in a connection. */
@@ -58808,9 +58807,9 @@ export type WorkItemNumberFieldValue = WorkItemCustomFieldValue & {
 /** Parent ID wildcard values */
 export enum WorkItemParentWildcardId {
   /** Any parent is assigned. */
-  Any = "ANY",
+  ANY = "ANY",
   /** No parent is assigned. */
-  None = "NONE",
+  NONE = "NONE",
 }
 
 /** Check permissions for the current user on a work item */
@@ -58879,11 +58878,11 @@ export type WorkItemRelatedBranchEdge = {
 /** Values for work item link types */
 export enum WorkItemRelatedLinkType {
   /** Blocked by type. */
-  BlockedBy = "BLOCKED_BY",
+  BLOCKED_BY = "BLOCKED_BY",
   /** Blocks type. */
-  Blocks = "BLOCKS",
+  BLOCKS = "BLOCKS",
   /** Related type. */
-  Related = "RELATED",
+  RELATED = "RELATED",
 }
 
 /** Autogenerated input type of WorkItemRemoveLinkedItems */
@@ -58927,162 +58926,162 @@ export type WorkItemSelectFieldValue = WorkItemCustomFieldValue & {
 /** Values for sorting work items */
 export enum WorkItemSort {
   /** Blocking items count by ascending order. */
-  BlockingIssuesAsc = "BLOCKING_ISSUES_ASC",
+  BLOCKING_ISSUES_ASC = "BLOCKING_ISSUES_ASC",
   /** Blocking items count by descending order. */
-  BlockingIssuesDesc = "BLOCKING_ISSUES_DESC",
+  BLOCKING_ISSUES_DESC = "BLOCKING_ISSUES_DESC",
   /**
    * Closed time by ascending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  ClosedAtAsc = "CLOSED_AT_ASC",
+  CLOSED_AT_ASC = "CLOSED_AT_ASC",
   /**
    * Closed time by descending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  ClosedAtDesc = "CLOSED_AT_DESC",
+  CLOSED_AT_DESC = "CLOSED_AT_DESC",
   /** Created at ascending order. */
-  CreatedAsc = "CREATED_ASC",
+  CREATED_ASC = "CREATED_ASC",
   /** Created at descending order. */
-  CreatedDesc = "CREATED_DESC",
+  CREATED_DESC = "CREATED_DESC",
   /**
    * Due date by ascending order. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  DueDateAsc = "DUE_DATE_ASC",
+  DUE_DATE_ASC = "DUE_DATE_ASC",
   /**
    * Due date by descending order. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  DueDateDesc = "DUE_DATE_DESC",
+  DUE_DATE_DESC = "DUE_DATE_DESC",
   /**
    * Status from triggered to resolved. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  EscalationStatusAsc = "ESCALATION_STATUS_ASC",
+  ESCALATION_STATUS_ASC = "ESCALATION_STATUS_ASC",
   /**
    * Status from resolved to triggered. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  EscalationStatusDesc = "ESCALATION_STATUS_DESC",
+  ESCALATION_STATUS_DESC = "ESCALATION_STATUS_DESC",
   /**
    * Health status by ascending order. Introduced in GitLab 17.11: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.11.
    */
-  HealthStatusAsc = "HEALTH_STATUS_ASC",
+  HEALTH_STATUS_ASC = "HEALTH_STATUS_ASC",
   /**
    * Health status by descending order. Introduced in GitLab 17.11: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.11.
    */
-  HealthStatusDesc = "HEALTH_STATUS_DESC",
+  HEALTH_STATUS_DESC = "HEALTH_STATUS_DESC",
   /** Label priority by ascending order. */
-  LabelPriorityAsc = "LABEL_PRIORITY_ASC",
+  LABEL_PRIORITY_ASC = "LABEL_PRIORITY_ASC",
   /** Label priority by descending order. */
-  LabelPriorityDesc = "LABEL_PRIORITY_DESC",
+  LABEL_PRIORITY_DESC = "LABEL_PRIORITY_DESC",
   /** Milestone due date by ascending order. */
-  MilestoneDueAsc = "MILESTONE_DUE_ASC",
+  MILESTONE_DUE_ASC = "MILESTONE_DUE_ASC",
   /** Milestone due date by descending order. */
-  MilestoneDueDesc = "MILESTONE_DUE_DESC",
+  MILESTONE_DUE_DESC = "MILESTONE_DUE_DESC",
   /**
    * Number of upvotes (awarded "thumbs up" emoji) by ascending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  PopularityAsc = "POPULARITY_ASC",
+  POPULARITY_ASC = "POPULARITY_ASC",
   /**
    * Number of upvotes (awarded "thumbs up" emoji) by descending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  PopularityDesc = "POPULARITY_DESC",
+  POPULARITY_DESC = "POPULARITY_DESC",
   /**
    * Priority by ascending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  PriorityAsc = "PRIORITY_ASC",
+  PRIORITY_ASC = "PRIORITY_ASC",
   /**
    * Priority by descending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  PriorityDesc = "PRIORITY_DESC",
+  PRIORITY_DESC = "PRIORITY_DESC",
   /**
    * Relative position by ascending order. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  RelativePositionAsc = "RELATIVE_POSITION_ASC",
+  RELATIVE_POSITION_ASC = "RELATIVE_POSITION_ASC",
   /**
    * Severity from less critical to more critical. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  SeverityAsc = "SEVERITY_ASC",
+  SEVERITY_ASC = "SEVERITY_ASC",
   /**
    * Severity from more critical to less critical. Introduced in GitLab 17.10: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.10.
    */
-  SeverityDesc = "SEVERITY_DESC",
+  SEVERITY_DESC = "SEVERITY_DESC",
   /**
    * Start date by ascending order. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  StartDateAsc = "START_DATE_ASC",
+  START_DATE_ASC = "START_DATE_ASC",
   /**
    * Start date by descending order. Introduced in GitLab 17.9: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.9.
    */
-  StartDateDesc = "START_DATE_DESC",
+  START_DATE_DESC = "START_DATE_DESC",
   /**
    * Status by ascending order. Introduced in GitLab 18.3: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.3.
    */
-  StatusAsc = "STATUS_ASC",
+  STATUS_ASC = "STATUS_ASC",
   /**
    * Status by descending order. Introduced in GitLab 18.3: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 18.3.
    */
-  StatusDesc = "STATUS_DESC",
+  STATUS_DESC = "STATUS_DESC",
   /** Title by ascending order. */
-  TitleAsc = "TITLE_ASC",
+  TITLE_ASC = "TITLE_ASC",
   /** Title by descending order. */
-  TitleDesc = "TITLE_DESC",
+  TITLE_DESC = "TITLE_DESC",
   /** Updated at ascending order. */
-  UpdatedAsc = "UPDATED_ASC",
+  UPDATED_ASC = "UPDATED_ASC",
   /** Updated at descending order. */
-  UpdatedDesc = "UPDATED_DESC",
+  UPDATED_DESC = "UPDATED_DESC",
   /**
    * Weight by ascending order. Introduced in GitLab 17.11: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.11.
    */
-  WeightAsc = "WEIGHT_ASC",
+  WEIGHT_ASC = "WEIGHT_ASC",
   /**
    * Weight by descending order. Introduced in GitLab 17.11: **Status**: Experiment.
    * @deprecated **Status**: Experiment. Introduced in GitLab 17.11.
    */
-  WeightDesc = "WEIGHT_DESC",
+  WEIGHT_DESC = "WEIGHT_DESC",
   /**
    * Created at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_ASC`. Deprecated in GitLab 13.5.
    */
-  CreatedAsc = "created_asc",
+  created_asc = "created_asc",
   /**
    * Created at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `CREATED_DESC`. Deprecated in GitLab 13.5.
    */
-  CreatedDesc = "created_desc",
+  created_desc = "created_desc",
   /**
    * Updated at ascending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_ASC`. Deprecated in GitLab 13.5.
    */
-  UpdatedAsc = "updated_asc",
+  updated_asc = "updated_asc",
   /**
    * Updated at descending order. Deprecated in GitLab 13.5: This was renamed.
    * @deprecated This was renamed. Please use `UPDATED_DESC`. Deprecated in GitLab 13.5.
    */
-  UpdatedDesc = "updated_desc",
+  updated_desc = "updated_desc",
 }
 
 /** State of a GitLab work item */
 export enum WorkItemState {
   /** In closed state. */
-  Closed = "CLOSED",
+  CLOSED = "CLOSED",
   /** In open state. */
-  Open = "OPEN",
+  OPEN = "OPEN",
 }
 
 /** Represents total number of work items for the represented states */
@@ -59099,9 +59098,9 @@ export type WorkItemStateCountsType = {
 /** Values for work item state events */
 export enum WorkItemStateEvent {
   /** Closes the work item. */
-  Close = "CLOSE",
+  CLOSE = "CLOSE",
   /** Reopens the work item. */
-  Reopen = "REOPEN",
+  REOPEN = "REOPEN",
 }
 
 /** Represents status */
@@ -59147,15 +59146,15 @@ export type WorkItemStatus = {
 /** Category of the work item status */
 export enum WorkItemStatusCategoryEnum {
   /** Canceled status category */
-  Canceled = "CANCELED",
+  CANCELED = "CANCELED",
   /** Done status category */
-  Done = "DONE",
+  DONE = "DONE",
   /** In progress status category */
-  InProgress = "IN_PROGRESS",
+  IN_PROGRESS = "IN_PROGRESS",
   /** To do status category */
-  ToDo = "TO_DO",
+  TO_DO = "TO_DO",
   /** Triage status category */
-  Triage = "TRIAGE",
+  TRIAGE = "TRIAGE",
 }
 
 /** The connection type for WorkItemStatus. */
@@ -59230,9 +59229,9 @@ export type WorkItemSubscribePayload = {
 /** Values for work item subscription events */
 export enum WorkItemSubscriptionEvent {
   /** Subscribe to a work item. */
-  Subscribe = "SUBSCRIBE",
+  SUBSCRIBE = "SUBSCRIBE",
   /** Unsubscribe from a work item. */
-  Unsubscribe = "UNSUBSCRIBE",
+  UNSUBSCRIBE = "UNSUBSCRIBE",
 }
 
 export type WorkItemTextFieldValue = WorkItemCustomFieldValue & {
@@ -59288,9 +59287,9 @@ export type WorkItemTimelogEdge = {
 /** Values for work item to-do update enum */
 export enum WorkItemTodoUpdateAction {
   /** Adds the to-do. */
-  Add = "ADD",
+  ADD = "ADD",
   /** Marks the to-do as done. */
-  MarkAsDone = "MARK_AS_DONE",
+  MARK_AS_DONE = "MARK_AS_DONE",
 }
 
 export type WorkItemType = {
@@ -59315,7 +59314,7 @@ export type WorkItemType = {
   widgetDefinitions?: Maybe<Array<WorkItemWidgetDefinition>>;
 };
 
-export type WorkItemTypeUnavailableWidgetsOnConversionArgs = {
+export type WorkItemTypeunavailableWidgetsOnConversionArgs = {
   target: Scalars["WorkItemsTypeID"]["input"];
 };
 
@@ -59480,7 +59479,7 @@ export type WorkItemWidgetAssignees = WorkItemWidget & {
 };
 
 /** Represents an assignees widget */
-export type WorkItemWidgetAssigneesAssigneesArgs = {
+export type WorkItemWidgetAssigneesassigneesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59508,7 +59507,7 @@ export type WorkItemWidgetAwardEmoji = WorkItemWidget & {
 };
 
 /** Represents the emoji reactions widget */
-export type WorkItemWidgetAwardEmojiAwardEmojiArgs = {
+export type WorkItemWidgetAwardEmojiawardEmojiArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59550,7 +59549,7 @@ export type WorkItemWidgetCrmContacts = WorkItemWidget & {
 };
 
 /** Represents CRM contacts widget */
-export type WorkItemWidgetCrmContactsContactsArgs = {
+export type WorkItemWidgetCrmContactscontactsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59580,7 +59579,7 @@ export type WorkItemWidgetCurrentUserTodos = CurrentUserTodos &
   };
 
 /** Represents a todos widget */
-export type WorkItemWidgetCurrentUserTodosCurrentUserTodosArgs = {
+export type WorkItemWidgetCurrentUserTodoscurrentUserTodosArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59632,7 +59631,7 @@ export type WorkItemWidgetCustomFields = WorkItemWidget & {
 };
 
 /** Represents a custom fields widget */
-export type WorkItemWidgetCustomFieldsCustomFieldValuesArgs = {
+export type WorkItemWidgetCustomFieldscustomFieldValuesArgs = {
   customFieldIds?: InputMaybe<Array<Scalars["IssuablesCustomFieldID"]["input"]>>;
 };
 
@@ -59683,7 +59682,7 @@ export type WorkItemWidgetDefinitionHierarchy = WorkItemWidgetDefinition & {
 };
 
 /** Represents a hierarchy widget definition */
-export type WorkItemWidgetDefinitionHierarchyAllowedChildTypesArgs = {
+export type WorkItemWidgetDefinitionHierarchyallowedChildTypesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59691,7 +59690,7 @@ export type WorkItemWidgetDefinitionHierarchyAllowedChildTypesArgs = {
 };
 
 /** Represents a hierarchy widget definition */
-export type WorkItemWidgetDefinitionHierarchyAllowedParentTypesArgs = {
+export type WorkItemWidgetDefinitionHierarchyallowedParentTypesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59794,7 +59793,7 @@ export type WorkItemWidgetDevelopment = WorkItemWidget & {
 };
 
 /** Represents a development widget */
-export type WorkItemWidgetDevelopmentClosingMergeRequestsArgs = {
+export type WorkItemWidgetDevelopmentclosingMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59802,7 +59801,7 @@ export type WorkItemWidgetDevelopmentClosingMergeRequestsArgs = {
 };
 
 /** Represents a development widget */
-export type WorkItemWidgetDevelopmentFeatureFlagsArgs = {
+export type WorkItemWidgetDevelopmentfeatureFlagsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59810,7 +59809,7 @@ export type WorkItemWidgetDevelopmentFeatureFlagsArgs = {
 };
 
 /** Represents a development widget */
-export type WorkItemWidgetDevelopmentRelatedBranchesArgs = {
+export type WorkItemWidgetDevelopmentrelatedBranchesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59818,7 +59817,7 @@ export type WorkItemWidgetDevelopmentRelatedBranchesArgs = {
 };
 
 /** Represents a development widget */
-export type WorkItemWidgetDevelopmentRelatedMergeRequestsArgs = {
+export type WorkItemWidgetDevelopmentrelatedMergeRequestsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59835,7 +59834,7 @@ export type WorkItemWidgetEmailParticipants = WorkItemWidget & {
 };
 
 /** Represents email participants widget */
-export type WorkItemWidgetEmailParticipantsEmailParticipantsArgs = {
+export type WorkItemWidgetEmailParticipantsemailParticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59856,7 +59855,7 @@ export type WorkItemWidgetErrorTracking = WorkItemWidget & {
 };
 
 /** Represents the error tracking widget */
-export type WorkItemWidgetErrorTrackingStackTraceArgs = {
+export type WorkItemWidgetErrorTrackingstackTraceArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59928,7 +59927,7 @@ export type WorkItemWidgetHierarchy = WorkItemWidget & {
 };
 
 /** Represents a hierarchy widget */
-export type WorkItemWidgetHierarchyAncestorsArgs = {
+export type WorkItemWidgetHierarchyancestorsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59936,7 +59935,7 @@ export type WorkItemWidgetHierarchyAncestorsArgs = {
 };
 
 /** Represents a hierarchy widget */
-export type WorkItemWidgetHierarchyChildrenArgs = {
+export type WorkItemWidgetHierarchychildrenArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -59989,7 +59988,7 @@ export type WorkItemWidgetLabels = WorkItemWidget & {
 };
 
 /** Represents the labels widget */
-export type WorkItemWidgetLabelsLabelsArgs = {
+export type WorkItemWidgetLabelslabelsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60027,7 +60026,7 @@ export type WorkItemWidgetLinkedItems = WorkItemWidget & {
 };
 
 /** Represents the linked items widget */
-export type WorkItemWidgetLinkedItemsLinkedItemsArgs = {
+export type WorkItemWidgetLinkedItemslinkedItemsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<WorkItemRelatedLinkType>;
@@ -60052,7 +60051,7 @@ export type WorkItemWidgetLinkedResources = WorkItemWidget & {
 };
 
 /** Represents the linked resources widget */
-export type WorkItemWidgetLinkedResourcesLinkedResourcesArgs = {
+export type WorkItemWidgetLinkedResourceslinkedResourcesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60087,7 +60086,7 @@ export type WorkItemWidgetNotes = WorkItemWidget & {
 };
 
 /** Represents a notes widget */
-export type WorkItemWidgetNotesDiscussionsArgs = {
+export type WorkItemWidgetNotesdiscussionsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60095,7 +60094,7 @@ export type WorkItemWidgetNotesDiscussionsArgs = {
 };
 
 /** Represents a notes widget */
-export type WorkItemWidgetNotesNotesArgs = {
+export type WorkItemWidgetNotesnotesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<NotesFilterType>;
@@ -60132,7 +60131,7 @@ export type WorkItemWidgetParticipants = WorkItemWidget & {
 };
 
 /** Represents a participants widget */
-export type WorkItemWidgetParticipantsParticipantsArgs = {
+export type WorkItemWidgetParticipantsparticipantsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60243,7 +60242,7 @@ export type WorkItemWidgetTestReports = WorkItemWidget & {
 };
 
 /** Represents a test reports widget */
-export type WorkItemWidgetTestReportsTestReportsArgs = {
+export type WorkItemWidgetTestReportstestReportsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60266,7 +60265,7 @@ export type WorkItemWidgetTimeTracking = WorkItemWidget & {
 };
 
 /** Represents the time tracking widget on the work item */
-export type WorkItemWidgetTimeTrackingTimelogsArgs = {
+export type WorkItemWidgetTimeTrackingtimelogsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60301,65 +60300,65 @@ export type WorkItemWidgetTimeTrackingTimelogInput = {
 /** Type of a work item widget */
 export enum WorkItemWidgetType {
   /** Assignees widget. */
-  Assignees = "ASSIGNEES",
+  ASSIGNEES = "ASSIGNEES",
   /** Award Emoji widget. */
-  AwardEmoji = "AWARD_EMOJI",
+  AWARD_EMOJI = "AWARD_EMOJI",
   /** Color widget. */
-  Color = "COLOR",
+  COLOR = "COLOR",
   /** Crm Contacts widget. */
-  CrmContacts = "CRM_CONTACTS",
+  CRM_CONTACTS = "CRM_CONTACTS",
   /** Current User Todos widget. */
-  CurrentUserTodos = "CURRENT_USER_TODOS",
+  CURRENT_USER_TODOS = "CURRENT_USER_TODOS",
   /** Custom Fields widget. */
-  CustomFields = "CUSTOM_FIELDS",
+  CUSTOM_FIELDS = "CUSTOM_FIELDS",
   /** Description widget. */
-  Description = "DESCRIPTION",
+  DESCRIPTION = "DESCRIPTION",
   /** Designs widget. */
-  Designs = "DESIGNS",
+  DESIGNS = "DESIGNS",
   /** Development widget. */
-  Development = "DEVELOPMENT",
+  DEVELOPMENT = "DEVELOPMENT",
   /** Email Participants widget. */
-  EmailParticipants = "EMAIL_PARTICIPANTS",
+  EMAIL_PARTICIPANTS = "EMAIL_PARTICIPANTS",
   /** Error Tracking widget. */
-  ErrorTracking = "ERROR_TRACKING",
+  ERROR_TRACKING = "ERROR_TRACKING",
   /** Health Status widget. */
-  HealthStatus = "HEALTH_STATUS",
+  HEALTH_STATUS = "HEALTH_STATUS",
   /** Hierarchy widget. */
-  Hierarchy = "HIERARCHY",
+  HIERARCHY = "HIERARCHY",
   /** Iteration widget. */
-  Iteration = "ITERATION",
+  ITERATION = "ITERATION",
   /** Labels widget. */
-  Labels = "LABELS",
+  LABELS = "LABELS",
   /** Linked Items widget. */
-  LinkedItems = "LINKED_ITEMS",
+  LINKED_ITEMS = "LINKED_ITEMS",
   /** Linked Resources widget. */
-  LinkedResources = "LINKED_RESOURCES",
+  LINKED_RESOURCES = "LINKED_RESOURCES",
   /** Milestone widget. */
-  Milestone = "MILESTONE",
+  MILESTONE = "MILESTONE",
   /** Notes widget. */
-  Notes = "NOTES",
+  NOTES = "NOTES",
   /** Notifications widget. */
-  Notifications = "NOTIFICATIONS",
+  NOTIFICATIONS = "NOTIFICATIONS",
   /** Participants widget. */
-  Participants = "PARTICIPANTS",
+  PARTICIPANTS = "PARTICIPANTS",
   /** Progress widget. */
-  Progress = "PROGRESS",
+  PROGRESS = "PROGRESS",
   /** Requirement Legacy widget. */
-  RequirementLegacy = "REQUIREMENT_LEGACY",
+  REQUIREMENT_LEGACY = "REQUIREMENT_LEGACY",
   /** Start And Due Date widget. */
-  StartAndDueDate = "START_AND_DUE_DATE",
+  START_AND_DUE_DATE = "START_AND_DUE_DATE",
   /** Status widget. */
-  Status = "STATUS",
+  STATUS = "STATUS",
   /** Test Reports widget. */
-  TestReports = "TEST_REPORTS",
+  TEST_REPORTS = "TEST_REPORTS",
   /** Time Tracking widget. */
-  TimeTracking = "TIME_TRACKING",
+  TIME_TRACKING = "TIME_TRACKING",
   /** Verification Status widget. */
-  VerificationStatus = "VERIFICATION_STATUS",
+  VERIFICATION_STATUS = "VERIFICATION_STATUS",
   /** Vulnerabilities widget. */
-  Vulnerabilities = "VULNERABILITIES",
+  VULNERABILITIES = "VULNERABILITIES",
   /** Weight widget. */
-  Weight = "WEIGHT",
+  WEIGHT = "WEIGHT",
 }
 
 /** Represents a verification status widget */
@@ -60387,7 +60386,7 @@ export type WorkItemWidgetVulnerabilities = WorkItemWidget & {
 };
 
 /** Represents a vulnerabilities widget */
-export type WorkItemWidgetVulnerabilitiesRelatedVulnerabilitiesArgs = {
+export type WorkItemWidgetVulnerabilitiesrelatedVulnerabilitiesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60527,11 +60526,11 @@ export type WorkItemsCsvImportPayload = {
 /** The environment of a workflow. */
 export enum WorkflowEnvironment {
   /** Chat Partial environment */
-  ChatPartial = "CHAT_PARTIAL",
+  CHAT_PARTIAL = "CHAT_PARTIAL",
   /** Ide environment */
-  Ide = "IDE",
+  IDE = "IDE",
   /** Web environment */
-  Web = "WEB",
+  WEB = "WEB",
 }
 
 /** Represents a remote development workspace */
@@ -60616,7 +60615,7 @@ export type Workspace = {
 };
 
 /** Represents a remote development workspace */
-export type WorkspaceWorkspaceVariablesArgs = {
+export type WorkspaceworkspaceVariablesArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -60750,13 +60749,13 @@ export type WorkspaceVariableInput = {
 /** Enum for the type of the variable to be injected in a workspace. */
 export enum WorkspaceVariableInputType {
   /** Name type. */
-  Environment = "ENVIRONMENT",
+  ENVIRONMENT = "ENVIRONMENT",
 }
 
 /** Enum for the type of the variable injected in a workspace. */
 export enum WorkspaceVariableType {
   /** Environment type. */
-  Environment = "ENVIRONMENT",
+  ENVIRONMENT = "ENVIRONMENT",
 }
 
 /** Represents a workspaces agent config */
@@ -60872,7 +60871,7 @@ export type X509Signature = CommitSignature & {
 };
 
 /** Autogenerated input type of approvalProjectRuleDelete */
-export type ApprovalProjectRuleDeleteInput = {
+export type approvalProjectRuleDeleteInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Global ID of the approval project rule to delete. */
@@ -60880,7 +60879,7 @@ export type ApprovalProjectRuleDeleteInput = {
 };
 
 /** Autogenerated return type of approvalProjectRuleDelete. */
-export type ApprovalProjectRuleDeletePayload = {
+export type approvalProjectRuleDeletePayload = {
   __typename?: "approvalProjectRuleDeletePayload";
   /** Deleted approval rule. */
   approvalRule?: Maybe<ApprovalProjectRule>;
@@ -60891,7 +60890,7 @@ export type ApprovalProjectRuleDeletePayload = {
 };
 
 /** Autogenerated input type of approvalProjectRuleUpdate */
-export type ApprovalProjectRuleUpdateInput = {
+export type approvalProjectRuleUpdateInput = {
   /** How many approvals are required to satify rule. */
   approvalsRequired: Scalars["Int"]["input"];
   /** A unique identifier for the client performing the mutation. */
@@ -60907,7 +60906,7 @@ export type ApprovalProjectRuleUpdateInput = {
 };
 
 /** Autogenerated return type of approvalProjectRuleUpdate. */
-export type ApprovalProjectRuleUpdatePayload = {
+export type approvalProjectRuleUpdatePayload = {
   __typename?: "approvalProjectRuleUpdatePayload";
   /** Approval rule after mutation. */
   approvalRule?: Maybe<ApprovalProjectRule>;
@@ -60918,7 +60917,7 @@ export type ApprovalProjectRuleUpdatePayload = {
 };
 
 /** Autogenerated input type of branchRuleApprovalProjectRuleCreate */
-export type BranchRuleApprovalProjectRuleCreateInput = {
+export type branchRuleApprovalProjectRuleCreateInput = {
   /** How many approvals are required to satify rule. */
   approvalsRequired: Scalars["Int"]["input"];
   /** Global ID of the branch rule to destroy. */
@@ -60934,7 +60933,7 @@ export type BranchRuleApprovalProjectRuleCreateInput = {
 };
 
 /** Autogenerated return type of branchRuleApprovalProjectRuleCreate. */
-export type BranchRuleApprovalProjectRuleCreatePayload = {
+export type branchRuleApprovalProjectRuleCreatePayload = {
   __typename?: "branchRuleApprovalProjectRuleCreatePayload";
   /** Approval rule after mutation. */
   approvalRule?: Maybe<ApprovalProjectRule>;
@@ -60945,7 +60944,7 @@ export type BranchRuleApprovalProjectRuleCreatePayload = {
 };
 
 /** Requires ClickHouse. Premium and Ultimate with GitLab Duo Pro and Enterprise only. */
-export type CodeSuggestionMetrics = {
+export type codeSuggestionMetrics = {
   __typename?: "codeSuggestionMetrics";
   /** Total count of code suggestions accepted. */
   acceptedCount?: Maybe<Scalars["Int"]["output"]>;
@@ -60962,7 +60961,7 @@ export type CodeSuggestionMetrics = {
 };
 
 /** Autogenerated input type of createContainerProtectionTagRule */
-export type CreateContainerProtectionTagRuleInput = {
+export type createContainerProtectionTagRuleInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Minimum GitLab access level required to delete container image tags from the container repository. Valid values include `MAINTAINER`, `OWNER`, or `ADMIN`. Introduced in GitLab 17.8: **Status**: Experiment. If the value is `nil`, no access level can delete tags.  */
@@ -60976,7 +60975,7 @@ export type CreateContainerProtectionTagRuleInput = {
 };
 
 /** Autogenerated return type of createContainerProtectionTagRule. */
-export type CreateContainerProtectionTagRulePayload = {
+export type createContainerProtectionTagRulePayload = {
   __typename?: "createContainerProtectionTagRulePayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -60990,7 +60989,7 @@ export type CreateContainerProtectionTagRulePayload = {
 };
 
 /** Autogenerated input type of iterationCreate */
-export type IterationCreateInput = {
+export type iterationCreateInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Description of the iteration. */
@@ -61010,7 +61009,7 @@ export type IterationCreateInput = {
 };
 
 /** Autogenerated return type of iterationCreate. */
-export type IterationCreatePayload = {
+export type iterationCreatePayload = {
   __typename?: "iterationCreatePayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -61021,7 +61020,7 @@ export type IterationCreatePayload = {
 };
 
 /** Autogenerated input type of projectBlobsRemove */
-export type ProjectBlobsRemoveInput = {
+export type projectBlobsRemoveInput = {
   /** List of blob oids. */
   blobOids: Array<Scalars["String"]["input"]>;
   /** A unique identifier for the client performing the mutation. */
@@ -61031,7 +61030,7 @@ export type ProjectBlobsRemoveInput = {
 };
 
 /** Autogenerated return type of projectBlobsRemove. */
-export type ProjectBlobsRemovePayload = {
+export type projectBlobsRemovePayload = {
   __typename?: "projectBlobsRemovePayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -61040,7 +61039,7 @@ export type ProjectBlobsRemovePayload = {
 };
 
 /** Autogenerated input type of projectTextReplace */
-export type ProjectTextReplaceInput = {
+export type projectTextReplaceInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Full path of the project to replace. */
@@ -61050,7 +61049,7 @@ export type ProjectTextReplaceInput = {
 };
 
 /** Autogenerated return type of projectTextReplace. */
-export type ProjectTextReplacePayload = {
+export type projectTextReplacePayload = {
   __typename?: "projectTextReplacePayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -61059,7 +61058,7 @@ export type ProjectTextReplacePayload = {
 };
 
 /** Autogenerated input type of vulnerabilitiesSeverityOverride */
-export type VulnerabilitiesSeverityOverrideInput = {
+export type vulnerabilitiesSeverityOverrideInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Comment why vulnerability severity was changed (maximum 50,000 characters). */
@@ -61071,7 +61070,7 @@ export type VulnerabilitiesSeverityOverrideInput = {
 };
 
 /** Autogenerated return type of vulnerabilitiesSeverityOverride. */
-export type VulnerabilitiesSeverityOverridePayload = {
+export type vulnerabilitiesSeverityOverridePayload = {
   __typename?: "vulnerabilitiesSeverityOverridePayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -61082,7 +61081,7 @@ export type VulnerabilitiesSeverityOverridePayload = {
 };
 
 /** Autogenerated input type of workItemsHierarchyReorder */
-export type WorkItemsHierarchyReorderInput = {
+export type workItemsHierarchyReorderInput = {
   /** ID of the work item to move next to. For example, the item above or below. */
   adjacentWorkItemId?: InputMaybe<Scalars["WorkItemID"]["input"]>;
   /** A unique identifier for the client performing the mutation. */
@@ -61096,7 +61095,7 @@ export type WorkItemsHierarchyReorderInput = {
 };
 
 /** Autogenerated return type of workItemsHierarchyReorder. */
-export type WorkItemsHierarchyReorderPayload = {
+export type workItemsHierarchyReorderPayload = {
   __typename?: "workItemsHierarchyReorderPayload";
   /** Adjacent work item after mutation. */
   adjacentWorkItem?: Maybe<WorkItem>;
@@ -61111,7 +61110,7 @@ export type WorkItemsHierarchyReorderPayload = {
 };
 
 /** Autogenerated input type of workItemsReorder */
-export type WorkItemsReorderInput = {
+export type workItemsReorderInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars["String"]["input"]>;
   /** Global ID of the work item to be reordered. */
@@ -61123,7 +61122,7 @@ export type WorkItemsReorderInput = {
 };
 
 /** Autogenerated return type of workItemsReorder. */
-export type WorkItemsReorderPayload = {
+export type workItemsReorderPayload = {
   __typename?: "workItemsReorderPayload";
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars["String"]["output"]>;
@@ -61476,77 +61475,77 @@ export type FetchComprehensiveGroupProjectsQuery = {
           __typename?: "MemberInterfaceConnection";
           nodes?: Array<
             | {
-                __typename?: "GroupMember";
-                id: string;
-                createdAt?: any | null;
-                updatedAt?: any | null;
-                expiresAt?: any | null;
-                accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-                user?: {
-                  __typename?: "UserCore";
-                  id: any;
-                  username: string;
-                  name: string;
-                  publicEmail?: string | null;
-                  state: UserState;
-                  webUrl: string;
-                  avatarUrl?: string | null;
-                } | null;
-              }
+              __typename?: "GroupMember";
+              id: string;
+              createdAt?: any | null;
+              updatedAt?: any | null;
+              expiresAt?: any | null;
+              accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+              user?: {
+                __typename?: "UserCore";
+                id: any;
+                username: string;
+                name: string;
+                publicEmail?: string | null;
+                state: UserState;
+                webUrl: string;
+                avatarUrl?: string | null;
+              } | null;
+            }
             | {
-                __typename?: "PendingGroupMember";
-                id: string;
-                createdAt?: any | null;
-                updatedAt?: any | null;
-                expiresAt?: any | null;
-                accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-                user?: {
-                  __typename?: "UserCore";
-                  id: any;
-                  username: string;
-                  name: string;
-                  publicEmail?: string | null;
-                  state: UserState;
-                  webUrl: string;
-                  avatarUrl?: string | null;
-                } | null;
-              }
+              __typename?: "PendingGroupMember";
+              id: string;
+              createdAt?: any | null;
+              updatedAt?: any | null;
+              expiresAt?: any | null;
+              accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+              user?: {
+                __typename?: "UserCore";
+                id: any;
+                username: string;
+                name: string;
+                publicEmail?: string | null;
+                state: UserState;
+                webUrl: string;
+                avatarUrl?: string | null;
+              } | null;
+            }
             | {
-                __typename?: "PendingProjectMember";
-                id: string;
-                createdAt?: any | null;
-                updatedAt?: any | null;
-                expiresAt?: any | null;
-                accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-                user?: {
-                  __typename?: "UserCore";
-                  id: any;
-                  username: string;
-                  name: string;
-                  publicEmail?: string | null;
-                  state: UserState;
-                  webUrl: string;
-                  avatarUrl?: string | null;
-                } | null;
-              }
+              __typename?: "PendingProjectMember";
+              id: string;
+              createdAt?: any | null;
+              updatedAt?: any | null;
+              expiresAt?: any | null;
+              accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+              user?: {
+                __typename?: "UserCore";
+                id: any;
+                username: string;
+                name: string;
+                publicEmail?: string | null;
+                state: UserState;
+                webUrl: string;
+                avatarUrl?: string | null;
+              } | null;
+            }
             | {
-                __typename?: "ProjectMember";
-                id: string;
-                createdAt?: any | null;
-                updatedAt?: any | null;
-                expiresAt?: any | null;
-                accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-                user?: {
-                  __typename?: "UserCore";
-                  id: any;
-                  username: string;
-                  name: string;
-                  publicEmail?: string | null;
-                  state: UserState;
-                  webUrl: string;
-                  avatarUrl?: string | null;
-                } | null;
-              }
+              __typename?: "ProjectMember";
+              id: string;
+              createdAt?: any | null;
+              updatedAt?: any | null;
+              expiresAt?: any | null;
+              accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+              user?: {
+                __typename?: "UserCore";
+                id: any;
+                username: string;
+                name: string;
+                publicEmail?: string | null;
+                state: UserState;
+                webUrl: string;
+                avatarUrl?: string | null;
+              } | null;
+            }
             | null
           > | null;
         } | null;
@@ -61641,109 +61640,109 @@ export type FetchComprehensiveProjectQuery = {
       pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean; endCursor?: string | null };
       nodes?: Array<
         | {
-            __typename?: "GroupMember";
-            id: string;
+          __typename?: "GroupMember";
+          id: string;
+          createdAt?: any | null;
+          updatedAt?: any | null;
+          expiresAt?: any | null;
+          accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+          user?: {
+            __typename?: "UserCore";
+            id: any;
+            username: string;
+            name: string;
+            publicEmail?: string | null;
+            state: UserState;
+            webUrl: string;
+            avatarUrl?: string | null;
+            bio?: string | null;
+            location?: string | null;
+            organization?: string | null;
+            linkedin?: string | null;
+            twitter?: string | null;
+            lastActivityOn?: any | null;
             createdAt?: any | null;
-            updatedAt?: any | null;
-            expiresAt?: any | null;
-            accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-            user?: {
-              __typename?: "UserCore";
-              id: any;
-              username: string;
-              name: string;
-              publicEmail?: string | null;
-              state: UserState;
-              webUrl: string;
-              avatarUrl?: string | null;
-              bio?: string | null;
-              location?: string | null;
-              organization?: string | null;
-              linkedin?: string | null;
-              twitter?: string | null;
-              lastActivityOn?: any | null;
-              createdAt?: any | null;
-              userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
-            } | null;
-          }
+            userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
+          } | null;
+        }
         | {
-            __typename?: "PendingGroupMember";
-            id: string;
+          __typename?: "PendingGroupMember";
+          id: string;
+          createdAt?: any | null;
+          updatedAt?: any | null;
+          expiresAt?: any | null;
+          accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+          user?: {
+            __typename?: "UserCore";
+            id: any;
+            username: string;
+            name: string;
+            publicEmail?: string | null;
+            state: UserState;
+            webUrl: string;
+            avatarUrl?: string | null;
+            bio?: string | null;
+            location?: string | null;
+            organization?: string | null;
+            linkedin?: string | null;
+            twitter?: string | null;
+            lastActivityOn?: any | null;
             createdAt?: any | null;
-            updatedAt?: any | null;
-            expiresAt?: any | null;
-            accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-            user?: {
-              __typename?: "UserCore";
-              id: any;
-              username: string;
-              name: string;
-              publicEmail?: string | null;
-              state: UserState;
-              webUrl: string;
-              avatarUrl?: string | null;
-              bio?: string | null;
-              location?: string | null;
-              organization?: string | null;
-              linkedin?: string | null;
-              twitter?: string | null;
-              lastActivityOn?: any | null;
-              createdAt?: any | null;
-              userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
-            } | null;
-          }
+            userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
+          } | null;
+        }
         | {
-            __typename?: "PendingProjectMember";
-            id: string;
+          __typename?: "PendingProjectMember";
+          id: string;
+          createdAt?: any | null;
+          updatedAt?: any | null;
+          expiresAt?: any | null;
+          accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+          user?: {
+            __typename?: "UserCore";
+            id: any;
+            username: string;
+            name: string;
+            publicEmail?: string | null;
+            state: UserState;
+            webUrl: string;
+            avatarUrl?: string | null;
+            bio?: string | null;
+            location?: string | null;
+            organization?: string | null;
+            linkedin?: string | null;
+            twitter?: string | null;
+            lastActivityOn?: any | null;
             createdAt?: any | null;
-            updatedAt?: any | null;
-            expiresAt?: any | null;
-            accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-            user?: {
-              __typename?: "UserCore";
-              id: any;
-              username: string;
-              name: string;
-              publicEmail?: string | null;
-              state: UserState;
-              webUrl: string;
-              avatarUrl?: string | null;
-              bio?: string | null;
-              location?: string | null;
-              organization?: string | null;
-              linkedin?: string | null;
-              twitter?: string | null;
-              lastActivityOn?: any | null;
-              createdAt?: any | null;
-              userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
-            } | null;
-          }
+            userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
+          } | null;
+        }
         | {
-            __typename?: "ProjectMember";
-            id: string;
+          __typename?: "ProjectMember";
+          id: string;
+          createdAt?: any | null;
+          updatedAt?: any | null;
+          expiresAt?: any | null;
+          accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
+          user?: {
+            __typename?: "UserCore";
+            id: any;
+            username: string;
+            name: string;
+            publicEmail?: string | null;
+            state: UserState;
+            webUrl: string;
+            avatarUrl?: string | null;
+            bio?: string | null;
+            location?: string | null;
+            organization?: string | null;
+            linkedin?: string | null;
+            twitter?: string | null;
+            lastActivityOn?: any | null;
             createdAt?: any | null;
-            updatedAt?: any | null;
-            expiresAt?: any | null;
-            accessLevel?: { __typename?: "AccessLevel"; integerValue?: number | null; stringValue?: AccessLevelEnum | null } | null;
-            user?: {
-              __typename?: "UserCore";
-              id: any;
-              username: string;
-              name: string;
-              publicEmail?: string | null;
-              state: UserState;
-              webUrl: string;
-              avatarUrl?: string | null;
-              bio?: string | null;
-              location?: string | null;
-              organization?: string | null;
-              linkedin?: string | null;
-              twitter?: string | null;
-              lastActivityOn?: any | null;
-              createdAt?: any | null;
-              userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
-            } | null;
-          }
+            userPermissions: { __typename?: "UserPermissions"; createSnippet: boolean };
+          } | null;
+        }
         | null
       > | null;
     } | null;
@@ -62402,31 +62401,31 @@ export type FetchComprehensiveUsersQuery = {
           createdAt: any;
           state: TodoStateEnum;
           target:
-            | { __typename?: "AddOnUser" }
-            | { __typename?: "AlertManagementAlert" }
-            | { __typename?: "AutocompletedUser" }
-            | { __typename?: "BoardEpic" }
-            | { __typename?: "Commit" }
-            | { __typename?: "CountableVulnerability" }
-            | { __typename?: "CurrentUser" }
-            | { __typename?: "Design" }
-            | { __typename?: "Epic" }
-            | { __typename?: "EpicIssue" }
-            | { __typename?: "Group" }
-            | { __typename?: "Issue"; id: string; title: string }
-            | { __typename?: "Key" }
-            | { __typename?: "MergeRequest"; id: string; title: string }
-            | { __typename?: "MergeRequestAssignee" }
-            | { __typename?: "MergeRequestAuthor" }
-            | { __typename?: "MergeRequestParticipant" }
-            | { __typename?: "MergeRequestReviewer" }
-            | { __typename?: "Namespace" }
-            | { __typename?: "Project" }
-            | { __typename?: "ProjectComplianceViolation" }
-            | { __typename?: "UserCore" }
-            | { __typename?: "Vulnerability" }
-            | { __typename?: "WikiPage" }
-            | { __typename?: "WorkItem" };
+          | { __typename?: "AddOnUser" }
+          | { __typename?: "AlertManagementAlert" }
+          | { __typename?: "AutocompletedUser" }
+          | { __typename?: "BoardEpic" }
+          | { __typename?: "Commit" }
+          | { __typename?: "CountableVulnerability" }
+          | { __typename?: "CurrentUser" }
+          | { __typename?: "Design" }
+          | { __typename?: "Epic" }
+          | { __typename?: "EpicIssue" }
+          | { __typename?: "Group" }
+          | { __typename?: "Issue"; id: string; title: string }
+          | { __typename?: "Key" }
+          | { __typename?: "MergeRequest"; id: string; title: string }
+          | { __typename?: "MergeRequestAssignee" }
+          | { __typename?: "MergeRequestAuthor" }
+          | { __typename?: "MergeRequestParticipant" }
+          | { __typename?: "MergeRequestReviewer" }
+          | { __typename?: "Namespace" }
+          | { __typename?: "Project" }
+          | { __typename?: "ProjectComplianceViolation" }
+          | { __typename?: "UserCore" }
+          | { __typename?: "Vulnerability" }
+          | { __typename?: "WikiPage" }
+          | { __typename?: "WorkItem" };
         } | null> | null;
       } | null;
       timelogs?: {
@@ -62680,31 +62679,31 @@ export type FetchComprehensiveUserQuery = {
         createdAt: any;
         state: TodoStateEnum;
         target:
-          | { __typename?: "AddOnUser" }
-          | { __typename?: "AlertManagementAlert" }
-          | { __typename?: "AutocompletedUser" }
-          | { __typename?: "BoardEpic" }
-          | { __typename?: "Commit" }
-          | { __typename?: "CountableVulnerability" }
-          | { __typename?: "CurrentUser" }
-          | { __typename?: "Design" }
-          | { __typename?: "Epic" }
-          | { __typename?: "EpicIssue" }
-          | { __typename?: "Group" }
-          | { __typename?: "Issue"; id: string; title: string }
-          | { __typename?: "Key" }
-          | { __typename?: "MergeRequest"; id: string; title: string }
-          | { __typename?: "MergeRequestAssignee" }
-          | { __typename?: "MergeRequestAuthor" }
-          | { __typename?: "MergeRequestParticipant" }
-          | { __typename?: "MergeRequestReviewer" }
-          | { __typename?: "Namespace" }
-          | { __typename?: "Project" }
-          | { __typename?: "ProjectComplianceViolation" }
-          | { __typename?: "UserCore" }
-          | { __typename?: "Vulnerability" }
-          | { __typename?: "WikiPage" }
-          | { __typename?: "WorkItem" };
+        | { __typename?: "AddOnUser" }
+        | { __typename?: "AlertManagementAlert" }
+        | { __typename?: "AutocompletedUser" }
+        | { __typename?: "BoardEpic" }
+        | { __typename?: "Commit" }
+        | { __typename?: "CountableVulnerability" }
+        | { __typename?: "CurrentUser" }
+        | { __typename?: "Design" }
+        | { __typename?: "Epic" }
+        | { __typename?: "EpicIssue" }
+        | { __typename?: "Group" }
+        | { __typename?: "Issue"; id: string; title: string }
+        | { __typename?: "Key" }
+        | { __typename?: "MergeRequest"; id: string; title: string }
+        | { __typename?: "MergeRequestAssignee" }
+        | { __typename?: "MergeRequestAuthor" }
+        | { __typename?: "MergeRequestParticipant" }
+        | { __typename?: "MergeRequestReviewer" }
+        | { __typename?: "Namespace" }
+        | { __typename?: "Project" }
+        | { __typename?: "ProjectComplianceViolation" }
+        | { __typename?: "UserCore" }
+        | { __typename?: "Vulnerability" }
+        | { __typename?: "WikiPage" }
+        | { __typename?: "WorkItem" };
       } | null> | null;
     } | null;
     timelogs?: {

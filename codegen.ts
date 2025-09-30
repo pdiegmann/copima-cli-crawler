@@ -5,6 +5,7 @@ const config: CodegenConfig = {
   schema: "https://gitlab.com/api/graphql",
   documents: "src/api/**/*",
   hooks: { afterOneFileWrite: ["eslint --fix", "prettier --write"] },
+  config: { namingConvention: "keep" },
   emitLegacyCommonJSImports: false,
   allowPartialOutputs: true,
   generates: {
