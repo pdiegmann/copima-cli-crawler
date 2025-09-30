@@ -41,11 +41,33 @@ export class CommonResourcesFetcher {
                   username
                   name
                   publicEmail
+                  avatarUrl
+                  webUrl
+                  state
+                  bio
+                  location
+                  organization
+                  jobTitle
+                  pronouns
+                  bot
                   createdAt
+                }
+                createdBy {
+                  id
+                  username
+                  name
                 }
                 createdAt
                 updatedAt
                 expiresAt
+                inviteEmail
+                inviteAcceptedAt
+                requestedAt
+                inviteSource
+                mergeRequestInteraction {
+                  canMerge
+                  canUpdate
+                }
               }
             }
           }
@@ -100,6 +122,8 @@ export class CommonResourcesFetcher {
                 textColor
                 createdAt
                 updatedAt
+                lockOnMerge
+                removeOnClose
               }
             }
           }
@@ -153,6 +177,7 @@ export class CommonResourcesFetcher {
             milestones {
               nodes {
                 id
+                iid
                 title
                 description
                 state
@@ -161,6 +186,14 @@ export class CommonResourcesFetcher {
                 createdAt
                 updatedAt
                 webUrl
+                projectId
+                groupId
+                expired
+                upcomingDue
+                stats {
+                  totalIssuesCount
+                  closedIssuesCount
+                }
               }
             }
           }
@@ -216,34 +249,140 @@ export class CommonResourcesFetcher {
                 iid
                 title
                 description
+                descriptionHtml
                 state
                 createdAt
                 updatedAt
                 closedAt
+                dueDate
+                confidential
+                discussionLocked
+                upvotes
+                downvotes
+                userNotesCount
+                webUrl
+                relativePosition
+                emailsDisabled
+                subscribed
+                timeEstimate
+                totalTimeSpent
+                humanTimeEstimate
+                humanTotalTimeSpent
+                closedBy {
+                  id
+                  username
+                  name
+                }
                 author {
                   id
                   username
                   name
+                  avatarUrl
+                  webUrl
                 }
                 assignees {
                   nodes {
                     id
                     username
                     name
+                    avatarUrl
+                    webUrl
                   }
                 }
                 labels {
                   nodes {
                     id
                     title
+                    description
                     color
+                    textColor
                   }
                 }
                 milestone {
                   id
+                  iid
+                  title
+                  description
+                  state
+                  webUrl
+                }
+                taskCompletionStatus {
+                  count
+                  completedCount
+                }
+                healthStatus
+                weight
+                blocked
+                blockedByCount
+                epic {
+                  id
+                  iid
+                  title
+                  webUrl
+                }
+                iteration {
+                  id
+                  title
+                  description
+                  state
+                  webUrl
+                }
+                userPermissions {
+                  adminIssue
+                  createNote
+                  pushCode
+                  readIssue
+                  reopenIssue
+                  updateIssue
+                }
+                reference
+                moved
+                movedTo {
+                  id
+                  iid
                   title
                 }
-                webUrl
+                duplicatedTo {
+                  id
+                  iid
+                  title
+                }
+                serviceType
+                severity
+                alertManagementAlert {
+                  id
+                  iid
+                  title
+                  description
+                  severity
+                  status
+                  service
+                  monitoringTool
+                  startedAt
+                  endedAt
+                  eventCount
+                  fingerprint
+                }
+                customerRelationsContacts {
+                  nodes {
+                    id
+                    firstName
+                    lastName
+                    email
+                    phone
+                    description
+                    organization {
+                      id
+                      name
+                    }
+                  }
+                }
+                escalationStatus
+                escalationPolicy {
+                  id
+                  name
+                  description
+                }
               }
             }
           }
@@ -319,23 +458,70 @@ export class CommonResourcesFetcher {
                 iid
                 title
                 description
+                descriptionHtml
                 state
+                detailedMergeStatus
                 createdAt
                 updatedAt
                 mergedAt
                 closedAt
                 sourceBranch
                 targetBranch
+                sourceBranchExists
+                targetBranchExists
+                reference
+                references {
+                  full
+                  relative
+                  short
+                }
+                webUrl
+                upvotes
+                downvotes
+                userNotesCount
+                shouldRemoveSourceBranch
+                forceRemoveSourceBranch
+                allowCollaboration
+                allowMaintainerToPush
+                squash
+                squashOnMerge
+                mergeable
+                mergeableDiscussionsState
+                workInProgress
+                draft
+                discussionLocked
+                timeEstimate
+                totalTimeSpent
+                humanTimeEstimate
+                humanTotalTimeSpent
+                rebaseInProgress
+                mergeTrainsCount
+                hasSecurityReports
+                autoMergeEnabled
+                preparedAt
+                mergeUser {
+                  id
+                  username
+                  name
+                  avatarUrl
+                  webUrl
+                }
                 author {
                   id
                   username
                   name
+                  avatarUrl
+                  webUrl
+                  state
                 }
                 assignees {
                   nodes {
                     id
                     username
                     name
+                    avatarUrl
+                    webUrl
+                    state
                   }
                 }
                 reviewers {
@@ -343,20 +529,139 @@ export class CommonResourcesFetcher {
                     id
                     username
                     name
+                    avatarUrl
+                    webUrl
+                    state
                   }
                 }
                 labels {
                   nodes {
                     id
                     title
+                    description
                     color
+                    textColor
                   }
                 }
                 milestone {
                   id
+                  iid
                   title
+                  description
+                  state
+                  webUrl
+                  dueDate
+                  startDate
                 }
-                webUrl
+                userPermissions {
+                  adminMergeRequest
+                  canMerge
+                  cherryPickOnCurrentMergeRequest
+                  createNote
+                  pushToSourceBranch
+                  readMergeRequest
+                  removeSourceBranch
+                  revertOnCurrentMergeRequest
+                  updateMergeRequest
+                }
+                approved
+                approvedBy {
+                  nodes {
+                    id
+                    username
+                    name
+                    avatarUrl
+                  }
+                }
+                commitCount
+                commitsWithoutMergeCommits {
+                  nodes {
+                    id
+                    sha
+                    shortId
+                    title
+                    message
+                    authoredDate
+                    committedDate
+                    webUrl
+                    author {
+                      name
+                      email
+                      avatarUrl
+                    }
+                    committer {
+                      name
+                      email
+                      avatarUrl
+                    }
+                  }
+                }
+                headPipeline {
+                  id
+                  iid
+                  sha
+                  status
+                  detailedStatus {
+                    id
+                    group
+                    icon
+                    text
+                    label
+                    tooltip
+                  }
+                  createdAt
+                  updatedAt
+                  startedAt
+                  finishedAt
+                  duration
+                  queuedDuration
+                  webUrl
+                }
+                mergeTrain {
+                  id
+                  status
+                  mergedAt
+                  user {
+                    id
+                    username
+                    name
+                  }
+                }
+                diffRefs {
+                  baseSha
+                  headSha
+                  startSha
+                }
+                diffStats {
+                  additions
+                  deletions
+                  fileCount
+                }
+                conflicts
+                projectId
+                targetProjectId
+                sourceProjectId
+                sourceProject {
+                  id
+                  name
+                  nameWithNamespace
+                  fullPath
+                  webUrl
+                }
+                targetProject {
+                  id
+                  name
+                  nameWithNamespace
+                  fullPath
+                  webUrl
+                }
+                subscribed
+                blocking
+                blockedByCount
+                taskCompletionStatus {
+                  count
+                  completedCount
+                }
               }
             }
           }
