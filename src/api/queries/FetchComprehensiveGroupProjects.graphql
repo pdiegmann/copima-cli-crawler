@@ -1,0 +1,132 @@
+query FetchComprehensiveGroupProjects($fullPath: ID!, $first: Int, $after: String) {
+  group(fullPath: $fullPath) {
+    projects(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
+      nodes {
+        # Basic project information
+        id
+        name
+        path
+        fullPath
+        nameWithNamespace
+        description
+        visibility
+        createdAt
+        updatedAt
+        lastActivityAt
+        webUrl
+        avatarUrl
+
+        # Project status and settings
+        archived
+        forksCount
+        starCount
+
+        # Feature enablement flags
+        issuesEnabled
+        mergeRequestsEnabled
+        wikiEnabled
+        snippetsEnabled
+        containerRegistryEnabled
+        lfsEnabled
+        requestAccessEnabled
+        publicJobs
+        sharedRunnersEnabled
+
+        # Repository and Git settings
+        sshUrlToRepo
+        httpUrlToRepo
+
+        # Merge request settings
+        onlyAllowMergeIfPipelineSucceeds
+        onlyAllowMergeIfAllDiscussionsAreResolved
+        removeSourceBranchAfterMerge
+        printingMergeRequestLinkEnabled
+        allowMergeOnSkippedPipeline
+
+        # Service desk settings
+        serviceDeskEnabled
+        serviceDeskAddress
+
+        # Topic and tagging
+        topics
+        tagList
+
+        # Compliance frameworks
+        complianceFrameworks {
+          nodes {
+            id
+            name
+            description
+            color
+            pipelineConfigurationFullPath
+          }
+        }
+
+        # Project members with user data
+        projectMembers {
+          nodes {
+            id
+            accessLevel {
+              integerValue
+              stringValue
+            }
+            createdAt
+            updatedAt
+            expiresAt
+            user {
+              id
+              username
+              name
+              publicEmail
+              state
+              webUrl
+              avatarUrl
+            }
+          }
+        }
+
+        # Repository information
+        repository {
+          exists
+          empty
+          rootRef
+          tree {
+            lastCommit {
+              id
+              sha
+              title
+              message
+              authorName
+              authorEmail
+              authoredDate
+              committedDate
+              webUrl
+            }
+          }
+        }
+
+        # Statistics
+        statistics {
+          commitCount
+          storageSize
+          repositorySize
+          lfsObjectsSize
+          buildArtifactsSize
+          packagesSize
+          snippetsSize
+          uploadsSize
+          wikiSize
+        }
+
+        # Autoclose referenced issues
+        autocloseReferencedIssues
+      }
+    }
+  }
+}

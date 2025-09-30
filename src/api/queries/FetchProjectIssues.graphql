@@ -1,0 +1,54 @@
+query FetchProjectIssues($fullPath: ID!, $first: Int, $after: String) {
+  project(fullPath: $fullPath) {
+    issues(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        iid
+        title
+        description
+        state
+        createdAt
+        updatedAt
+        closedAt
+        author {
+          id
+          username
+          name
+          publicEmail
+          avatarUrl
+        }
+        assignees {
+          nodes {
+            id
+            username
+            name
+            publicEmail
+            avatarUrl
+          }
+        }
+        labels {
+          nodes {
+            id
+            title
+            description
+            color
+            textColor
+          }
+        }
+        milestone {
+          id
+          title
+          description
+          state
+          dueDate
+          startDate
+        }
+        webUrl
+      }
+    }
+  }
+}

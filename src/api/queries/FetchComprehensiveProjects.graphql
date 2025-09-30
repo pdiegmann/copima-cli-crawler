@@ -1,0 +1,45 @@
+query FetchComprehensiveProjects($first: Int, $after: String) {
+  projects(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      name
+      path
+      fullPath
+      nameWithNamespace
+      description
+      visibility
+      createdAt
+      updatedAt
+      lastActivityAt
+      webUrl
+      avatarUrl
+      archived
+
+      # Feature toggles
+      issuesEnabled
+      mergeRequestsEnabled
+      wikiEnabled
+      snippetsEnabled
+      jobsEnabled
+      containerRegistryEnabled
+      lfsEnabled
+
+      # Statistics
+      openIssuesCount
+      starCount
+      forksCount
+
+      # Namespace info
+      namespace {
+        id
+        name
+        path
+        fullPath
+      }
+    }
+  }
+}

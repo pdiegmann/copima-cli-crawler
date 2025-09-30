@@ -1,0 +1,56 @@
+query FetchComprehensiveSubgroups($fullPath: ID!, $first: Int, $after: String) {
+  group(fullPath: $fullPath) {
+    descendantGroups(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
+      nodes {
+        id
+        name
+        path
+        fullName
+        fullPath
+        description
+        visibility
+        createdAt
+        updatedAt
+        webUrl
+        avatarUrl
+        shareWithGroupLock
+        requireTwoFactorAuthentication
+        twoFactorGracePeriod
+        autoDevopsEnabled
+        emailsDisabled
+        mentionsDisabled
+        parent {
+          id
+          fullPath
+          name
+          path
+          webUrl
+        }
+        subgroupCreationLevel
+        projectCreationLevel
+        actualRepositorySizeLimit
+        lfsEnabled
+        requestAccessEnabled
+        rootStorageStatistics {
+          storageSize
+          repositorySize
+          lfsObjectsSize
+          buildArtifactsSize
+          packagesSize
+          snippetsSize
+          uploadsSize
+          wikiSize
+          containerRegistrySize
+          dependencyProxySize
+        }
+        sharedRunnersSetting
+      }
+    }
+  }
+}

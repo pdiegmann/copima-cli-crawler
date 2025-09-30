@@ -1,0 +1,48 @@
+query FetchAdminUsers($first: Int, $after: String) {
+  users(admins: true, first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+      hasPreviousPage
+      startCursor
+    }
+    nodes {
+      # Basic User Information
+      id
+      username
+      name
+      publicEmail
+      location
+      webUrl
+      avatarUrl
+      state
+      bio
+      pronouns
+      organization
+      jobTitle
+      linkedin
+      twitter
+
+      # Timestamps
+      createdAt
+      lastActivityOn
+
+      # User Settings & Preferences
+      commitEmail
+
+      # User Status
+      status {
+        availability
+        emoji
+        message
+        messageHtml
+        clearStatusAt
+      }
+
+      # User Permissions
+      userPermissions {
+        createSnippet
+      }
+    }
+  }
+}

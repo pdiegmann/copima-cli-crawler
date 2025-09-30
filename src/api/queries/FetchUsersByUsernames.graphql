@@ -1,0 +1,77 @@
+query FetchUsersByUsernames($usernames: [String!]!, $first: Int, $after: String) {
+  users(usernames: $usernames, first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+      hasPreviousPage
+      startCursor
+    }
+    nodes {
+      # Basic User Information
+      id
+      username
+      name
+      publicEmail
+      location
+      webUrl
+      avatarUrl
+      state
+      bio
+      pronouns
+      organization
+      jobTitle
+      linkedin
+      twitter
+
+      # Timestamps
+      createdAt
+      lastActivityOn
+
+      # User Settings & Preferences
+      commitEmail
+
+      # User Status
+      status {
+        availability
+        emoji
+        message
+        messageHtml
+        clearStatusAt
+      }
+
+      # Namespace Information
+      namespace {
+        id
+        name
+        path
+        fullName
+        fullPath
+        description
+        visibility
+        lfsEnabled
+        requestAccessEnabled
+        rootStorageStatistics {
+          storageSize
+          repositorySize
+          lfsObjectsSize
+          buildArtifactsSize
+          packagesSize
+          snippetsSize
+          uploadsSize
+          wikiSize
+          containerRegistrySize
+          dependencyProxySize
+        }
+      }
+
+      # User Permissions
+      userPermissions {
+        createSnippet
+      }
+
+      # User Preferences
+      gitpodEnabled
+      preferencesGitpodPath
+    }
+  }
+}

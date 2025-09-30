@@ -1,0 +1,615 @@
+query FetchComprehensiveProject($fullPath: ID!) {
+  project(fullPath: $fullPath) {
+    # Basic project information
+    id
+    name
+    path
+    fullPath
+    nameWithNamespace
+    description
+    visibility
+    createdAt
+    updatedAt
+    lastActivityAt
+    webUrl
+    avatarUrl
+    archived
+
+    # Counts and statistics
+    forksCount
+    starCount
+    openIssuesCount
+
+    # Feature enablement flags
+    issuesEnabled
+    mergeRequestsEnabled
+    wikiEnabled
+    snippetsEnabled
+    jobsEnabled
+    containerRegistryEnabled
+    lfsEnabled
+    requestAccessEnabled
+    publicJobs
+    sharedRunnersEnabled
+
+    # Access level settings (with subfields)
+    issuesAccessLevel {
+      integerValue
+      stringValue
+    }
+    mergeRequestsAccessLevel {
+      integerValue
+      stringValue
+    }
+    forkingAccessLevel {
+      integerValue
+      stringValue
+    }
+
+    # Repository and Git settings
+    sshUrlToRepo
+    httpUrlToRepo
+
+    # Merge request settings
+    onlyAllowMergeIfPipelineSucceeds
+    onlyAllowMergeIfAllDiscussionsAreResolved
+    removeSourceBranchAfterMerge
+    printingMergeRequestLinkEnabled
+
+    # Service desk settings
+    serviceDeskEnabled
+
+    # Topic and tagging
+    topics
+    tagList
+
+    # Group and namespace
+    group {
+      id
+      name
+      path
+      fullPath
+      webUrl
+    }
+    namespace {
+      id
+      name
+      path
+      fullPath
+    }
+
+    # Project members with comprehensive user data
+    projectMembers(first: 100) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        accessLevel {
+          integerValue
+          stringValue
+        }
+        createdAt
+        updatedAt
+        expiresAt
+        user {
+          id
+          username
+          name
+          publicEmail
+          state
+          webUrl
+          avatarUrl
+          bio
+          location
+          organization
+          linkedin
+          twitter
+          lastActivityOn
+          createdAt
+          userPermissions {
+            createSnippet
+          }
+        }
+      }
+    }
+
+    # Repository information
+    repository {
+      exists
+      empty
+      rootRef
+      tree {
+        lastCommit {
+          id
+          shortId
+          title
+          message
+          authorName
+          authorEmail
+          authoredDate
+          committedDate
+        }
+      }
+    }
+
+    # Comprehensive statistics
+    statistics {
+      commitCount
+      storageSize
+      repositorySize
+      lfsObjectsSize
+      buildArtifactsSize
+      packagesSize
+      snippetsSize
+      uploadsSize
+      wikiSize
+    }
+
+    # Labels
+    labels(first: 100) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        title
+        description
+        color
+        textColor
+        createdAt
+        updatedAt
+      }
+    }
+
+    # Milestones
+    milestones(first: 100) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        title
+        description
+        state
+        dueDate
+        startDate
+        createdAt
+        updatedAt
+        expired
+        upcoming
+        groupMilestone
+        projectMilestone
+        stats {
+          totalIssuesCount
+          closedIssuesCount
+        }
+      }
+    }
+
+    # Issues (limited sample for performance)
+    issues(first: 20, sort: UPDATED_DESC) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        iid
+        title
+        description
+        state
+        createdAt
+        updatedAt
+        closedAt
+        dueDate
+        confidential
+        discussionLocked
+        upvotes
+        downvotes
+        userNotesCount
+        webUrl
+        relativePosition
+        emailsDisabled
+        author {
+          id
+          username
+          name
+          webUrl
+          avatarUrl
+        }
+        assignees {
+          nodes {
+            id
+            username
+            name
+            webUrl
+            avatarUrl
+          }
+        }
+        labels {
+          nodes {
+            id
+            title
+            color
+            description
+          }
+        }
+        milestone {
+          id
+          title
+          state
+          dueDate
+        }
+        taskCompletionStatus {
+          count
+          completedCount
+        }
+      }
+    }
+
+    # Merge Requests (limited sample for performance)
+    mergeRequests(first: 20, sort: UPDATED_DESC) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        iid
+        title
+        description
+        state
+        createdAt
+        updatedAt
+        mergedAt
+        closedAt
+        sourceBranch
+        targetBranch
+        sourceBranchExists
+        targetBranchExists
+        conflicts
+        mergeable
+        mergeOngoing
+        draft
+        forceRemoveSourceBranch
+        shouldRemoveSourceBranch
+        rebaseInProgress
+        diffHeadSha
+        mergeCommitSha
+        commitCount
+        downvotes
+        upvotes
+        userNotesCount
+        webUrl
+        subscribed
+        headPipeline {
+          id
+          iid
+          status
+          detailedStatus {
+            id
+            group
+            icon
+            label
+            text
+            tooltip
+          }
+        }
+        author {
+          id
+          username
+          name
+          webUrl
+          avatarUrl
+        }
+        assignees {
+          nodes {
+            id
+            username
+            name
+            webUrl
+            avatarUrl
+          }
+        }
+        reviewers {
+          nodes {
+            id
+            username
+            name
+            webUrl
+            avatarUrl
+          }
+        }
+        labels {
+          nodes {
+            id
+            title
+            color
+            description
+          }
+        }
+        milestone {
+          id
+          title
+          state
+          dueDate
+        }
+        taskCompletionStatus {
+          count
+          completedCount
+        }
+      }
+    }
+
+    # Environments
+    environments(first: 50) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        slug
+        state
+        path
+        externalUrl
+        environmentType
+        createdAt
+        updatedAt
+        autoStopAt
+        tier
+      }
+    }
+
+    # Releases (limited sample)
+    releases(first: 20, sort: RELEASED_AT_DESC) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        name
+        tagName
+        tagPath
+        description
+        descriptionHtml
+        releasedAt
+        createdAt
+        upcomingRelease
+        author {
+          id
+          username
+          name
+          webUrl
+          avatarUrl
+        }
+        commit {
+          id
+          shortId
+          title
+          authorName
+          authoredDate
+        }
+        assets {
+          count
+          sources {
+            nodes {
+              url
+              format
+            }
+          }
+          links {
+            nodes {
+              id
+              name
+              url
+              directAssetUrl
+              linkType
+            }
+          }
+        }
+        evidences {
+          nodes {
+            id
+            filepath
+            collectedAt
+          }
+        }
+      }
+    }
+
+    # Packages (limited sample)
+    packages(first: 20, sort: CREATED_DESC) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        version
+        packageType
+        status
+        createdAt
+        updatedAt
+      }
+    }
+
+    # Snippets
+    snippets(first: 20) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        title
+        fileName
+        description
+        visibilityLevel
+        createdAt
+        updatedAt
+        webUrl
+        author {
+          id
+          username
+          name
+          webUrl
+          avatarUrl
+        }
+        blobs {
+          nodes {
+            name
+            path
+            size
+            mode
+          }
+        }
+      }
+    }
+
+    # Runners
+    runners(first: 20) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        runnerType
+        description
+        contactedAt
+        active
+        status
+        tagList
+        locked
+        maximumTimeout
+        accessLevel
+        paused
+        maintenanceNote
+        jobCount
+      }
+    }
+
+    # Board information
+    boards(first: 10) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        hideBacklogList
+        hideClosedList
+        createdAt
+        updatedAt
+        webUrl
+        lists {
+          nodes {
+            id
+            listType
+            position
+            label {
+              id
+              title
+              color
+            }
+            milestone {
+              id
+              title
+            }
+            assignee {
+              id
+              username
+              name
+            }
+          }
+        }
+      }
+    }
+
+    # Container repositories
+    containerRepositories(first: 20) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        path
+        location
+        createdAt
+        updatedAt
+        expirationPolicyStartedAt
+        expirationPolicyCleanupStatus
+        status
+        tagsCount
+      }
+    }
+
+    # Pipelines (limited sample for performance)
+    pipelines(first: 10) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        iid
+        sha
+        beforeSha
+        status
+        detailedStatus {
+          id
+          group
+          icon
+          label
+          text
+          tooltip
+        }
+        configSource
+        duration
+        queuedDuration
+        coverage
+        createdAt
+        updatedAt
+        startedAt
+        finishedAt
+        committedAt
+        ref
+        user {
+          id
+          username
+          name
+          webUrl
+          avatarUrl
+        }
+        commit {
+          id
+          shortId
+          title
+          message
+          authorName
+          authorEmail
+          authoredDate
+        }
+      }
+    }
+
+    # Compliance frameworks
+    complianceFrameworks {
+      nodes {
+        id
+        name
+        description
+      }
+    }
+  }
+}

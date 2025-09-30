@@ -1,0 +1,29 @@
+query FetchProjectPipelines($fullPath: ID!, $first: Int, $after: String) {
+  project(fullPath: $fullPath) {
+    pipelines(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        iid
+        sha
+        ref
+        status
+        source
+        createdAt
+        updatedAt
+        startedAt
+        finishedAt
+        duration
+        coverage
+        user {
+          id
+          username
+          name
+        }
+      }
+    }
+  }
+}
