@@ -1,9 +1,12 @@
 import { existsSync, readFileSync } from "fs";
+import process from "node:process";
 import { homedir } from "os";
 import { join } from "path";
 import { parse as yamlParse } from "yaml";
 import { createLogger } from "../logging";
 import { defaultConfig } from "./defaults";
+import { ConfigurationValidationError } from "./errors";
+import type { WizardPrompter } from "./setupWizard";
 import type { CliArgs, Config, EnvMapping } from "./types";
 
 // Import new modular components
@@ -601,48 +604,110 @@ export class ConfigLoader {
    * Validate configuration
    */
   validate(): void {
-    if (!this.config.gitlab.host) {
-      throw new Error("GitLab host is required");
-    }
+    const validationResult = this.validator.validate(this.config);
+    const issues = [...validationResult.errors];
 
-    if (!this.config.gitlab.accessToken) {
-      throw new Error("GitLab access token is required");
-    }
+    const pushNumericIssue = (field: string, message: string, value: unknown): void => {
+      issues.push({
+        field,
+        message,
+        value,
+        severity: "error",
+      });
+    };
 
     if (this.config.gitlab?.timeout !== undefined && this.config.gitlab.timeout <= 0) {
-      throw new Error("GitLab timeout must be positive");
+      pushNumericIssue("gitlab.timeout", "GitLab timeout must be positive", this.config.gitlab.timeout);
     }
 
     if (this.config.gitlab?.maxConcurrency !== undefined && this.config.gitlab.maxConcurrency <= 0) {
-      throw new Error("GitLab max concurrency must be positive");
+      pushNumericIssue("gitlab.maxConcurrency", "GitLab max concurrency must be positive", this.config.gitlab.maxConcurrency);
     }
 
     if (this.config.gitlab?.rateLimit !== undefined && this.config.gitlab.rateLimit <= 0) {
-      throw new Error("GitLab rate limit must be positive");
+      pushNumericIssue("gitlab.rateLimit", "GitLab rate limit must be positive", this.config.gitlab.rateLimit);
     }
 
     if (this.config.database?.timeout !== undefined && this.config.database.timeout <= 0) {
-      throw new Error("Database timeout must be positive");
+      pushNumericIssue("database.timeout", "Database timeout must be positive", this.config.database.timeout);
     }
 
     if (this.config.progress?.interval !== undefined && this.config.progress.interval <= 0) {
-      throw new Error("Progress interval must be positive");
+      pushNumericIssue("progress.interval", "Progress interval must be positive", this.config.progress.interval);
     }
 
     if (this.config.resume?.autoSaveInterval !== undefined && this.config.resume.autoSaveInterval <= 0) {
-      throw new Error("Resume auto-save interval must be positive");
+      pushNumericIssue("resume.autoSaveInterval", "Resume auto-save interval must be positive", this.config.resume.autoSaveInterval);
+    }
+
+    const hasBlockingIssues = issues.some((issue) => issue.severity === "error");
+
+    if (hasBlockingIssues) {
+      throw ConfigurationValidationError.fromIssues(issues, validationResult.warnings);
+    }
+
+    if (validationResult.warnings.length > 0) {
+      validationResult.warnings.forEach((warning) => this.logger.warn(warning));
     }
 
     this.logger.debug("Configuration validation passed");
+  }
+
+  getCurrentConfig(): Config {
+    return this.config;
+  }
+
+  getLogger(): ReturnType<typeof createLogger> {
+    return this.logger;
   }
 }
 
 /**
  * Create and load configuration
  */
-export const loadConfig = async (args: CliArgs = {}): Promise<Config> => {
+export type LoadConfigOptions = {
+  autoSetup?: boolean;
+  preferredConfigPath?: string;
+  wizardPrompter?: WizardPrompter;
+  alwaysPromptCoreFields?: boolean;
+};
+
+const isInteractiveSession = (): boolean => Boolean(process.stdin?.isTTY && process.stdout?.isTTY);
+
+export const loadConfig = async (args: CliArgs = {}, options: LoadConfigOptions = {}): Promise<Config> => {
   const loader = new ConfigLoader();
-  const config = await loader.load(args);
-  loader.validate();
-  return config;
+
+  try {
+    const config = await loader.load(args);
+    loader.validate();
+    return config;
+  } catch (error) {
+    if (!(error instanceof ConfigurationValidationError)) {
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+
+    if (options.autoSetup === false || !isInteractiveSession()) {
+      throw error;
+    }
+
+    loader.getLogger().warn("Configuration incomplete. Launching setup wizard...");
+
+    const { runSetupWizard } = await import("./setupWizard.js");
+
+    const wizardResult = await runSetupWizard({
+      initialConfig: loader.getCurrentConfig(),
+      issues: error.issues,
+      preferredTargetPath: options.preferredConfigPath ?? args.config,
+      prompter: options.wizardPrompter,
+      alwaysPromptCoreFields: Boolean(options.alwaysPromptCoreFields),
+      args,
+    });
+
+    if (wizardResult.status === "completed") {
+      return loadConfig(args, { ...options, autoSetup: false });
+    }
+
+    loader.getLogger().warn(wizardResult.status === "aborted" ? "Setup wizard aborted by user." : "Setup wizard skipped; configuration remains incomplete.");
+    throw error;
+  }
 };

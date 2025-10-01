@@ -9,7 +9,7 @@ import { areasCommand, crawlCommand, repositoryCommand, resourcesCommand, usersC
 import { addAccountCommand, listAccountsCommand, refreshTokenCommand, removeAccountCommand } from "./commands/account/command";
 
 // Import config commands
-import { setConfigCommand, showConfigCommand, unsetConfigCommand, validateConfigCommand } from "./commands/config/command";
+import { setConfigCommand, setupConfigCommand, showConfigCommand, unsetConfigCommand, validateConfigCommand } from "./commands/config/command";
 
 // Import test commands
 import { testCommand } from "./commands/test/command";
@@ -37,6 +37,7 @@ const routes = buildRouteMap({
     "config:set": setConfigCommand,
     "config:unset": unsetConfigCommand,
     "config:validate": validateConfigCommand,
+    "config:setup": setupConfigCommand,
 
     // Authentication commands - OAuth2 browser flow
     auth: authCommand,

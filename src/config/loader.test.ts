@@ -4,7 +4,9 @@
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { promises as fs } from 'fs';
+import { ConfigurationValidationError } from './errors.js';
 import { loadConfig } from './loader.js';
+import type { SetupWizardResult } from './setupWizard';
 
 // Mock fs
 jest.mock('fs', () => ({
@@ -56,6 +58,13 @@ const mockConfigMergerInstance = {
   merge: jest.fn() as jest.MockedFunction<any>,
 };
 
+const mockConfigValidatorInstance = {
+  validate: jest.fn()
+    .mockReturnValue({ isValid: true, errors: [], warnings: [] }),
+};
+
+const runSetupWizardMock = jest.fn<(options: unknown) => Promise<SetupWizardResult>>();
+
 // Mock file loader
 jest.mock('./loaders/fileLoader', () => ({
   FileConfigLoader: jest.fn().mockImplementation(() => mockFileLoaderInstance),
@@ -94,7 +103,11 @@ jest.mock('./utils/templateUtils', () => ({
 
 // Mock validator
 jest.mock('./validation/validator', () => ({
-  ConfigValidator: jest.fn().mockImplementation(() => ({})),
+  ConfigValidator: jest.fn().mockImplementation(() => mockConfigValidatorInstance),
+}));
+
+jest.mock('./setupWizard.js', () => ({
+  runSetupWizard: runSetupWizardMock,
 }));
 
 describe('Configuration Loader', () => {
@@ -102,6 +115,9 @@ describe('Configuration Loader', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockConfigValidatorInstance.validate.mockReset();
+    mockConfigValidatorInstance.validate.mockReturnValue({ isValid: true, errors: [], warnings: [] });
+    runSetupWizardMock.mockReset();
     process.env = {}; // Reset environment
   });
 
@@ -349,6 +365,104 @@ describe('Configuration Loader', () => {
 
       // Should fallback to some basic config
       await expect(loadConfig({})).rejects.toThrow();
+    });
+  });
+
+  describe('auto setup wizard', () => {
+    const baseConfig = {
+      gitlab: { host: '', accessToken: '', timeout: 5000 },
+      output: { rootDir: './output' },
+      database: { path: './database.sqlite' },
+      logging: { level: 'info', console: true },
+      progress: { enabled: true, file: './progress.yaml' },
+      resume: { enabled: true, stateFile: './resume.json' },
+      callbacks: { enabled: false },
+    };
+
+    let originalStdoutIsTTY: boolean | undefined;
+    let originalStdinIsTTY: boolean | undefined;
+
+    beforeEach(() => {
+      originalStdoutIsTTY = (process.stdout as any).isTTY;
+      originalStdinIsTTY = (process.stdin as any).isTTY;
+      (process.stdout as any).isTTY = true;
+      (process.stdin as any).isTTY = true;
+    });
+
+    afterEach(() => {
+      (process.stdout as any).isTTY = originalStdoutIsTTY;
+      (process.stdin as any).isTTY = originalStdinIsTTY;
+    });
+
+    it('launches setup wizard when validation fails interactively', async () => {
+      const invalidConfig = { ...baseConfig };
+      const validConfig = {
+        ...baseConfig,
+        gitlab: {
+          ...baseConfig.gitlab,
+          host: 'https://gitlab.com',
+          accessToken: 'testtokenwithenoughlength123456',
+        },
+      };
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce(invalidConfig).mockReturnValueOnce(validConfig);
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValue({});
+      mockConfigValidatorInstance.validate
+        .mockImplementationOnce(() => ({
+          isValid: false,
+          errors: [
+            { field: 'gitlab.host', message: 'required', severity: 'error' },
+            { field: 'gitlab.accessToken', message: 'required', severity: 'error' },
+          ],
+          warnings: [],
+        }))
+        .mockImplementationOnce(() => ({ isValid: true, errors: [], warnings: [] }));
+
+      runSetupWizardMock.mockResolvedValueOnce({ status: 'completed', configPath: '/tmp/copima.yaml' });
+
+      const result = await loadConfig({});
+
+      expect(runSetupWizardMock).toHaveBeenCalledTimes(1);
+      const wizardArgs = runSetupWizardMock.mock.calls[0]?.[0] as unknown as { issues?: Array<{ field: string }> };
+      expect(wizardArgs?.issues).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ field: 'gitlab.host' }),
+          expect.objectContaining({ field: 'gitlab.accessToken' }),
+        ]),
+      );
+      expect(result.gitlab?.host).toBe('https://gitlab.com');
+      expect(result.gitlab?.accessToken).toBe('testtokenwithenoughlength123456');
+    });
+
+    it('rethrows validation error when wizard is aborted', async () => {
+      mockConfigMergerInstance.merge.mockReturnValue(baseConfig);
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValue({});
+      mockConfigValidatorInstance.validate.mockImplementationOnce(() => ({
+        isValid: false,
+        errors: [{ field: 'gitlab.host', message: 'required', severity: 'error' }],
+        warnings: [],
+      }));
+
+      runSetupWizardMock.mockResolvedValueOnce({ status: 'aborted' });
+
+      await expect(loadConfig({})).rejects.toBeInstanceOf(ConfigurationValidationError);
+      expect(runSetupWizardMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not invoke wizard when session is non-interactive', async () => {
+      (process.stdout as any).isTTY = false;
+      (process.stdin as any).isTTY = false;
+
+      mockConfigMergerInstance.merge.mockReturnValue(baseConfig);
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValue({});
+      mockConfigValidatorInstance.validate.mockImplementationOnce(() => ({
+        isValid: false,
+        errors: [{ field: 'gitlab.host', message: 'required', severity: 'error' }],
+        warnings: [],
+      }));
+
+      await expect(loadConfig({})).rejects.toBeInstanceOf(ConfigurationValidationError);
+      expect(runSetupWizardMock).not.toHaveBeenCalled();
     });
   });
 });

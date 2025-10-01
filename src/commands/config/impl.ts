@@ -4,7 +4,11 @@ import { homedir } from "os";
 import { dirname, join } from "path";
 import colors from "picocolors";
 import treeify from "treeify";
-import { loadConfig } from "../../config/index";
+import { ConfigurationValidationError } from "../../config/errors";
+import { ConfigLoader, loadConfig } from "../../config/index";
+import { runSetupWizard } from "../../config/setupWizard";
+import type { CliArgs, Config } from "../../config/types";
+import type { ConfigValidationError } from "../../config/validation/types";
 import { createLogger } from "../../logging";
 
 const logger = createLogger("ConfigCommands");
@@ -30,6 +34,11 @@ type UnsetConfigFlags = {
 type ValidateConfigFlags = {
   fix?: boolean;
   strict?: boolean;
+};
+
+type SetupConfigFlags = {
+  config?: string;
+  full?: boolean;
 };
 
 const GLOBAL_CONFIG_DIR = join(homedir(), ".config", "copima");
@@ -223,6 +232,58 @@ export const validateConfig = async (flags: ValidateConfigFlags): Promise<void |
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
+};
+
+export const setupConfig = async (flags: SetupConfigFlags): Promise<void | Error> => {
+  const logger = createLogger("ConfigSetupCommand");
+  const cliArgs: CliArgs = {};
+  if (flags.config) {
+    cliArgs.config = flags.config;
+  }
+
+  const loader = new ConfigLoader(logger);
+  let initialConfig: Config | null = null;
+  let validationIssues: ConfigValidationError[] = [];
+
+  try {
+    initialConfig = await loader.load(cliArgs);
+    loader.validate();
+  } catch (error) {
+    if (error instanceof ConfigurationValidationError) {
+      validationIssues = error.issues;
+      initialConfig = loader.getCurrentConfig();
+    } else {
+      return error instanceof Error ? error : new Error(String(error));
+    }
+  }
+
+  initialConfig = initialConfig ?? loader.getCurrentConfig();
+
+  const wizardResult = await runSetupWizard({
+    initialConfig,
+    issues: validationIssues,
+    preferredTargetPath: flags.config,
+    alwaysPromptCoreFields: flags.full !== false,
+  });
+
+  if (wizardResult.status === "completed") {
+    logger.info(colors.green("✅ Configuration updated"));
+    try {
+      await loadConfig(cliArgs, { autoSetup: false });
+      logger.info(colors.cyan("Configuration validated successfully."));
+    } catch (error) {
+      logger.error(colors.red("Failed to validate configuration after setup"));
+      return error instanceof Error ? error : new Error(String(error));
+    }
+    return;
+  }
+
+  if (wizardResult.status === "aborted") {
+    logger.warn(colors.yellow("Setup wizard aborted by user."));
+    return new Error("Setup wizard aborted by user");
+  }
+
+  logger.info(colors.yellow("Setup wizard skipped"));
 };
 
 const validateGitlabConfig = (config: any, errors: string[], warnings: string[]): void => {

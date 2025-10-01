@@ -123,6 +123,36 @@ export const unsetConfigCommand = buildCommand({
   },
 });
 
+export const setupConfigCommand = buildCommand({
+  loader: async () => {
+    const { setupConfig } = await import("./impl.js");
+    return setupConfig;
+  },
+  parameters: {
+    positional: {
+      kind: "tuple",
+      parameters: [],
+    },
+    flags: {
+      config: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Path to configuration file to update",
+        optional: true,
+      },
+      full: {
+        kind: "parsed",
+        parse: (input: string) => input.toLowerCase() !== "false",
+        brief: "Prompt for core fields even if already set",
+        optional: true,
+      },
+    },
+  },
+  docs: {
+    brief: "Launch interactive configuration setup wizard",
+  },
+});
+
 export const validateConfigCommand = buildCommand({
   loader: async () => {
     const { validateConfig } = await import("./impl.js");

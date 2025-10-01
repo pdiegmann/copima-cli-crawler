@@ -271,3 +271,19 @@ The application must implement the following **core responsibilities** in additi
 8. YAML-based configuration file in the user's home configuration directory (e.g., ~/.config/copima)
 9. YAML-based configuration file in the current working directory
 10. Built-time defaults derived from a YAML-based configuration file in the project's root directory
+
+## Interactive configuration setup
+
+The CLI now ships with an interactive setup wizard that captures every required configuration value in one pass. You can launch it manually at any time with:
+
+```bash
+copima config:setup [--config ./copima.yaml] [--full=false]
+```
+
+- **`--config`** lets you explicitly target a configuration file. When omitted, the wizard offers to create `./copima.yaml` or `~/.config/copima/config.yaml` if they do not exist.
+- **`--full=false`** keeps the wizard focused on missing values only. By default the command re-prompts the core GitLab credentials so that you can rotate them quickly.
+- OAuth client configuration is optional; you can skip it entirely or capture provider and callback settings in the same session.
+
+When any command needs configuration and none is available (or critical fields such as `gitlab.host` or `gitlab.accessToken` are blank), the wizard is triggered automatically—as long as the CLI is running in an interactive terminal. Non-interactive environments (CI pipelines, scripts, etc.) still fail fast with a clear validation error instead of hanging for input.
+
+The wizard writes YAML or JSON depending on the target filename and will reuse existing values wherever possible, only prompting for the fields that are missing or invalid.
