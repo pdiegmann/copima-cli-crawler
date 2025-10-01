@@ -3,12 +3,11 @@
  */
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import type { MockedFunction } from 'jest-mock';
 import { GitLabGraphQLClient } from './gitlabGraphQLClient.js';
 
 // Mock fetch
 const mockFetch = jest.fn();
-global.fetch = mockFetch;
+global.fetch = mockFetch as any;
 
 // Mock logger
 jest.mock('../logging', () => ({
@@ -73,10 +72,11 @@ describe('GitLabGraphQLClient', () => {
   describe('query method', () => {
     it('should execute GraphQL query successfully', async () => {
       const mockResponse = { data: { projects: [] } };
-      (mockFetch as MockedFunction<typeof mockFetch>).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      } as any);
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const query = { loc: { source: { body: 'query { projects { id name } }' } } };
       const variables = { first: 10 };
@@ -102,10 +102,11 @@ describe('GitLabGraphQLClient', () => {
         data: null,
         errors: [{ message: 'Field not found' }],
       };
-      (mockFetch as MockedFunction<typeof mockFetch>).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      } as any);
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const query = { loc: { source: { body: 'query { invalidField }' } } };
 
@@ -113,11 +114,12 @@ describe('GitLabGraphQLClient', () => {
     });
 
     it('should handle 401 errors', async () => {
-      (mockFetch as MockedFunction<typeof mockFetch>).mockResolvedValueOnce({
+      const mockTextFn = jest.fn<() => Promise<string>>().mockResolvedValueOnce('Unauthorized');
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        text: jest.fn().mockResolvedValueOnce('Unauthorized'),
-      } as any);
+        text: mockTextFn,
+      } as unknown as Response);
 
       const query = { loc: { source: { body: 'query { test }' } } };
 
@@ -125,11 +127,12 @@ describe('GitLabGraphQLClient', () => {
     });
 
     it('should handle other HTTP errors', async () => {
-      (mockFetch as MockedFunction<typeof mockFetch>).mockResolvedValueOnce({
+      const mockTextFn = jest.fn<() => Promise<string>>().mockResolvedValueOnce('Internal Server Error');
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
-        text: jest.fn().mockResolvedValueOnce('Internal Server Error'),
-      } as any);
+        text: mockTextFn,
+      } as unknown as Response);
 
       const query = { loc: { source: { body: 'query { test }' } } };
 
@@ -157,10 +160,11 @@ describe('GitLabGraphQLClient', () => {
         },
       };
 
-      (mockFetch as MockedFunction<typeof mockFetch>).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      } as any);
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const result = await client.fetchGroups();
 
@@ -183,10 +187,11 @@ describe('GitLabGraphQLClient', () => {
         },
       };
 
-      (mockFetch as any).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      });
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const result = await client.fetchUsers();
 
@@ -204,10 +209,11 @@ describe('GitLabGraphQLClient', () => {
         },
       };
 
-      (mockFetch as any).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      });
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const result = await client.fetchUsers(50, 'cursor123');
 
@@ -233,10 +239,11 @@ describe('GitLabGraphQLClient', () => {
         },
       };
 
-      (mockFetch as any).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      });
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const result = await client.fetchGroupProjects('group-123');
 
@@ -253,10 +260,11 @@ describe('GitLabGraphQLClient', () => {
         },
       };
 
-      (mockFetch as any).mockResolvedValueOnce({
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
-      });
+        json: mockJsonFn,
+      } as unknown as Response);
 
       const result = await client.fetchGroup('group-123');
 
@@ -267,7 +275,7 @@ describe('GitLabGraphQLClient', () => {
   describe('error handling', () => {
     it('should handle network timeouts', async () => {
       const timeoutError = new Error('Request timeout');
-      (mockFetch as MockedFunction<typeof mockFetch>).mockRejectedValueOnce(timeoutError);
+      mockFetch.mockRejectedValueOnce(timeoutError);
 
       const query = { loc: { source: { body: 'query { test }' } } };
       await expect(client.query(query)).rejects.toThrow('Request timeout');
@@ -275,7 +283,7 @@ describe('GitLabGraphQLClient', () => {
 
     it('should handle fetch errors', async () => {
       const fetchError = new Error('Network error');
-      (mockFetch as MockedFunction<typeof mockFetch>).mockRejectedValueOnce(fetchError);
+      mockFetch.mockRejectedValueOnce(fetchError);
 
       const query = { loc: { source: { body: 'query { test }' } } };
       await expect(client.query(query)).rejects.toThrow('Network error');
@@ -301,15 +309,17 @@ describe('GitLabGraphQLClient', () => {
         },
       };
 
-      (mockFetch as any)
+      const mockJsonFn1 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(firstResponse);
+      const mockJsonFn2 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(secondResponse);
+      mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: jest.fn().mockResolvedValueOnce(firstResponse),
-        })
+          json: mockJsonFn1,
+        } as unknown as Response)
         .mockResolvedValueOnce({
           ok: true,
-          json: jest.fn().mockResolvedValueOnce(secondResponse),
-        });
+          json: mockJsonFn2,
+        } as unknown as Response);
 
       const result = await client.fetchAllUsers();
 

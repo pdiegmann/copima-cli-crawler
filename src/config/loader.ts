@@ -50,18 +50,28 @@ export class ConfigLoader {
       configs.push({ ...defaultConfig });
       this.logger.debug("Applied default configuration");
 
-      // Level 4: Local config file (./copima.yaml)
-      const localConfig = await this.loadConfigFiles();
-      if (Object.keys(localConfig).length > 0) {
-        configs.push(localConfig);
-        this.logger.debug("Applied local configuration files");
+      // Level 4: Specified config file (if provided) or local config files
+      let fileConfig: Partial<Config> = {};
+      if (args.config) {
+        // Load from specified config file
+        fileConfig = await this.loadSpecifiedConfigFile(args.config);
+      } else {
+        // Load from local config files
+        fileConfig = await this.loadConfigFiles();
       }
 
-      // Level 3: User config file (~/.config/copima/config.yaml)
-      const userConfig = await this.loadUserConfigFiles();
-      if (Object.keys(userConfig).length > 0) {
-        configs.push(userConfig);
-        this.logger.debug("Applied user configuration files");
+      if (Object.keys(fileConfig).length > 0) {
+        configs.push(fileConfig);
+        this.logger.debug(args.config ? `Applied specified configuration file: ${args.config}` : "Applied local configuration files");
+      }
+
+      // Level 3: User config file (~/.config/copima/config.yaml) - only if no specified config
+      if (!args.config) {
+        const userConfig = await this.loadUserConfigFiles();
+        if (Object.keys(userConfig).length > 0) {
+          configs.push(userConfig);
+          this.logger.debug("Applied user configuration files");
+        }
       }
 
       // Level 2: Environment variables
@@ -92,6 +102,27 @@ export class ConfigLoader {
     } catch (error) {
       this.logger.error("Failed to load configuration", { error });
       throw new Error(`Configuration loading failed: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+
+  /**
+   * Load specified configuration file using new modular file loader
+   */
+  private async loadSpecifiedConfigFile(configPath: string): Promise<Partial<Config>> {
+    try {
+      let config: Partial<Config>;
+      if (configPath.endsWith(".json")) {
+        config = await this.fileLoader.loadJsonFile(configPath);
+      } else {
+        config = await this.fileLoader.loadYamlFile(configPath);
+      }
+      this.logger.debug(`Loaded specified config from ${configPath}`);
+      return config;
+    } catch (error) {
+      this.logger.warn(`Failed to load specified config from ${configPath}:`, {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return {}; // Return empty config on error, don't re-throw
     }
   }
 
