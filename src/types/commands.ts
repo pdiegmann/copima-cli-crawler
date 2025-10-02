@@ -82,6 +82,7 @@ export type AuthCommandFlags = {
   timeout?: string; // Timeout in seconds for auth flow (parsed as string)
   "account-id"?: string; // Account identifier for storage
   name?: string; // Display name for account
+  email?: string; // Email associated with the account for storage
   config?: string; // Path to YAML configuration file
 } & SafeRecord;
 

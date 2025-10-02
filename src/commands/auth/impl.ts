@@ -36,7 +36,8 @@ export const executeAuthFlow = async (flags: AuthCommandFlags): Promise<void> =>
       console.log(pc.yellow("⏳ Waiting for authorization callback..."));
 
       // Wait for callback
-      const callbackParams = await waitForCallback(server, (flags.timeout || 300) * 1000);
+      const callbackTimeoutMs = (parseOptionalNumber(flags.timeout) ?? 300) * 1000;
+      const callbackParams = await waitForCallback(server, callbackTimeoutMs);
 
       // Validate callback
       if (callbackParams.error) {
@@ -223,65 +224,159 @@ const buildConfigFromFlags = async (flags: AuthCommandFlags): Promise<OAuth2Conf
   return config;
 };
 
+type ServerConfigOverride = Partial<{ port: number; timeoutMs: number; callbackPath: string }>;
+
+const DEFAULT_SERVER_OVERRIDE: Required<ServerConfigOverride> = {
+  port: 3000,
+  timeoutMs: 300 * 1000,
+  callbackPath: "/callback",
+};
+
 const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Server> => {
-  let serverConfig: AuthServerConfig = {
-    port: flags.port ? parseInt(flags.port, 10) : 3000,
-    timeout: (flags.timeout ? parseInt(flags.timeout, 10) : 300) * 1000,
-    callbackPath: "/callback",
-  };
+  const overrides: ServerConfigOverride[] = [];
 
-  // Try to get server config from unified config first
-  if (!flags.config) {
-    try {
-      const mainConfig = await loadConfig({ config: undefined });
-      if (mainConfig.oauth2?.server) {
-        const oauth2Server = mainConfig.oauth2.server;
-        serverConfig = {
-          port: flags.port ? parseInt(flags.port, 10) : oauth2Server.port || 3000,
-          timeout: (flags.timeout ? parseInt(flags.timeout, 10) : oauth2Server.timeout || 300) * 1000,
-          callbackPath: oauth2Server.callbackPath || "/callback",
-        };
-        logger.debug("Using OAuth2 server config from main application config");
-      }
-    } catch {
-      logger.debug("No OAuth2 server config found in main config, using defaults");
-    }
+  const mainConfigOverride = await loadServerConfigFromMainConfig(flags);
+  if (mainConfigOverride) {
+    overrides.push(mainConfigOverride);
   }
 
-  // Check if YAML configuration is provided and load server config
-  if (flags.config) {
-    try {
-      // Try unified config format first
-      const mainConfig = await loadConfig({ config: flags.config });
-      if (mainConfig.oauth2?.server) {
-        const oauth2Server = mainConfig.oauth2.server;
-        serverConfig = {
-          port: flags.port ? parseInt(flags.port, 10) : oauth2Server.port || 3000,
-          timeout: (flags.timeout ? parseInt(flags.timeout, 10) : oauth2Server.timeout || 300) * 1000,
-          callbackPath: oauth2Server.callbackPath || "/callback",
-        };
-        logger.debug("Using OAuth2 server config from unified config file");
-      }
-    } catch {
-      logger.debug("Failed to load unified config, trying legacy OAuth2 config format");
-
-      // Fall back to legacy format
-      const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
-      const yamlConfig = oauth2YamlConfigLoader.loadConfig(flags.config);
-      const yamlServerConfig = oauth2YamlConfigLoader.getServerConfigFromYaml(yamlConfig);
-
-      // Merge YAML config with command-line flags (flags take precedence)
-      serverConfig = {
-        port: flags.port ? parseInt(flags.port, 10) : yamlServerConfig.port || 3000,
-        timeout: (flags.timeout ? parseInt(flags.timeout, 10) : yamlServerConfig.timeout ? yamlServerConfig.timeout / 1000 : 300) * 1000,
-        callbackPath: yamlServerConfig.callbackPath || "/callback",
-      };
-    }
+  const configFileOverride = await loadServerConfigFromExplicitConfig(flags);
+  if (configFileOverride) {
+    overrides.push(configFileOverride);
   }
 
+  const cliOverride = buildCliServerOverride(flags);
+  if (cliOverride) {
+    overrides.push(cliOverride);
+  }
+
+  const serverConfig = resolveServerConfig(overrides);
   const server = new OAuth2Server(serverConfig);
   await server.start();
   return server;
+};
+
+const resolveServerConfig = (overrides: ServerConfigOverride[]): AuthServerConfig => {
+  const merged: Required<ServerConfigOverride> = { ...DEFAULT_SERVER_OVERRIDE };
+
+  for (const override of overrides) {
+    if (override.port !== undefined) {
+      merged.port = override.port;
+    }
+    if (override.timeoutMs !== undefined) {
+      merged.timeoutMs = override.timeoutMs;
+    }
+    if (typeof override.callbackPath === "string") {
+      merged.callbackPath = override.callbackPath;
+    }
+  }
+
+  return {
+    port: merged.port,
+    timeout: merged.timeoutMs,
+    callbackPath: merged.callbackPath,
+  };
+};
+
+const buildCliServerOverride = (flags: AuthCommandFlags): ServerConfigOverride | null => {
+  const override: ServerConfigOverride = {};
+  const port = parseOptionalNumber(flags.port);
+  const timeoutSeconds = parseOptionalNumber(flags.timeout);
+
+  if (port !== undefined) {
+    override.port = port;
+  }
+  if (timeoutSeconds !== undefined) {
+    override.timeoutMs = timeoutSeconds * 1000;
+  }
+
+  return Object.keys(override).length > 0 ? override : null;
+};
+
+const parseOptionalNumber = (value?: string): number | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
+const loadServerConfigFromMainConfig = async (flags: AuthCommandFlags): Promise<ServerConfigOverride | null> => {
+  if (flags.config) {
+    return null;
+  }
+
+  try {
+    const mainConfig = await loadConfig({ config: undefined });
+    const serverConfig = mainConfig.oauth2?.server;
+    if (!serverConfig) {
+      return null;
+    }
+
+    logger.debug("Using OAuth2 server config from main application config");
+    return extractServerOverrideFromUnifiedConfig(serverConfig);
+  } catch {
+    logger.debug("No OAuth2 server config found in main config, using defaults");
+    return null;
+  }
+};
+
+const loadServerConfigFromExplicitConfig = async (flags: AuthCommandFlags): Promise<ServerConfigOverride | null> => {
+  if (!flags.config) {
+    return null;
+  }
+
+  try {
+    const override = await loadServerConfigFromUnifiedConfig(flags.config);
+    if (override) {
+      logger.debug("Using OAuth2 server config from unified config file");
+      return override;
+    }
+    return null;
+  } catch {
+    logger.debug("Failed to load unified config, trying legacy OAuth2 config format");
+    return await loadServerConfigFromLegacyConfig(flags.config);
+  }
+};
+
+const loadServerConfigFromUnifiedConfig = async (configPath: string): Promise<ServerConfigOverride | null> => {
+  const unifiedConfig = await loadConfig({ config: configPath });
+  const serverConfig = unifiedConfig.oauth2?.server;
+  if (!serverConfig) {
+    return null;
+  }
+
+  return extractServerOverrideFromUnifiedConfig(serverConfig);
+};
+
+const extractServerOverrideFromUnifiedConfig = (serverConfig: { port?: number; timeout?: number; callbackPath?: string }): ServerConfigOverride => {
+  return {
+    port: typeof serverConfig.port === "number" ? serverConfig.port : undefined,
+    timeoutMs: typeof serverConfig.timeout === "number" ? serverConfig.timeout * 1000 : undefined,
+    callbackPath: serverConfig.callbackPath,
+  };
+};
+
+const loadServerConfigFromLegacyConfig = async (configPath: string): Promise<ServerConfigOverride | null> => {
+  const { oauth2YamlConfigLoader } = await import("../../auth/yamlConfigLoader.js");
+  const yamlConfig = oauth2YamlConfigLoader.loadConfig(configPath);
+  const yamlServerConfig = oauth2YamlConfigLoader.getServerConfigFromYaml(yamlConfig);
+
+  if (!yamlServerConfig.port && !yamlServerConfig.timeout && !yamlServerConfig.callbackPath) {
+    return null;
+  }
+
+  logger.debug("Using OAuth2 server config from legacy YAML file");
+  return extractServerOverrideFromLegacyConfig(yamlServerConfig);
+};
+
+const extractServerOverrideFromLegacyConfig = (serverConfig: Partial<AuthServerConfig>): ServerConfigOverride => {
+  return {
+    port: typeof serverConfig.port === "number" ? serverConfig.port : undefined,
+    timeoutMs: typeof serverConfig.timeout === "number" ? serverConfig.timeout : undefined,
+    callbackPath: serverConfig.callbackPath,
+  };
 };
 
 const generateState = (): string => {
@@ -466,6 +561,7 @@ const storeCredentialsInDatabase = async (credentialData: any, tokens: OAuth2Tok
   await db()
     .insert(user)
     .values({
+      id: credentialData.userId,
       name: credentialData.userName,
       email: credentialData.userEmail,
       emailVerified: false,
