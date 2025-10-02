@@ -36,11 +36,6 @@ export default defineConfig([
       "no-console": ["off"],
       "prefer-template": "error",
 
-      // Stylistic
-      "stylistic/semi": ["error", "always"],
-      "stylistic/indent": ["error", 2],
-      "stylistic/quotes": ["error", "double", { avoidEscape: true, allowTemplateLiterals: "avoidEscape" }],
-
       // TypeScript
       "@typescript-eslint/explicit-function-return-type": "error",
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
@@ -57,8 +52,14 @@ export default defineConfig([
           singleQuote: false,
           tabWidth: 2,
           trailingComma: "es5",
+          bracketSameLine: true,
         },
       ],
+
+      // Disable stylistic rules that conflict with Prettier
+      "stylistic/indent": "off",
+      "stylistic/semi": "off",
+      "stylistic/quotes": "off",
 
       // Unicorn
       "unicorn/empty-brace-spaces": "off",

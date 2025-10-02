@@ -36,7 +36,21 @@ describe("db/schema", () => {
   });
 
   it("should have all required account fields", () => {
-    const expectedFields = ["id", "accountId", "providerId", "userId", "accessToken", "refreshToken", "accessTokenExpiresAt", "refreshTokenExpiresAt", "idToken", "scope", "password", "createdAt", "updatedAt"];
+    const expectedFields = [
+      "id",
+      "accountId",
+      "providerId",
+      "userId",
+      "accessToken",
+      "refreshToken",
+      "accessTokenExpiresAt",
+      "refreshTokenExpiresAt",
+      "idToken",
+      "scope",
+      "password",
+      "createdAt",
+      "updatedAt",
+    ];
     const actualFields = Object.keys(schema.account);
     expect(actualFields.sort()).toEqual(expectedFields.sort());
   });

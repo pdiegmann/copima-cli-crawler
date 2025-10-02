@@ -292,9 +292,7 @@ describe("YamlStorage", () => {
       });
 
       it("should throw error when account not found", () => {
-        expect(() => storage.updateAccount("nonexistent", { accessToken: "new" })).toThrow(
-          "Account with accountId nonexistent not found"
-        );
+        expect(() => storage.updateAccount("nonexistent", { accessToken: "new" })).toThrow("Account with accountId nonexistent not found");
       });
     });
 

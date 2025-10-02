@@ -995,65 +995,13 @@ export class TestRunner {
       const storage = initStorage({ path: "./database.yaml" });
       const tokenManager = new TokenManager(storage);
 
-      let accountRecord: { accountId: string; refreshToken: string | null } | undefined;
-
-      if (gitlabConfig.accountId) {
-        const account = storage.findAccountByAccountId(gitlabConfig.accountId);
-        if (account) {
-          accountRecord = {
-            accountId: account.accountId,
-            refreshToken: account.refreshToken,
-          };
-        }
-      } else if (gitlabConfig.email) {
-        const user = storage.findUserByEmail(gitlabConfig.email);
-        if (user) {
-          const accounts = storage.findAccountsByUserId(user.id);
-          // Sort by creation date and get the most recent
-          const sortedAccounts = accounts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-          const mostRecentAccount = sortedAccounts[0];
-          if (mostRecentAccount) {
-            accountRecord = {
-              accountId: mostRecentAccount.accountId,
-              refreshToken: mostRecentAccount.refreshToken,
-            };
-          }
-        }
-      } else {
-        const resolvedAccountId = await tokenManager.resolveAccountId();
-
-        if (!resolvedAccountId) {
-          console.warn("Test runner: Unable to determine which OAuth2 account to use. Please provide an accountId in the test configuration.");
-          return null;
-        }
-
-        const account = storage.findAccountByAccountId(resolvedAccountId);
-        if (account) {
-          accountRecord = {
-            accountId: account.accountId,
-            refreshToken: account.refreshToken,
-          };
-        }
-      }
-
+      const accountRecord = await this.findAccountRecord(gitlabConfig, storage, tokenManager);
       if (!accountRecord) {
-        console.warn("Test runner: No stored OAuth2 account found matching configuration");
         return null;
       }
 
-      if (!accountRecord.refreshToken) {
-        console.warn("Test runner: Stored account is missing a refresh token and cannot be used for OAuth2-authenticated tests");
-        return null;
-      }
-
-      const accessToken = await tokenManager.getAccessToken(accountRecord.accountId);
+      const accessToken = await this.getValidAccessToken(tokenManager, accountRecord.accountId);
       if (!accessToken) {
-        console.warn(`Test runner: No valid access token available for account: ${accountRecord.accountId}`);
-        return null;
-      }
-
-      if (accessToken.startsWith("test_") || accessToken.startsWith("mock_")) {
-        console.warn(`Test runner: Ignoring mock access token for account: ${accountRecord.accountId}`);
         return null;
       }
 
@@ -1068,6 +1016,118 @@ export class TestRunner {
       console.warn("Test runner: Failed to resolve OAuth2 account context", error);
       return null;
     }
+  }
+
+  /**
+   * Finds account record based on GitLab configuration.
+   */
+  private async findAccountRecord(gitlabConfig: any, storage: any, tokenManager: any): Promise<{ accountId: string; refreshToken: string | null } | null> {
+    let accountRecord: { accountId: string; refreshToken: string | null } | undefined;
+
+    if (gitlabConfig.accountId) {
+      accountRecord = this.findAccountByAccountId(gitlabConfig.accountId, storage);
+    } else if (gitlabConfig.email) {
+      accountRecord = this.findAccountByEmail(gitlabConfig.email, storage);
+    } else {
+      accountRecord = await this.findAccountByAutoResolve(tokenManager, storage);
+    }
+
+    return this.validateAccountRecord(accountRecord);
+  }
+
+  /**
+   * Finds account by account ID.
+   */
+  private findAccountByAccountId(accountId: string, storage: any): { accountId: string; refreshToken: string | null } | undefined {
+    const account = storage.findAccountByAccountId(accountId);
+    if (account) {
+      return {
+        accountId: account.accountId,
+        refreshToken: account.refreshToken,
+      };
+    }
+    return undefined;
+  }
+
+  /**
+   * Finds account by email (most recent account for user).
+   */
+  private findAccountByEmail(email: string, storage: any): { accountId: string; refreshToken: string | null } | undefined {
+    const user = storage.findUserByEmail(email);
+    if (!user) {
+      return undefined;
+    }
+
+    const accounts = storage.findAccountsByUserId(user.id);
+    const sortedAccounts = accounts.sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime());
+    const mostRecentAccount = sortedAccounts[0];
+
+    if (mostRecentAccount) {
+      return {
+        accountId: mostRecentAccount.accountId,
+        refreshToken: mostRecentAccount.refreshToken,
+      };
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Finds account by auto-resolving from token manager.
+   */
+  private async findAccountByAutoResolve(tokenManager: any, storage: any): Promise<{ accountId: string; refreshToken: string | null } | undefined> {
+    const resolvedAccountId = await tokenManager.resolveAccountId();
+
+    if (!resolvedAccountId) {
+      console.warn("Test runner: Unable to determine which OAuth2 account to use. Please provide an accountId in the test configuration.");
+      return undefined;
+    }
+
+    const account = storage.findAccountByAccountId(resolvedAccountId);
+    if (account) {
+      return {
+        accountId: account.accountId,
+        refreshToken: account.refreshToken,
+      };
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Validates account record has required fields.
+   */
+  private validateAccountRecord(accountRecord: { accountId: string; refreshToken: string | null } | undefined): { accountId: string; refreshToken: string | null } | null {
+    if (!accountRecord) {
+      console.warn("Test runner: No stored OAuth2 account found matching configuration");
+      return null;
+    }
+
+    if (!accountRecord.refreshToken) {
+      console.warn("Test runner: Stored account is missing a refresh token and cannot be used for OAuth2-authenticated tests");
+      return null;
+    }
+
+    return accountRecord;
+  }
+
+  /**
+   * Gets and validates access token for account.
+   */
+  private async getValidAccessToken(tokenManager: any, accountId: string): Promise<string | null> {
+    const accessToken = await tokenManager.getAccessToken(accountId);
+
+    if (!accessToken) {
+      console.warn(`Test runner: No valid access token available for account: ${accountId}`);
+      return null;
+    }
+
+    if (accessToken.startsWith("test_") || accessToken.startsWith("mock_")) {
+      console.warn(`Test runner: Ignoring mock access token for account: ${accountId}`);
+      return null;
+    }
+
+    return accessToken;
   }
 
   private getAccountContextCacheKey(gitlabConfig: any): string | null {

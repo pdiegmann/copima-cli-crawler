@@ -61,5 +61,6 @@ export const closeStorage = (): void => {
 export const initDatabase = initStorage;
 export const getDatabase = getStorage;
 export const closeDatabase = closeStorage;
+// eslint-disable-next-line sonarjs/redundant-type-aliases -- Intentional backward compatibility alias
 export type DatabaseConfig = StorageConfig;
 export type Database = YamlStorage;
