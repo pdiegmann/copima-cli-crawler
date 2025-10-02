@@ -24,7 +24,7 @@ export type {
   PaginatedResult,
   User,
   UserUpdate,
-  UserWithAccounts
+  UserWithAccounts,
 } from "./types.js";
 
 // YamlStorage export
