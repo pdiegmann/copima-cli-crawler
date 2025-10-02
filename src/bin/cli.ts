@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import { run } from "@stricli/core";
+import { existsSync } from "node:fs";
 import { app } from "../app";
 import { TokenManager } from "../auth/tokenManager";
 import { buildContext } from "../context";
 import { createLogger } from "../logging";
 
 const logger = createLogger("CLI");
+
+const DEFAULT_DATABASE_PATH = "./database.sqlite";
 
 type CommandContext = {
   args: string[];
@@ -68,13 +71,20 @@ class DatabaseAuthenticator {
 
   async attemptDatabaseAuthentication(): Promise<void> {
     try {
+      if (!existsSync(DEFAULT_DATABASE_PATH)) {
+        this.logger.debug("Skipping database authentication - database file not found", { path: DEFAULT_DATABASE_PATH });
+        return;
+      }
+
       const { initDatabase } = await import("../db/connection.js");
       const { initializeDatabase } = await import("../db/migrate.js");
 
+      const globalState = globalThis as typeof globalThis & { __copimaDatabaseInitialized?: boolean; __copimaDatabasePath?: string };
+
       let db;
       try {
-        initializeDatabase({ path: "./database.sqlite", wal: true });
-        db = initDatabase({ path: "./database.sqlite", wal: true });
+        initializeDatabase({ path: DEFAULT_DATABASE_PATH, wal: true });
+        db = initDatabase({ path: DEFAULT_DATABASE_PATH, wal: true });
       } catch {
         this.logger.warn("Database initialization failed - database may not be available");
         return;
@@ -82,12 +92,24 @@ class DatabaseAuthenticator {
 
       if (!db) return;
 
+      globalState.__copimaDatabaseInitialized = true;
+      globalState.__copimaDatabasePath = DEFAULT_DATABASE_PATH;
+
       const tokenManager = new TokenManager(db);
-      const accessToken = await tokenManager.getAccessToken("default");
+      const accountId = await tokenManager.resolveAccountId();
+
+      if (!accountId) {
+        this.logger.warn("Unable to determine which account to use from the local database.");
+        this.logger.warn("Please run 'copima auth' to authenticate or provide --access-token manually.");
+        return;
+      }
+
+      const accessToken = await tokenManager.getAccessToken(accountId);
 
       if (accessToken) {
-        this.logger.info("Authentication successful. Access token retrieved from database.");
+        this.logger.info(`Authentication successful. Access token retrieved from database for account '${accountId}'.`);
         process.argv.push("--access-token", accessToken);
+        process.argv.push("--account-id", accountId);
       } else {
         this.logger.warn("No valid access token found in database. Please run 'copima auth' to authenticate.");
       }

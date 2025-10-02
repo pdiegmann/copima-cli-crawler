@@ -7,6 +7,7 @@ import { createInterface } from "node:readline/promises";
 import pc from "picocolors";
 import { getSupportedProviders } from "../auth/oauth2Providers.js";
 import { createLogger } from "../logging/index.js";
+import type { AuthCommandFlags } from "../types/commands.js";
 import type { CliArgs, Config, OAuth2ProviderConfig } from "./types.js";
 import type { ConfigValidationError } from "./validation/types.js";
 
@@ -36,6 +37,7 @@ type SetupWizardOptions = {
   prompter?: WizardPrompter;
   alwaysPromptCoreFields?: boolean;
   args?: CliArgs;
+  launchAuthFlow?: boolean;
 };
 
 export type SetupWizardResult = {
@@ -46,7 +48,7 @@ export type SetupWizardResult = {
 const LOCAL_CONFIG_CANDIDATES = ["./copima.yaml", "./copima.yml", "./.copima.yaml", "./copima.json"];
 const GLOBAL_CONFIG_FILE = join(homedir(), ".config", "copima", "config.yaml");
 
-const CORE_FIELDS = ["gitlab.host", "gitlab.accessToken"] as const;
+const CORE_FIELDS = ["gitlab.host"] as const;
 
 export class NodeWizardPrompter implements WizardPrompter {
   private readonly rl = createInterface({ input, output, terminal: true });
@@ -279,12 +281,6 @@ const fieldValidators: Record<string, (value: string) => string | null> = {
       return "Enter a valid URL";
     }
   },
-  "gitlab.accessToken": (value: string) => {
-    if (value.length < 20) {
-      return "Access token must be at least 20 characters";
-    }
-    return null;
-  },
   "database.path": (value: string) => {
     if (!value.trim()) {
       return "Database path cannot be empty";
@@ -324,7 +320,6 @@ const numberValidator = (min: number, max?: number) => {
 
 const FIELD_METADATA: Record<string, { message: string; type: "string" | "password" | "number" | "select" | "boolean"; choices?: ChoiceOption[]; min?: number; max?: number }> = {
   "gitlab.host": { message: "GitLab host URL", type: "string" },
-  "gitlab.accessToken": { message: "GitLab access token", type: "password" },
   "gitlab.timeout": { message: "GitLab timeout (ms)", type: "number", min: 1000, max: 300000 },
   "gitlab.maxConcurrency": { message: "Max concurrent API requests", type: "number", min: 1, max: 100 },
   "gitlab.rateLimit": { message: "API rate limit (requests per minute)", type: "number", min: 1, max: 2000 },
@@ -344,6 +339,40 @@ const FIELD_METADATA: Record<string, { message: string; type: "string" | "passwo
 };
 
 const toNumber = (value: string): number => Number.parseInt(value, 10);
+
+const parseScopes = (value: string): string[] =>
+  value
+    .split(",")
+    .map((scope) => scope.trim())
+    .filter(Boolean);
+
+const formatScopes = (scopes?: string[]): string | undefined => {
+  if (!scopes || scopes.length === 0) {
+    return undefined;
+  }
+  return scopes.join(",");
+};
+
+const promptClientSecret = async (prompter: WizardPrompter, existingSecret?: string): Promise<string> => {
+  const allowReuse = Boolean(existingSecret);
+  const message = allowReuse ? "OAuth2 client secret (leave blank to keep current)" : "OAuth2 client secret";
+
+  const secret = await prompter.password(message, {
+    allowEmpty: allowReuse,
+    validate: (value) => {
+      if (!value && !allowReuse) {
+        return "Client secret is required.";
+      }
+      return null;
+    },
+  });
+
+  if (!secret && allowReuse && existingSecret) {
+    return existingSecret;
+  }
+
+  return secret;
+};
 
 const applyAnswer = (config: Record<string, unknown>, field: string, value: string): void => {
   const metadata = FIELD_METADATA[field];
@@ -371,7 +400,7 @@ const deriveDefaultValue = (config: Config | Record<string, unknown>, field: str
     return String(cursor);
   }
   if (typeof cursor === "string") {
-    return cursor;
+    return cursor === "" ? undefined : cursor;
   }
   return undefined;
 };
@@ -383,7 +412,7 @@ const gatherFieldsToPrompt = (issues: ConfigValidationError[], alwaysPromptCore:
       missingFields.add(field);
     }
   }
-  return Array.from(missingFields);
+  return Array.from(missingFields).filter((field) => field !== "gitlab.accessToken");
 };
 
 type FieldPromptMetadata = (typeof FIELD_METADATA)[keyof typeof FIELD_METADATA];
@@ -450,7 +479,7 @@ const promptConfigurationFields = async ({ prompter, fields, initialConfig, exis
 
   for (const field of fields) {
     const metadata = FIELD_METADATA[field];
-    const defaultValue = deriveDefaultValue(initialConfig, field) ?? deriveDefaultValue(existingConfig, field);
+    const defaultValue = deriveDefaultValue(existingConfig, field) ?? deriveDefaultValue(initialConfig, field);
     const validator = buildFieldValidator(field, metadata);
 
     const value = await promptFieldValue({ prompter, field, metadata, defaultValue, validator });
@@ -461,37 +490,69 @@ const promptConfigurationFields = async ({ prompter, fields, initialConfig, exis
 };
 
 const maybeConfigureOAuthSetup = async (config: Record<string, unknown>, prompter: WizardPrompter): Promise<void> => {
-  const wantsOAuth = await prompter.confirm("Configure OAuth2 client credentials now?", false);
+  const existingOAuth = (config["oauth2"] as Record<string, unknown>) ?? {};
+  const existingProviders = existingOAuth["providers"] as Record<string, unknown> | undefined;
+  const hasExistingProviders = Boolean(existingProviders && Object.keys(existingProviders).length > 0);
+
+  if (hasExistingProviders) {
+    output.write(`${pc.dim("Existing OAuth2 settings detected; press enter to reuse saved values where available.")}\n`);
+  }
+
+  const wantsOAuth = await prompter.confirm("Configure OAuth2 client credentials now?", true);
   if (wantsOAuth) {
     await configureOAuth(config, prompter);
   }
 };
 
 const configureOAuth = async (config: Record<string, unknown>, prompter: WizardPrompter): Promise<void> => {
-  const providers = getSupportedProviders();
-  const providerChoices: ChoiceOption[] = [...providers.map((provider) => ({ label: provider, value: provider })), { label: "Custom provider", value: "custom" }];
+  const supportedProviders = getSupportedProviders();
+  const oauthConfig = (config["oauth2"] as Record<string, unknown>) ?? {};
+  const providerMap = (oauthConfig["providers"] as Record<string, OAuth2ProviderConfig>) ?? {};
+  const existingProviderKeys = Object.keys(providerMap);
 
-  const selectedProvider = await prompter.select("Which OAuth2 provider do you want to configure?", providerChoices, providers[0]);
+  const providerChoices: ChoiceOption[] = [
+    ...supportedProviders.map((provider) => ({
+      label: providerMap[provider] ? `${provider} (existing)` : provider,
+      value: provider,
+    })),
+    ...existingProviderKeys.filter((key) => !supportedProviders.includes(key)).map((key) => ({ label: `${key} (existing)`, value: key })),
+    { label: "Custom provider", value: "custom" },
+  ];
 
-  const clientId = await prompter.input("OAuth2 client ID", { allowEmpty: false });
-  const clientSecret = await prompter.password("OAuth2 client secret", { allowEmpty: false });
+  const defaultProviderChoice = determineDefaultProviderChoice(existingProviderKeys, supportedProviders);
+  const selectedProvider = await prompter.select("Which OAuth2 provider do you want to configure?", providerChoices, defaultProviderChoice);
 
-  let authorizationUrl: string;
-  let tokenUrl: string;
-  let scopes: string;
+  const isKnownProvider = supportedProviders.includes(selectedProvider);
+  const isNewCustomProvider = selectedProvider === "custom";
+  const existingProviderConfig = isNewCustomProvider ? undefined : (providerMap[selectedProvider] as OAuth2ProviderConfig | undefined);
+  const defaults = isKnownProvider ? providerDefaults(selectedProvider) : providerDefaults("custom");
 
-  if (selectedProvider === "custom") {
-    authorizationUrl = await prompter.input("Authorization URL", { allowEmpty: false });
-    tokenUrl = await prompter.input("Token URL", { allowEmpty: false });
-    scopes = await prompter.input("Scopes (comma-separated)", { defaultValue: "api" });
-  } else {
-    const defaults = providerDefaults(selectedProvider);
-    authorizationUrl = await prompter.input("Authorization URL", { defaultValue: defaults.authorizationUrl, allowEmpty: false });
-    tokenUrl = await prompter.input("Token URL", { defaultValue: defaults.tokenUrl, allowEmpty: false });
-    scopes = await prompter.input("Scopes (comma-separated)", { defaultValue: defaults.scopes.join(",") });
-  }
+  const clientId = await prompter.input("OAuth2 client ID", {
+    allowEmpty: false,
+    defaultValue: existingProviderConfig?.clientId,
+  });
 
-  const redirectUri = await prompter.input("Redirect URI", { defaultValue: "http://localhost:3000/callback", allowEmpty: false });
+  const clientSecret = await promptClientSecret(prompter, existingProviderConfig?.clientSecret);
+
+  const authorizationUrl = await prompter.input("Authorization URL", {
+    allowEmpty: false,
+    defaultValue: existingProviderConfig?.authorizationUrl ?? (isKnownProvider ? defaults.authorizationUrl : ""),
+  });
+
+  const tokenUrl = await prompter.input("Token URL", {
+    allowEmpty: false,
+    defaultValue: existingProviderConfig?.tokenUrl ?? (isKnownProvider ? defaults.tokenUrl : ""),
+  });
+
+  const scopesAnswer = await prompter.input("Scopes (comma-separated)", {
+    defaultValue: formatScopes(existingProviderConfig?.scopes) ?? formatScopes(defaults.scopes),
+    allowEmpty: true,
+  });
+
+  const redirectUri = await prompter.input("Redirect URI", {
+    defaultValue: existingProviderConfig?.redirectUri ?? "http://localhost:3000/callback",
+    allowEmpty: false,
+  });
 
   const providerConfig: OAuth2ProviderConfig = {
     clientId,
@@ -499,22 +560,31 @@ const configureOAuth = async (config: Record<string, unknown>, prompter: WizardP
     authorizationUrl,
     tokenUrl,
     redirectUri,
-    scopes: scopes
-      .split(",")
-      .map((scope) => scope.trim())
-      .filter(Boolean),
+    scopes: parseScopes(scopesAnswer),
   };
 
-  const oauthConfig = (config["oauth2"] as Record<string, unknown>) ?? {};
-  const providerMap = (oauthConfig["providers"] as Record<string, unknown>) ?? {};
-  providerMap[selectedProvider === "custom" ? providerConfig.authorizationUrl : selectedProvider] = providerConfig;
+  let providerKey = selectedProvider;
+  if (isNewCustomProvider) {
+    providerKey = providerConfig.authorizationUrl || "custom";
+  }
+
+  providerMap[providerKey] = providerConfig;
   oauthConfig["providers"] = providerMap;
 
-  const configureServer = await prompter.confirm("Configure OAuth2 callback server settings now?", false);
+  const existingServerConfig = oauthConfig["server"] as { port?: number; callbackPath?: string; timeout?: number } | undefined;
+  const configureServer = await prompter.confirm("Configure OAuth2 callback server settings now?", Boolean(existingServerConfig));
   if (configureServer) {
-    const port = await prompter.input("Callback port", { defaultValue: "3000", validate: numberValidator(1, 65535) });
-    const callbackPath = await prompter.input("Callback path", { defaultValue: "/callback" });
-    const timeout = await prompter.input("Timeout in seconds", { defaultValue: "300", validate: numberValidator(1) });
+    const port = await prompter.input("Callback port", {
+      defaultValue: String(existingServerConfig?.port ?? 3000),
+      validate: numberValidator(1, 65535),
+    });
+    const callbackPath = await prompter.input("Callback path", {
+      defaultValue: existingServerConfig?.callbackPath ?? "/callback",
+    });
+    const timeout = await prompter.input("Timeout in seconds", {
+      defaultValue: String(existingServerConfig?.timeout ?? 300),
+      validate: numberValidator(1),
+    });
 
     oauthConfig["server"] = {
       port: Number.parseInt(port, 10),
@@ -549,6 +619,91 @@ const providerDefaults = (provider: string): { authorizationUrl: string; tokenUr
   }
 };
 
+const determineDefaultProviderChoice = (existingKeys: string[], supportedProviders: string[]): string | undefined => {
+  const matchingSupported = supportedProviders.find((provider) => existingKeys.includes(provider));
+  if (matchingSupported) {
+    return matchingSupported;
+  }
+
+  if (existingKeys.length > 0) {
+    return existingKeys[0];
+  }
+
+  return supportedProviders[0];
+};
+
+const resolveAuthProviderKey = (config: Record<string, unknown>, providers: Record<string, OAuth2ProviderConfig>): string | undefined => {
+  const authSection = config["auth"];
+  if (authSection && typeof authSection === "object") {
+    const oauthSection = (authSection as Record<string, unknown>)["oauth2"];
+    if (oauthSection && typeof oauthSection === "object") {
+      const defaultProvider = (oauthSection as Record<string, unknown>)["defaultProvider"];
+      if (typeof defaultProvider === "string" && providers[defaultProvider]) {
+        return defaultProvider;
+      }
+    }
+  }
+
+  if (providers["gitlab"]) {
+    return "gitlab";
+  }
+
+  const keys = Object.keys(providers);
+  return keys[0];
+};
+
+const maybeLaunchAuthFlow = async (targetPath: string, config: Record<string, unknown>, options: SetupWizardOptions): Promise<void> => {
+  if (options.launchAuthFlow === false) {
+    return;
+  }
+
+  const oauthSection = config["oauth2"];
+  if (!oauthSection || typeof oauthSection !== "object") {
+    output.write(`${pc.dim("Skipped automatic authentication: no OAuth2 providers configured yet.")}\n`);
+    return;
+  }
+
+  const providerMap = (oauthSection as Record<string, unknown>)["providers"] as Record<string, OAuth2ProviderConfig> | undefined;
+  if (!providerMap || Object.keys(providerMap).length === 0) {
+    output.write(`${pc.dim("Skipped automatic authentication: no OAuth2 providers configured yet.")}\n`);
+    return;
+  }
+
+  const providerKey = resolveAuthProviderKey(config, providerMap);
+  if (!providerKey) {
+    output.write(`${pc.dim("Skipped automatic authentication: unable to determine a provider to authenticate.")}\n`);
+    return;
+  }
+
+  const providerConfig = providerMap[providerKey];
+  output.write(`${pc.cyan("➡ Starting OAuth2 authentication flow to finish setup...")}\n`);
+
+  const { executeAuthFlow } = await import("../commands/auth/impl.js");
+  const authFlags: AuthCommandFlags = {
+    provider: providerKey,
+    config: targetPath,
+  };
+
+  if (providerConfig?.redirectUri) {
+    authFlags["redirect-uri"] = providerConfig.redirectUri;
+  }
+
+  const gitlabSection = config["gitlab"];
+  if (gitlabSection && typeof gitlabSection === "object") {
+    const accountId = (gitlabSection as Record<string, unknown>)["accountId"];
+    if (typeof accountId === "string") {
+      authFlags["account-id"] = accountId;
+    }
+
+    const email = (gitlabSection as Record<string, unknown>)["email"];
+    if (typeof email === "string") {
+      authFlags.email = email;
+    }
+  }
+
+  await executeAuthFlow(authFlags);
+};
+
 export const runSetupWizard = async (options: SetupWizardOptions): Promise<SetupWizardResult> => {
   const logger = createLogger("SetupWizard");
   const prompter = options.prompter ?? new NodeWizardPrompter();
@@ -556,7 +711,8 @@ export const runSetupWizard = async (options: SetupWizardOptions): Promise<Setup
 
   try {
     output.write(`\n${pc.bold(pc.green("Copima CLI setup wizard"))}\n`);
-    output.write(`${pc.dim("We will collect only the values that are still missing or incomplete.")}\n\n`);
+    output.write(`${pc.dim("We will collect only the values that are still missing or incomplete.")}\n`);
+    output.write(`${pc.dim("Static personal access tokens are no longer required—set up OAuth2 to authenticate securely.")}\n\n`);
 
     const targetPath = await resolveConfigTarget(prompter, options.preferredTargetPath);
     const existingConfig = loadExistingConfig(targetPath);
@@ -575,6 +731,8 @@ export const runSetupWizard = async (options: SetupWizardOptions): Promise<Setup
 
     output.write(`\n${pc.green("✔ Configuration saved!")} ${pc.dim(targetPath)}\n`);
     logger.info("Configuration updated via setup wizard", { targetPath });
+
+    await maybeLaunchAuthFlow(targetPath, mergedConfig, options);
 
     return { status: "completed", configPath: targetPath };
   } catch (error) {

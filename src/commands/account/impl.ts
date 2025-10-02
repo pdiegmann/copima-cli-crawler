@@ -149,19 +149,27 @@ export const listAccounts = async (flags: ListAccountsFlags): Promise<void | Err
         logger.info(`  updatedAt: ${acc.updatedAt?.toISOString()}`);
       });
     } else {
-      // Table format using treeify
-      const tree: Record<string, SafeRecord> = {};
+      // Table format using treeify; group by user and show each account entry
+      const tree: Record<string, Record<string, SafeRecord>> = {};
       accounts.forEach((acc) => {
-        const key = `${acc.name} (${acc.email})`;
-        tree[key] = {
+        const userKey = `${acc.name} (${acc.email})`;
+        if (!tree[userKey]) {
+          tree[userKey] = {};
+        }
+
+        const accountLabel = `Account ${acc.accountId}`;
+        const accountDetails: SafeRecord = {
           "Account ID": acc.accountId,
           Created: acc.createdAt?.toISOString(),
           Updated: acc.updatedAt?.toISOString(),
-          ...(showTokens && {
-            "Access Token": acc.accessToken ? `${acc.accessToken.substring(0, 20)}...` : "None",
-            "Refresh Token": acc.refreshToken ? `${acc.refreshToken.substring(0, 20)}...` : "None",
-          }),
         };
+
+        if (showTokens) {
+          accountDetails["Access Token"] = acc.accessToken ? `${acc.accessToken.substring(0, 20)}...` : "None";
+          accountDetails["Refresh Token"] = acc.refreshToken ? `${acc.refreshToken.substring(0, 20)}...` : "None";
+        }
+
+        tree[userKey]![accountLabel] = accountDetails;
       });
 
       logger.info(colors.bold("\n📋 GitLab Accounts:"));

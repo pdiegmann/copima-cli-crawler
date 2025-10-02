@@ -10,6 +10,7 @@ import {
   FETCH_COMPREHENSIVE_GROUPS_QUERY,
   FETCH_COMPREHENSIVE_SUBGROUPS_QUERY,
 } from "./queries/groupQueries";
+import { FETCH_COMPREHENSIVE_PROJECTS_QUERY } from "./queries/projectQueries";
 import { FETCH_COMPREHENSIVE_USERS_QUERY } from "./queries/userQueries";
 
 const logger = createLogger("GitLabGraphQLClient");
@@ -248,10 +249,44 @@ export class GitLabGraphQLClient {
     }
   }
 
-  // Note: General projects fetch not available - use fetchGroupProjects instead
-  async fetchProjects(_first: number = 100, _after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
-    logger.warn("fetchProjects is not available with current GraphQL schema - use fetchGroupProjects instead");
-    throw new Error("fetchProjects is not supported - use fetchGroupProjects with a specific group ID");
+  async fetchProjects(first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
+    try {
+      const data = await this.query<any>(FETCH_COMPREHENSIVE_PROJECTS_QUERY, { first, after });
+      if (!data.projects?.nodes || !data.projects.pageInfo) throw new Error("Invalid data format");
+      return {
+        nodes: (data.projects.nodes ?? []) as GitLabProject[],
+        pageInfo: { ...data.projects.pageInfo, endCursor: data.projects.pageInfo.endCursor || undefined },
+      };
+    } catch (error) {
+      logger.error("Failed to fetch projects:", { error });
+      throw error;
+    }
+  }
+
+  async fetchAllProjects(): Promise<GitLabProject[]> {
+    try {
+      let allProjects: GitLabProject[] = [];
+      let hasNextPage = true;
+      let after: string | undefined = undefined;
+
+      logger.info("Starting to fetch all projects with pagination");
+
+      while (hasNextPage) {
+        const result = await this.fetchProjects(100, after);
+        allProjects = allProjects.concat(result.nodes);
+
+        hasNextPage = result.pageInfo.hasNextPage || false;
+        after = result.pageInfo.endCursor || undefined;
+
+        logger.debug(`Fetched ${result.nodes.length} projects (total: ${allProjects.length})`);
+      }
+
+      logger.info(`Successfully fetched all ${allProjects.length} projects across ${Math.ceil(allProjects.length / 100)} pages`);
+      return allProjects;
+    } catch (error) {
+      logger.error("Failed to fetch all projects:", { error });
+      throw error;
+    }
   }
 
   async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {

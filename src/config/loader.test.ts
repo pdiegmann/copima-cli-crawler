@@ -401,7 +401,18 @@ describe('Configuration Loader', () => {
         gitlab: {
           ...baseConfig.gitlab,
           host: 'https://gitlab.com',
-          accessToken: 'testtokenwithenoughlength123456',
+        },
+        oauth2: {
+          providers: {
+            gitlab: {
+              clientId: 'client-id',
+              clientSecret: 'client-secret',
+              authorizationUrl: 'https://gitlab.com/oauth/authorize',
+              tokenUrl: 'https://gitlab.com/oauth/token',
+              redirectUri: 'http://localhost:3000/callback',
+              scopes: ['api', 'read_user'],
+            },
+          },
         },
       };
 
@@ -431,7 +442,10 @@ describe('Configuration Loader', () => {
         ]),
       );
       expect(result.gitlab?.host).toBe('https://gitlab.com');
-      expect(result.gitlab?.accessToken).toBe('testtokenwithenoughlength123456');
+      expect(result.gitlab?.accessToken).toBe('');
+      expect(result.oauth2?.providers?.["gitlab"]).toEqual(
+        expect.objectContaining({ clientId: 'client-id', clientSecret: 'client-secret' })
+      );
     });
 
     it('rethrows validation error when wizard is aborted', async () => {

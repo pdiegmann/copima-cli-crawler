@@ -77,6 +77,13 @@ export const runMigrations = (_config: MigrationConfig): undefined => {
 };
 
 export const initializeDatabase = (config: MigrationConfig): undefined => {
+  const globalState = globalThis as typeof globalThis & { __copimaDatabaseInitialized?: boolean; __copimaDatabasePath?: string };
+
+  if (globalState.__copimaDatabaseInitialized && globalState.__copimaDatabasePath === config.path) {
+    initDatabase(config);
+    return;
+  }
+
   try {
     logger.info("Initializing database with migrations");
 
@@ -87,6 +94,9 @@ export const initializeDatabase = (config: MigrationConfig): undefined => {
     runMigrations(config);
 
     logger.info("Database initialization completed");
+
+    globalState.__copimaDatabaseInitialized = true;
+    globalState.__copimaDatabasePath = config.path;
   } catch (error) {
     logger.error("Failed to initialize database", { error });
     throw error;

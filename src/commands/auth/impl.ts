@@ -19,7 +19,7 @@ export const executeAuthFlow = async (flags: AuthCommandFlags): Promise<void> =>
     const config = await prepareOAuth2Config(flags);
 
     // Create and start callback server
-    const server = await startCallbackServer(flags);
+    const server = await startCallbackServer(flags, config.redirectUri);
     const redirectUri = server.getCallbackUrl();
     config.redirectUri = redirectUri;
 
@@ -213,7 +213,7 @@ const buildConfigFromFlags = async (flags: AuthCommandFlags): Promise<OAuth2Conf
   const config = buildOAuth2Config(provider, {
     clientId,
     clientSecret,
-    redirectUri: "http://localhost:3000/callback",
+    redirectUri: flags["redirect-uri"] ?? "http://localhost:3000/callback",
     scopes: flags.scopes ? flags.scopes.split(",").map((s) => s.trim()) : undefined,
   });
 
@@ -232,8 +232,44 @@ const DEFAULT_SERVER_OVERRIDE: Required<ServerConfigOverride> = {
   callbackPath: "/callback",
 };
 
-const startCallbackServer = async (flags: AuthCommandFlags): Promise<OAuth2Server> => {
+const buildServerOverrideFromRedirect = (redirectUri?: string): ServerConfigOverride | null => {
+  if (!redirectUri) {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(redirectUri);
+
+    if (parsed.hostname && !["localhost", "127.0.0.1"].includes(parsed.hostname)) {
+      logger.debug("Redirect URI host is not localhost; falling back to default callback server", { redirectUri });
+      return null;
+    }
+
+    const override: ServerConfigOverride = {
+      callbackPath: parsed.pathname || "/callback",
+    };
+
+    if (parsed.port) {
+      const numericPort = Number.parseInt(parsed.port, 10);
+      if (!Number.isNaN(numericPort)) {
+        override.port = numericPort;
+      }
+    }
+
+    return override;
+  } catch (error) {
+    logger.debug("Failed to parse redirect URI for callback server", { redirectUri, error: error instanceof Error ? error.message : String(error) });
+    return null;
+  }
+};
+
+const startCallbackServer = async (flags: AuthCommandFlags, preferredRedirectUri?: string): Promise<OAuth2Server> => {
   const overrides: ServerConfigOverride[] = [];
+
+  const redirectOverride = buildServerOverrideFromRedirect(preferredRedirectUri);
+  if (redirectOverride) {
+    overrides.push(redirectOverride);
+  }
 
   const mainConfigOverride = await loadServerConfigFromMainConfig(flags);
   if (mainConfigOverride) {
@@ -448,10 +484,12 @@ const exchangeCodeForTokens = async (code: string, config: OAuth2Config): Promis
 };
 
 const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandFlags, config: OAuth2Config): Promise<void> => {
+  let databaseAvailable = false;
+
   try {
     console.log(pc.blue("💾 Storing credentials..."));
 
-    const databaseAvailable = await initializeDatabaseConnection();
+    databaseAvailable = await initializeDatabaseConnection();
     const credentialData = await prepareCredentialData(tokens, flags, config);
 
     if (databaseAvailable) {
@@ -465,6 +503,17 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
   } catch (error) {
     logger.error("Failed to store credentials in database", { error: error instanceof Error ? error.message : String(error) });
     throw new Error(`Failed to store credentials: ${error instanceof Error ? error.message : String(error)}`);
+  } finally {
+    if (databaseAvailable) {
+      try {
+        const { closeDatabase } = await import("../../db/index.js");
+        closeDatabase();
+      } catch (error) {
+        logger.warn("Failed to close database after storing credentials", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
   }
 };
 

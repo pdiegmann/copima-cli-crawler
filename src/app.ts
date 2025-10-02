@@ -38,6 +38,7 @@ const routes = buildRouteMap({
     "config:unset": unsetConfigCommand,
     "config:validate": validateConfigCommand,
     "config:setup": setupConfigCommand,
+    setup: setupConfigCommand,
 
     // Authentication commands - OAuth2 browser flow
     auth: authCommand,

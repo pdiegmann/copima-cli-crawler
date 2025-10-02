@@ -25,6 +25,8 @@ export class GitlabConfigValidator implements BaseValidator {
     }
 
     // Validate access token
+    const hasOauthProviders = Boolean(config.oauth2 && Object.keys(config.oauth2.providers ?? {}).length > 0);
+
     if (config.gitlab?.accessToken) {
       if (typeof config.gitlab.accessToken !== "string" || config.gitlab.accessToken.length < 20) {
         errors.push({
@@ -33,10 +35,10 @@ export class GitlabConfigValidator implements BaseValidator {
           severity: "error",
         });
       }
-    } else {
+    } else if (!hasOauthProviders) {
       errors.push({
         field: "gitlab.accessToken",
-        message: "GitLab access token is required",
+        message: "GitLab access token is required unless OAuth2 providers are configured",
         severity: "error",
       });
     }

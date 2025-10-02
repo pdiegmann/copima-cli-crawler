@@ -100,6 +100,84 @@ describe("TokenManager", () => {
     });
   });
 
+  describe("resolveAccountId", () => {
+    it("returns provided account ID when it exists", async () => {
+      mockDb.limit.mockResolvedValueOnce([{ accountId: "custom" }]);
+
+      const result = await tokenManager.resolveAccountId("custom");
+
+      expect(result).toBe("custom");
+      expect(mockDb.select).toHaveBeenCalled();
+      expect(mockDb.limit).toHaveBeenCalledWith(1);
+    });
+
+    it("falls back to sole stored account when none specified", async () => {
+      mockDb.limit.mockResolvedValueOnce([]); // default account lookup
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          accountId: "only-account",
+          userId: "user-1",
+          updatedAt: new Date("2025-01-01T00:00:00Z"),
+          accessToken: "token",
+          refreshToken: "refresh",
+        },
+      ]);
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBe("only-account");
+      expect(mockDb.limit).toHaveBeenCalledWith(100);
+    });
+
+    it("returns null when multiple accounts exist without a default", async () => {
+      mockDb.limit.mockResolvedValueOnce([]);
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          accountId: "acc-1",
+          userId: "user-1",
+          updatedAt: new Date("2025-01-01T00:00:00Z"),
+          accessToken: "token-1",
+          refreshToken: "refresh-1",
+        },
+        {
+          accountId: "acc-2",
+          userId: "user-2",
+          updatedAt: new Date("2025-01-02T00:00:00Z"),
+          accessToken: "token-2",
+          refreshToken: "refresh-2",
+        },
+      ]);
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBeNull();
+    });
+
+    it("auto-selects the most recent account when duplicates share the same user", async () => {
+      mockDb.limit.mockResolvedValueOnce([]);
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          accountId: "acc-older",
+          userId: "user-1",
+          updatedAt: new Date("2025-01-01T00:00:00Z"),
+          accessToken: "token-old",
+          refreshToken: "refresh-old",
+        },
+        {
+          accountId: "acc-newer",
+          userId: "user-1",
+          updatedAt: new Date("2025-01-03T00:00:00Z"),
+          accessToken: "token-new",
+          refreshToken: "refresh-new",
+        },
+      ]);
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBe("acc-newer");
+    });
+  });
+
   describe("refreshAccessToken", () => {
     it("should log an error if no refresh token is available", async () => {
       const accountId = "test-account";

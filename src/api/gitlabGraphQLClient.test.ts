@@ -6,8 +6,9 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { GitLabGraphQLClient } from './gitlabGraphQLClient.js';
 
 // Mock fetch
-const mockFetch = jest.fn();
-global.fetch = mockFetch as any;
+const baseFetchMock = jest.fn<typeof fetch>();
+const mockFetch = Object.assign(baseFetchMock, { preconnect: jest.fn() }) as jest.MockedFunction<typeof fetch>;
+global.fetch = mockFetch;
 
 // Mock logger
 jest.mock('../logging', () => ({
@@ -32,6 +33,10 @@ jest.mock('./queries/groupQueries', () => ({
   FETCH_COMPREHENSIVE_GROUP_QUERY: { loc: { source: { body: 'query FetchGroup' } } },
   FETCH_COMPREHENSIVE_GROUPS_QUERY: { loc: { source: { body: 'query FetchGroups' } } },
   FETCH_COMPREHENSIVE_SUBGROUPS_QUERY: { loc: { source: { body: 'query FetchSubgroups' } } },
+}));
+
+jest.mock('./queries/projectQueries', () => ({
+  FETCH_COMPREHENSIVE_PROJECTS_QUERY: { loc: { source: { body: 'query FetchProjects' } } },
 }));
 
 jest.mock('./queries/userQueries', () => ({
@@ -141,8 +146,29 @@ describe('GitLabGraphQLClient', () => {
   });
 
   describe('fetchProjects', () => {
-    it('should throw error as method is not supported', async () => {
-      await expect(client.fetchProjects()).rejects.toThrow('fetchProjects is not supported - use fetchGroupProjects with a specific group ID');
+    it('should fetch projects successfully', async () => {
+      const mockResponse = {
+        data: {
+          projects: {
+            nodes: [
+              { id: 'project-1', name: 'Project 1', fullPath: 'group/project-1' },
+              { id: 'project-2', name: 'Project 2', fullPath: 'group/project-2' },
+            ],
+            pageInfo: { hasNextPage: false, endCursor: null },
+          },
+        },
+      };
+
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: mockJsonFn,
+      } as unknown as Response);
+
+      const result = await client.fetchProjects();
+
+      expect(result.nodes).toHaveLength(2);
+      expect(result.pageInfo.hasNextPage).toBe(false);
     });
   });
 
@@ -326,6 +352,45 @@ describe('GitLabGraphQLClient', () => {
       expect(result).toHaveLength(2);
       expect(result[0]?.username).toBe('user1');
       expect(result[1]?.username).toBe('user2');
+    });
+  });
+
+  describe('fetchAllProjects', () => {
+    it('should fetch all projects with pagination', async () => {
+      const firstResponse = {
+        data: {
+          projects: {
+            nodes: [{ id: 'project-1', name: 'Project 1', fullPath: 'group/project-1' }],
+            pageInfo: { hasNextPage: true, endCursor: 'cursor1' },
+          },
+        },
+      };
+      const secondResponse = {
+        data: {
+          projects: {
+            nodes: [{ id: 'project-2', name: 'Project 2', fullPath: 'group/project-2' }],
+            pageInfo: { hasNextPage: false, endCursor: null },
+          },
+        },
+      };
+
+      const mockJsonFn1 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(firstResponse);
+      const mockJsonFn2 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(secondResponse);
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn1,
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn2,
+        } as unknown as Response);
+
+      const result = await client.fetchAllProjects();
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.id).toBe('project-1');
+      expect(result[1]?.id).toBe('project-2');
     });
   });
 });

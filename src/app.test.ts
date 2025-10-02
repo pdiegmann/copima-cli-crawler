@@ -11,11 +11,13 @@ const mockBuildInstallCommand = jest.fn();
 const mockBuildUninstallCommand = jest.fn();
 
 jest.mock('@stricli/core', () => ({
+  __esModule: true,
   buildRouteMap: mockBuildRouteMap,
   buildApplication: mockBuildApplication,
 }));
 
 jest.mock('@stricli/auto-complete', () => ({
+  __esModule: true,
   buildInstallCommand: mockBuildInstallCommand,
   buildUninstallCommand: mockBuildUninstallCommand,
 }));
@@ -47,6 +49,7 @@ jest.mock('./commands/config/command', () => ({
   setConfigCommand: { name: 'setConfigCommand' },
   showConfigCommand: { name: 'showConfigCommand' },
   unsetConfigCommand: { name: 'unsetConfigCommand' },
+  setupConfigCommand: { name: 'setupConfigCommand' },
   validateConfigCommand: { name: 'validateConfigCommand' },
 }));
 
@@ -60,6 +63,7 @@ jest.mock('./commands/auth/command', () => ({
 
 describe('Application Configuration', () => {
   beforeEach(() => {
+    jest.resetModules();
     jest.clearAllMocks();
 
     // Set up default mock returns
@@ -72,7 +76,7 @@ describe('Application Configuration', () => {
   describe('route configuration', () => {
     it('should build route map with all required commands', () => {
       // Import app to trigger the route building
-      require('./app.js');
+      require('./app');
 
       expect(mockBuildRouteMap).toHaveBeenCalledWith({
         routes: expect.objectContaining({
@@ -93,7 +97,9 @@ describe('Application Configuration', () => {
           'config:show': { name: 'showConfigCommand' },
           'config:set': { name: 'setConfigCommand' },
           'config:unset': { name: 'unsetConfigCommand' },
+          'config:setup': { name: 'setupConfigCommand' },
           'config:validate': { name: 'validateConfigCommand' },
+          setup: { name: 'setupConfigCommand' },
 
           // Auth command
           auth: { name: 'authCommand' },
@@ -116,7 +122,7 @@ describe('Application Configuration', () => {
     });
 
     it('should configure auto-completion commands correctly', () => {
-      require('./app.js');
+      require('./app');
 
       expect(mockBuildInstallCommand).toHaveBeenCalledWith('copima-cli-crawler', {
         bash: '__copima-cli-crawler_bash_complete',
@@ -130,7 +136,7 @@ describe('Application Configuration', () => {
 
   describe('application building', () => {
     it('should build application with correct configuration', () => {
-      require('./app.js');
+      require('./app');
 
       expect(mockBuildApplication).toHaveBeenCalledWith(
         { type: 'routeMap' },
@@ -144,7 +150,7 @@ describe('Application Configuration', () => {
     });
 
     it('should export the built application', () => {
-      const { app } = require('./app.js');
+      const { app } = require('./app');
 
       expect(app).toEqual({ type: 'application' });
     });
@@ -152,7 +158,7 @@ describe('Application Configuration', () => {
 
   describe('route structure', () => {
     it('should include all crawl workflow commands', async () => {
-      await import('./app.js');
+      await import('./app');
 
       expect(mockBuildRouteMap.mock.calls).toHaveLength(1);
       const routeConfig = mockBuildRouteMap.mock.calls[0]?.[0] as any;
@@ -166,7 +172,7 @@ describe('Application Configuration', () => {
     });
 
     it('should include all account management commands', async () => {
-      await import('./app.js');
+      await import('./app');
 
       expect(mockBuildRouteMap.mock.calls).toHaveLength(1);
       const routeConfig = mockBuildRouteMap.mock.calls[0]?.[0] as any;
@@ -178,7 +184,7 @@ describe('Application Configuration', () => {
     });
 
     it('should include all configuration management commands', async () => {
-      await import('./app.js');
+      await import('./app');
 
       expect(mockBuildRouteMap.mock.calls).toHaveLength(1);
       const routeConfig = mockBuildRouteMap.mock.calls[0]?.[0] as any;
@@ -186,11 +192,13 @@ describe('Application Configuration', () => {
       expect(routeConfig.routes).toHaveProperty('config:show');
       expect(routeConfig.routes).toHaveProperty('config:set');
       expect(routeConfig.routes).toHaveProperty('config:unset');
+      expect(routeConfig.routes).toHaveProperty('config:setup');
       expect(routeConfig.routes).toHaveProperty('config:validate');
+      expect(routeConfig.routes).toHaveProperty('setup');
     });
 
     it('should include authentication and testing commands', async () => {
-      await import('./app.js');
+      await import('./app');
 
       expect(mockBuildRouteMap.mock.calls).toHaveLength(1);
       const routeConfig = mockBuildRouteMap.mock.calls[0]?.[0] as any;
@@ -200,7 +208,7 @@ describe('Application Configuration', () => {
     });
 
     it('should hide auto-completion commands in documentation', async () => {
-      await import('./app.js');
+      await import('./app');
 
       expect(mockBuildRouteMap.mock.calls).toHaveLength(1);
       const routeConfig = mockBuildRouteMap.mock.calls[0]?.[0] as any;

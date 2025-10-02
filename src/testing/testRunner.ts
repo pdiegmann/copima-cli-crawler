@@ -1016,7 +1016,14 @@ export class TestRunner {
           .limit(1);
         accountRecord = rows[0];
       } else {
-        const rows = await db.select({ accountId: account.accountId, refreshToken: account.refreshToken }).from(account).where(eq(account.accountId, "default")).limit(1);
+        const resolvedAccountId = await tokenManager.resolveAccountId();
+
+        if (!resolvedAccountId) {
+          console.warn("Test runner: Unable to determine which OAuth2 account to use. Please provide an accountId in the test configuration.");
+          return null;
+        }
+
+        const rows = await db.select({ accountId: account.accountId, refreshToken: account.refreshToken }).from(account).where(eq(account.accountId, resolvedAccountId)).limit(1);
         accountRecord = rows[0];
       }
 

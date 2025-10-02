@@ -147,6 +147,11 @@ export class OAuth2Manager {
       }
     }, refreshDelayMs);
 
+    // Allow the process to exit naturally when only the refresh timer remains
+    if (typeof timer.unref === "function") {
+      timer.unref();
+    }
+
     this.refreshTimers.set(accountId, timer);
 
     logger.debug("Token refresh scheduled", {

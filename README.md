@@ -278,12 +278,18 @@ The CLI now ships with an interactive setup wizard that captures every required 
 
 ```bash
 copima config:setup [--config ./copima.yaml] [--full=false]
+ copima setup [--config ./copima.yaml] [--full=false]
 ```
 
-- **`--config`** lets you explicitly target a configuration file. When omitted, the wizard offers to create `./copima.yaml` or `~/.config/copima/config.yaml` if they do not exist.
-- **`--full=false`** keeps the wizard focused on missing values only. By default the command re-prompts the core GitLab credentials so that you can rotate them quickly.
-- OAuth client configuration is optional; you can skip it entirely or capture provider and callback settings in the same session.
+Both commands launch the same interactive flow; use whichever is more convenient.
 
-When any command needs configuration and none is available (or critical fields such as `gitlab.host` or `gitlab.accessToken` are blank), the wizard is triggered automatically—as long as the CLI is running in an interactive terminal. Non-interactive environments (CI pipelines, scripts, etc.) still fail fast with a clear validation error instead of hanging for input.
+- **`--config`** lets you explicitly target a configuration file. When omitted, the wizard offers to create `./copima.yaml` or `~/.config/copima/config.yaml` if they do not exist.
+- **`--full=false`** keeps the wizard focused on missing values only. By default the command re-prompts the GitLab host so that you can confirm connectivity without re-entering secrets.
+- OAuth client configuration now takes center stage: the wizard defaults to configuring a provider so you can obtain tokens through the built-in OAuth flow instead of pasting static personal access tokens. You can still opt out when needed.
+- Existing configuration values show up as defaults, so you can press <kbd>Enter</kbd> to keep saved hosts, OAuth URLs, or secrets without copying them from elsewhere.
+- After saving the file, the wizard automatically launches the OAuth2 auth flow (equivalent to running `copima auth --config <path>`), making it easy to capture fresh tokens immediately. If no provider is defined, the wizard skips this step.
+- The redirect URI you enter for an OAuth provider is reused verbatim during the automatic auth flow, so GitLab sees the exact callback URL you registered.
+
+When any command needs configuration and none is available (or critical fields such as `gitlab.host` are blank and no OAuth provider is configured), the wizard is triggered automatically—as long as the CLI is running in an interactive terminal. When that happens the wizard will also launch the auth flow once configuration is stored so you can complete setup in one shot. Non-interactive environments (CI pipelines, scripts, etc.) still fail fast with a clear validation error instead of hanging for input.
 
 The wizard writes YAML or JSON depending on the target filename and will reuse existing values wherever possible, only prompting for the fields that are missing or invalid.

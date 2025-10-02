@@ -41,6 +41,35 @@ export type GitLabGroup = {
 
 export type GitLabProject = {
   id: GitLabId;
+  name?: string;
+  path?: string;
+  fullPath?: string;
+  nameWithNamespace?: string;
+  description?: string | null;
+  visibility?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  lastActivityAt?: string | null;
+  webUrl?: string | null;
+  avatarUrl?: string | null;
+  archived?: boolean | null;
+  issuesEnabled?: boolean | null;
+  mergeRequestsEnabled?: boolean | null;
+  wikiEnabled?: boolean | null;
+  snippetsEnabled?: boolean | null;
+  jobsEnabled?: boolean | null;
+  containerRegistryEnabled?: boolean | null;
+  lfsEnabled?: boolean | null;
+  openIssuesCount?: number | null;
+  starCount?: number | null;
+  forksCount?: number | null;
+  namespace?: {
+    id: string;
+    name: string;
+    path: string;
+    fullPath: string;
+  } | null;
+  [key: string]: unknown;
 };
 
 export type GroupNode = {

@@ -65,7 +65,11 @@ jest.mock("treeify", () => ({
   },
 }));
 
+import treeify from "treeify";
+import { getDatabase } from "../../db/index";
 import * as impl from "./impl";
+
+const treeifyMock = treeify as unknown as { asTree: jest.Mock };
 
 describe("account/impl", () => {
   beforeEach(() => {
@@ -83,5 +87,50 @@ describe("account/impl", () => {
   it("should handle missing input gracefully", () => {
     // Test addAccount with missing required fields
     expect(impl.addAccount({})).resolves.toBeInstanceOf(Error);
+  });
+
+  describe("listAccounts", () => {
+    it("lists every stored account even when multiple share the same user", async () => {
+      const mockAccounts = [
+        {
+          accountId: "acc-1",
+          name: "Phil",
+          email: "phl@hnnl.eu",
+          accessToken: "token-1",
+          refreshToken: "refresh-1",
+          createdAt: new Date("2025-10-02T08:46:11Z"),
+          updatedAt: new Date("2025-10-02T08:46:11Z"),
+        },
+        {
+          accountId: "acc-2",
+          name: "Phil",
+          email: "phl@hnnl.eu",
+          accessToken: "token-2",
+          refreshToken: "refresh-2",
+          createdAt: new Date("2025-10-02T09:00:00Z"),
+          updatedAt: new Date("2025-10-02T09:00:00Z"),
+        },
+      ];
+
+      const mockDatabase = {
+        select: jest.fn(() => ({
+          from: jest.fn(() => ({
+            innerJoin: jest.fn(() => mockAccounts),
+          })),
+        })),
+      };
+
+      (getDatabase as jest.Mock).mockReturnValueOnce(mockDatabase);
+
+      treeifyMock.asTree.mockClear();
+
+      await impl.listAccounts({});
+
+      expect(treeifyMock.asTree).toHaveBeenCalledTimes(1);
+      const treeArgument = treeifyMock.asTree.mock.calls[0]![0] as Record<string, Record<string, any>>;
+      const userNode = treeArgument["Phil (phl@hnnl.eu)"];
+      expect(userNode).toBeDefined();
+      expect(Object.keys(userNode!)).toEqual(expect.arrayContaining(["Account acc-1", "Account acc-2"]));
+    });
   });
 });

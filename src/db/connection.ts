@@ -11,6 +11,7 @@ export type DatabaseConfig = {
 
 const logger = createLogger("Database");
 let db: ReturnType<typeof drizzle> | null = null;
+let sqliteInstance: { close: () => void } | null = null;
 
 export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle> => {
   if (db) {
@@ -34,6 +35,7 @@ export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle>
     sqlite.exec("PRAGMA foreign_keys = ON");
 
     db = drizzle(sqlite, { schema });
+    sqliteInstance = sqlite;
 
     logger.info("Database initialized successfully");
     return db;
@@ -63,11 +65,22 @@ export type Database = ReturnType<typeof drizzle> & {
 };
 
 export const closeDatabase = (): void => {
-  if (db) {
-    logger.info("Closing database connection");
-    // The better-sqlite3 database will be closed automatically when the process exits
-    db = null;
+  if (!db && !sqliteInstance) {
+    return;
   }
+
+  logger.info("Closing database connection");
+
+  try {
+    sqliteInstance?.close();
+  } catch (error) {
+    logger.warn("Failed to close SQLite database cleanly", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  db = null;
+  sqliteInstance = null;
 };
 
 // Export schema for external use

@@ -1,12 +1,127 @@
+import { createGraphQLClient, createRestClient } from "../../api/index.js";
 import { TokenManager } from "../../auth/tokenManager.js";
 import { createCallbackManager } from "../../callback";
-import type { CallbackContext } from "../../config/types.js";
+import { loadConfig } from "../../config/loader.js";
+import type { CallbackContext, Config } from "../../config/types.js";
 import type { LocalContext } from "../../context.js";
 import { getDatabase } from "../../db/connection.js";
 import { initializeDatabase as initializeDatabaseWithMigrations } from "../../db/migrate.js";
 import { createLogger } from "../../logging/index.js";
 
 const logger = createLogger("CLI");
+
+const ORCHESTRATOR_FLAG = "__copimaCrawlOrchestrator__";
+
+const normalizeGitlabHost = (host?: string): string => {
+  if (!host) {
+    throw new Error("GitLab host is not configured. Provide --host or set gitlab.host in the configuration file.");
+  }
+
+  const trimmed = host.trim();
+  if (!trimmed) {
+    throw new Error("GitLab host is empty after trimming. Provide a valid GitLab base URL (e.g., https://gitlab.example.com).");
+  }
+
+  let sanitized = trimmed;
+  while (sanitized.endsWith("/")) {
+    sanitized = sanitized.slice(0, -1);
+  }
+
+  const apiSuffix = "/api/v4";
+  if (sanitized.toLowerCase().endsWith(apiSuffix)) {
+    sanitized = sanitized.slice(0, -apiSuffix.length);
+  }
+
+  const hasScheme = /^https?:\/\//i.test(sanitized);
+  return hasScheme ? sanitized : `https://${sanitized}`;
+};
+
+const ensureDatabaseReady = async (databasePath: string): Promise<void> => {
+  const { dirname } = await import("path");
+  const { mkdirSync } = await import("fs");
+  const dbDir = dirname(databasePath);
+  mkdirSync(dbDir, { recursive: true });
+  await initializeDatabaseWithMigrations({ path: databasePath, wal: true });
+};
+
+const resolveGitlabHostForFlags = async (context: LocalContext, flagsAny: any, logger: ReturnType<typeof createLogger>): Promise<string> => {
+  const contextConfig = (context as any).config as Config | undefined;
+  const configAccessToken = contextConfig?.gitlab?.accessToken;
+
+  try {
+    return normalizeGitlabHost(flagsAny?.host || flagsAny?.gitlab?.host || contextConfig?.gitlab?.host);
+  } catch (error) {
+    logger.debug("Falling back to configuration loader for GitLab host", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    const fallbackConfig = await loadConfig();
+    const host = normalizeGitlabHost(flagsAny?.host || fallbackConfig.gitlab.host);
+    (context as any).config = {
+      ...fallbackConfig,
+      gitlab: {
+        ...fallbackConfig.gitlab,
+        host,
+        accessToken: configAccessToken ?? fallbackConfig.gitlab.accessToken,
+      },
+    };
+    return host;
+  }
+};
+
+const resolveAccessTokenForAccount = async (
+  flagsAny: any,
+  requestedAccountId: string | undefined,
+  databasePath: string,
+  configToken: string | undefined,
+  logger: ReturnType<typeof createLogger>
+): Promise<{ token: string | null; resolvedAccountId: string | null; source: "flag" | "config" | "database" }> => {
+  const flagToken = flagsAny?.accessToken || flagsAny?.["access-token"];
+
+  if (flagToken) {
+    return { token: flagToken, resolvedAccountId: requestedAccountId ?? null, source: "flag" };
+  }
+
+  if (configToken) {
+    return { token: configToken, resolvedAccountId: requestedAccountId ?? null, source: "config" };
+  }
+
+  await ensureDatabaseReady(databasePath);
+
+  const db = getDatabase();
+  const tokenManager = new TokenManager(db);
+  const accountFromStore = await tokenManager.resolveAccountId(requestedAccountId);
+
+  if (!accountFromStore) {
+    logger.warn("Unable to determine which account to use. Please authenticate or specify --account-id.");
+    return { token: null, resolvedAccountId: null, source: "database" };
+  }
+
+  const resolvedAccountId = accountFromStore;
+  const updatedToken = await tokenManager.getAccessToken(resolvedAccountId);
+  if (!updatedToken) {
+    logger.warn(`No valid access token found for account '${resolvedAccountId}'. Please run 'copima auth' to authenticate.`);
+    return { token: null, resolvedAccountId, source: "database" };
+  }
+
+  return { token: updatedToken, resolvedAccountId, source: "database" };
+};
+
+export const markFlagsFromOrchestrator = (flags: Record<string, unknown> | undefined): Record<string, unknown> => {
+  if (!flags) {
+    return { [ORCHESTRATOR_FLAG]: true };
+  }
+
+  if ((flags as Record<string, unknown>)[ORCHESTRATOR_FLAG]) {
+    return flags;
+  }
+
+  return {
+    ...flags,
+    [ORCHESTRATOR_FLAG]: true,
+  };
+};
+
+export const isCalledFromOrchestrator = (flags: Record<string, unknown> | undefined | null): boolean => Boolean(flags && (flags as Record<string, unknown>)[ORCHESTRATOR_FLAG]);
 
 // Shared writeJSONL utility function to avoid duplication
 const createWriteJSONL = (context: LocalContext, callbackManager: any, callbackContext: any) => {
@@ -16,7 +131,7 @@ const createWriteJSONL = (context: LocalContext, callbackManager: any, callbackC
     const processedData = await callbackManager.processObjects(callbackContext, data);
 
     const stream = (context.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
-    processedData.forEach((item) => {
+    processedData.forEach((item: unknown) => {
       stream.write(`${JSON.stringify(item)}\n`);
     });
     stream.end();
@@ -52,24 +167,39 @@ export const crawlCommand = async (options: any): Promise<void> => {
 
     // Handle authentication - check for test mode first
     let token: string | null = null;
-    const accountId = options.accountId || options["account-id"] || "default";
+    const requestedAccountId = options.accountId || options["account-id"];
     const accessToken = options.accessToken || options["access-token"];
+    let resolvedAccountId: string | null = null;
 
     // First check for global test token (set by test runner)
+    const displayAccount = (): string => resolvedAccountId ?? requestedAccountId ?? "(auto)";
+
     if ((global as any).testAccessToken) {
       token = (global as any).testAccessToken;
-      logger.info(`Using access token passed via test parameter for account '${accountId}'`);
+      logger.info(`Using access token passed via test parameter for account '${displayAccount()}'`);
     } else if (accessToken) {
-      logger.info(`Using access token passed via parameter for account '${accountId}'`);
+      logger.info(`Using access token passed via parameter for account '${displayAccount()}'`);
       token = accessToken;
     } else {
       const db = getDatabase();
       const tokenManager = new TokenManager(db);
-      token = await tokenManager.getValidToken(accountId);
+      const accountFromStore = await tokenManager.resolveAccountId(requestedAccountId);
+
+      if (!accountFromStore) {
+        logger.warn("Unable to determine which account to use. Please authenticate or specify --account-id.");
+        return;
+      }
+
+      resolvedAccountId = accountFromStore;
+      Object.assign(options, {
+        accountId: options.accountId ?? resolvedAccountId,
+        ["account-id"]: options["account-id"] ?? resolvedAccountId,
+      });
+      token = await tokenManager.getAccessToken(resolvedAccountId);
     }
 
     if (!token) {
-      logger.warn(`No valid access token found for account '${accountId}'. Please run 'copima auth' to authenticate.`);
+      logger.warn(`No valid access token found for account '${displayAccount()}'. Please run 'copima auth' to authenticate.`);
       return;
     }
 
@@ -85,70 +215,60 @@ export const crawlCommand = async (options: any): Promise<void> => {
       return;
     }
 
-    // Create a proper context with filesystem utilities
-    const { createGraphQLClient } = await import("../../api");
-    const graphqlClient = createGraphQLClient(options.host, token);
+    const config = await loadConfig();
+    const candidateHost = options.host || options["gitlab-url"] || config.gitlab.host;
+    const gitlabHost = normalizeGitlabHost(candidateHost);
+
+    if (!options.host) {
+      options.host = gitlabHost;
+    }
+
+    logger.info(`Resolved GitLab host: ${gitlabHost}`);
 
     const fs = await import("fs");
     const path = await import("path");
 
+    const graphqlClient = createGraphQLClient(gitlabHost, token);
+    const restClient = createRestClient(gitlabHost, token);
+
     const context = {
       logger,
       graphqlClient,
-      restClient: null,
+      restClient,
       process: process,
       fs,
       path,
-    } as LocalContext;
+      config: {
+        ...config,
+        gitlab: {
+          ...config.gitlab,
+          host: gitlabHost,
+          accessToken: token,
+        },
+      },
+    } as LocalContext & { config: Config };
 
     // Execute each step sequentially
     for (const step of steps) {
       switch (step) {
         case "areas": {
           logger.info("Starting Step 1: Crawling areas (groups and projects)");
-          await areas.call(context, options);
+          await areas.call(context, markFlagsFromOrchestrator(options));
           break;
         }
         case "users": {
           logger.info("Starting Step 2: Crawling users");
-          // Create context with filesystem access for real data processing
-          const usersContext = {
-            logger,
-            graphqlClient,
-            restClient: null,
-            process: process,
-            fs,
-            path,
-          } as LocalContext;
-          await users.call(usersContext, options);
+          await users.call(context, markFlagsFromOrchestrator(options));
           break;
         }
         case "resources": {
           logger.info("Starting Step 3: Crawling area-specific resources");
-          // Create context with filesystem access for real data processing
-          const resourcesContext = {
-            logger,
-            graphqlClient,
-            restClient: null,
-            process: process,
-            fs,
-            path,
-          } as LocalContext;
-          await resources.call(resourcesContext, options);
+          await resources.call(context, markFlagsFromOrchestrator(options));
           break;
         }
         case "repository": {
           logger.info("Starting Step 4: Crawling repository resources");
-          // Create context with filesystem access for real data processing
-          const repositoryContext = {
-            logger,
-            graphqlClient,
-            restClient: null,
-            process: process,
-            fs,
-            path,
-          } as LocalContext;
-          await repository.call(repositoryContext, options);
+          await repository.call(context, markFlagsFromOrchestrator(options));
           break;
         }
         default:
@@ -193,57 +313,49 @@ const executeTestModeSteps = async (steps: string[], options: any, logger: any):
 export const areas = async function (this: LocalContext, flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
 
+  const orchestratedCall = isCalledFromOrchestrator(flags);
+
   try {
-    logger.info("Starting Step 1: Crawling areas (groups and projects)");
+    if (!orchestratedCall) {
+      logger.info("Starting Step 1: Crawling areas (groups and projects)");
+    }
 
     // Debug: Log all available flags to understand the structure
     logger.info("Debug - Available flags:", { flags, configToken: (this as any).config?.gitlab?.accessToken });
 
-    // Get account ID from flags - StriCLI converts kebab-case to camelCase
     const flagsAny = flags as any;
-    const accountId = flagsAny?.accountId || flagsAny?.["account-id"] || "default";
-    const accessToken = flagsAny?.accessToken || flagsAny?.["access-token"];
-
-    // If we have an access token but no explicit account ID, we'll still use the passed token
-    // The test runner should ideally pass both token and account info, but for now we'll work with what we have
-    const resolvedAccountId = accountId;
-
-    // Get the GitLab host from flags (this comes from the test configuration)
-    const gitlabHost = flagsAny?.host || flagsAny?.gitlab?.host || (this as any).config?.gitlab?.host || "https://gitlab.example.com";
-
-    // Get database path from flags, fallback to default
+    const requestedAccountId = flagsAny?.accountId || flagsAny?.["account-id"];
     const databasePath = flagsAny?.database || "./database.sqlite";
+    const configAccessToken = (this as any).config?.gitlab?.accessToken as string | undefined;
 
-    // Ensure database directory exists
-    const { dirname } = await import("path");
-    const { mkdirSync } = await import("fs");
-    const dbDir = dirname(databasePath);
-    mkdirSync(dbDir, { recursive: true });
+    const gitlabHost = await resolveGitlabHostForFlags(this, flagsAny, logger);
+    flagsAny.host = gitlabHost;
 
-    // Initialize database
-    await initializeDatabaseWithMigrations({ path: databasePath, wal: true });
+    const { token, resolvedAccountId, source: tokenSource } = await resolveAccessTokenForAccount(flagsAny, requestedAccountId, databasePath, configAccessToken, logger);
 
-    // Use passed access token if available, otherwise try to get from database
-    let token: string | null = null;
-
-    if (accessToken) {
-      logger.info(`Using access token passed via parameter for account '${resolvedAccountId}'`);
-      token = accessToken;
-    } else {
-      const db = getDatabase();
-      const tokenManager = new TokenManager(db);
-      token = await tokenManager.getValidToken(resolvedAccountId);
+    if (resolvedAccountId) {
+      flagsAny.accountId = flagsAny.accountId ?? resolvedAccountId;
+      flagsAny["account-id"] = flagsAny["account-id"] ?? resolvedAccountId;
     }
 
+    const accountLabel = resolvedAccountId ?? requestedAccountId ?? (configAccessToken ? "config" : "(auto)");
+
     if (!token) {
-      logger.warn(`No valid access token found for account '${resolvedAccountId}'. Please run 'copima auth' to authenticate.`);
+      logger.warn(`No valid access token found for account '${accountLabel}'. Please run 'copima auth' to authenticate.`);
       return;
     }
 
-    // Check if this is test mode - enable for explicit test tokens OR when token is a placeholder
-    const isTestMode = token && (token.startsWith("test_") || token.startsWith("mock_") || token === "test-token-placeholder" || token === "test-pat-placeholder");
+    if (tokenSource === "flag") {
+      logger.info(`Using access token passed via parameter for account '${accountLabel}'`);
+    } else if (tokenSource === "database") {
+      logger.info(`Using access token retrieved from database for account '${accountLabel}'`);
+    } else if (tokenSource === "config") {
+      logger.info(`Using access token from configuration for account '${accountLabel}'`);
+    }
 
-    logger.info("Debug - Test mode check:", { token: token ? `${token.substring(0, 8)}...` : null, isTestMode });
+    const isTestMode = token.startsWith("test_") || token.startsWith("mock_") || token === "test-token-placeholder" || token === "test-pat-placeholder";
+
+    logger.info("Debug - Test mode check:", { token: `${token.substring(0, 8)}...`, isTestMode });
 
     if (isTestMode) {
       logger.info("Test mode detected - creating mock data");
@@ -258,24 +370,23 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       return;
     }
 
-    // Create a new GraphQL client with the correct host and token
-    const { createGraphQLClient } = await import("../../api");
-    const graphqlClient = createGraphQLClient(gitlabHost, token);
+    // Create or reuse GraphQL client with the correct host and token
+    const graphqlClient = (this as any).graphqlClient ?? createGraphQLClient(gitlabHost, token);
+    if (!(this as any).graphqlClient) {
+      (this as any).graphqlClient = graphqlClient;
+    }
 
     // Initialize callback manager
     const callbackManager = createCallbackManager((this as any).config?.callbacks || { enabled: false });
     const callbackContext: CallbackContext = {
       host: gitlabHost,
-      accountId: resolvedAccountId,
+      accountId: accountLabel,
       resourceType: "", // Will be set for each resource type
     };
 
     // Fetch groups and projects using generated GraphQL operations
-    const groupsData = await graphqlClient.fetchGroups(100);
-    const projectsData = await graphqlClient.fetchProjects(100);
-
-    const groups = groupsData.nodes;
-    const projects = projectsData.nodes;
+    const groups = await graphqlClient.fetchAllGroups();
+    const projects = await graphqlClient.fetchAllProjects();
 
     // Log and store results
     logger.info(`Fetched ${groups.length} groups`);
@@ -301,8 +412,12 @@ export const users = async function (this: LocalContext, flags: Record<string, u
   const logger = this.logger;
   const { graphqlClient } = this;
 
+  const orchestratedCall = isCalledFromOrchestrator(flags);
+
   try {
-    logger.info("Starting Step 2: Crawling users");
+    if (!orchestratedCall) {
+      logger.info("Starting Step 2: Crawling users");
+    }
 
     // Check if this is test mode and handle it
     const flagAccessToken = (flags as any)?.accessToken;
@@ -350,9 +465,12 @@ export const users = async function (this: LocalContext, flags: Record<string, u
 export const resources = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { graphqlClient } = this;
+  const orchestratedCall = isCalledFromOrchestrator(_flags);
 
   try {
-    logger.info("Starting Step 3: Crawling area-specific resources");
+    if (!orchestratedCall) {
+      logger.info("Starting Step 3: Crawling area-specific resources");
+    }
 
     // Initialize callback manager
     const callbackManager = createCallbackManager((this as any).config?.callbacks || { enabled: false });
@@ -399,9 +517,12 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
 export const repository = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { graphqlClient } = this;
+  const orchestratedCall = isCalledFromOrchestrator(_flags);
 
   try {
-    logger.info("Starting Step 4: Crawling repository resources");
+    if (!orchestratedCall) {
+      logger.info("Starting Step 4: Crawling repository resources");
+    }
 
     // Initialize callback manager
     const callbackManager = createCallbackManager((this as any).config?.callbacks || { enabled: false });

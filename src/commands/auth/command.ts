@@ -77,6 +77,12 @@ export const authCommand = buildCommand({
         brief: "Display name for account",
         optional: true,
       },
+      email: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Email associated with the account",
+        optional: true,
+      },
       config: {
         kind: "parsed",
         parse: (input: string) => input,

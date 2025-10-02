@@ -94,14 +94,18 @@ describe("Auth Command Implementation", () => {
       defaultScopes: ["api", "read_user"],
     });
 
-    buildOAuth2Config.mockReturnValue({
-      clientId: "test_client_id",
-      clientSecret: "test_client_secret",
+    buildOAuth2Config.mockImplementation((_provider: unknown, overrides: any) => ({
+      clientId: overrides.clientId ?? "test_client_id",
+      clientSecret: overrides.clientSecret ?? "test_client_secret",
       authorizationUrl: "https://gitlab.com/oauth/authorize",
       tokenUrl: "https://gitlab.com/oauth/token",
-      scopes: "api,read_user",
-      redirectUri: "http://localhost:3001/callback",
-    });
+      scopes: Array.isArray(overrides.scopes)
+        ? overrides.scopes
+        : typeof overrides.scopes === "string"
+          ? overrides.scopes.split(",").map((scope: string) => scope.trim())
+          : ["api", "read_user"],
+      redirectUri: overrides.redirectUri ?? "http://localhost:3001/callback",
+    }));
 
     // Setup crypto mock
     mockCrypto.randomBytes.mockImplementation(() => Buffer.from("mock-random-bytes"));
@@ -117,8 +121,8 @@ describe("Auth Command Implementation", () => {
         provider: "gitlab",
         "client-id": "test_client_id",
         "client-secret": "test_client_secret",
-        port: 3001,
-        timeout: 300,
+        port: "3001",
+        timeout: "300",
       };
 
       // Mock successful callback
@@ -159,6 +163,45 @@ describe("Auth Command Implementation", () => {
           }),
         })
       );
+    });
+
+    it("should honor custom redirect URI from flags", async () => {
+      const customRedirect = "http://localhost:3000/api/auth/oauth2/callback/gitlab";
+      const flags: AuthCommandFlags = {
+        provider: "gitlab",
+        "client-id": "test_client_id",
+        "client-secret": "test_client_secret",
+        "redirect-uri": customRedirect,
+      };
+
+      mockServer.getCallbackUrl.mockReturnValue(customRedirect);
+
+      mockServer.waitForCallback.mockResolvedValue({
+        code: "test_code",
+        state: "6d6f636b2d72616e646f6d2d6279746573",
+      });
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            access_token: "test_token",
+            token_type: "Bearer",
+          }),
+      });
+
+      await executeAuthFlow(flags);
+
+      expect(OAuth2Server).toHaveBeenCalledWith(
+        expect.objectContaining({
+          callbackPath: "/api/auth/oauth2/callback/gitlab",
+          port: 3000,
+        })
+      );
+
+      const openedUrl = mockOpen.mock.calls[0]![0] as string;
+      const parsedUrl = new URL(openedUrl);
+      expect(parsedUrl.searchParams.get("redirect_uri")).toBe(customRedirect);
     });
 
     it("should handle custom scopes", async () => {
