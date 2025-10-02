@@ -167,3 +167,34 @@ export const refreshTokenCommand = buildCommand({
     brief: "Refresh OAuth2 tokens for an account",
   },
 });
+
+export const importCSVCommand = buildCommand({
+  loader: async () => {
+    const { importCSV } = await import("./impl.js");
+    return importCSV;
+  },
+  parameters: {
+    positional: {
+      kind: "tuple",
+      parameters: [],
+    },
+    flags: {
+      "users-file": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Path to users CSV file (id,name,email,email_verified,image,created_at,updated_at,role,banned,ban_reason,ban_expires)",
+        optional: true,
+      },
+      "accounts-file": {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief:
+          "Path to accounts CSV file (id,account_id,provider_id,user_id,access_token,refresh_token,id_token,access_token_expires_at,refresh_token_expires_at,scope,password,created_at,updated_at)",
+        optional: true,
+      },
+    },
+  },
+  docs: {
+    brief: "Import users and accounts from CSV files (merges data, only updates if newer)",
+  },
+});

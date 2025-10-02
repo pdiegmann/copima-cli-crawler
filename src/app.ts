@@ -6,7 +6,7 @@ import { name, version } from "../package.json";
 import { areasCommand, crawlCommand, repositoryCommand, resourcesCommand, usersCommand } from "./commands/crawl/commands";
 
 // Import account commands
-import { addAccountCommand, listAccountsCommand, refreshTokenCommand, removeAccountCommand } from "./commands/account/command";
+import { addAccountCommand, importCSVCommand, listAccountsCommand, refreshTokenCommand, removeAccountCommand } from "./commands/account/command";
 
 // Import config commands
 import { setConfigCommand, setupConfigCommand, showConfigCommand, unsetConfigCommand, validateConfigCommand } from "./commands/config/command";
@@ -31,6 +31,7 @@ const routes = buildRouteMap({
     "account:list": listAccountsCommand,
     "account:remove": removeAccountCommand,
     "account:refresh": refreshTokenCommand,
+    "account:import": importCSVCommand,
 
     // Configuration management commands - YAML file operations
     "config:show": showConfigCommand,

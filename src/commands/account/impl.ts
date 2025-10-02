@@ -4,6 +4,7 @@ import treeify from "treeify";
 import { getDatabase, initStorage } from "../../account/index";
 import { createLogger } from "../../logging";
 import type { SafeRecord } from "../../types/api.js";
+import { importAccountsFromCSV, importFromCSV, importUsersFromCSV, type ImportStats } from "./csvImport";
 
 const logger = createLogger("AccountCommands");
 
@@ -89,6 +90,79 @@ export const addAccount = async (flags: AddAccountFlags): Promise<void | Error> 
     logger.info(`🆔 Account ID: ${colors.bold(accountId)}`);
   } catch (error) {
     logger.error(colors.red("❌ Failed to add account"));
+    logger.error(error instanceof Error ? error.message : String(error));
+    return error instanceof Error ? error : new Error(String(error));
+  }
+};
+
+type ImportCSVFlags = {
+  "users-file"?: string;
+  "accounts-file"?: string;
+};
+
+export const importCSV = async (flags: ImportCSVFlags): Promise<void | Error> => {
+  const logger = createLogger("ImportCSV");
+
+  try {
+    const { "users-file": usersFile, "accounts-file": accountsFile } = flags;
+
+    // Validate required flags
+    if (!usersFile && !accountsFile) {
+      logger.error(colors.red("❌ At least one of --users-file or --accounts-file must be provided"));
+      return new Error("At least one of --users-file or --accounts-file must be provided");
+    }
+
+    // Get storage
+    const storage = ensureDatabase();
+
+    let stats: ImportStats;
+
+    if (usersFile && accountsFile) {
+      // Import both
+      logger.info(colors.cyan("📥 Importing users and accounts from CSV files..."));
+      stats = await importFromCSV(storage, usersFile, accountsFile);
+    } else if (usersFile) {
+      // Import only users
+      logger.info(colors.cyan("📥 Importing users from CSV file..."));
+      stats = await importUsersFromCSV(storage, usersFile);
+    } else {
+      // Import only accounts
+      logger.info(colors.cyan("📥 Importing accounts from CSV file..."));
+      stats = await importAccountsFromCSV(storage, accountsFile!);
+    }
+
+    // Display results
+    console.log(`\n${colors.bold("📊 Import Results:")}`);
+    console.log(colors.bold("=================="));
+
+    if (stats.usersProcessed > 0) {
+      console.log(colors.cyan("\n👥 Users:"));
+      console.log(`  ${colors.gray("Processed:")} ${colors.bold(String(stats.usersProcessed))}`);
+      console.log(`  ${colors.green("Added:")}     ${colors.bold(String(stats.usersAdded))}`);
+      console.log(`  ${colors.yellow("Updated:")}   ${colors.bold(String(stats.usersUpdated))}`);
+      console.log(`  ${colors.gray("Skipped:")}   ${colors.bold(String(stats.usersSkipped))}`);
+    }
+
+    if (stats.accountsProcessed > 0) {
+      console.log(colors.cyan("\n🔑 Accounts:"));
+      console.log(`  ${colors.gray("Processed:")} ${colors.bold(String(stats.accountsProcessed))}`);
+      console.log(`  ${colors.green("Added:")}     ${colors.bold(String(stats.accountsAdded))}`);
+      console.log(`  ${colors.yellow("Updated:")}   ${colors.bold(String(stats.accountsUpdated))}`);
+      console.log(`  ${colors.gray("Skipped:")}   ${colors.bold(String(stats.accountsSkipped))}`);
+    }
+
+    if (stats.errors.length > 0) {
+      console.log(colors.red("\n⚠️  Errors:"));
+      stats.errors.forEach((error, index) => {
+        console.log(colors.red(`  ${index + 1}. ${error}`));
+      });
+      logger.warn(colors.yellow(`⚠️  Import completed with ${stats.errors.length} error(s)`));
+      return new Error(`Import completed with ${stats.errors.length} error(s)`);
+    }
+
+    logger.info(colors.green("\n✅ Import completed successfully"));
+  } catch (error) {
+    logger.error(colors.red("❌ Import failed"));
     logger.error(error instanceof Error ? error.message : String(error));
     return error instanceof Error ? error : new Error(String(error));
   }
