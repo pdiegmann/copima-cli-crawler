@@ -1,3 +1,4 @@
+import { print } from "graphql";
 import { createOAuth2Manager } from "../auth/oauth2Manager";
 import { createLogger } from "../logging";
 import type { PageInfo as CustomPageInfo, GitLabProject, GitLabUser, GroupNode, SafeRecord } from "../types/api.js";
@@ -115,7 +116,7 @@ export class GitLabGraphQLClient {
     try {
       logger.debug(`Making GraphQL request to: ${this.baseUrl}`);
 
-      const queryString = query.loc.source.body;
+      const queryString = this.getQueryString(query);
       let response = await makeRequest(this.accessToken, queryString);
 
       if (response.status === 401 && this.refreshToken && this.oauth2Config) {
@@ -153,6 +154,17 @@ export class GitLabGraphQLClient {
       });
 
       throw error;
+    }
+  }
+
+  private getQueryString(query: any): string {
+    if (typeof query === "string") return query;
+    if (query?.loc?.source?.body) return query.loc.source.body;
+
+    try {
+      return print(query);
+    } catch (error) {
+      throw new Error(`Unable to serialize GraphQL query: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

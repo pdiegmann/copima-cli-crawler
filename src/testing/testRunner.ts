@@ -45,6 +45,7 @@ export type TestExecutionOptions = {
 export class TestRunner {
   private logger = createLogger("TestRunner");
   private activeProcesses: ChildProcess[] = [];
+  private accountContextCache = new Map<string, { accountId: string; accessToken: string }>();
 
   /**
    * Runs a single test configuration.
@@ -630,7 +631,9 @@ export class TestRunner {
       for (let i = 0; i < Math.min(lines.length, 10); i++) {
         // Check first 10 records
         try {
-          const record = JSON.parse(lines[i]);
+          const line = lines[i];
+          if (!line) continue;
+          const record = JSON.parse(line);
           for (const field of requiredFields) {
             if (!(field in record)) {
               errors.push(`Missing required field '${field}' in record ${i + 1}`);
@@ -803,7 +806,9 @@ export class TestRunner {
 
     for (let i = 0; i < lines.length; i++) {
       try {
-        JSON.parse(lines[i]);
+        const line = lines[i];
+        if (!line) continue;
+        JSON.parse(line);
       } catch {
         errors.push(`Invalid JSON structure in ${fileName} at line ${i + 1}`);
         return false;
@@ -869,8 +874,8 @@ export class TestRunner {
     const args = this.buildStepArgs(config.execution.steps);
     this.addHostArgument(args, config.gitlab.host);
 
-    const { accessToken, accountId } = await this.resolveCredentials(config.gitlab);
-    this.addCredentialArgs(args, accessToken, accountId, config.gitlab.refreshToken);
+    const accountId = await this.resolveAccountId(config.gitlab);
+    this.addCredentialArgs(args, accountId);
     this.addOutputArgs(args, config.execution.outputDir, config.execution.databasePath);
 
     return args;
@@ -880,13 +885,16 @@ export class TestRunner {
    * Builds step arguments for crawler command.
    */
   private buildStepArgs(steps?: string[]): string[] {
-    const allSteps = steps && steps.length > 0 ? steps : ["areas"];
+    const allSteps: string[] = steps && steps.length > 0 ? steps : ["areas"];
     const args: string[] = [];
 
     if (allSteps.length > 1) {
       args.push("crawl", "--steps", allSteps.join(","));
     } else {
-      args.push(allSteps[0]);
+      const firstStep = allSteps[0];
+      if (firstStep) {
+        args.push(firstStep);
+      }
     }
 
     return args;
@@ -902,113 +910,23 @@ export class TestRunner {
   }
 
   /**
-   * Resolves access token and account ID from database or config.
+   * Resolves OAuth2 account identifier from stored credentials.
    */
-  private async resolveCredentials(gitlabConfig: any): Promise<{ accessToken?: string; accountId?: string }> {
-    let accessToken = gitlabConfig.accessToken;
-    let accountId = gitlabConfig.accountId;
+  private async resolveAccountId(gitlabConfig: any): Promise<string> {
+    const accountContext = await this.resolveAccountContext(gitlabConfig);
 
-    if (!accessToken) {
-      try {
-        const storedCredentials = await this.retrieveStoredCredentials(gitlabConfig);
-        if (storedCredentials) {
-          accessToken = storedCredentials.accessToken;
-          accountId = storedCredentials.accountId;
-        }
-      } catch (error) {
-        console.warn("Test runner: Failed to retrieve stored token:", error);
-      }
+    if (!accountContext) {
+      throw new Error("No OAuth2 credentials found for the provided configuration. Run 'copima auth' to authenticate.");
     }
 
-    return { accessToken, accountId };
-  }
-
-  /**
-   * Retrieves stored credentials from database.
-   */
-  private async retrieveStoredCredentials(gitlabConfig: any): Promise<{ accessToken: string; accountId: string } | null> {
-    const { initDatabase } = await import("../db/connection.js");
-    const { TokenManager } = await import("../auth/tokenManager.js");
-    const db = initDatabase({ path: "./database.sqlite", wal: true });
-    const tokenManager = new TokenManager(db);
-
-    if (gitlabConfig.accountId) {
-      return await this.getTokenByAccountId(tokenManager, gitlabConfig.accountId);
-    } else if (gitlabConfig.email) {
-      return await this.getTokenByEmail(db, tokenManager, gitlabConfig.email);
-    } else {
-      return await this.getDefaultToken(tokenManager);
-    }
-  }
-
-  /**
-   * Gets token by account ID.
-   */
-  private async getTokenByAccountId(tokenManager: any, accountId: string): Promise<{ accessToken: string; accountId: string } | null> {
-    const storedToken = await tokenManager.getAccessToken(accountId);
-    if (storedToken) {
-      console.log(`Test runner: Using access token for account ID: ${accountId}`);
-      return { accessToken: storedToken, accountId };
-    }
-    return null;
-  }
-
-  /**
-   * Gets token by email lookup.
-   */
-  private async getTokenByEmail(db: any, tokenManager: any, email: string): Promise<{ accessToken: string; accountId: string } | null> {
-    const { eq, desc } = await import("drizzle-orm");
-    const { account, user } = await import("../db/schema.js");
-
-    const [userRecord] = await db
-      .select({
-        accountId: account.accountId,
-        userId: user.id,
-        email: user.email,
-      })
-      .from(user)
-      .innerJoin(account, eq(account.userId, user.id))
-      .where(eq(user.email, email))
-      .orderBy(desc(account.createdAt))
-      .limit(1);
-
-    if (userRecord) {
-      const storedToken = await tokenManager.getAccessToken(userRecord.accountId);
-      if (storedToken) {
-        console.log(`Test runner: Using access token for email: ${email} (account: ${userRecord.accountId})`);
-        return { accessToken: storedToken, accountId: userRecord.accountId };
-      }
-    } else {
-      console.warn(`Test runner: No account found for email: ${email}`);
-    }
-    return null;
-  }
-
-  /**
-   * Gets default token.
-   */
-  private async getDefaultToken(tokenManager: any): Promise<{ accessToken: string; accountId: string } | null> {
-    const storedToken = await tokenManager.getAccessToken("default");
-    if (storedToken) {
-      console.log("Test runner: Using access token for default account");
-      return { accessToken: storedToken, accountId: "default" };
-    }
-    return null;
+    return accountContext.accountId;
   }
 
   /**
    * Adds credential arguments to command.
    */
-  private addCredentialArgs(args: string[], accessToken?: string, accountId?: string, refreshToken?: string): void {
-    if (accountId) {
-      args.push("--account-id", accountId);
-    }
-    if (accessToken && accessToken.trim()) {
-      args.push("--access-token", accessToken);
-    }
-    if (refreshToken) {
-      args.push("--refresh-token", refreshToken);
-    }
+  private addCredentialArgs(args: string[], accountId: string): void {
+    args.push("--account-id", accountId);
   }
 
   /**
@@ -1046,8 +964,12 @@ export class TestRunner {
     if (!config.gitlab) return;
 
     this.addGitlabHostToEnvironment(env, config.gitlab);
-    const accessToken = await this.resolveGitlabAccessToken(config.gitlab);
-    this.addGitlabTokenToEnvironment(env, accessToken);
+    const accountContext = await this.resolveAccountContext(config.gitlab);
+
+    if (accountContext) {
+      env["GITLAB_ACCOUNT_ID"] = accountContext.accountId;
+      this.addGitlabTokenToEnvironment(env, accountContext.accessToken);
+    }
   }
 
   /**
@@ -1059,108 +981,90 @@ export class TestRunner {
     }
   }
 
-  /**
-   * Resolves GitLab access token from database or configuration.
-   */
-  private async resolveGitlabAccessToken(gitlabConfig: any): Promise<string | undefined> {
-    let accessToken = gitlabConfig.accessToken;
-
-    try {
-      const storedToken = await this.retrieveStoredGitlabToken(gitlabConfig);
-      if (storedToken) {
-        accessToken = storedToken;
-      } else if (!accessToken) {
-        console.warn("Test runner: No stored access token found and none in config. Please run 'copima auth' first.");
-      }
-    } catch (error) {
-      console.warn("Test runner: Failed to retrieve stored token, using config token:", error);
+  private async resolveAccountContext(gitlabConfig: any): Promise<{ accountId: string; accessToken: string } | null> {
+    const cacheKey = this.getAccountContextCacheKey(gitlabConfig);
+    const cachedContext = cacheKey ? this.accountContextCache.get(cacheKey) : undefined;
+    if (cachedContext) {
+      return cachedContext;
     }
 
-    return accessToken;
-  }
-
-  /**
-   * Retrieves stored GitLab token from database.
-   */
-  private async retrieveStoredGitlabToken(gitlabConfig: any): Promise<string | null> {
     try {
       const { initDatabase } = await import("../db/connection.js");
       const { TokenManager } = await import("../auth/tokenManager.js");
+      const { account, user } = await import("../db/schema.js");
+      const { eq, desc } = await import("drizzle-orm");
 
       const db = initDatabase({ path: "./database.sqlite", wal: true });
       const tokenManager = new TokenManager(db);
 
-      return await this.getStoredTokenByCredentials(tokenManager, gitlabConfig);
-    } catch {
-      console.warn("Test runner: Database not available, using config token");
+      let accountRecord: { accountId: string; refreshToken: string | null } | undefined;
+
+      if (gitlabConfig.accountId) {
+        const rows = await db
+          .select({ accountId: account.accountId, refreshToken: account.refreshToken })
+          .from(account)
+          .where(eq(account.accountId, gitlabConfig.accountId))
+          .limit(1);
+        accountRecord = rows[0];
+      } else if (gitlabConfig.email) {
+        const rows = await db
+          .select({ accountId: account.accountId, refreshToken: account.refreshToken, createdAt: account.createdAt })
+          .from(user)
+          .innerJoin(account, eq(account.userId, user.id))
+          .where(eq(user.email, gitlabConfig.email))
+          .orderBy(desc(account.createdAt))
+          .limit(1);
+        accountRecord = rows[0];
+      } else {
+        const rows = await db.select({ accountId: account.accountId, refreshToken: account.refreshToken }).from(account).where(eq(account.accountId, "default")).limit(1);
+        accountRecord = rows[0];
+      }
+
+      if (!accountRecord) {
+        console.warn("Test runner: No stored OAuth2 account found matching configuration");
+        return null;
+      }
+
+      if (!accountRecord.refreshToken) {
+        console.warn("Test runner: Stored account is missing a refresh token and cannot be used for OAuth2-authenticated tests");
+        return null;
+      }
+
+      const accessToken = await tokenManager.getAccessToken(accountRecord.accountId);
+      if (!accessToken) {
+        console.warn(`Test runner: No valid access token available for account: ${accountRecord.accountId}`);
+        return null;
+      }
+
+      if (accessToken.startsWith("test_") || accessToken.startsWith("mock_")) {
+        console.warn(`Test runner: Ignoring mock access token for account: ${accountRecord.accountId}`);
+        return null;
+      }
+
+      const context = { accountId: accountRecord.accountId, accessToken };
+      if (cacheKey) {
+        this.accountContextCache.set(cacheKey, context);
+      }
+
+      console.log(`Test runner: Using OAuth2 account ${context.accountId}`);
+      return context;
+    } catch (error) {
+      console.warn("Test runner: Failed to resolve OAuth2 account context", error);
       return null;
     }
   }
 
-  /**
-   * Gets stored token based on account ID, email, or default account.
-   */
-  private async getStoredTokenByCredentials(tokenManager: any, gitlabConfig: any): Promise<string | null> {
+  private getAccountContextCacheKey(gitlabConfig: any): string | null {
     if (gitlabConfig.accountId) {
-      const tokenData = await this.getTokenByAccountId(tokenManager, gitlabConfig.accountId);
-      return tokenData ? tokenData.accessToken : null;
-    } else if (gitlabConfig.email) {
-      return await this.getTokenByEmailLookup(gitlabConfig.email);
-    } else {
-      return await this.getDefaultStoredToken(tokenManager);
+      return `account:${gitlabConfig.accountId}`;
     }
-  }
-
-  /**
-   * Gets token by email lookup through user-account join.
-   */
-  private async getTokenByEmailLookup(email: string): Promise<string | null> {
-    try {
-      const { initDatabase } = await import("../db/connection.js");
-      const { TokenManager } = await import("../auth/tokenManager.js");
-      const { eq, desc } = await import("drizzle-orm");
-      const { account, user } = await import("../db/schema.js");
-
-      const db = initDatabase({ path: "./database.sqlite", wal: true });
-      const tokenManager = new TokenManager(db);
-
-      const [userRecord] = await db
-        .select({
-          accountId: account.accountId,
-          userId: user.id,
-          email: user.email,
-        })
-        .from(user)
-        .innerJoin(account, eq(account.userId, user.id))
-        .where(eq(user.email, email))
-        .orderBy(desc(account.createdAt))
-        .limit(1);
-
-      if (userRecord) {
-        const storedToken = await tokenManager.getAccessToken(userRecord.accountId);
-        if (storedToken) {
-          console.log(`Test runner: Using access token for email: ${email} (account: ${userRecord.accountId})`);
-          return storedToken;
-        }
-      } else {
-        console.warn(`Test runner: No account found for email: ${email}`);
-      }
-    } catch (error) {
-      console.warn(`Test runner: Failed to lookup token by email: ${email}`, error);
+    if (gitlabConfig.email) {
+      return `email:${gitlabConfig.email}`;
     }
-
+    if (gitlabConfig.host) {
+      return `host:${gitlabConfig.host}`;
+    }
     return null;
-  }
-
-  /**
-   * Gets default stored token.
-   */
-  private async getDefaultStoredToken(tokenManager: any): Promise<string | null> {
-    const storedToken = await tokenManager.getAccessToken("default");
-    if (storedToken) {
-      console.log("Test runner: Using access token for default account");
-    }
-    return storedToken;
   }
 
   /**
@@ -1274,8 +1178,8 @@ export class TestRunner {
 
     <h2>Test Results</h2>
     ${result.results
-      .map(
-        (test) => `
+        .map(
+          (test) => `
         <div class="test ${test.success ? "passed" : "failed"}">
             <h3>${test.config.metadata.name} - ${test.success ? "PASSED" : "FAILED"}</h3>
             <p>${test.config.metadata.description}</p>
@@ -1287,8 +1191,8 @@ export class TestRunner {
             </div>
         </div>
     `
-      )
-      .join("")}
+        )
+        .join("")}
 </body>
 </html>`;
   }
