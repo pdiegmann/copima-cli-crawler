@@ -989,10 +989,10 @@ export class TestRunner {
     }
 
     try {
-      const { initDatabase } = await import("../db/connection.js");
+      const { initStorage } = await import("../account/storage.js");
       const { TokenManager } = await import("../auth/tokenManager.js");
 
-      const storage = initDatabase({ path: "./database.yaml", wal: true });
+      const storage = initStorage({ path: "./database.yaml" });
       const tokenManager = new TokenManager(storage);
 
       let accountRecord: { accountId: string; refreshToken: string | null } | undefined;

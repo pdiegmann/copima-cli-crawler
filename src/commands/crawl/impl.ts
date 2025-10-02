@@ -1,11 +1,10 @@
+import { getDatabase } from "../../account/storage.js";
 import { createGraphQLClient, createRestClient } from "../../api/index.js";
 import { TokenManager } from "../../auth/tokenManager.js";
 import { createCallbackManager } from "../../callback";
 import { loadConfig } from "../../config/loader.js";
 import type { CallbackContext, Config } from "../../config/types.js";
 import type { LocalContext } from "../../context.js";
-import { getDatabase } from "../../db/connection.js";
-import { initializeDatabase as initializeDatabaseWithMigrations } from "../../db/migrate.js";
 import { createLogger } from "../../logging/index.js";
 
 const logger = createLogger("CLI");
@@ -41,7 +40,8 @@ const ensureDatabaseReady = async (databasePath: string): Promise<void> => {
   const { mkdirSync } = await import("fs");
   const dbDir = dirname(databasePath);
   mkdirSync(dbDir, { recursive: true });
-  await initializeDatabaseWithMigrations({ path: databasePath, wal: true });
+  const { initStorage } = await import("../../account/storage.js");
+  initStorage({ path: databasePath });
 };
 
 const resolveGitlabHostForFlags = async (context: LocalContext, flagsAny: any, logger: ReturnType<typeof createLogger>): Promise<string> => {
@@ -162,8 +162,9 @@ export const crawlCommand = async (options: any): Promise<void> => {
     const dbDir = dirname(databasePath);
     mkdirSync(dbDir, { recursive: true });
 
-    // Initialize the database and run migrations
-    await initializeDatabaseWithMigrations({ path: databasePath, wal: true });
+    // Initialize the account storage
+    const { initStorage } = await import("../../account/storage.js");
+    initStorage({ path: databasePath });
 
     // Handle authentication - check for test mode first
     let token: string | null = null;

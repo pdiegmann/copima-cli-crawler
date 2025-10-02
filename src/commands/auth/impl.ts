@@ -506,7 +506,7 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
   } finally {
     if (databaseAvailable) {
       try {
-        const { closeDatabase } = await import("../../db/index.js");
+        const { closeDatabase } = await import("../../account/index.js");
         closeDatabase();
       } catch (error) {
         logger.warn("Failed to close database after storing credentials", {
@@ -519,15 +519,12 @@ const storeCredentials = async (tokens: OAuth2TokenResponse, flags: AuthCommandF
 
 const initializeDatabaseConnection = async (): Promise<boolean> => {
   try {
-    const { initDatabase, initializeDatabase } = await import("../../db/index.js");
+    const { initStorage } = await import("../../account/index.js");
     const databaseConfig = {
       path: "./database.yaml",
-      wal: true,
-      timeout: 5000,
     };
 
-    initDatabase(databaseConfig);
-    initializeDatabase(databaseConfig);
+    initStorage(databaseConfig);
     return true;
   } catch (error) {
     logger.error("Database initialization failed", {
@@ -601,7 +598,7 @@ const fetchUserInfoFromOAuth = async (tokens: OAuth2TokenResponse, config: OAuth
 };
 
 const storeCredentialsInDatabase = async (credentialData: any, tokens: OAuth2TokenResponse, config: OAuth2Config): Promise<void> => {
-  const { getDatabase } = await import("../../db/index.js");
+  const { getDatabase } = await import("../../account/index.js");
   const { randomUUID } = await import("node:crypto");
 
   const storage = getDatabase();

@@ -76,17 +76,16 @@ class DatabaseAuthenticator {
         return;
       }
 
-      const { initDatabase } = await import("../db/connection.js");
-      const { initializeDatabase } = await import("../db/migrate.js");
+      const { initStorage, getDatabase } = await import("../account/storage.js");
 
       const globalState = globalThis as typeof globalThis & { __copimaDatabaseInitialized?: boolean; __copimaDatabasePath?: string };
 
       let db;
       try {
-        initializeDatabase({ path: DEFAULT_DATABASE_PATH, wal: true });
-        db = initDatabase({ path: DEFAULT_DATABASE_PATH, wal: true });
+        initStorage({ path: DEFAULT_DATABASE_PATH });
+        db = getDatabase();
       } catch {
-        this.logger.warn("Database initialization failed - database may not be available");
+        this.logger.warn("Account storage initialization failed - storage may not be available");
         return;
       }
 

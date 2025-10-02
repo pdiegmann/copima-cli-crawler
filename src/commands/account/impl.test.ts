@@ -2,8 +2,8 @@
 
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 
-// Mock database connection completely to prevent Jest from loading the actual module
-jest.mock("../../db/index", () => ({
+// Mock account storage completely to prevent Jest from loading the actual module
+jest.mock("../../account/index", () => ({
   __esModule: true,
   default: {},
   getDatabase: jest.fn(() => ({
@@ -66,7 +66,7 @@ jest.mock("treeify", () => ({
 }));
 
 import treeify from "treeify";
-import { getDatabase } from "../../db/index";
+import { getDatabase } from "../../account/index";
 import * as impl from "./impl";
 
 const treeifyMock = treeify as unknown as { asTree: jest.Mock };

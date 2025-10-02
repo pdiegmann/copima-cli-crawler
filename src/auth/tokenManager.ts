@@ -1,7 +1,7 @@
 // src/auth/tokenManager.ts
 
 import { addSeconds } from "date-fns";
-import type { YamlStorage } from "../db/yamlStorage";
+import type { YamlStorage } from "../account/yamlStorage";
 import { createLogger } from "../logging";
 import type { OAuth2TokenResponse } from "../types/api";
 

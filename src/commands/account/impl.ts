@@ -1,19 +1,19 @@
 import { randomUUID } from "crypto";
 import colors from "picocolors";
 import treeify from "treeify";
-import { getDatabase, initializeDatabase } from "../../db/index";
+import { getDatabase, initStorage } from "../../account/index";
 import { createLogger } from "../../logging";
 import type { SafeRecord } from "../../types/api.js";
 
 const logger = createLogger("AccountCommands");
 
-// Helper function to ensure database is initialized
+// Helper function to ensure storage is initialized
 const ensureDatabase = (): ReturnType<typeof getDatabase> => {
   try {
     return getDatabase();
   } catch {
-    // Initialize database if not already done
-    initializeDatabase({ path: "./database.yaml", wal: true });
+    // Initialize storage if not already done
+    initStorage({ path: "./database.yaml" });
     return getDatabase();
   }
 };
