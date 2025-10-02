@@ -94,30 +94,30 @@ describe("account/impl", () => {
       const mockAccounts = [
         {
           accountId: "acc-1",
-          name: "Phil",
-          email: "phl@hnnl.eu",
           accessToken: "token-1",
           refreshToken: "refresh-1",
           createdAt: new Date("2025-10-02T08:46:11Z"),
           updatedAt: new Date("2025-10-02T08:46:11Z"),
+          user: {
+            name: "Phil",
+            email: "phl@hnnl.eu",
+          },
         },
         {
           accountId: "acc-2",
-          name: "Phil",
-          email: "phl@hnnl.eu",
           accessToken: "token-2",
           refreshToken: "refresh-2",
           createdAt: new Date("2025-10-02T09:00:00Z"),
           updatedAt: new Date("2025-10-02T09:00:00Z"),
+          user: {
+            name: "Phil",
+            email: "phl@hnnl.eu",
+          },
         },
       ];
 
       const mockDatabase = {
-        select: jest.fn(() => ({
-          from: jest.fn(() => ({
-            innerJoin: jest.fn(() => mockAccounts),
-          })),
-        })),
+        getAccountsWithUsers: jest.fn(() => mockAccounts),
       };
 
       (getDatabase as jest.Mock).mockReturnValueOnce(mockDatabase);

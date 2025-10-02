@@ -8,7 +8,6 @@ const mockLogger = {
 };
 const mockCreateLogger = jest.fn(() => mockLogger);
 
-jest.mock("../db/connection", () => ({}));
 jest.mock("../logging", () => ({
   createLogger: mockCreateLogger,
 }));
@@ -22,12 +21,9 @@ describe("TokenManager", () => {
 
   beforeEach(() => {
     mockDb = {
-      select: jest.fn().mockReturnThis(),
-      from: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      update: jest.fn().mockReturnThis(),
-      set: jest.fn().mockReturnThis(),
+      findAccountByAccountId: jest.fn(),
+      getAllAccounts: jest.fn(),
+      updateAccount: jest.fn(),
     };
 
     // Clear all mock calls and create fresh instance
@@ -46,74 +42,67 @@ describe("TokenManager", () => {
       const validAccessToken = "valid-token";
       const futureDate = new Date(Date.now() + 10000);
 
-      // Mock the chain for the successful query
-      mockDb.limit.mockResolvedValue([
-        {
-          accessToken: validAccessToken,
-          accessTokenExpiresAt: futureDate,
-        },
-      ]);
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        accessToken: validAccessToken,
+        accessTokenExpiresAt: futureDate,
+        refreshToken: "refresh-token",
+        userId: "user-1",
+        updatedAt: new Date(),
+      });
 
       const token = await tokenManager.getAccessToken(accountId);
 
       expect(token).toBe(validAccessToken);
-      expect(mockDb.select).toHaveBeenCalled();
-      expect(mockDb.from).toHaveBeenCalled();
-      expect(mockDb.where).toHaveBeenCalled();
-      expect(mockDb.limit).toHaveBeenCalledWith(1);
+      expect(mockDb.findAccountByAccountId).toHaveBeenCalledWith(accountId);
     });
 
     it("should refresh the token if the access token is expired", async () => {
       const accountId = "test-account";
       const expiredDate = new Date(Date.now() - 10000);
 
-      // Mock the chain for the expired token query
-      mockDb.limit.mockResolvedValue([
-        {
-          accessToken: "expired-token",
-          accessTokenExpiresAt: expiredDate,
-          refreshToken: "valid-refresh-token",
-        },
-      ]);
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        accessToken: "expired-token",
+        accessTokenExpiresAt: expiredDate,
+        refreshToken: "valid-refresh-token",
+        userId: "user-1",
+        updatedAt: new Date(),
+      });
 
       jest.spyOn(tokenManager as any, "refreshAccessToken").mockResolvedValue("new-access-token");
 
       const token = await tokenManager.getAccessToken(accountId);
 
       expect(token).toBe("new-access-token");
-      expect(mockDb.select).toHaveBeenCalled();
-      expect(mockDb.from).toHaveBeenCalled();
-      expect(mockDb.where).toHaveBeenCalled();
-      expect(mockDb.limit).toHaveBeenCalledWith(1);
+      expect(mockDb.findAccountByAccountId).toHaveBeenCalledWith(accountId);
     });
 
     it("should return null if no account is found", async () => {
       const accountId = "non-existent-account";
 
-      mockDb.limit.mockResolvedValue([]);
+      mockDb.findAccountByAccountId.mockReturnValue(null);
 
       const token = await tokenManager.getAccessToken(accountId);
 
       expect(token).toBeNull();
-      // Since the real logger is being used, just verify the behavior works correctly
-      // The actual error logging is happening as shown in the test output
+      expect(mockLogger.error).toHaveBeenCalled();
     });
   });
 
   describe("resolveAccountId", () => {
     it("returns provided account ID when it exists", async () => {
-      mockDb.limit.mockResolvedValueOnce([{ accountId: "custom" }]);
+      mockDb.findAccountByAccountId.mockReturnValue({ accountId: "custom", userId: "user-1" });
 
       const result = await tokenManager.resolveAccountId("custom");
 
       expect(result).toBe("custom");
-      expect(mockDb.select).toHaveBeenCalled();
-      expect(mockDb.limit).toHaveBeenCalledWith(1);
+      expect(mockDb.findAccountByAccountId).toHaveBeenCalledWith("custom");
     });
 
     it("falls back to sole stored account when none specified", async () => {
-      mockDb.limit.mockResolvedValueOnce([]); // default account lookup
-      mockDb.limit.mockResolvedValueOnce([
+      mockDb.findAccountByAccountId.mockReturnValue(null); // no default
+      mockDb.getAllAccounts.mockReturnValue([
         {
           accountId: "only-account",
           userId: "user-1",
@@ -126,12 +115,12 @@ describe("TokenManager", () => {
       const result = await tokenManager.resolveAccountId();
 
       expect(result).toBe("only-account");
-      expect(mockDb.limit).toHaveBeenCalledWith(100);
+      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Auto-selected sole stored account"));
     });
 
     it("returns null when multiple accounts exist without a default", async () => {
-      mockDb.limit.mockResolvedValueOnce([]);
-      mockDb.limit.mockResolvedValueOnce([
+      mockDb.findAccountByAccountId.mockReturnValue(null);
+      mockDb.getAllAccounts.mockReturnValue([
         {
           accountId: "acc-1",
           userId: "user-1",
@@ -151,11 +140,12 @@ describe("TokenManager", () => {
       const result = await tokenManager.resolveAccountId();
 
       expect(result).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Multiple accounts found"));
     });
 
     it("auto-selects the most recent account when duplicates share the same user", async () => {
-      mockDb.limit.mockResolvedValueOnce([]);
-      mockDb.limit.mockResolvedValueOnce([
+      mockDb.findAccountByAccountId.mockReturnValue(null);
+      mockDb.getAllAccounts.mockReturnValue([
         {
           accountId: "acc-older",
           userId: "user-1",
@@ -175,6 +165,7 @@ describe("TokenManager", () => {
       const result = await tokenManager.resolveAccountId();
 
       expect(result).toBe("acc-newer");
+      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Auto-selected most recent account"));
     });
   });
 
@@ -182,17 +173,31 @@ describe("TokenManager", () => {
     it("should log an error if no refresh token is available", async () => {
       const accountId = "test-account";
 
-      mockDb.limit.mockResolvedValue([
-        {
-          refreshToken: null,
-        },
-      ]);
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        refreshToken: null,
+        userId: "user-1",
+      });
 
       const token = await (tokenManager as any).refreshAccessToken(accountId);
 
       expect(token).toBeNull();
-      // Since the real logger is being used, just verify the behavior works correctly
-      // The actual error logging is happening as shown in the test output
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Refresh token missing"));
+    });
+
+    it("should log warning when refresh not implemented", async () => {
+      const accountId = "test-account";
+
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        refreshToken: "refresh-token",
+        userId: "user-1",
+      });
+
+      const token = await (tokenManager as any).refreshAccessToken(accountId);
+
+      expect(token).toBeNull();
+      expect(mockLogger.warn).toHaveBeenCalledWith(expect.stringContaining("not yet implemented"));
     });
   });
 });
