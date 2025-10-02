@@ -1,37 +1,64 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+// Schema definitions are now handled by types.ts
+// This file is kept for backward compatibility but exports are from types.ts
 
-export const user = sqliteTable("user", {
-  banExpires: integer("ban_expires", { mode: "timestamp" }),
-  banned: integer("banned", { mode: "boolean" }),
-  banReason: text("ban_reason"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
-  id: text("id").primaryKey(),
-  image: text("image"),
-  name: text("name").notNull(),
-  role: text("role"),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-});
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null;
+  role: string | null;
+  banned: boolean | null;
+  banReason: string | null;
+  banExpires: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-export const account = sqliteTable("account", {
-  accessToken: text("access_token"),
-  accessTokenExpiresAt: integer("access_token_expires_at", {
-    mode: "timestamp",
-  }),
-  accountId: text("account_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  id: text("id").primaryKey(),
-  idToken: text("id_token"),
-  password: text("password"),
-  providerId: text("provider_id").notNull(),
-  refreshToken: text("refresh_token"),
-  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
-    mode: "timestamp",
-  }),
-  scope: text("scope"),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
+export type Account = {
+  id: string;
+  accountId: string;
+  providerId: string;
+  userId: string;
+  accessToken: string | null;
+  refreshToken: string | null;
+  accessTokenExpiresAt: Date | null;
+  refreshTokenExpiresAt: Date | null;
+  idToken: string | null;
+  scope: string | null;
+  password: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// For backward compatibility, create mock table objects
+export const user = {
+  id: "id",
+  name: "name",
+  email: "email",
+  emailVerified: "emailVerified",
+  image: "image",
+  role: "role",
+  banned: "banned",
+  banReason: "banReason",
+  banExpires: "banExpires",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+} as const;
+
+export const account = {
+  id: "id",
+  accountId: "accountId",
+  providerId: "providerId",
+  userId: "userId",
+  accessToken: "accessToken",
+  refreshToken: "refreshToken",
+  accessTokenExpiresAt: "accessTokenExpiresAt",
+  refreshTokenExpiresAt: "refreshTokenExpiresAt",
+  idToken: "idToken",
+  scope: "scope",
+  // eslint-disable-next-line sonarjs/no-hardcoded-passwords
+  password: "password", // This is a field name, not a hardcoded password
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+} as const;

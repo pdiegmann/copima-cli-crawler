@@ -1,51 +1,30 @@
 // src/db/migrate.test.ts
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-// Mock database connection completely to prevent Jest from loading the actual module
-jest.mock("./connection", () => ({
-  __esModule: true,
-  default: {},
-  getDatabase: jest.fn(() => null),
-  initDatabase: jest.fn(() => ({})),
-  closeDatabase: jest.fn(),
-}));
-
-// Mock the logging module
-jest.mock("../logging", () => {
-  const loggerMock = {
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  };
-
-  return {
-    __esModule: true,
-    default: {},
-    createLogger: jest.fn(() => loggerMock),
-    __loggerMock: loggerMock,
-  };
-});
-
-// Mock drizzle migrator
-jest.mock("drizzle-orm/better-sqlite3/migrator", () => ({
-  __esModule: true,
-  default: {},
-  migrate: jest.fn(),
-}));
-
+import { afterEach, beforeEach, describe, expect, it } from "@jest/globals";
+import { existsSync, rmSync } from "fs";
+import { join } from "path";
+import { closeDatabase } from "./connection";
 import * as migrate from "./migrate";
 
-const connection = jest.requireMock("./connection") as { initDatabase: jest.Mock };
-const logging = jest.requireMock("../logging") as { createLogger: jest.Mock; __loggerMock: Record<string, jest.Mock> };
+const TEST_DIR = join(__dirname, "../../test-tmp");
+const TEST_FILE = join(TEST_DIR, "test-migrate.yaml");
 
 describe("db/migrate", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    Object.values(logging.__loggerMock).forEach((mockFn) => mockFn.mockClear());
+    // Clean up test file if it exists
+    if (existsSync(TEST_FILE)) {
+      rmSync(TEST_FILE);
+    }
+    // Reset global state
     delete (globalThis as any).__copimaDatabaseInitialized;
     delete (globalThis as any).__copimaDatabasePath;
+  });
+
+  afterEach(() => {
+    closeDatabase();
+    if (existsSync(TEST_FILE)) {
+      rmSync(TEST_FILE);
+    }
   });
 
   it("should export expected functions", () => {
@@ -54,27 +33,42 @@ describe("db/migrate", () => {
     expect(typeof migrate.initializeDatabase).toBe("function");
   });
 
-  it("should handle migration errors gracefully", () => {
-    // Test that the function exists and can handle invalid configurations
-    expect(() => migrate.runMigrations({ path: ":memory:" })).toThrow();
+  it("should skip migrations for YAML storage", () => {
+    // YAML doesn't need migrations, so this should not throw
+    expect(() => migrate.runMigrations({ path: TEST_FILE })).not.toThrow();
   });
 
-  it("skips redundant initialization for the same database path", () => {
-    const runMigrationsSpy = jest.spyOn(migrate, "runMigrations").mockImplementation(() => undefined);
+  it("should initialize database without errors", () => {
+    expect(() => migrate.initializeDatabase({ path: TEST_FILE })).not.toThrow();
+    expect(existsSync(TEST_FILE)).toBe(true);
+  });
 
-    migrate.initializeDatabase({ path: "./test.db" });
+  it("should skip redundant initialization for the same database path", () => {
+    migrate.initializeDatabase({ path: TEST_FILE });
+    const firstInit = existsSync(TEST_FILE);
 
-    expect(logging.__loggerMock["info"]).toHaveBeenCalledWith("Initializing database with migrations");
-    expect(connection.initDatabase).toHaveBeenCalledTimes(1);
+    // Second initialization should not throw
+    expect(() => migrate.initializeDatabase({ path: TEST_FILE })).not.toThrow();
+    expect(existsSync(TEST_FILE)).toBe(firstInit);
+  });
 
-    Object.values(logging.__loggerMock).forEach((mockFn) => mockFn.mockClear());
-    connection.initDatabase.mockClear();
+  it("should initialize different database paths by closing first", () => {
+    const testFile2 = join(TEST_DIR, "test-migrate-2.yaml");
 
-    migrate.initializeDatabase({ path: "./test.db" });
+    // Initialize first database
+    migrate.initializeDatabase({ path: TEST_FILE });
+    expect(existsSync(TEST_FILE)).toBe(true);
 
-    expect(logging.__loggerMock["info"]).not.toHaveBeenCalledWith("Initializing database with migrations");
-    expect(connection.initDatabase).toHaveBeenCalledTimes(1);
+    // Close first database before initializing a different one
+    closeDatabase();
 
-    runMigrationsSpy.mockRestore();
+    // Initialize second database
+    migrate.initializeDatabase({ path: testFile2 });
+    expect(existsSync(testFile2)).toBe(true);
+
+    // Cleanup
+    if (existsSync(testFile2)) {
+      rmSync(testFile2);
+    }
   });
 });

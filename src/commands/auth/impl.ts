@@ -521,13 +521,13 @@ const initializeDatabaseConnection = async (): Promise<boolean> => {
   try {
     const { initDatabase, initializeDatabase } = await import("../../db/index.js");
     const databaseConfig = {
-      path: "./database.sqlite",
+      path: "./database.yaml",
       wal: true,
       timeout: 5000,
     };
 
     initDatabase(databaseConfig);
-    initializeDatabase({ ...databaseConfig, migrationsFolder: "./drizzle" });
+    initializeDatabase(databaseConfig);
     return true;
   } catch (error) {
     logger.error("Database initialization failed", {
@@ -601,52 +601,39 @@ const fetchUserInfoFromOAuth = async (tokens: OAuth2TokenResponse, config: OAuth
 };
 
 const storeCredentialsInDatabase = async (credentialData: any, tokens: OAuth2TokenResponse, config: OAuth2Config): Promise<void> => {
-  const { db } = await import("../../db/index.js");
-  const { user, account } = await import("../../db/schema.js");
+  const { getDatabase } = await import("../../db/index.js");
   const { randomUUID } = await import("node:crypto");
-  const { eq } = await import("drizzle-orm");
 
-  // Store user in database
-  await db()
-    .insert(user)
-    .values({
-      id: credentialData.userId,
-      name: credentialData.userName,
-      email: credentialData.userEmail,
-      emailVerified: false,
-      createdAt: credentialData.now,
-      updatedAt: credentialData.now,
-    })
-    .onConflictDoUpdate({
-      target: user.email,
-      set: {
-        name: credentialData.userName,
-        updatedAt: credentialData.now,
-      },
-    });
+  const storage = getDatabase();
 
-  // Get the actual user ID (in case of conflict resolution)
-  const [existingUser] = await db().select({ id: user.id }).from(user).where(eq(user.email, credentialData.userEmail)).limit(1);
-  const finalUserId = existingUser?.id || credentialData.userId;
+  // Store user in YAML storage (upsert by email)
+  const storedUser = storage.upsertUser({
+    id: credentialData.userId,
+    name: credentialData.userName,
+    email: credentialData.userEmail,
+    emailVerified: false,
+    createdAt: credentialData.now,
+    updatedAt: credentialData.now,
+  });
 
-  // Store account credentials in database
-  await db()
-    .insert(account)
-    .values({
-      id: randomUUID(),
-      accountId: credentialData.accountId,
-      providerId: credentialData.providerId,
-      userId: finalUserId,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token || null,
-      accessTokenExpiresAt: credentialData.accessTokenExpiresAt,
-      refreshTokenExpiresAt: credentialData.refreshTokenExpiresAt,
-      scope: config.scopes.join(" "),
-      createdAt: credentialData.now,
-      updatedAt: credentialData.now,
-    });
+  const finalUserId = storedUser.id;
 
-  logger.info("OAuth2 authentication successful - credentials stored in database", {
+  // Store account credentials in YAML storage
+  storage.insertAccount({
+    id: randomUUID(),
+    accountId: credentialData.accountId,
+    providerId: credentialData.providerId,
+    userId: finalUserId,
+    accessToken: tokens.access_token,
+    refreshToken: tokens.refresh_token || null,
+    accessTokenExpiresAt: credentialData.accessTokenExpiresAt,
+    refreshTokenExpiresAt: credentialData.refreshTokenExpiresAt,
+    scope: config.scopes.join(" "),
+    createdAt: credentialData.now,
+    updatedAt: credentialData.now,
+  });
+
+  logger.info("OAuth2 authentication successful - credentials stored in YAML storage", {
     accountId: credentialData.accountId,
     providerId: credentialData.providerId,
     userName: credentialData.userName,

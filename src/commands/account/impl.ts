@@ -1,9 +1,7 @@
 import { randomUUID } from "crypto";
-import { eq } from "drizzle-orm";
 import colors from "picocolors";
 import treeify from "treeify";
 import { getDatabase, initializeDatabase } from "../../db/index";
-import { account, user } from "../../db/schema";
 import { createLogger } from "../../logging";
 import type { SafeRecord } from "../../types/api.js";
 
@@ -15,7 +13,7 @@ const ensureDatabase = (): ReturnType<typeof getDatabase> => {
     return getDatabase();
   } catch {
     // Initialize database if not already done
-    initializeDatabase({ path: "./database.sqlite", wal: true });
+    initializeDatabase({ path: "./database.yaml", wal: true });
     return getDatabase();
   }
 };
@@ -60,10 +58,10 @@ export const addAccount = async (flags: AddAccountFlags): Promise<void | Error> 
     const accountId = flags["account-id"] || randomUUID();
     const now = new Date();
 
-    const database = ensureDatabase();
+    const storage = ensureDatabase();
 
     // Create user record
-    await database.insert(user).values({
+    storage.upsertUser({
       id: userId,
       name: flags.name,
       email: flags.email,
@@ -73,7 +71,7 @@ export const addAccount = async (flags: AddAccountFlags): Promise<void | Error> 
     });
 
     // Create account record
-    await database.insert(account).values({
+    storage.insertAccount({
       id: randomUUID(),
       accountId: accountId,
       providerId: "gitlab",
@@ -100,24 +98,23 @@ export const listAccounts = async (flags: ListAccountsFlags): Promise<void | Err
   logger.info(colors.cyan("📋 Listing GitLab accounts..."));
 
   try {
-    const database = ensureDatabase();
-    const accounts = await database
-      .select({
-        accountId: account.accountId,
-        name: user.name,
-        email: user.email,
-        accessToken: account.accessToken,
-        refreshToken: account.refreshToken,
-        createdAt: account.createdAt,
-        updatedAt: account.updatedAt,
-      })
-      .from(account)
-      .innerJoin(user, eq(account.userId, user.id));
+    const storage = ensureDatabase();
+    const accountsWithUsers = storage.getAccountsWithUsers();
 
-    if (accounts.length === 0) {
+    if (accountsWithUsers.length === 0) {
       logger.info(colors.yellow("📭 No accounts found"));
       return;
     }
+
+    const accounts = accountsWithUsers.map((acc) => ({
+      accountId: acc.accountId,
+      name: acc.user.name,
+      email: acc.user.email,
+      accessToken: acc.accessToken,
+      refreshToken: acc.refreshToken,
+      createdAt: acc.createdAt,
+      updatedAt: acc.updatedAt,
+    }));
 
     const format = flags.format || "table";
     const showTokens = flags["show-tokens"] || false;
@@ -193,36 +190,33 @@ export const removeAccount = async (flags: RemoveAccountFlags): Promise<void | E
   logger.info(colors.cyan("🗑️  Removing GitLab account..."));
 
   try {
-    const database = ensureDatabase();
+    const storage = ensureDatabase();
 
     // Find the account to remove
-    const accountToRemove = await database
-      .select({
-        id: account.id,
-        accountId: account.accountId,
-        name: user.name,
-        email: user.email,
-        userId: user.id,
-      })
-      .from(account)
-      .innerJoin(user, eq(account.userId, user.id))
-      .where(
-        flags["account-id"] ? eq(account.accountId, flags["account-id"]) : eq(user.email, flags.host!) // Using host as email for now - this could be improved
-      )
-      .limit(1);
+    let accountToRemove;
+    if (flags["account-id"]) {
+      accountToRemove = storage.findAccountByAccountId(flags["account-id"]);
+    } else if (flags.host) {
+      // Using host as email for now - this could be improved
+      const userByEmail = storage.findUserByEmail(flags.host);
+      if (userByEmail) {
+        const userAccounts = storage.findAccountsByUserId(userByEmail.id);
+        accountToRemove = userAccounts[0];
+      }
+    }
 
-    if (accountToRemove.length === 0) {
+    if (!accountToRemove) {
       logger.error(colors.red("❌ Account not found"));
       return new Error("Account not found");
     }
 
-    const acc = accountToRemove[0];
+    const userRecord = storage.findUserById(accountToRemove.userId);
 
     if (!flags.force) {
       logger.warn(colors.yellow("⚠️  About to remove account:"));
-      logger.warn(`   Name: ${acc?.name || "Unknown"}`);
-      logger.warn(`   Email: ${acc?.email || "Unknown"}`);
-      logger.warn(`   Account ID: ${acc?.accountId || "Unknown"}`);
+      logger.warn(`   Name: ${userRecord?.name || "Unknown"}`);
+      logger.warn(`   Email: ${userRecord?.email || "Unknown"}`);
+      logger.warn(`   Account ID: ${accountToRemove.accountId || "Unknown"}`);
       logger.warn(colors.red("   This action cannot be undone!"));
 
       // In a real CLI, this would prompt for confirmation
@@ -231,13 +225,11 @@ export const removeAccount = async (flags: RemoveAccountFlags): Promise<void | E
       return new Error("Use --force to confirm account removal");
     }
 
-    // Remove account (cascade will remove related records)
-    if (acc?.userId) {
-      await database.delete(user).where(eq(user.id, acc.userId));
-    }
+    // Remove user (which will cascade remove accounts)
+    storage.deleteUser(accountToRemove.userId);
 
     logger.info(colors.green("✅ Account removed successfully"));
-    logger.info(`👤 Removed: ${colors.bold(acc?.name || "Unknown")} (${acc?.email || "Unknown"})`);
+    logger.info(`👤 Removed: ${colors.bold(userRecord?.name || "Unknown")} (${userRecord?.email || "Unknown"})`);
   } catch (error) {
     logger.error(colors.red("❌ Failed to remove account"));
     logger.error(error instanceof Error ? error.message : String(error));
@@ -259,31 +251,22 @@ export const refreshToken = async (flags: RefreshTokenFlags, _positionals?: stri
   logger.info(colors.cyan("🔄 Refreshing OAuth2 tokens..."));
 
   try {
-    const database = ensureDatabase();
+    const storage = ensureDatabase();
 
     // Find the account
-    const accountToRefresh = await database
-      .select({
-        id: account.id,
-        accountId: account.accountId,
-        refreshToken: account.refreshToken,
-        name: user.name,
-      })
-      .from(account)
-      .innerJoin(user, eq(account.userId, user.id))
-      .where(
-        flags["account-id"] ? eq(account.accountId, flags["account-id"]) : eq(account.accountId, flags.host!) // Simplified for now
-      )
-      .limit(1);
+    let accountToRefresh;
+    if (flags["account-id"]) {
+      accountToRefresh = storage.findAccountByAccountId(flags["account-id"]);
+    } else {
+      accountToRefresh = storage.findAccountByAccountId(flags.host!);
+    }
 
-    if (accountToRefresh.length === 0) {
+    if (!accountToRefresh) {
       logger.error(colors.red("❌ Account not found"));
       return new Error("Account not found");
     }
 
-    const acc = accountToRefresh[0];
-
-    if (!acc?.refreshToken) {
+    if (!accountToRefresh.refreshToken) {
       logger.error(colors.red("❌ No refresh token available for this account"));
       return new Error("No refresh token available for this account");
     }
@@ -295,7 +278,7 @@ export const refreshToken = async (flags: RefreshTokenFlags, _positionals?: stri
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         grant_type: "refresh_token",
-        refresh_token: acc?.refreshToken,
+        refresh_token: accountToRefresh.refreshToken,
         client_id: flags["client-id"],
         client_secret: flags["client-secret"],
       }),
@@ -306,14 +289,18 @@ export const refreshToken = async (flags: RefreshTokenFlags, _positionals?: stri
       throw new Error("Token refresh failed");
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as any;
+
+    // Update tokens in storage
+    storage.updateAccount(accountToRefresh.accountId, {
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      accessTokenExpiresAt: new Date(Date.now() + data.expires_in * 1000),
+    });
+
     logger.info(colors.green("✅ Token refreshed successfully"));
-    logger.info(`🔑 New Access Token: ${(data as any).access_token}`);
+    logger.info(`🔑 New Access Token: ${data.access_token}`);
     logger.info("🔄 Refresh Token Updated");
-    // Update tokens in the database
-    (acc as any).accessToken = (data as any).access_token;
-    (acc as any).refreshToken = (data as any).refresh_token;
-    (acc as any).accessTokenExpiresAt = Date.now() + (data as any).expires_in * 1000;
   } catch (error) {
     logger.error(colors.red("❌ Failed to refresh tokens"));
     logger.error(error instanceof Error ? error.message : String(error));

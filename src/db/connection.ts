@@ -1,87 +1,64 @@
-import { Database as BunDatabase } from "bun:sqlite";
-import { drizzle } from "drizzle-orm/bun-sqlite";
 import { createLogger } from "../logging";
-import * as schema from "./schema";
+import { YamlStorage } from "./yamlStorage";
 
 export type DatabaseConfig = {
   path: string;
-  wal?: boolean;
-  timeout?: number;
+  wal?: boolean; // Kept for backward compatibility, but ignored
+  timeout?: number; // Kept for backward compatibility, but ignored
 };
 
 const logger = createLogger("Database");
-let db: ReturnType<typeof drizzle> | null = null;
-let sqliteInstance: { close: () => void } | null = null;
+let storage: YamlStorage | null = null;
 
-export const initDatabase = (config: DatabaseConfig): ReturnType<typeof drizzle> => {
-  if (db) {
+export const initDatabase = (config: DatabaseConfig): YamlStorage => {
+  if (storage) {
     // Return existing instance without warning to reduce log noise
-    return db;
+    return storage;
   }
 
   try {
-    logger.info(`Initializing database at ${config.path}`);
+    logger.info(`Initializing YAML storage at ${config.path}`);
 
-    const sqlite = new BunDatabase(config.path, {
-      create: true,
-    });
+    // Convert .sqlite extension to .yaml if present
+    const yamlPath = config.path.replace(/\.sqlite$/, ".yaml");
+    storage = new YamlStorage(yamlPath);
 
-    // Enable WAL mode for better concurrency if requested
-    if (config.wal !== false) {
-      sqlite.exec("PRAGMA journal_mode = WAL");
-    }
-
-    // Enable foreign keys
-    sqlite.exec("PRAGMA foreign_keys = ON");
-
-    db = drizzle(sqlite, { schema });
-    sqliteInstance = sqlite;
-
-    logger.info("Database initialized successfully");
-    return db;
+    logger.info("YAML storage initialized successfully");
+    return storage;
   } catch (error) {
     if (error instanceof Error) {
-      logger.error(`Failed to initialize database: ${error.message}`);
+      logger.error(`Failed to initialize YAML storage: ${error.message}`);
     } else {
-      logger.error("Failed to initialize database: Unknown error");
+      logger.error("Failed to initialize YAML storage: Unknown error");
     }
     throw error;
   }
 };
 
-export const getDatabase = (): ReturnType<typeof drizzle> => {
-  if (!db) {
+export const getDatabase = (): YamlStorage => {
+  if (!storage) {
     throw new Error("Database not initialized. Call initDatabase() first.");
   }
-  return db;
+  return storage;
 };
 
-// Extend Database type to include schema properties
-export type Database = ReturnType<typeof drizzle> & {
-  account: {
-    update: (args: { where: { accountId: string }; data: Record<string, unknown> }) => Promise<void>;
-    findUnique: (args: { where: { accountId: string } }) => Promise<Record<string, unknown> | null>;
-  };
-};
+// Database type for compatibility
+export type Database = YamlStorage;
 
 export const closeDatabase = (): void => {
-  if (!db && !sqliteInstance) {
+  if (!storage) {
     return;
   }
 
-  logger.info("Closing database connection");
+  logger.info("Closing YAML storage");
 
   try {
-    sqliteInstance?.close();
+    storage.flush();
   } catch (error) {
-    logger.warn("Failed to close SQLite database cleanly", {
+    logger.warn("Failed to flush YAML storage cleanly", {
       error: error instanceof Error ? error.message : String(error),
     });
   }
 
-  db = null;
-  sqliteInstance = null;
+  storage = null;
 };
-
-// Export schema for external use
-export { schema };

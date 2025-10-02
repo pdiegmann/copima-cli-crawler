@@ -85,7 +85,7 @@ jest.mock('./defaults', () => ({
   defaultConfig: {
     gitlab: { host: 'https://gitlab.com', accessToken: 'default-token', timeout: 5000 },
     output: { rootDir: './output' },
-    database: { path: './database.sqlite' },
+    database: { path: './database.yaml' },
     logging: { level: 'info', console: true },
     progress: { enabled: true, file: './progress.yaml' },
     resume: { enabled: true, stateFile: './resume.json' },

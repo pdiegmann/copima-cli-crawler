@@ -15,7 +15,7 @@ export const defaultConfig: Config = {
   },
 
   database: {
-    path: "./database.sqlite",
+    path: "./database.yaml",
     walMode: true,
     timeout: 5000, // 5 seconds
   },

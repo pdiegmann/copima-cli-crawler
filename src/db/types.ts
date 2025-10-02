@@ -1,14 +1,67 @@
-import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
-import type { user, account } from "./schema.js";
-
 // User types
-export type User = InferSelectModel<typeof user>;
-export type NewUser = InferInsertModel<typeof user>;
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null;
+  role: string | null;
+  banned: boolean | null;
+  banReason: string | null;
+  banExpires: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type NewUser = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image?: string | null;
+  role?: string | null;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type UserUpdate = Partial<Omit<NewUser, "id" | "createdAt">>;
 
 // Account types
-export type Account = InferSelectModel<typeof account>;
-export type NewAccount = InferInsertModel<typeof account>;
+export type Account = {
+  id: string;
+  accountId: string;
+  providerId: string;
+  userId: string;
+  accessToken: string | null;
+  refreshToken: string | null;
+  accessTokenExpiresAt: Date | null;
+  refreshTokenExpiresAt: Date | null;
+  idToken: string | null;
+  scope: string | null;
+  password: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type NewAccount = {
+  id: string;
+  accountId: string;
+  providerId: string;
+  userId: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  accessTokenExpiresAt?: Date | null;
+  refreshTokenExpiresAt?: Date | null;
+  idToken?: string | null;
+  scope?: string | null;
+  password?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type AccountUpdate = Partial<Omit<NewAccount, "id" | "createdAt">>;
 
 // Combined types for OAuth authentication

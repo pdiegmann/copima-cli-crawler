@@ -300,8 +300,8 @@ const validateGitlabConfig = (config: any, errors: string[], warnings: string[])
 const validateDatabaseConfig = (config: any, errors: string[], warnings: string[]): void => {
   if (!config.database) return;
 
-  if (config.database.path && !config.database.path.endsWith(".sqlite")) {
-    warnings.push("database.path should end with .sqlite extension");
+  if (config.database.path && !config.database.path.endsWith(".yaml") && !config.database.path.endsWith(".yml")) {
+    warnings.push("database.path should end with .yaml or .yml extension");
   }
 };
 

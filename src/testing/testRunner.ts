@@ -991,30 +991,34 @@ export class TestRunner {
     try {
       const { initDatabase } = await import("../db/connection.js");
       const { TokenManager } = await import("../auth/tokenManager.js");
-      const { account, user } = await import("../db/schema.js");
-      const { eq, desc } = await import("drizzle-orm");
 
-      const db = initDatabase({ path: "./database.sqlite", wal: true });
-      const tokenManager = new TokenManager(db);
+      const storage = initDatabase({ path: "./database.yaml", wal: true });
+      const tokenManager = new TokenManager(storage);
 
       let accountRecord: { accountId: string; refreshToken: string | null } | undefined;
 
       if (gitlabConfig.accountId) {
-        const rows = await db
-          .select({ accountId: account.accountId, refreshToken: account.refreshToken })
-          .from(account)
-          .where(eq(account.accountId, gitlabConfig.accountId))
-          .limit(1);
-        accountRecord = rows[0];
+        const account = storage.findAccountByAccountId(gitlabConfig.accountId);
+        if (account) {
+          accountRecord = {
+            accountId: account.accountId,
+            refreshToken: account.refreshToken,
+          };
+        }
       } else if (gitlabConfig.email) {
-        const rows = await db
-          .select({ accountId: account.accountId, refreshToken: account.refreshToken, createdAt: account.createdAt })
-          .from(user)
-          .innerJoin(account, eq(account.userId, user.id))
-          .where(eq(user.email, gitlabConfig.email))
-          .orderBy(desc(account.createdAt))
-          .limit(1);
-        accountRecord = rows[0];
+        const user = storage.findUserByEmail(gitlabConfig.email);
+        if (user) {
+          const accounts = storage.findAccountsByUserId(user.id);
+          // Sort by creation date and get the most recent
+          const sortedAccounts = accounts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          const mostRecentAccount = sortedAccounts[0];
+          if (mostRecentAccount) {
+            accountRecord = {
+              accountId: mostRecentAccount.accountId,
+              refreshToken: mostRecentAccount.refreshToken,
+            };
+          }
+        }
       } else {
         const resolvedAccountId = await tokenManager.resolveAccountId();
 
@@ -1023,8 +1027,13 @@ export class TestRunner {
           return null;
         }
 
-        const rows = await db.select({ accountId: account.accountId, refreshToken: account.refreshToken }).from(account).where(eq(account.accountId, resolvedAccountId)).limit(1);
-        accountRecord = rows[0];
+        const account = storage.findAccountByAccountId(resolvedAccountId);
+        if (account) {
+          accountRecord = {
+            accountId: account.accountId,
+            refreshToken: account.refreshToken,
+          };
+        }
       }
 
       if (!accountRecord) {

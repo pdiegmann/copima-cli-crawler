@@ -40,8 +40,8 @@ export class DatabaseConfigValidator implements BaseValidator {
     }
 
     // Validate database path extension
-    if (config.database?.path && !config.database.path.endsWith(".sqlite") && !config.database.path.endsWith(".db")) {
-      warnings.push("Database file should have .sqlite or .db extension");
+    if (config.database?.path && !config.database.path.endsWith(".yaml") && !config.database.path.endsWith(".yml")) {
+      warnings.push("Database file should have .yaml or .yml extension");
     }
 
     return { isValid: errors.length === 0, errors, warnings };

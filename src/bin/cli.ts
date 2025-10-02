@@ -8,7 +8,7 @@ import { createLogger } from "../logging";
 
 const logger = createLogger("CLI");
 
-const DEFAULT_DATABASE_PATH = "./database.sqlite";
+const DEFAULT_DATABASE_PATH = "./database.yaml";
 
 type CommandContext = {
   args: string[];

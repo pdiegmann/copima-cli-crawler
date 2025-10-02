@@ -154,7 +154,7 @@ export const crawlCommand = async (options: any): Promise<void> => {
     logger.info(`Executing steps: ${steps.join(", ")}`);
 
     // Use the database path from options if provided
-    const databasePath = options.database || "./database.sqlite";
+    const databasePath = options.database || "./database.yaml";
 
     // Ensure database directory exists
     const { dirname } = await import("path");
@@ -325,7 +325,7 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
 
     const flagsAny = flags as any;
     const requestedAccountId = flagsAny?.accountId || flagsAny?.["account-id"];
-    const databasePath = flagsAny?.database || "./database.sqlite";
+    const databasePath = flagsAny?.database || "./database.yaml";
     const configAccessToken = (this as any).config?.gitlab?.accessToken as string | undefined;
 
     const gitlabHost = await resolveGitlabHostForFlags(this, flagsAny, logger);

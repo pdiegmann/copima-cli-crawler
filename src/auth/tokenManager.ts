@@ -1,17 +1,16 @@
 // src/auth/tokenManager.ts
 
 import { addSeconds } from "date-fns";
-import { eq } from "drizzle-orm";
-import { account } from "../db/schema";
+import type { YamlStorage } from "../db/yamlStorage";
 import { createLogger } from "../logging";
 import type { OAuth2TokenResponse } from "../types/api";
 
 const logger = createLogger("TokenManager");
 
 export class TokenManager {
-  private readonly db: any;
+  private readonly db: YamlStorage;
 
-  constructor(db?: any) {
+  constructor(db: YamlStorage) {
     this.db = db;
   }
 
@@ -26,7 +25,7 @@ export class TokenManager {
 
   async getAccessToken(accountId: string): Promise<string | null> {
     try {
-      const [accountRecord] = await this.db.select().from(account).where(eq(account.accountId, accountId)).limit(1);
+      const accountRecord = this.db.findAccountByAccountId(accountId);
 
       if (!accountRecord) {
         logger.error(`Account with ID ${accountId} not found.`);
@@ -54,7 +53,7 @@ export class TokenManager {
   async resolveAccountId(accountId?: string): Promise<string | null> {
     try {
       if (accountId) {
-        const [accountRecord] = await this.db.select({ accountId: account.accountId }).from(account).where(eq(account.accountId, accountId)).limit(1);
+        const accountRecord = this.db.findAccountByAccountId(accountId);
 
         if (!accountRecord) {
           logger.error(`Account with ID ${accountId} not found.`);
@@ -64,29 +63,20 @@ export class TokenManager {
         return accountId;
       }
 
-      const [defaultAccountRecord] = await this.db.select({ accountId: account.accountId }).from(account).where(eq(account.accountId, "default")).limit(1);
+      const defaultAccountRecord = this.db.findAccountByAccountId("default");
 
       if (defaultAccountRecord) {
         return defaultAccountRecord.accountId;
       }
 
-      const accounts = await this.db
-        .select({
-          accountId: account.accountId,
-          userId: account.userId,
-          updatedAt: account.updatedAt,
-          accessToken: account.accessToken,
-          refreshToken: account.refreshToken,
-        })
-        .from(account)
-        .limit(100);
+      const accounts = this.db.getAllAccounts();
 
       if (accounts.length === 0) {
         logger.error("No stored accounts found. Please run 'copima auth' to authenticate.");
         return null;
       }
 
-      const accountsWithTokens = accounts.filter((acc: any) => acc.accessToken && acc.refreshToken);
+      const accountsWithTokens = accounts.filter((acc) => acc.accessToken && acc.refreshToken);
       const candidateAccounts = accountsWithTokens.length > 0 ? accountsWithTokens : accounts;
 
       if (candidateAccounts.length === 1) {
@@ -95,7 +85,7 @@ export class TokenManager {
         return soleAccountId;
       }
 
-      const uniqueUserIds = new Set(candidateAccounts.map((acc: any) => acc.userId));
+      const uniqueUserIds = new Set(candidateAccounts.map((acc) => acc.userId));
 
       if (uniqueUserIds.size === 1) {
         const toEpoch = (value: unknown): number => {
@@ -112,7 +102,7 @@ export class TokenManager {
           return 0;
         };
 
-        const sortedAccounts = [...candidateAccounts].sort((a: any, b: any) => toEpoch(b.updatedAt) - toEpoch(a.updatedAt));
+        const sortedAccounts = [...candidateAccounts].sort((a, b) => toEpoch(b.updatedAt) - toEpoch(a.updatedAt));
         const chosenAccountId = sortedAccounts[0]!.accountId;
         logger.info(`Auto-selected most recent account '${chosenAccountId}' for user '${sortedAccounts[0]!.userId}'. Detected ${candidateAccounts.length} stored account entries.`);
         return chosenAccountId;
@@ -130,7 +120,7 @@ export class TokenManager {
   // eslint-disable-next-line sonarjs/no-invariant-returns
   async refreshAccessToken(accountId: string): Promise<string | null> {
     try {
-      const [accountRecord] = await this.db.select().from(account).where(eq(account.accountId, accountId)).limit(1);
+      const accountRecord = this.db.findAccountByAccountId(accountId);
 
       if (!accountRecord?.refreshToken) {
         logger.error(`Cannot refresh token for account ${accountId}. Refresh token missing.`);
@@ -153,16 +143,13 @@ export class TokenManager {
     const accessTokenExpiresAt = addSeconds(now, tokenResponse.expires_in);
     const refreshTokenExpiresAt = tokenResponse.refresh_expires_in ? addSeconds(now, tokenResponse.refresh_expires_in) : null;
 
-    await this.db
-      .update(account)
-      .set({
-        accessToken: tokenResponse.access_token,
-        accessTokenExpiresAt,
-        refreshToken: tokenResponse.refresh_token,
-        refreshTokenExpiresAt,
-        updatedAt: now,
-      })
-      .where(eq(account.accountId, accountId));
+    this.db.updateAccount(accountId, {
+      accessToken: tokenResponse.access_token,
+      accessTokenExpiresAt,
+      refreshToken: tokenResponse.refresh_token,
+      refreshTokenExpiresAt,
+      updatedAt: now,
+    });
 
     logger.info(`Tokens updated for account ${accountId}`);
   }
