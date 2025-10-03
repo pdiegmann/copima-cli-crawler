@@ -694,6 +694,27 @@ describe("Configuration Loader", () => {
     });
   });
 
+  describe("template interpolation errors", () => {
+    it("should handle template interpolation errors", async () => {
+      const { TemplateUtils } = await import("./utils/templateUtils");
+      const interpolateDeepMock = TemplateUtils.interpolateDeep as jest.MockedFunction<any>;
+
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: { rootDir: "./output" },
+      });
+
+      // Make interpolation throw an error
+      interpolateDeepMock.mockImplementationOnce(() => {
+        throw new Error("Template interpolation failed");
+      });
+
+      await expect(loadConfig({})).rejects.toThrow("Configuration loading failed: Template interpolation failed");
+    });
+  });
+
   describe("auto setup wizard", () => {
     const baseConfig = {
       gitlab: { host: "", accessToken: "", timeout: 5000 },

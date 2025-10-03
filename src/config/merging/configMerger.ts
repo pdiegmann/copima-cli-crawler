@@ -65,7 +65,7 @@ export class ConfigMerger {
         if (Array.isArray(value)) {
           result[key] = [...(result[key] || []), ...value];
         } else if (this.isObject(value) && this.isObject(result[key])) {
-          result[key] = this.deepMerge(result[key], value);
+          result[key] = this.deepMergeWithArrayAppend(result[key], value);
         } else {
           result[key] = value;
         }
@@ -73,5 +73,31 @@ export class ConfigMerger {
     }
 
     return result as Partial<Config>;
+  }
+
+  private deepMergeWithArrayAppend(target: any, source: any): any {
+    if (this.isObject(target) && this.isObject(source)) {
+      const result = { ...target };
+
+      for (const key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+            // Concatenate arrays instead of replacing
+            result[key] = [...target[key], ...source[key]];
+          } else if (this.isObject(source[key]) && this.isObject(target[key])) {
+            result[key] = this.deepMergeWithArrayAppend(target[key], source[key]);
+          } else if (Array.isArray(source[key])) {
+            // First array encountered, just copy it
+            result[key] = [...source[key]];
+          } else {
+            result[key] = source[key];
+          }
+        }
+      }
+
+      return result;
+    }
+
+    return source;
   }
 }

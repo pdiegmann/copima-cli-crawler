@@ -316,6 +316,105 @@ describe("ConfigMerger", () => {
     });
   });
 
+  describe("append strategy", () => {
+    it("appends array fields with 'append' strategy", () => {
+      const config1 = {
+        oauth2: {
+          providers: {
+            gitlab: { scopes: ["read_user"] },
+          },
+        },
+      } as any;
+      const config2 = {
+        oauth2: {
+          providers: {
+            gitlab: { scopes: ["api"] },
+          },
+        },
+      } as any;
+
+      const result = merger.mergeWithStrategy([config1, config2], "append");
+
+      // With append strategy, arrays should be concatenated
+      expect(result.oauth2?.providers?.gitlab?.scopes).toEqual(["read_user", "api"]);
+    });
+
+    it("handles empty arrays with append strategy", () => {
+      const config1 = {
+        oauth2: {
+          providers: {
+            gitlab: { scopes: [] },
+          },
+        },
+      } as any;
+      const config2 = {
+        oauth2: {
+          providers: {
+            gitlab: { scopes: ["api"] },
+          },
+        },
+      } as any;
+
+      const result = merger.mergeWithStrategy([config1, config2], "append");
+
+      expect(result.oauth2?.providers?.gitlab?.scopes).toEqual(["api"]);
+    });
+
+    it("merges non-array fields with append strategy", () => {
+      const config1 = {
+        gitlab: { host: "host1", timeout: 1000 },
+      } as any;
+      const config2 = {
+        gitlab: { accessToken: "token" },
+      } as any;
+
+      const result = merger.mergeWithStrategy([config1, config2], "append");
+
+      expect(result["gitlab"]).toEqual({
+        host: "host1",
+        timeout: 1000,
+        accessToken: "token",
+      });
+    });
+
+    it("overwrites non-array fields with append strategy", () => {
+      const config1 = {
+        gitlab: { host: "host1" },
+      } as any;
+      const config2 = {
+        gitlab: { host: "host2" },
+      } as any;
+
+      const result = merger.mergeWithStrategy([config1, config2], "append");
+
+      expect(result["gitlab"]?.host).toBe("host2");
+    });
+
+    it("handles mixed array and object fields with append strategy", () => {
+      const config1 = {
+        gitlab: { host: "host1" },
+        oauth2: {
+          providers: {
+            gitlab: { scopes: ["read"] },
+          },
+        },
+      } as any;
+      const config2 = {
+        gitlab: { timeout: 1000 },
+        oauth2: {
+          providers: {
+            gitlab: { scopes: ["write"] },
+          },
+        },
+      } as any;
+
+      const result = merger.mergeWithStrategy([config1, config2], "append");
+
+      expect(result["gitlab"]).toEqual({ host: "host1", timeout: 1000 });
+      expect(result.oauth2?.providers?.gitlab?.scopes).toEqual(["read", "write"]);
+    });
+  });
+
   describe("edge cases", () => {
     it("handles configs with different top-level keys", () => {
       const config1 = { gitlab: { host: "host1" } } as any;
