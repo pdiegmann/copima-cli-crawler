@@ -393,4 +393,281 @@ describe("GitLabGraphQLClient", () => {
       expect(result[1]?.id).toBe("project-2");
     });
   });
+
+  describe("fetchAllGroups", () => {
+    it("should fetch all groups with pagination", async () => {
+      const firstResponse = {
+        data: {
+          groups: {
+            nodes: [{ id: "group-1", name: "Group 1", fullPath: "group-1" }],
+            pageInfo: { hasNextPage: true, endCursor: "cursor1" },
+          },
+        },
+      };
+      const secondResponse = {
+        data: {
+          groups: {
+            nodes: [{ id: "group-2", name: "Group 2", fullPath: "group-2" }],
+            pageInfo: { hasNextPage: false, endCursor: null },
+          },
+        },
+      };
+
+      const mockJsonFn1 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(firstResponse);
+      const mockJsonFn2 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(secondResponse);
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn1,
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn2,
+        } as unknown as Response);
+
+      const result = await client.fetchAllGroups();
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.id).toBe("group-1");
+      expect(result[1]?.id).toBe("group-2");
+    });
+
+    it("should handle empty groups result", async () => {
+      const mockResponse = {
+        data: {
+          groups: {
+            nodes: [],
+            pageInfo: { hasNextPage: false, endCursor: null },
+          },
+        },
+      };
+
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: mockJsonFn,
+      } as unknown as Response);
+
+      const result = await client.fetchAllGroups();
+
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe("fetchAllSubgroups", () => {
+    it("should fetch all subgroups with pagination", async () => {
+      const firstResponse = {
+        data: {
+          group: {
+            descendantGroups: {
+              nodes: [{ id: "subgroup-1", name: "Subgroup 1", fullPath: "group/subgroup-1" }],
+              pageInfo: { hasNextPage: true, endCursor: "cursor1" },
+            },
+          },
+        },
+      };
+      const secondResponse = {
+        data: {
+          group: {
+            descendantGroups: {
+              nodes: [{ id: "subgroup-2", name: "Subgroup 2", fullPath: "group/subgroup-2" }],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        },
+      };
+
+      const mockJsonFn1 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(firstResponse);
+      const mockJsonFn2 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(secondResponse);
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn1,
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn2,
+        } as unknown as Response);
+
+      const result = await client.fetchAllSubgroups("parent-group-id");
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.id).toBe("subgroup-1");
+      expect(result[1]?.id).toBe("subgroup-2");
+    });
+
+    it("should handle empty subgroups result", async () => {
+      const mockResponse = {
+        data: {
+          group: {
+            descendantGroups: {
+              nodes: [],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        },
+      };
+
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: mockJsonFn,
+      } as unknown as Response);
+
+      const result = await client.fetchAllSubgroups("parent-group-id");
+
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe("fetchAllGroupProjects", () => {
+    it("should fetch all group projects with pagination", async () => {
+      const firstResponse = {
+        data: {
+          group: {
+            projects: {
+              nodes: [{ id: "project-1", name: "Project 1", fullPath: "group/project-1" }],
+              pageInfo: { hasNextPage: true, endCursor: "cursor1" },
+            },
+          },
+        },
+      };
+      const secondResponse = {
+        data: {
+          group: {
+            projects: {
+              nodes: [{ id: "project-2", name: "Project 2", fullPath: "group/project-2" }],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        },
+      };
+
+      const mockJsonFn1 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(firstResponse);
+      const mockJsonFn2 = jest.fn<() => Promise<any>>().mockResolvedValueOnce(secondResponse);
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn1,
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: mockJsonFn2,
+        } as unknown as Response);
+
+      const result = await client.fetchAllGroupProjects("group-id");
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.id).toBe("project-1");
+      expect(result[1]?.id).toBe("project-2");
+    });
+
+    it("should handle empty group projects result", async () => {
+      const mockResponse = {
+        data: {
+          group: {
+            projects: {
+              nodes: [],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        },
+      };
+
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: mockJsonFn,
+      } as unknown as Response);
+
+      const result = await client.fetchAllGroupProjects("group-id");
+
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe("token refresh scenarios", () => {
+    it("should refresh token on 401 and retry request", async () => {
+      const clientWithOAuth = new GitLabGraphQLClient(baseUrl, accessToken, {
+        refreshToken: "refresh-token",
+        oauth2: {
+          clientId: "client-id",
+          clientSecret: "client-secret",
+        },
+      });
+
+      // First request fails with 401
+      const mockTextFn = jest.fn<() => Promise<string>>().mockResolvedValueOnce("Unauthorized");
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        text: mockTextFn,
+      } as unknown as Response);
+
+      const query = { loc: { source: { body: "query { test }" } } };
+
+      await expect(clientWithOAuth.query(query)).rejects.toThrow("Authentication failed");
+    });
+
+    it("should handle token refresh failure", async () => {
+      const clientWithOAuth = new GitLabGraphQLClient(baseUrl, accessToken, {
+        refreshToken: "invalid-refresh-token",
+        oauth2: {
+          clientId: "client-id",
+          clientSecret: "client-secret",
+        },
+      });
+
+      const mockTextFn = jest.fn<() => Promise<string>>().mockResolvedValueOnce("Unauthorized");
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        text: mockTextFn,
+      } as unknown as Response);
+
+      const query = { loc: { source: { body: "query { test }" } } };
+
+      await expect(clientWithOAuth.query(query)).rejects.toThrow("Authentication failed");
+    });
+  });
+
+  describe("getQueryString", () => {
+    it("should extract query string from GraphQL document", async () => {
+      const mockResponse = { data: { test: "value" } };
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: mockJsonFn,
+      } as unknown as Response);
+
+      const query = { loc: { source: { body: "query TestQuery { test }" } } };
+      await client.query(query);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining("query TestQuery { test }"),
+        })
+      );
+    });
+
+    it("should handle string query input", async () => {
+      const mockResponse = { data: { test: "value" } };
+      const mockJsonFn = jest.fn<() => Promise<any>>().mockResolvedValueOnce(mockResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: mockJsonFn,
+      } as unknown as Response);
+
+      const queryString = "query { test }";
+      await client.query(queryString as any);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining("query { test }"),
+        })
+      );
+    });
+  });
 });

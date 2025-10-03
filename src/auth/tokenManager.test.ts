@@ -199,5 +199,196 @@ describe("TokenManager", () => {
       expect(token).toBeNull();
       expect(mockLogger.warn).toHaveBeenCalledWith(expect.stringContaining("not yet implemented"));
     });
+
+    it("should handle errors during refresh", async () => {
+      const accountId = "test-account";
+
+      mockDb.findAccountByAccountId.mockImplementation(() => {
+        throw new Error("Database error");
+      });
+
+      const token = await (tokenManager as any).refreshAccessToken(accountId);
+
+      expect(token).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Failed to refresh access token"));
+    });
+  });
+
+  describe("getValidToken", () => {
+    it("should return valid token when account ID is provided", async () => {
+      const accountId = "test-account";
+      const validToken = "valid-token";
+      const futureDate = new Date(Date.now() + 10000);
+
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        accessToken: validToken,
+        accessTokenExpiresAt: futureDate,
+        refreshToken: "refresh-token",
+        userId: "user-1",
+        updatedAt: new Date(),
+      });
+
+      const token = await tokenManager.getValidToken(accountId);
+
+      expect(token).toBe(validToken);
+    });
+
+    it("should return null when account resolution fails", async () => {
+      mockDb.findAccountByAccountId.mockReturnValue(null);
+      mockDb.getAllAccounts.mockReturnValue([]);
+
+      const token = await tokenManager.getValidToken();
+
+      expect(token).toBeNull();
+    });
+
+    it("should auto-resolve account ID when not provided", async () => {
+      const validToken = "valid-token";
+      const futureDate = new Date(Date.now() + 10000);
+
+      const accountData = {
+        accountId: "only-account",
+        userId: "user-1",
+        updatedAt: new Date(),
+        accessToken: validToken,
+        accessTokenExpiresAt: futureDate,
+        refreshToken: "refresh",
+      };
+
+      mockDb.findAccountByAccountId.mockImplementation((id: string) => {
+        if (id === "default") return null;
+        if (id === "only-account") return accountData;
+        return null;
+      });
+      mockDb.getAllAccounts.mockReturnValue([accountData]);
+
+      const token = await tokenManager.getValidToken();
+
+      expect(token).toBe(validToken);
+    });
+  });
+
+  describe("getAccessToken error cases", () => {
+    it("should return null when access token is missing", async () => {
+      const accountId = "test-account";
+
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        accessToken: null,
+        accessTokenExpiresAt: new Date(Date.now() + 10000),
+        userId: "user-1",
+      });
+
+      const token = await tokenManager.getAccessToken(accountId);
+
+      expect(token).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Access token or expiration missing"));
+    });
+
+    it("should return null when expiration date is missing", async () => {
+      const accountId = "test-account";
+
+      mockDb.findAccountByAccountId.mockReturnValue({
+        accountId,
+        accessToken: "valid-token",
+        accessTokenExpiresAt: null,
+        userId: "user-1",
+      });
+
+      const token = await tokenManager.getAccessToken(accountId);
+
+      expect(token).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Access token or expiration missing"));
+    });
+
+    it("should handle errors during token retrieval", async () => {
+      const accountId = "test-account";
+
+      mockDb.findAccountByAccountId.mockImplementation(() => {
+        throw new Error("Database error");
+      });
+
+      const token = await tokenManager.getAccessToken(accountId);
+
+      expect(token).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Failed to get access token"));
+    });
+  });
+
+  describe("resolveAccountId error cases", () => {
+    it("should return null when no accounts exist", async () => {
+      mockDb.findAccountByAccountId.mockReturnValue(null);
+      mockDb.getAllAccounts.mockReturnValue([]);
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("No stored accounts found"));
+    });
+
+    it("should handle errors during account resolution", async () => {
+      mockDb.findAccountByAccountId.mockImplementation(() => {
+        throw new Error("Database error");
+      });
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Failed to resolve account ID"));
+    });
+
+    it("should filter accounts without tokens and select sole candidate", async () => {
+      mockDb.findAccountByAccountId.mockReturnValue(null);
+      mockDb.getAllAccounts.mockReturnValue([
+        {
+          accountId: "account-with-tokens",
+          userId: "user-1",
+          updatedAt: new Date(),
+          accessToken: "token",
+          refreshToken: "refresh",
+        },
+        {
+          accountId: "account-without-tokens",
+          userId: "user-2",
+          updatedAt: new Date(),
+          accessToken: null,
+          refreshToken: null,
+        },
+      ]);
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBe("account-with-tokens");
+      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Auto-selected sole stored account"));
+    });
+
+    it("should select default account when it exists", async () => {
+      mockDb.findAccountByAccountId.mockImplementation((id: string) => {
+        if (id === "default") {
+          return {
+            accountId: "default",
+            userId: "user-1",
+            updatedAt: new Date(),
+            accessToken: "token",
+            refreshToken: "refresh",
+          };
+        }
+        return null;
+      });
+
+      const result = await tokenManager.resolveAccountId();
+
+      expect(result).toBe("default");
+    });
+
+    it("should handle non-existent specified account ID", async () => {
+      mockDb.findAccountByAccountId.mockReturnValue(null);
+
+      const result = await tokenManager.resolveAccountId("non-existent");
+
+      expect(result).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining("Account with ID non-existent not found"));
+    });
   });
 });

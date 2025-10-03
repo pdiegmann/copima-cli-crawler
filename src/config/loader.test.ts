@@ -363,6 +363,288 @@ describe("Configuration Loader", () => {
     });
   });
 
+  describe("validation", () => {
+    it("should validate numeric fields and throw on invalid values", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token", timeout: -1 },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({
+        isValid: false,
+        errors: [{ field: "gitlab.timeout", message: "must be positive", severity: "error" }],
+        warnings: [],
+      });
+
+      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+    });
+
+    it("should validate maxConcurrency field", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token", maxConcurrency: 0 },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
+
+      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+    });
+
+    it("should validate rateLimit field", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token", rateLimit: -5 },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
+
+      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+    });
+
+    it("should validate database timeout field", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        database: { path: "./db.yaml", timeout: 0 },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
+
+      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+    });
+
+    it("should validate progress interval field", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        progress: { enabled: true, interval: -10 },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
+
+      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+    });
+
+    it("should validate resume autoSaveInterval field", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        resume: { enabled: true, autoSaveInterval: 0 },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
+
+      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+    });
+
+    it("should log warnings when validation has warnings but no errors", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: { rootDir: "./output" },
+      });
+
+      mockConfigValidatorInstance.validate.mockReturnValueOnce({
+        isValid: true,
+        errors: [],
+        warnings: ["Warning 1", "Warning 2"],
+      });
+
+      const result = await loadConfig({});
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe("CLI arguments conversion", () => {
+    it("should convert all gitlab CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      const argsConfig = {
+        gitlab: {
+          host: "https://cli.gitlab.com",
+          accessToken: "cli-token",
+          refreshToken: "cli-refresh",
+          timeout: 10000,
+          maxConcurrency: 5,
+          rateLimit: 100,
+        },
+        output: { rootDir: "./output" },
+      };
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce(argsConfig);
+
+      const result = await loadConfig({
+        host: "https://cli.gitlab.com",
+        accessToken: "cli-token",
+        refreshToken: "cli-refresh",
+        timeout: 10000,
+        maxConcurrency: 5,
+        rateLimit: 100,
+      });
+
+      expect(result.gitlab?.host).toBe("https://cli.gitlab.com");
+      expect(result.gitlab?.timeout).toBe(10000);
+    });
+
+    it("should convert database CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        database: { path: "./custom-db.yaml", walMode: true, timeout: 5000 },
+        output: { rootDir: "./output" },
+      });
+
+      const result = await loadConfig({
+        databasePath: "./custom-db.yaml",
+        walMode: true,
+        databaseTimeout: 5000,
+      });
+
+      expect(result.database?.path).toBe("./custom-db.yaml");
+    });
+
+    it("should convert output CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: {
+          rootDir: "./data",
+          fileNaming: "kebab-case",
+          prettyPrint: true,
+          compression: "gzip",
+        },
+      });
+
+      const result = await loadConfig({
+        outputDir: "./data",
+        fileNaming: "kebab-case",
+        prettyPrint: true,
+        compression: "gzip",
+      });
+
+      expect(result.output?.rootDir).toBe("./data");
+      expect(result.output?.fileNaming).toBe("kebab-case");
+    });
+
+    it("should convert logging CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: { rootDir: "./output" },
+        logging: {
+          level: "debug",
+          format: "json",
+          file: "./app.log",
+          console: true,
+          colors: false,
+        },
+      });
+
+      const result = await loadConfig({
+        logLevel: "debug",
+        logFormat: "json",
+        logFile: "./app.log",
+        console: true,
+        colors: false,
+      });
+
+      expect(result.logging?.level).toBe("debug");
+      expect(result.logging?.format).toBe("json");
+    });
+
+    it("should convert progress CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: { rootDir: "./output" },
+        progress: {
+          enabled: true,
+          file: "./progress.yaml",
+          interval: 1000,
+          detailed: true,
+        },
+      });
+
+      const result = await loadConfig({
+        progressEnabled: true,
+        progressFile: "./progress.yaml",
+        progressInterval: 1000,
+        progressDetailed: true,
+      });
+
+      expect(result.progress?.enabled).toBe(true);
+      expect(result.progress?.interval).toBe(1000);
+    });
+
+    it("should convert resume CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: { rootDir: "./output" },
+        resume: {
+          enabled: true,
+          stateFile: "./state.json",
+          autoSaveInterval: 5000,
+        },
+      });
+
+      const result = await loadConfig({
+        resumeEnabled: true,
+        resumeStateFile: "./state.json",
+        resumeAutoSaveInterval: 5000,
+      });
+
+      expect(result.resume?.enabled).toBe(true);
+      expect(result.resume?.autoSaveInterval).toBe(5000);
+    });
+
+    it("should convert callback CLI args to config", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("No config"));
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: { host: "https://gitlab.com", accessToken: "token" },
+        output: { rootDir: "./output" },
+        callbacks: {
+          enabled: true,
+          modulePath: "./callbacks.js",
+        },
+      });
+
+      const result = await loadConfig({
+        callbackEnabled: true,
+        callbackModulePath: "./callbacks.js",
+      });
+
+      expect(result.callbacks?.enabled).toBe(true);
+      expect(result.callbacks?.modulePath).toBe("./callbacks.js");
+    });
+  });
+
   describe("auto setup wizard", () => {
     const baseConfig = {
       gitlab: { host: "", accessToken: "", timeout: 5000 },
