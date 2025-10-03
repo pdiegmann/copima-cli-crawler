@@ -2,7 +2,7 @@
  * Test suite for configuration loader
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { promises as fs } from "fs";
 import { ConfigurationValidationError } from "./errors.js";
 import { loadConfig } from "./loader.js";
@@ -378,7 +378,7 @@ describe("Configuration Loader", () => {
         warnings: [],
       });
 
-      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toThrow(ConfigurationValidationError);
     });
 
     it("should validate maxConcurrency field", async () => {
@@ -391,7 +391,7 @@ describe("Configuration Loader", () => {
 
       mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
 
-      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toThrow(ConfigurationValidationError);
     });
 
     it("should validate rateLimit field", async () => {
@@ -404,7 +404,7 @@ describe("Configuration Loader", () => {
 
       mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
 
-      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toThrow(ConfigurationValidationError);
     });
 
     it("should validate database timeout field", async () => {
@@ -418,7 +418,7 @@ describe("Configuration Loader", () => {
 
       mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
 
-      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toThrow(ConfigurationValidationError);
     });
 
     it("should validate progress interval field", async () => {
@@ -432,7 +432,7 @@ describe("Configuration Loader", () => {
 
       mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
 
-      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toThrow(ConfigurationValidationError);
     });
 
     it("should validate resume autoSaveInterval field", async () => {
@@ -446,7 +446,7 @@ describe("Configuration Loader", () => {
 
       mockConfigValidatorInstance.validate.mockReturnValueOnce({ isValid: true, errors: [], warnings: [] });
 
-      await expect(loadConfig({})).rejects.toThrow(ConfigurationValidationError);
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toThrow(ConfigurationValidationError);
     });
 
     it("should log warnings when validation has warnings but no errors", async () => {
@@ -645,6 +645,55 @@ describe("Configuration Loader", () => {
     });
   });
 
+  describe("JSON config file loading", () => {
+    it("should load JSON config file when specified", async () => {
+      const configPath = "./test-config.json";
+
+      mockFileLoaderInstance.loadJsonFile.mockResolvedValueOnce({
+        gitlab: { host: "https://json.gitlab.com", accessToken: "json-token" },
+      });
+
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: {
+          host: "https://json.gitlab.com",
+          accessToken: "json-token",
+          timeout: 5000,
+        },
+        output: { rootDir: "./output" },
+      });
+
+      const result = await loadConfig({ config: configPath });
+
+      expect(mockFileLoaderInstance.loadJsonFile).toHaveBeenCalledWith(configPath);
+      expect(result.gitlab?.host).toBe("https://json.gitlab.com");
+    });
+
+    it("should auto-discover JSON config files", async () => {
+      mockFs.access.mockRejectedValueOnce(new Error("Not found")).mockRejectedValueOnce(new Error("Not found")).mockRejectedValueOnce(new Error("Not found")).mockResolvedValueOnce(undefined);
+
+      mockFileLoaderInstance.loadJsonFile.mockResolvedValueOnce({
+        gitlab: { host: "https://auto-json.gitlab.com", accessToken: "auto-json-token" },
+      });
+
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValueOnce({});
+
+      mockConfigMergerInstance.merge.mockReturnValueOnce({
+        gitlab: {
+          host: "https://auto-json.gitlab.com",
+          accessToken: "auto-json-token",
+          timeout: 5000,
+        },
+        output: { rootDir: "./output" },
+      });
+
+      const result = await loadConfig({});
+
+      expect(result.gitlab?.host).toBe("https://auto-json.gitlab.com");
+    });
+  });
+
   describe("auto setup wizard", () => {
     const baseConfig = {
       gitlab: { host: "", accessToken: "", timeout: 5000 },
@@ -669,6 +718,19 @@ describe("Configuration Loader", () => {
     afterEach(() => {
       (process.stdout as any).isTTY = originalStdoutIsTTY;
       (process.stdin as any).isTTY = originalStdinIsTTY;
+    });
+
+    it("should skip wizard when autoSetup is false", async () => {
+      mockConfigMergerInstance.merge.mockReturnValue(baseConfig);
+      mockEnvironmentLoaderInstance.loadFromEnvironment.mockReturnValue({});
+      mockConfigValidatorInstance.validate.mockImplementationOnce(() => ({
+        isValid: false,
+        errors: [{ field: "gitlab.host", message: "required", severity: "error" }],
+        warnings: [],
+      }));
+
+      await expect(loadConfig({}, { autoSetup: false })).rejects.toBeInstanceOf(ConfigurationValidationError);
+      expect(runSetupWizardMock).not.toHaveBeenCalled();
     });
 
     it("launches setup wizard when validation fails interactively", async () => {
