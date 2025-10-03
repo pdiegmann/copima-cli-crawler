@@ -10,6 +10,7 @@ import { createLogger } from "../logging";
 export class CallbackManager {
   private callback: ((context: CallbackContext, object: any) => any | false) | null = null;
   private isEnabled = false;
+  private loadingVersion = 0;
   private readonly logger = createLogger("CallbackManager");
 
   constructor(private config: CallbackConfig) {
@@ -24,6 +25,7 @@ export class CallbackManager {
    * Prioritizes inline callback over module path.
    */
   private async loadCallback(): Promise<void> {
+    const currentVersion = ++this.loadingVersion;
     try {
       if (this.config.inlineCallback) {
         // Use inline callback if provided
@@ -51,8 +53,11 @@ export class CallbackManager {
       }
     } catch (error) {
       this.logger.error(`Failed to load callback function: ${error instanceof Error ? error.message : "Unknown error"}`);
-      this.isEnabled = false;
-      this.callback = null;
+      // Only update state if this is still the current loading operation
+      if (currentVersion === this.loadingVersion) {
+        this.isEnabled = false;
+        this.callback = null;
+      }
     }
   }
 
@@ -142,12 +147,18 @@ export class CallbackManager {
   async updateConfig(newConfig: CallbackConfig): Promise<void> {
     const wasEnabled = this.isEnabled;
     const oldModulePath = this.config.modulePath;
+    const oldInlineCallback = this.config.inlineCallback;
 
     this.config = newConfig;
     this.isEnabled = newConfig.enabled;
 
     // Reload callback if configuration changed
-    if (this.isEnabled && (!wasEnabled || oldModulePath !== newConfig.modulePath)) {
+    const modulePathChanged = oldModulePath !== newConfig.modulePath;
+    const inlineCallbackChanged = oldInlineCallback !== newConfig.inlineCallback;
+    const enabledChanged = !wasEnabled && newConfig.enabled;
+    const configChanged = enabledChanged || modulePathChanged || inlineCallbackChanged;
+
+    if (this.isEnabled && configChanged) {
       await this.loadCallback();
     } else if (!this.isEnabled) {
       this.callback = null;

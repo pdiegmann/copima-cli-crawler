@@ -1,20 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { existsSync } from "fs";
 
+// Mock logger that will be used by the implementation
+const mockLogger = {
+  info: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+};
+
 // Mock dependencies before importing the implementation
 jest.mock("fs");
-jest.mock("../../logging/index.js");
+jest.mock("../../logging/index.js", () => ({
+  createLogger: jest.fn(() => mockLogger),
+}));
 jest.mock("../../testing/testRunner.js");
 
 const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
-const mockCreateLogger = jest.fn();
-const mockCreateTestRunner = jest.fn();
 
 // Import after mocking
 import { testImpl } from "./impl.js";
 
 describe("test/impl", () => {
-  let mockLogger: any;
   let mockTestRunner: any;
   let mockProcessExit: jest.SpiedFunction<typeof process.exit>;
   let processExitCalls: number[];
@@ -23,13 +29,6 @@ describe("test/impl", () => {
     // Reset mocks
     jest.clearAllMocks();
     processExitCalls = [];
-
-    // Mock logger
-    mockLogger = {
-      info: jest.fn(),
-      error: jest.fn(),
-      warn: jest.fn(),
-    };
 
     // Mock test runner
     mockTestRunner = {
@@ -40,14 +39,9 @@ describe("test/impl", () => {
       cleanupProcesses: jest.fn(),
     };
 
-    // Setup module mocks
-    const loggingModule = jest.requireMock("../../logging/index.js") as any;
-    loggingModule.createLogger = mockCreateLogger;
-    mockCreateLogger.mockReturnValue(mockLogger);
-
+    // Setup test runner mock
     const testRunnerModule = jest.requireMock("../../testing/testRunner.js") as any;
-    testRunnerModule.createTestRunner = mockCreateTestRunner;
-    mockCreateTestRunner.mockReturnValue(mockTestRunner);
+    testRunnerModule.createTestRunner = jest.fn(() => mockTestRunner);
 
     // Mock process.exit to prevent actual exit
     mockProcessExit = jest.spyOn(process, "exit").mockImplementation((code?: string | number | null | undefined) => {
