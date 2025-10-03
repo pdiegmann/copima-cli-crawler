@@ -1,90 +1,201 @@
-// src/utils/progressReporter.test.ts
-
-import { mkdtemp, rm } from "fs/promises";
-import { tmpdir } from "os";
-import { join } from "path";
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import ProgressReporter from "./progressReporter";
 
+// Mock logger
+jest.mock("../logging/logger", () => ({
+  createLogger: jest.fn(() => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+  })),
+}));
+
 describe("ProgressReporter", () => {
-  let reporter: ProgressReporter;
-  let tempDir: string;
-  let progressFile: string;
+  let progressReporter: ProgressReporter;
+  let originalStdoutWrite: any;
+  let originalConsoleLog: any;
 
-  beforeEach(async () => {
-    // Create a temporary directory for test files
-    tempDir = await mkdtemp(join(tmpdir(), "progress-test-"));
-    progressFile = join(tempDir, "progress.yaml");
+  beforeEach(() => {
+    // Mock stdout.write
+    originalStdoutWrite = process.stdout.write;
+    process.stdout.write = jest.fn((str: string) => true) as any;
 
-    // ProgressReporter expects a string (progressFile) as its only argument
-    reporter = new ProgressReporter(progressFile, false); // Disable terminal output for tests
-    // Set up initial state for tests
-    reporter.updateState({ totalSteps: 3 });
-    reporter.updateState({ enableTerminal: false });
-    reporter.updateState({ progressInterval: 100 });
+    // Mock console.log
+    originalConsoleLog = console.log;
+    console.log = jest.fn();
+
+    progressReporter = new ProgressReporter("/test/progress.yaml");
   });
 
-  afterEach(async () => {
-    await reporter.stop();
-    // Wait a tick to ensure all async logs/timers are flushed
-    await new Promise((r) => setTimeout(r, 20));
-
-    // Clean up temp directory
-    try {
-      await rm(tempDir, { recursive: true, force: true });
-    } catch (error) {
-      // Ignore cleanup errors
+  afterEach(() => {
+    if (progressReporter) {
+      progressReporter.stop();
     }
+    jest.clearAllMocks();
+    process.stdout.write = originalStdoutWrite;
+    console.log = originalConsoleLog;
   });
 
-  it("should start and stop reporting", async () => {
-    reporter.start();
-    reporter.updateState({ currentStep: "Step 1" });
-    await new Promise((r) => setTimeout(r, 150));
-    await reporter.stop();
-    await new Promise((r) => setTimeout(r, 20));
-    expect(reporter.getState()["currentStep"]).toBe("Step 1");
+  describe("constructor", () => {
+    it("should create instance with file path", () => {
+      expect(progressReporter).toBeDefined();
+    });
+
+    it("should create instance with terminal output disabled", () => {
+      const reporter = new ProgressReporter("/test/progress.yaml", false);
+      expect(reporter).toBeDefined();
+    });
   });
 
-  it("should update resource count and performance", async () => {
-    reporter.start();
-    reporter.updateResourceCount("users", { total: 5, processed: 3 });
-    // No updatePerformance method, so skip that
-    await reporter.stop();
-    await new Promise((r) => setTimeout(r, 20));
-    const stats = reporter.getStats();
-    expect(stats.resourceCounts && stats.resourceCounts["users"] && stats.resourceCounts["users"].total).toBe(5);
+  describe("updateState", () => {
+    it("should update progress state", () => {
+      const newState = { step: "processing", status: "active" };
+      progressReporter.updateState(newState);
+
+      const state = progressReporter.getState();
+      expect(state).toMatchObject(newState);
+    });
+
+    it("should merge with existing state", () => {
+      progressReporter.updateState({ step: "init" });
+      progressReporter.updateState({ status: "active" });
+
+      const state = progressReporter.getState();
+      expect(state).toMatchObject({ step: "init", status: "active" });
+    });
   });
 
-  it("should update estimated time", async () => {
-    reporter.start();
-    reporter.updateState({ estimatedTimeRemaining: 42 });
-    await reporter.stop();
-    await new Promise((r) => setTimeout(r, 20));
-    const state = reporter.getState();
-    expect(state["estimatedTimeRemaining"]).toBe(42);
+  describe("updateStats", () => {
+    it("should update progress statistics", () => {
+      progressReporter.updateStats({
+        totalSteps: 10,
+        completedSteps: 5,
+        currentStep: "Processing data",
+      });
+
+      const stats = progressReporter.getStats();
+      expect(stats.totalSteps).toBe(10);
+      expect(stats.completedSteps).toBe(5);
+      expect(stats.currentStep).toBe("Processing data");
+    });
+
+    it("should preserve existing stats when partially updating", () => {
+      progressReporter.updateStats({ totalSteps: 10 });
+      progressReporter.updateStats({ completedSteps: 5 });
+
+      const stats = progressReporter.getStats();
+      expect(stats.totalSteps).toBe(10);
+      expect(stats.completedSteps).toBe(5);
+    });
   });
 
-  it("should set total steps and complete step", async () => {
-    reporter.start();
-    reporter.updateState({ totalSteps: 5 });
-    reporter.updateState({ completedSteps: 1 });
-    await reporter.stop();
-    await new Promise((r) => setTimeout(r, 20));
-    const state = reporter.getState();
-    expect(state["totalSteps"]).toBe(5);
-    expect(state["completedSteps"]).toBe(1);
+  describe("updateResourceCount", () => {
+    it("should update resource counts", () => {
+      progressReporter.updateResourceCount("users", {
+        total: 100,
+        processed: 50,
+        filtered: 10,
+        errors: 2,
+      });
+
+      const stats = progressReporter.getStats();
+      expect(stats.resourceCounts).toBeDefined();
+      expect(stats.resourceCounts!["users"]).toEqual({
+        total: 100,
+        processed: 50,
+        filtered: 10,
+        errors: 2,
+      });
+    });
+
+    it("should initialize resource counts if not exists", () => {
+      progressReporter.updateResourceCount("projects", { total: 50 });
+
+      const stats = progressReporter.getStats();
+      expect(stats.resourceCounts!["projects"]).toEqual({
+        total: 50,
+        processed: 0,
+        filtered: 0,
+        errors: 0,
+      });
+    });
+
+    it("should handle multiple resource types", () => {
+      progressReporter.updateResourceCount("users", { total: 100, processed: 50 });
+      progressReporter.updateResourceCount("projects", { total: 200, processed: 100 });
+
+      const stats = progressReporter.getStats();
+      expect(stats.resourceCounts!["users"].total).toBe(100);
+      expect(stats.resourceCounts!["projects"].total).toBe(200);
+    });
+
+    it("should overwrite resource counts on update", () => {
+      progressReporter.updateResourceCount("users", { total: 100, processed: 25 });
+      progressReporter.updateResourceCount("users", { processed: 50, errors: 2 });
+
+      const stats = progressReporter.getStats();
+      expect(stats.resourceCounts!["users"].processed).toBe(50);
+      expect(stats.resourceCounts!["users"].errors).toBe(2);
+    });
   });
 
-  it("should get current stats", () => {
-    const stats = reporter.getStats();
-    expect(stats).toHaveProperty("resourceCounts");
-    expect(stats).toHaveProperty("performance");
+  describe("getStats", () => {
+    it("should return current statistics", () => {
+      progressReporter.updateStats({ totalSteps: 10, completedSteps: 5 });
+
+      const stats = progressReporter.getStats();
+      expect(stats.totalSteps).toBe(10);
+      expect(stats.completedSteps).toBe(5);
+    });
+
+    it("should return a copy of stats", () => {
+      const stats1 = progressReporter.getStats();
+      stats1.totalSteps = 999;
+
+      const stats2 = progressReporter.getStats();
+      expect(stats2.totalSteps).not.toBe(999);
+    });
   });
 
-  it("should not write if disabled", async () => {
-    reporter.updateState({ enableTerminal: false });
-    reporter.start();
-    await reporter.stop();
-    expect(reporter.getState()["enableTerminal"]).toBe(false);
+  describe("getState", () => {
+    it("should return current state", () => {
+      progressReporter.updateState({ step: "processing" });
+
+      const state = progressReporter.getState();
+      expect(state["step"]).toBe("processing");
+    });
+
+    it("should return a copy of state", () => {
+      const state1 = progressReporter.getState();
+      state1["step"] = "modified";
+
+      const state2 = progressReporter.getState();
+      expect(state2["step"]).not.toBe("modified");
+    });
+  });
+
+  describe("edge cases", () => {
+    it("should handle zero total steps", () => {
+      progressReporter.updateStats({ totalSteps: 0, completedSteps: 0 });
+
+      const stats = progressReporter.getStats();
+      expect(stats.totalSteps).toBe(0);
+    });
+
+    it("should handle performance metrics", () => {
+      progressReporter.updateStats({
+        performance: {
+          requestsPerSecond: 10.5,
+          avgResponseTime: 250,
+          errorRate: 0.02,
+        },
+      });
+
+      const stats = progressReporter.getStats();
+      expect(stats.performance?.requestsPerSecond).toBe(10.5);
+      expect(stats.performance?.avgResponseTime).toBe(250);
+      expect(stats.performance?.errorRate).toBe(0.02);
+    });
   });
 });
