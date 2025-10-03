@@ -27,10 +27,8 @@ describe("YamlStorage", () => {
   });
 
   afterEach(() => {
-    // Clean up test file
-    if (existsSync(TEST_FILE)) {
-      rmSync(TEST_FILE);
-    }
+    // Clean up test file - force: true prevents errors if file doesn't exist
+    rmSync(TEST_FILE, { force: true });
   });
 
   describe("initialization", () => {

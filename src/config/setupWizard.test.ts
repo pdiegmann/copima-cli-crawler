@@ -541,4 +541,358 @@ describe("setup wizard", () => {
       rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  it("handles numeric field validation (gitlab.timeout)", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com", "30000"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [
+      { field: "gitlab.host", message: "required", severity: "error" },
+      { field: "gitlab.timeout", message: "required", severity: "error" },
+    ];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.gitlab.timeout).toBe(30000);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("handles numeric field validation (gitlab.maxConcurrency)", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com", "10"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [
+      { field: "gitlab.host", message: "required", severity: "error" },
+      { field: "gitlab.maxConcurrency", message: "required", severity: "error" },
+    ];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.gitlab.maxConcurrency).toBe(10);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("handles numeric field validation (gitlab.rateLimit)", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com", "600"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [
+      { field: "gitlab.host", message: "required", severity: "error" },
+      { field: "gitlab.rateLimit", message: "required", severity: "error" },
+    ];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.gitlab.rateLimit).toBe(600);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("handles database.timeout numeric field", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com", "10000"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [
+      { field: "gitlab.host", message: "required", severity: "error" },
+      { field: "database.timeout", message: "required", severity: "error" },
+    ];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.database.timeout).toBe(10000);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("configures OAuth server settings when requested", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: [
+        "https://gitlab.com",
+        "test-client-id",
+        "https://gitlab.com/oauth/authorize",
+        "https://gitlab.com/oauth/token",
+        "api",
+        "http://localhost:5000/callback",
+        "5000",
+        "/custom/callback",
+        "120",
+      ],
+      passwords: ["test-secret"],
+      confirms: [true, true], // Configure OAuth, Configure server
+      selects: ["gitlab"],
+    });
+
+    const issues: ConfigValidationError[] = [{ field: "gitlab.host", message: "required", severity: "error" }];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.oauth2?.server?.port).toBe(5000);
+      expect(stored.oauth2?.server?.callbackPath).toBe("/custom/callback");
+      expect(stored.oauth2?.server?.timeout).toBe(120);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("skips auth flow when launchAuthFlow is false", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com", "client-id", "https://gitlab.com/oauth/authorize", "https://gitlab.com/oauth/token", "api", "http://localhost:3000/callback"],
+      passwords: ["secret"],
+      confirms: [true, false],
+      selects: ["gitlab"],
+    });
+
+    const issues: ConfigValidationError[] = [{ field: "gitlab.host", message: "required", severity: "error" }];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("skips auth flow when no OAuth2 config exists", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com"],
+      confirms: [false], // Decline OAuth
+    });
+
+    const issues: ConfigValidationError[] = [{ field: "gitlab.host", message: "required", severity: "error" }];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: true, // Try to launch but should skip
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.oauth2).toBeUndefined();
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("handles empty config when determining fields to prompt", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("uses default value from initial config when existing config has no value", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [{ field: "gitlab.host", message: "required", severity: "error" }];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: { ...defaultConfig, gitlab: { ...defaultConfig.gitlab, host: "https://default.com" } },
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("handles warning-level validation issues (only errors prompt)", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com"],
+      confirms: [false],
+    });
+
+    const issues: ConfigValidationError[] = [
+      { field: "gitlab.host", message: "required", severity: "error" },
+      { field: "gitlab.timeout", message: "recommended", severity: "warning" },
+    ];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.gitlab.host).toBe("https://gitlab.com");
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("configures existing custom OAuth provider", async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), "copima-wizard-"));
+    const targetPath = join(tempDir, "copima.yaml");
+
+    const existingConfig = {
+      gitlab: { host: "https://gitlab.com" },
+      oauth2: {
+        providers: {
+          "custom-provider": {
+            clientId: "custom-id",
+            clientSecret: "custom-secret",
+            authorizationUrl: "https://custom.com/authorize",
+            tokenUrl: "https://custom.com/token",
+            redirectUri: "http://localhost:3000/callback",
+            scopes: ["custom"],
+          },
+        },
+      },
+    };
+
+    writeFileSync(targetPath, yaml.dump(existingConfig));
+
+    const prompter = new SequencePrompter({
+      inputs: ["https://gitlab.com", "updated-id", "https://custom.com/authorize", "https://custom.com/token", "custom,scopes", "http://localhost:3000/callback"],
+      passwords: [""],
+      confirms: [true, false],
+      selects: ["custom-provider"],
+    });
+
+    const issues: ConfigValidationError[] = [{ field: "gitlab.host", message: "required", severity: "error" }];
+
+    try {
+      const result = await runSetupWizard({
+        initialConfig: defaultConfig,
+        issues,
+        preferredTargetPath: targetPath,
+        prompter,
+        launchAuthFlow: false,
+      });
+
+      expect(result.status).toBe("completed");
+      const stored = yaml.load(readFileSync(targetPath, "utf8")) as any;
+      expect(stored.oauth2?.providers?.["custom-provider"]?.clientId).toBe("updated-id");
+      expect(stored.oauth2?.providers?.["custom-provider"]?.clientSecret).toBe("custom-secret");
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
