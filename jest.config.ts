@@ -14,8 +14,7 @@ module.exports = {
   testPathIgnorePatterns: [
     "/node_modules/",
     "/dist/",
-    "src/commands/auth/impl.test.ts", // Temporarily exclude problematic tests
-    "src/commands/crawl/impl.test.ts", // Temporarily exclude problematic tests
+    "src/commands/auth/impl.test.ts", // Temporarily exclude problematic tests - process.exit mocking issue
     "src/db/connection.test.ts", // Exclude Bun-specific tests
   ],
   extensionsToTreatAsEsm: [".ts"],
@@ -40,7 +39,6 @@ module.exports = {
     "!src/db/connection.ts", // Exclude Bun-specific database connection
     "!src/__mocks__/**", // Exclude mock files
     "!src/commands/auth/impl.ts", // Exclude complex auth implementation for now
-    "!src/commands/crawl/impl.ts", // Exclude complex crawl implementation for now
     "!**/node_modules/**",
     "!**/dist/**",
   ],

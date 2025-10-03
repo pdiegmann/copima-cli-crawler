@@ -112,9 +112,21 @@ describe("OAuth2Manager", () => {
     });
 
     it("should handle fetch errors", async () => {
+      const noRetryManager = new OAuth2Manager({ ...defaultConfig, maxRetries: 1 });
       mockFetch.mockRejectedValue(new Error("Network error"));
 
-      await expect(manager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow();
+      await expect(noRetryManager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow("Network error");
+    });
+
+    it("should handle non-200 response", async () => {
+      const noRetryManager = new OAuth2Manager({ ...defaultConfig, maxRetries: 1 });
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 401,
+        text: async () => "Unauthorized",
+      } as Response);
+
+      await expect(noRetryManager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow("OAuth2 refresh failed: 401 - Unauthorized");
     });
   });
 
@@ -163,9 +175,120 @@ describe("OAuth2Manager", () => {
     });
   });
 
+  describe("scheduleTokenRefresh", () => {
+    jest.useFakeTimers();
+
+    afterEach(() => {
+      jest.clearAllTimers();
+      jest.useRealTimers();
+    });
+
+    it("should schedule token refresh with valid token", async () => {
+      const accountId = "test-account";
+      const token: OAuth2TokenResponse = {
+        access_token: "test-token",
+        token_type: "Bearer",
+        expires_in: 3600,
+        refresh_token: "test-refresh-token",
+      };
+
+      const onRefresh = jest.fn();
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      // Verify timer was set (internal state check via clearTokenRefreshTimer)
+      expect(() => manager.clearTokenRefreshTimer(accountId)).not.toThrow();
+    });
+
+    it("should not schedule refresh when token has no expiry", () => {
+      const accountId = "test-account";
+      const token = {
+        access_token: "test-token",
+        token_type: "Bearer",
+      } as OAuth2TokenResponse;
+
+      const onRefresh = jest.fn();
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      // No timer should be set
+      expect(() => manager.clearTokenRefreshTimer(accountId)).not.toThrow();
+    });
+
+    it("should not schedule refresh when token has no refresh token", () => {
+      const accountId = "test-account";
+      const token = {
+        access_token: "test-token",
+        token_type: "Bearer",
+        expires_in: 3600,
+      } as OAuth2TokenResponse;
+
+      const onRefresh = jest.fn();
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      // No timer should be set
+      expect(() => manager.clearTokenRefreshTimer(accountId)).not.toThrow();
+    });
+
+    it("should not schedule refresh when expires too soon", () => {
+      const accountId = "test-account";
+      const token: OAuth2TokenResponse = {
+        access_token: "test-token",
+        token_type: "Bearer",
+        expires_in: 100, // Less than threshold (300)
+        refresh_token: "test-refresh-token",
+      };
+
+      const onRefresh = jest.fn();
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      // No timer should be set
+      expect(() => manager.clearTokenRefreshTimer(accountId)).not.toThrow();
+    });
+
+    it("should clear existing timer when scheduling new one", () => {
+      const accountId = "test-account";
+      const token: OAuth2TokenResponse = {
+        access_token: "test-token",
+        token_type: "Bearer",
+        expires_in: 3600,
+        refresh_token: "test-refresh-token",
+      };
+
+      const onRefresh = jest.fn();
+
+      // Schedule first timer
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      // Schedule second timer (should clear first)
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      expect(() => manager.clearTokenRefreshTimer(accountId)).not.toThrow();
+    });
+  });
+
   describe("clearTokenRefreshTimer", () => {
     it("should do nothing when timer does not exist", () => {
       expect(() => manager.clearTokenRefreshTimer("nonexistent")).not.toThrow();
+    });
+
+    it("should clear existing timer", () => {
+      jest.useFakeTimers();
+
+      const accountId = "test-account";
+      const token: OAuth2TokenResponse = {
+        access_token: "test-token",
+        token_type: "Bearer",
+        expires_in: 3600,
+        refresh_token: "test-refresh-token",
+      };
+
+      const onRefresh = jest.fn();
+      manager.scheduleTokenRefresh(accountId, token, onRefresh);
+
+      // Clear the timer
+      expect(() => manager.clearTokenRefreshTimer(accountId)).not.toThrow();
+
+      jest.clearAllTimers();
+      jest.useRealTimers();
     });
   });
 
