@@ -13,6 +13,8 @@ export type TokenSource = {
   accountId?: string;
 };
 
+export type TokenResult = TokenSource | null;
+
 export class TokenManager {
   private readonly db: YamlStorage;
 
@@ -26,18 +28,23 @@ export class TokenManager {
    * 2. OAuth2 token from YAML storage - looked up by accountId
    * 3. OAuth2 token from explicit access/refresh tokens - stored if provided
    */
-  async getValidToken(options: { pat?: string; accountId?: string; accessToken?: string; refreshToken?: string }): Promise<TokenSource | null> {
+  async getValidToken(options: {
+    pat?: string;
+    accountId?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  }) {
     // Priority 1: PAT (never stored, just used)
     if (options.pat) {
       logger.debug("Using Personal Access Token (PAT)");
-      return { token: options.pat, source: "pat" };
+      return { token: options.pat, source: "pat" as const };
     }
 
     // Priority 2: OAuth2 tokens explicitly provided (store and use)
     if (options.accessToken && options.refreshToken && options.accountId) {
       logger.debug(`Storing and using OAuth2 tokens for account ${options.accountId}`);
       await this.storeOAuth2Tokens(options.accountId, options.accessToken, options.refreshToken);
-      return { token: options.accessToken, source: "oauth2", accountId: options.accountId };
+      return { token: options.accessToken, source: "oauth2" as const, accountId: options.accountId };
     }
 
     // Priority 3: Look up OAuth2 tokens from YAML storage
@@ -51,13 +58,13 @@ export class TokenManager {
       return null;
     }
 
-    return { token, source: "oauth2", accountId: resolvedAccountId };
+    return { token, source: "oauth2" as const, accountId: resolvedAccountId };
   }
 
   /**
    * Store OAuth2 tokens for an account
    */
-  private async storeOAuth2Tokens(accountId: string, accessToken: string, refreshToken: string): Promise<void> {
+  private async storeOAuth2Tokens(accountId: string, accessToken: string, refreshToken: string) {
     const { randomUUID } = await import("node:crypto");
     const now = new Date();
 
@@ -107,7 +114,7 @@ export class TokenManager {
     }
   }
 
-  async getAccessToken(accountId: string): Promise<string | null> {
+  async getAccessToken(accountId: string) {
     try {
       const accountRecord = this.db.findAccountByAccountId(accountId);
 
@@ -134,7 +141,7 @@ export class TokenManager {
     }
   }
 
-  async resolveAccountId(accountId?: string): Promise<string | null> {
+  async resolveAccountId(accountId?: string) {
     try {
       if (accountId) {
         const accountRecord = this.db.findAccountByAccountId(accountId);
@@ -202,7 +209,7 @@ export class TokenManager {
   }
 
   // eslint-disable-next-line sonarjs/no-invariant-returns
-  async refreshAccessToken(accountId: string): Promise<string | null> {
+  async refreshAccessToken(accountId: string) {
     try {
       const accountRecord = this.db.findAccountByAccountId(accountId);
 
@@ -222,7 +229,7 @@ export class TokenManager {
     }
   }
 
-  private async updateTokens(accountId: string, tokenResponse: OAuth2TokenResponse): Promise<void> {
+  private async updateTokens(accountId: string, tokenResponse: OAuth2TokenResponse) {
     const now = new Date();
     const accessTokenExpiresAt = addSeconds(now, tokenResponse.expires_in);
     const refreshTokenExpiresAt = tokenResponse.refresh_expires_in ? addSeconds(now, tokenResponse.refresh_expires_in) : null;
