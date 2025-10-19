@@ -58,3 +58,4 @@ output/areas/projects.jsonl
 # Unencrypted config files with secrets (use .enc.yaml versions)
 examples/unified-config.yaml
 examples/unified-config.yaml
+examples/test-configs/repository-test.yaml
