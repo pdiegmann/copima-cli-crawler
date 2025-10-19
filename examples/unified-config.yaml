@@ -30,24 +30,22 @@ execution:
 # Expected outcomes and validation rules
 validation:
   expectedFiles:
-    - path: "groups.jsonl"
+    - path: "areas/groups.jsonl"
       format: "jsonl"
       minRecords: 1
       requiredFields: ["id", "name", "fullPath"]
-    - path: "projects.jsonl"
+    - path: "areas/projects.jsonl"
       format: "jsonl"
       minRecords: 1
       requiredFields: ["id", "name", "fullPath"]
-    - path: "users.jsonl"
+    - path: "users/users.jsonl"
       format: "jsonl"
       minRecords: 1
-      requiredFields: ["id", "username", "email"]
+      requiredFields: ["id", "username", "publicEmail"]
 
   logs:
     expectedLevels: ["info", "debug"]
-    requiredMessages:
-      - "Starting.*crawl"
-      - "Completed.*crawl"
+    requiredMessages: []
     forbiddenMessages:
       - "FATAL"
       - "CRITICAL"

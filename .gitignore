@@ -52,3 +52,5 @@ test-tmp/
 **/template-state/
 **/test-state/
 suite-report.yaml
+output/areas/groups.jsonl
+output/areas/projects.jsonl

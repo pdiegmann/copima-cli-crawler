@@ -172,7 +172,7 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchUsers(first: number = 50, after?: string): Promise<{ nodes: GitLabUser[]; pageInfo: PageInfo }> {
+  async fetchUsers(first: number = 40, after?: string): Promise<{ nodes: GitLabUser[]; pageInfo: PageInfo }> {
     try {
       const data = await this.query<any>(FETCH_COMPREHENSIVE_USERS_QUERY, { first, after });
       if (!data.users?.nodes || !data.users.pageInfo) throw new Error("Invalid data format");
@@ -195,7 +195,7 @@ export class GitLabGraphQLClient {
       logger.info("Starting to fetch all users with pagination");
 
       while (hasNextPage) {
-        const result = await this.fetchUsers(50, after);
+        const result = await this.fetchUsers(40, after);
         allUsers = allUsers.concat(result.nodes);
 
         hasNextPage = result.pageInfo.hasNextPage || false;
@@ -204,7 +204,7 @@ export class GitLabGraphQLClient {
         logger.debug(`Fetched ${result.nodes.length} users (total: ${allUsers.length})`);
       }
 
-      logger.info(`Successfully fetched all ${allUsers.length} users across ${Math.ceil(allUsers.length / 50)} pages`);
+      logger.info(`Successfully fetched all ${allUsers.length} users across ${Math.ceil(allUsers.length / 40)} pages`);
       return allUsers;
     } catch (error) {
       logger.error("Failed to fetch all users:", { error });
@@ -212,7 +212,7 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchGroups(first: number = 50, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
+  async fetchGroups(first: number = 40, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
     try {
       const data = await this.query<any>(FETCH_COMPREHENSIVE_GROUPS_QUERY, { first, after });
       if (!data.groups?.nodes || !data.groups.pageInfo) throw new Error("Invalid data format");
@@ -235,7 +235,7 @@ export class GitLabGraphQLClient {
       logger.info("Starting to fetch all groups with pagination");
 
       while (hasNextPage) {
-        const result = await this.fetchGroups(50, after);
+        const result = await this.fetchGroups(40, after);
         allGroups = allGroups.concat(result.nodes);
 
         hasNextPage = result.pageInfo.hasNextPage || false;
@@ -244,7 +244,7 @@ export class GitLabGraphQLClient {
         logger.debug(`Fetched ${result.nodes.length} groups (total: ${allGroups.length})`);
       }
 
-      logger.info(`Successfully fetched all ${allGroups.length} groups across ${Math.ceil(allGroups.length / 50)} pages`);
+      logger.info(`Successfully fetched all ${allGroups.length} groups across ${Math.ceil(allGroups.length / 40)} pages`);
       return allGroups;
     } catch (error) {
       logger.error("Failed to fetch all groups:", { error });
@@ -252,7 +252,7 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchProjects(first: number = 50, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
+  async fetchProjects(first: number = 40, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
     try {
       const data = await this.query<any>(FETCH_COMPREHENSIVE_PROJECTS_QUERY, { first, after });
       if (!data.projects?.nodes || !data.projects.pageInfo) throw new Error("Invalid data format");
@@ -275,7 +275,7 @@ export class GitLabGraphQLClient {
       logger.info("Starting to fetch all projects with pagination");
 
       while (hasNextPage) {
-        const result = await this.fetchProjects(50, after);
+        const result = await this.fetchProjects(40, after);
         allProjects = allProjects.concat(result.nodes);
 
         hasNextPage = result.pageInfo.hasNextPage || false;
@@ -284,7 +284,7 @@ export class GitLabGraphQLClient {
         logger.debug(`Fetched ${result.nodes.length} projects (total: ${allProjects.length})`);
       }
 
-      logger.info(`Successfully fetched all ${allProjects.length} projects across ${Math.ceil(allProjects.length / 50)} pages`);
+      logger.info(`Successfully fetched all ${allProjects.length} projects across ${Math.ceil(allProjects.length / 40)} pages`);
       return allProjects;
     } catch (error) {
       logger.error("Failed to fetch all projects:", { error });

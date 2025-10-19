@@ -126,9 +126,21 @@ export const isCalledFromOrchestrator = (flags: Record<string, unknown> | undefi
 // Shared writeJSONL utility function to avoid duplication
 const createWriteJSONL = (context: LocalContext, callbackManager: any, callbackContext: any) => {
   return async (filePath: string, data: any[], resourceType: string): Promise<undefined> => {
+    // Ensure data is an array
+    if (!Array.isArray(data)) {
+      context.logger.error(`writeJSONL called with non-array data for ${resourceType}:`, { dataType: typeof data, data });
+      throw new Error(`writeJSONL expects array input, got ${typeof data}`);
+    }
+
     // Process data through callback system
     callbackContext.resourceType = resourceType;
     const processedData = await callbackManager.processObjects(callbackContext, data);
+
+    // Ensure processedData is also an array (defensive check)
+    if (!Array.isArray(processedData)) {
+      context.logger.error(`processObjects returned non-array for ${resourceType}:`, { dataType: typeof processedData });
+      throw new Error(`processObjects returned non-array: ${typeof processedData}`);
+    }
 
     const stream = (context.fs as any)?.createWriteStream?.(filePath, { flags: "w" });
     processedData.forEach((item: unknown) => {
@@ -389,9 +401,13 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const groups = await graphqlClient.fetchAllGroups();
     const projects = await graphqlClient.fetchAllProjects();
 
+    // Debug: Check if data is actually an array
+    logger.debug(`Groups type: ${Array.isArray(groups) ? 'array' : typeof groups}, length: ${Array.isArray(groups) ? groups.length : 'N/A'}`);
+    logger.debug(`Projects type: ${Array.isArray(projects) ? 'array' : typeof projects}, length: ${Array.isArray(projects) ? projects.length : 'N/A'}`);
+
     // Log and store results
-    logger.info(`Fetched ${groups.length} groups`);
-    logger.info(`Fetched ${projects.length} projects`);
+    logger.info(`Fetched ${Array.isArray(groups) ? groups.length : 0} groups`);
+    logger.info(`Fetched ${Array.isArray(projects) ? projects.length : 0} projects`);
 
     // Implement JSONL storage logic with callback processing
     const outputDir = (this.path as any)?.resolve?.("output", "areas") ?? "";
@@ -443,7 +459,7 @@ export const users = async function (this: LocalContext, flags: Record<string, u
     };
 
     // Fetch users using generated GraphQL operations
-    const users = await graphqlClient.fetchUsers();
+    const users = await graphqlClient.fetchAllUsers();
 
     // Log and store results
     logger.info(`Fetched ${users.length} users`);
