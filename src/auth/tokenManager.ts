@@ -7,6 +7,12 @@ import type { OAuth2TokenResponse } from "../types/api";
 
 const logger = createLogger("TokenManager");
 
+export type TokenSource = {
+  token: string;
+  source: "pat" | "oauth2" | "flag" | "config";
+  accountId?: string;
+};
+
 export class TokenManager {
   private readonly db: YamlStorage;
 
@@ -14,13 +20,96 @@ export class TokenManager {
     this.db = db;
   }
 
-  async getValidToken(accountId?: string): Promise<string | null> {
-    const resolvedAccountId = await this.resolveAccountId(accountId);
+  /**
+   * Get a valid token with priority:
+   * 1. PAT (Personal Access Token) - passed as parameter
+   * 2. OAuth2 token from YAML storage - looked up by accountId
+   * 3. OAuth2 token from explicit access/refresh tokens - stored if provided
+   */
+  async getValidToken(options: {
+    pat?: string;
+    accountId?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  }): Promise<TokenSource | null> {
+    // Priority 1: PAT (never stored, just used)
+    if (options.pat) {
+      logger.debug("Using Personal Access Token (PAT)");
+      return { token: options.pat, source: "pat" };
+    }
+
+    // Priority 2: OAuth2 tokens explicitly provided (store and use)
+    if (options.accessToken && options.refreshToken && options.accountId) {
+      logger.debug(`Storing and using OAuth2 tokens for account ${options.accountId}`);
+      await this.storeOAuth2Tokens(options.accountId, options.accessToken, options.refreshToken);
+      return { token: options.accessToken, source: "oauth2", accountId: options.accountId };
+    }
+
+    // Priority 3: Look up OAuth2 tokens from YAML storage
+    const resolvedAccountId = await this.resolveAccountId(options.accountId);
     if (!resolvedAccountId) {
       return null;
     }
 
-    return await this.getAccessToken(resolvedAccountId);
+    const token = await this.getAccessToken(resolvedAccountId);
+    if (!token) {
+      return null;
+    }
+
+    return { token, source: "oauth2", accountId: resolvedAccountId };
+  }
+
+  /**
+   * Store OAuth2 tokens for an account
+   */
+  private async storeOAuth2Tokens(accountId: string, accessToken: string, refreshToken: string): Promise<void> {
+    const { randomUUID } = await import("node:crypto");
+    const now = new Date();
+
+    // Check if account already exists
+    const existingAccount = this.db.findAccountByAccountId(accountId);
+
+    if (existingAccount) {
+      // Update existing account
+      this.db.updateAccount(accountId, {
+        accessToken,
+        refreshToken,
+        updatedAt: now,
+      });
+      logger.info(`Updated OAuth2 tokens for account ${accountId}`);
+    } else {
+      // Create new account
+      // First ensure a user exists
+      let userId = randomUUID();
+      const users = this.db.getAllAccounts();
+      if (users.length === 0) {
+        // Create a default user
+        const user = {
+          id: userId,
+          name: "Default User",
+          email: `${accountId}@local`,
+          emailVerified: false,
+          createdAt: now,
+          updatedAt: now,
+        };
+        this.db.upsertUser(user);
+      } else {
+        // Use the first available user
+        userId = users[0]!.userId;
+      }
+
+      this.db.insertAccount({
+        id: randomUUID(),
+        accountId,
+        providerId: "gitlab",
+        userId,
+        accessToken,
+        refreshToken,
+        createdAt: now,
+        updatedAt: now,
+      });
+      logger.info(`Stored OAuth2 tokens for new account ${accountId}`);
+    }
   }
 
   async getAccessToken(accountId: string): Promise<string | null> {
