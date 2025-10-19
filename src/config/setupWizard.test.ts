@@ -243,14 +243,7 @@ describe("setup wizard", () => {
     const targetPath = join(tempDir, "copima.yaml");
 
     const prompter = new SequencePrompter({
-      inputs: [
-        "https://gitlab.com",
-        "custom-client-id",
-        "https://custom.com/oauth/authorize",
-        "https://custom.com/oauth/token",
-        "custom,scopes",
-        "http://localhost:4000/callback",
-      ],
+      inputs: ["https://gitlab.com", "custom-client-id", "https://custom.com/oauth/authorize", "https://custom.com/oauth/token", "custom,scopes", "http://localhost:4000/callback"],
       passwords: ["custom-secret"],
       confirms: [true, false],
       selects: ["custom"],
@@ -353,11 +346,7 @@ describe("setup wizard", () => {
     const targetPath = join(tempDir, "copima.yaml");
 
     const prompter = new SequencePrompter({
-      inputs: [
-        "https://gitlab.com",
-        "./custom-db.sqlite",
-        "./custom-output",
-      ],
+      inputs: ["https://gitlab.com", "./custom-db.sqlite", "./custom-output"],
       confirms: [false],
     });
 

@@ -205,14 +205,16 @@ describe("account/impl", () => {
     });
 
     it("should output JSON format when requested", async () => {
-      const mockAccounts = [{
-        accountId: "acc-1",
-        accessToken: "token-1",
-        refreshToken: "refresh-1",
-        createdAt: new Date("2025-10-02T08:46:11Z"),
-        updatedAt: new Date("2025-10-02T08:46:11Z"),
-        user: { name: "Test", email: "test@example.com" },
-      }];
+      const mockAccounts = [
+        {
+          accountId: "acc-1",
+          accessToken: "token-1",
+          refreshToken: "refresh-1",
+          createdAt: new Date("2025-10-02T08:46:11Z"),
+          updatedAt: new Date("2025-10-02T08:46:11Z"),
+          user: { name: "Test", email: "test@example.com" },
+        },
+      ];
 
       const mockDatabase = {
         getAccountsWithUsers: jest.fn(() => mockAccounts),
@@ -225,14 +227,16 @@ describe("account/impl", () => {
     });
 
     it("should output YAML format when requested", async () => {
-      const mockAccounts = [{
-        accountId: "acc-1",
-        accessToken: "token-1",
-        refreshToken: "refresh-1",
-        createdAt: new Date("2025-10-02T08:46:11Z"),
-        updatedAt: new Date("2025-10-02T08:46:11Z"),
-        user: { name: "Test", email: "test@example.com" },
-      }];
+      const mockAccounts = [
+        {
+          accountId: "acc-1",
+          accessToken: "token-1",
+          refreshToken: "refresh-1",
+          createdAt: new Date("2025-10-02T08:46:11Z"),
+          updatedAt: new Date("2025-10-02T08:46:11Z"),
+          user: { name: "Test", email: "test@example.com" },
+        },
+      ];
 
       const mockDatabase = {
         getAccountsWithUsers: jest.fn(() => mockAccounts),
@@ -245,14 +249,16 @@ describe("account/impl", () => {
     });
 
     it("should show tokens when flag is set", async () => {
-      const mockAccounts = [{
-        accountId: "acc-1",
-        accessToken: "token-1-very-long-token",
-        refreshToken: "refresh-1-very-long",
-        createdAt: new Date("2025-10-02T08:46:11Z"),
-        updatedAt: new Date("2025-10-02T08:46:11Z"),
-        user: { name: "Test", email: "test@example.com" },
-      }];
+      const mockAccounts = [
+        {
+          accountId: "acc-1",
+          accessToken: "token-1-very-long-token",
+          refreshToken: "refresh-1-very-long",
+          createdAt: new Date("2025-10-02T08:46:11Z"),
+          updatedAt: new Date("2025-10-02T08:46:11Z"),
+          user: { name: "Test", email: "test@example.com" },
+        },
+      ];
 
       const mockDatabase = {
         getAccountsWithUsers: jest.fn(() => mockAccounts),

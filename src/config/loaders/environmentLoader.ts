@@ -49,11 +49,17 @@ export class EnvironmentConfigLoader {
     const host = this.getString("GITLAB_HOST");
     if (host) config.host = host;
 
+    const token = this.getString("GITLAB_TOKEN");
+    if (token) config.token = token;
+
     const accessToken = this.getString("GITLAB_ACCESS_TOKEN");
     if (accessToken) config.accessToken = accessToken;
 
     const refreshToken = this.getString("GITLAB_REFRESH_TOKEN");
     if (refreshToken) config.refreshToken = refreshToken;
+
+    const accountId = this.getString("GITLAB_ACCOUNT_ID");
+    if (accountId) config.accountId = accountId;
 
     const timeout = this.getInt("GITLAB_TIMEOUT");
     if (timeout !== undefined) config.timeout = timeout;

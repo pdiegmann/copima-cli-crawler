@@ -49,12 +49,8 @@ describe("crawl impl", () => {
         { id: "1", fullPath: "group1", name: "Group 1" },
         { id: "2", fullPath: "group2", name: "Group 2" },
       ]),
-      fetchAllProjects: jest.fn().mockResolvedValue([
-        { id: "1", fullPath: "project1", name: "Project 1" },
-      ]),
-      fetchUsers: jest.fn().mockResolvedValue([
-        { id: "1", username: "user1", name: "User 1" },
-      ]),
+      fetchAllProjects: jest.fn().mockResolvedValue([{ id: "1", fullPath: "project1", name: "Project 1" }]),
+      fetchUsers: jest.fn().mockResolvedValue([{ id: "1", username: "user1", name: "User 1" }]),
       fetchProjects: jest.fn().mockResolvedValue({
         nodes: [{ id: "1", name: "Project 1" }],
       }),

@@ -204,10 +204,7 @@ describe("GitLabRestClient", () => {
       const result = await client.fetchFileBlob("123", "sha123");
 
       expect(result).toEqual(mockBlob);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/projects/123/repository/blobs/sha123"),
-        expect.any(Object)
-      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/projects/123/repository/blobs/sha123"), expect.any(Object));
     });
 
     it("should fetch repository tree", async () => {
@@ -221,10 +218,7 @@ describe("GitLabRestClient", () => {
       const result = await client.fetchRepositoryTree("123");
 
       expect(result).toEqual(mockTree);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/projects/123/repository/tree"),
-        expect.any(Object)
-      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/projects/123/repository/tree"), expect.any(Object));
     });
   });
 
@@ -240,10 +234,7 @@ describe("GitLabRestClient", () => {
       const result = await client.fetchArtifacts("123", "job456");
 
       expect(result).toEqual(mockArtifacts);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/projects/123/jobs/job456/artifacts"),
-        expect.any(Object)
-      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/projects/123/jobs/job456/artifacts"), expect.any(Object));
     });
 
     it("should fetch job logs", async () => {
@@ -257,10 +248,7 @@ describe("GitLabRestClient", () => {
       const result = await client.fetchJobLogs("123", "job456");
 
       expect(result).toEqual(mockLogs);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/projects/123/jobs/job456/trace"),
-        expect.any(Object)
-      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/projects/123/jobs/job456/trace"), expect.any(Object));
     });
   });
 
@@ -369,10 +357,7 @@ describe("GitLabRestClient", () => {
       const result = await client.getCommits("123", { page: 2, per_page: 50 });
 
       expect(result).toEqual(mockCommits);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("per_page=50&page=2"),
-        expect.any(Object)
-      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("per_page=50&page=2"), expect.any(Object));
     });
 
     it("should getCommits with query options", async () => {
@@ -451,10 +436,7 @@ describe("GitLabRestClient", () => {
       const result = await client.getFileContent("123", "src/file.ts", "develop");
 
       expect(result).toEqual(mockFile);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("src%2Ffile.ts"),
-        expect.any(Object)
-      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("src%2Ffile.ts"), expect.any(Object));
     });
 
     it("should getFileContent with default ref", async () => {

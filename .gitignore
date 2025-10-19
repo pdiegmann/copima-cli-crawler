@@ -46,6 +46,8 @@ test-tmp/
 **/dry-run-output/
 **/template-output/
 **/test-output/
+**/__test_*__/
+*.lock
 
 # Test state and progress files
 **/dry-run-state/

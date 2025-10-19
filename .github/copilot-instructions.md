@@ -5,7 +5,7 @@
 - Stricli CLI entry is `src/bin/cli.ts`; `src/app.ts` registers commands and maps to `src/commands/**`.
 - `src/context.ts` builds the command context: pass `createGraphQLClient`, `createRestClient`, and `createLogger` to all routes; extend the context instead of bypassing it.
 - GraphQL and REST clients live in `src/api`; reuse `GitLabGraphQLClient`/`GitLabRestClient` and their pagination helpers before inventing new fetchers.
-- OAuth token flow is centralized in `src/auth/**`; any refresh logic must update the Drizzle tables defined in `src/db/schema.ts`.
+- OAuth token flow is centralized in `src/auth/**`; any refresh logic must update the YAML storage in `database.yaml` via `YamlStorage` from `src/account/yamlStorage.ts`.
 
 ## Crawling workflow
 
@@ -17,7 +17,7 @@
 
 - `ConfigLoader` (`src/config/loader.ts`) enforces the 5-level precedence (CLI → env → user config → local config → defaults) and applies validation/templates; extend loaders instead of bypassing it.
 - Commands should call `buildContext` so tests can swap in the mocks in `src/__mocks__`; avoid manual client construction in command bodies.
-- Persist OAuth credentials via the Drizzle connection in `src/db/connection.ts`; keep access and refresh tokens in sync as mandated in `README.md`.
+- Persist OAuth credentials via `YamlStorage` in `database.yaml`; keep access and refresh tokens in sync as mandated in `README.md`.
 
 ## Storage, reporting, resume
 
@@ -29,7 +29,6 @@
 
 - Bun scripts drive development: `bun run dev` (CLI with TLS bypass), `bun run dev:auth` (auth bootstrap), `bun run build` (tsup bundle), `bun run build:executables` (platform binaries).
 - Testing matrix: `bun test` for Bun-native suites, `bun run test`/`test:watch` for Jest, and `bun run test:e2e*` against configs in `examples/`.
-- Database utilities run through Drizzle commands: `bun run db:generate`, `bun run db:migrate`, `bun run db:studio`.
 
 ## Conventions
 

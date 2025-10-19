@@ -229,16 +229,17 @@ describe("TokenManager", () => {
         updatedAt: new Date(),
       });
 
-      const token = await tokenManager.getValidToken(accountId);
+      const token = await tokenManager.getValidToken({ accountId });
 
-      expect(token).toBe(validToken);
+      expect(token?.token).toBe(validToken);
+      expect(token?.source).toBe("oauth2");
     });
 
     it("should return null when account resolution fails", async () => {
       mockDb.findAccountByAccountId.mockReturnValue(null);
       mockDb.getAllAccounts.mockReturnValue([]);
 
-      const token = await tokenManager.getValidToken();
+      const token = await tokenManager.getValidToken({});
 
       expect(token).toBeNull();
     });
@@ -263,9 +264,10 @@ describe("TokenManager", () => {
       });
       mockDb.getAllAccounts.mockReturnValue([accountData]);
 
-      const token = await tokenManager.getValidToken();
+      const token = await tokenManager.getValidToken({});
 
-      expect(token).toBe(validToken);
+      expect(token?.token).toBe(validToken);
+      expect(token?.source).toBe("oauth2");
     });
   });
 

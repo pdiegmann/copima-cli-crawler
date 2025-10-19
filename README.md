@@ -10,14 +10,16 @@ This project REQUIRES the STRICT USAGE of CERTAIN LIBRARIES AND UTILITIES whenev
 4. [winston](https://github.com/winstonjs/winston) as logging provider with /src/utils/logger.ts being the central/default logger
 5. [picocolors](https://github.com/alexeyraspopov/picocolors) for terminal output formatting with colors
 6. [treeify](https://github.com/notatestuser/treeify) for converting JS/TS objects into nicely formatted trees for terminal output
-7. [drizzle-orm](https://orm.drizzle.team/docs/overview) for database access and as ORM with Bun's integrated sqlite driver
+7. [js-yaml](https://github.com/nodeca/js-yaml) for YAML configuration and storage
 
 ## Non-Negotiable Assumptions
 
 The following rules MUST always be respected during design and implementation:
 
-1. Authentication MUST use **OAuth2 access tokens** only.
-2. Refreshing access tokens MUST also update the refresh tokens in the database.
+1. Authentication supports both **Personal Access Tokens (PAT)** and **OAuth2 access tokens**.
+   - PATs are simple and never stored - just passed as arguments/environment variables.
+   - OAuth2 tokens are stored in YAML with account identifiers for automatic refresh.
+2. Refreshing access tokens MUST also update the refresh tokens in the YAML storage.
    - Refresh tokens may be invalidated after use.
    - The refresh token from the refresh response MUST replace the old refresh token.
 3. Both GraphQL and REST APIs MUST be used.
@@ -32,51 +34,248 @@ The following rules MUST always be respected during design and implementation:
 7. Errors or incomplete work MUST trigger iterative improvement until validation succeeds.
 8. Simplicity MUST be prioritized in all design and code decisions.
 
-## Account and Credentials Database Schema
+## Authentication Methods
 
-```ts
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+The crawler supports three authentication methods in order of preference:
 
-export const user = sqliteTable("user", {
-  banExpires: integer("ban_expires", { mode: "timestamp" }),
-  banned: integer("banned", { mode: "boolean" }),
-  banReason: text("ban_reason"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
-  id: text("id").primaryKey(),
-  image: text("image"),
-  name: text("name").notNull(),
-  role: text("role"),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-});
+1. **Personal Access Token (PAT)**: Simple token-based auth, never stored
+   - Pass via `--token` flag or `GITLAB_TOKEN` environment variable
+   - Best for quick tests and automation
+   
+2. **OAuth2 with Explicit Tokens**: Store and use OAuth2 tokens
+   - Pass via `--account-id`, `--access-token`, and `--refresh-token` flags
+   - Tokens are stored in `database.yaml` for automatic refresh
+   - Account identifier enables token lookup and management
+   
+3. **OAuth2 from Storage**: Automatic lookup from stored tokens
+   - Run `copima auth` to authenticate and store tokens
+   - Pass `--account-id` to select which account to use
+   - Tokens are automatically refreshed when expired
 
-export const account = sqliteTable("account", {
-  accessToken: text("access_token"),
-  accessTokenExpiresAt: integer("access_token_expires_at", {
-    mode: "timestamp",
-  }),
-  accountId: text("account_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  id: text("id").primaryKey(),
-  idToken: text("id_token"),
-  password: text("password"),
-  providerId: text("provider_id").notNull(),
-  refreshToken: text("refresh_token"),
-  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
-    mode: "timestamp",
-  }),
-  scope: text("scope"),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
+### YAML Storage Format
+
+OAuth2 credentials are stored in `database.yaml`:
+
+```yaml
+users:
+  - id: "user-uuid"
+    name: "User Name"
+    email: "user@example.com"
+    emailVerified: false
+    createdAt: 2024-01-01T00:00:00.000Z
+    updatedAt: 2024-01-01T00:00:00.000Z
+
+accounts:
+  - id: "account-uuid"
+    accountId: "my-account"
+    providerId: "gitlab"
+    userId: "user-uuid"
+    accessToken: "access-token-value"
+    refreshToken: "refresh-token-value"
+    accessTokenExpiresAt: 2024-01-01T01:00:00.000Z
+    refreshTokenExpiresAt: null
+    scope: "api read_api"
+    createdAt: 2024-01-01T00:00:00.000Z
+    updatedAt: 2024-01-01T00:00:00.000Z
 ```
+
+**Note**: Personal Access Tokens (PATs) are never stored in this file - they are only used at runtime.
+
+## Usage Examples
+
+### Using a Personal Access Token (PAT)
+
+Simple, one-time usage without storing credentials:
+
+```bash
+# Crawl areas using PAT
+copima areas --host https://gitlab.example.com --token your-pat-token
+
+# Crawl all steps using PAT from environment
+export GITLAB_HOST=https://gitlab.example.com
+export GITLAB_TOKEN=your-pat-token
+copima crawl
+
+# Use PAT with specific output directory
+copima crawl --host https://gitlab.example.com --token your-pat-token --output-dir ./data
+```
+
+### Using OAuth2 with Explicit Tokens
+
+Store and use OAuth2 tokens for automatic refresh:
+
+```bash
+# Provide all OAuth2 credentials to store them
+copima areas \
+  --host https://gitlab.example.com \
+  --account-id my-account \
+  --access-token oauth2-access-token \
+  --refresh-token oauth2-refresh-token
+
+# Subsequent runs can just use the account ID
+copima crawl --account-id my-account
+```
+
+### Using OAuth2 from Storage
+
+After authenticating with `copima auth`:
+
+```bash
+# Run OAuth2 authentication flow
+copima auth --config ./copima.yaml
+
+# Use stored tokens (auto-refreshed when expired)
+copima crawl --account-id my-account
+
+# Or let the CLI auto-select the account
+copima crawl
+```
+
+### Configuration File Examples
+
+**Simple PAT configuration** (`copima.yaml`):
+
+```yaml
+gitlab:
+  host: https://gitlab.example.com
+  token: your-pat-token
+
+output:
+  rootDir: ./output
+```
+
+**OAuth2 configuration** (`copima.yaml`):
+
+```yaml
+gitlab:
+  host: https://gitlab.example.com
+  accountId: my-account  # Will look up tokens from database.yaml
+
+output:
+  rootDir: ./output
+
+oauth2:
+  providers:
+    gitlab:
+      clientId: your-client-id
+      clientSecret: your-client-secret
+      redirectUri: http://localhost:3000/callback
+      authorizationUrl: https://gitlab.example.com/oauth/authorize
+      tokenUrl: https://gitlab.example.com/oauth/token
+      scopes:
+        - api
+        - read_api
+```
+
 
 # Project Introduction
 
 This project is aimed at crawling all accessible resources (e.g., groups, projects, repositories) from a GitLab instance via the GraphQL and REST APIs. For authentication, oAuth credentials (access and refresh tokens) are provided, as well as the GitLab instance's host.
+
+## 📚 Documentation
+
+- **[HOW_TO.md](HOW_TO.md)** - **Start here!** Complete beginner-friendly guide for using this tool
+- **README.md** (this file) - Technical documentation for developers and advanced users
+- **[docs/](docs/)** - Additional technical documentation
+
+## 🚀 Quick Start
+
+If you're new to this tool or want step-by-step instructions, see the **[HOW_TO.md](HOW_TO.md)** guide.
+
+For experienced users, here's a quick start:
+
+```bash
+# 1. Run interactive setup
+copima-cli-crawler setup
+
+# 2. Authenticate
+copima-cli-crawler auth
+
+# 3. Crawl GitLab data
+copima-cli-crawler crawl
+```
+
+## 📖 Basic CLI Usage
+
+### Main Crawl Command
+
+```bash
+# Crawl all data (all 4 steps)
+copima-cli-crawler crawl
+
+# Crawl specific steps only
+copima-cli-crawler crawl --steps areas,users
+
+# Resume an interrupted crawl
+copima-cli-crawler crawl --resume true
+
+# Specify output directory
+copima-cli-crawler crawl --output ./my-data
+
+# Run in dry-run mode (test configuration)
+copima-cli-crawler crawl --dry-run true
+```
+
+### Individual Step Commands
+
+You can also run each crawling step individually:
+
+```bash
+# Step 1: Crawl groups and projects
+copima-cli-crawler areas
+
+# Step 2: Crawl users
+copima-cli-crawler users
+
+# Step 3: Crawl issues, MRs, and other resources
+copima-cli-crawler resources
+
+# Step 4: Crawl commits, branches, tags, and files
+copima-cli-crawler repository
+```
+
+### Configuration Management
+
+```bash
+# Interactive setup wizard
+copima-cli-crawler setup
+
+# View current configuration
+copima-cli-crawler config:show
+
+# Set a configuration value
+copima-cli-crawler config:set --key gitlab.host --value https://gitlab.com
+
+# Validate configuration
+copima-cli-crawler config:validate
+```
+
+### Account Management
+
+```bash
+# Add an account with access token
+copima-cli-crawler account:add --access-token YOUR_TOKEN
+
+# List all stored accounts
+copima-cli-crawler account:list
+
+# Authenticate with OAuth2
+copima-cli-crawler auth
+```
+
+### Common Options
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--host` | GitLab instance URL | `--host https://gitlab.com` |
+| `--access-token` | Access token for authentication | `--access-token glpat-xxx...` |
+| `--output` | Output directory for data | `--output ./my-data` |
+| `--steps` | Comma-separated steps to run | `--steps areas,users` |
+| `--resume` | Resume from last checkpoint | `--resume true` |
+| `--verbose` | Enable detailed logging | `--verbose true` |
+| `--help` | Show help for any command | `--help` |
+
+For complete usage instructions, examples, and troubleshooting, see **[HOW_TO.md](HOW_TO.md)**.
 
 ## Abstract Workflow
 
@@ -272,27 +471,59 @@ The application must implement the following **core responsibilities** in additi
 9. YAML-based configuration file in the current working directory
 10. Built-time defaults derived from a YAML-based configuration file in the project's root directory
 
-## Interactive configuration setup
+## Interactive Configuration Setup
 
-The CLI now ships with an interactive setup wizard that captures every required configuration value in one pass. You can launch it manually at any time with:
+The CLI ships with an interactive setup wizard that guides you through the configuration process. Launch it with:
 
 ```bash
-copima config:setup [--config ./copima.yaml] [--full=false]
- copima setup [--config ./copima.yaml] [--full=false]
+copima-cli-crawler config:setup
+# or simply
+copima-cli-crawler setup
 ```
 
-Both commands launch the same interactive flow; use whichever is more convenient.
+### Setup Wizard Features
 
-- **`--config`** lets you explicitly target a configuration file. When omitted, the wizard offers to create `./copima.yaml` or `~/.config/copima/config.yaml` if they do not exist.
-- **`--full=false`** keeps the wizard focused on missing values only. By default the command re-prompts the GitLab host so that you can confirm connectivity without re-entering secrets.
-- OAuth client configuration now takes center stage: the wizard defaults to configuring a provider so you can obtain tokens through the built-in OAuth flow instead of pasting static personal access tokens. You can still opt out when needed.
-- Existing configuration values show up as defaults, so you can press <kbd>Enter</kbd> to keep saved hosts, OAuth URLs, or secrets without copying them from elsewhere.
-- After saving the file, the wizard automatically launches the OAuth2 auth flow (equivalent to running `copima auth --config <path>`), making it easy to capture fresh tokens immediately. If no provider is defined, the wizard skips this step.
-- The redirect URI you enter for an OAuth provider is reused verbatim during the automatic auth flow, so GitLab sees the exact callback URL you registered.
+- **`--config`** - Specify a configuration file path (default: `./copima.yaml` or `~/.config/copima/config.yaml`)
+- **`--full`** - Re-prompt for all values, not just missing ones (default: true)
 
-When any command needs configuration and none is available (or critical fields such as `gitlab.host` are blank and no OAuth provider is configured), the wizard is triggered automatically—as long as the CLI is running in an interactive terminal. When that happens the wizard will also launch the auth flow once configuration is stored so you can complete setup in one shot. Non-interactive environments (CI pipelines, scripts, etc.) still fail fast with a clear validation error instead of hanging for input.
+The wizard will:
+1. Prompt for GitLab instance URL
+2. Configure authentication (OAuth2 or Personal Access Token)
+3. Set output directory and other options
+4. Automatically launch the OAuth2 authentication flow (if configured)
+5. Save the configuration file
 
-The wizard writes YAML or JSON depending on the target filename and will reuse existing values wherever possible, only prompting for the fields that are missing or invalid.
+### Configuration Priority (Highest to Lowest)
+
+1. Command-line arguments (e.g., `--host https://gitlab.com`)
+2. Environment variables (e.g., `GITLAB_HOST=https://gitlab.com`)
+3. User configuration file (`~/.config/copima/config.yaml`)
+4. Local configuration file (`./copima.yaml`)
+5. Built-in defaults
+
+### Example: Manual Configuration
+
+If you prefer not to use the wizard, you can create a `copima.yaml` file manually:
+
+```yaml
+gitlab:
+  host: "https://gitlab.com"
+  apiVersion: "v4"
+  
+output:
+  directory: "./output"
+  format: "jsonl"
+
+logging:
+  level: "info"
+  
+oauth:
+  clientId: "your-client-id"
+  clientSecret: "your-client-secret"
+  redirectUri: "http://localhost:8080/callback"
+```
+
+For complete configuration documentation, see [HOW_TO.md](HOW_TO.md).
 
 ## Testing and Validation
 

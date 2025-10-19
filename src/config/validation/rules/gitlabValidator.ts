@@ -24,10 +24,25 @@ export class GitlabConfigValidator implements BaseValidator {
       });
     }
 
-    // Validate access token
+    // Validate authentication token (PAT, accessToken, or OAuth2 providers)
     const hasOauthProviders = Boolean(config.oauth2 && Object.keys(config.oauth2.providers ?? {}).length > 0);
+    const hasPat = Boolean(config.gitlab?.token);
+    const hasAccessToken = Boolean(config.gitlab?.accessToken);
+    const hasAccountId = Boolean(config.gitlab?.accountId);
 
-    if (config.gitlab?.accessToken) {
+    // Validate PAT if provided
+    if (hasPat && config.gitlab?.token) {
+      if (typeof config.gitlab.token !== "string" || config.gitlab.token.length < 20) {
+        errors.push({
+          field: "gitlab.token",
+          message: "Personal Access Token must be at least 20 characters",
+          severity: "error",
+        });
+      }
+    }
+
+    // Validate access token if provided
+    if (hasAccessToken && config.gitlab?.accessToken) {
       if (typeof config.gitlab.accessToken !== "string" || config.gitlab.accessToken.length < 20) {
         errors.push({
           field: "gitlab.accessToken",
@@ -35,10 +50,13 @@ export class GitlabConfigValidator implements BaseValidator {
           severity: "error",
         });
       }
-    } else if (!hasOauthProviders) {
+    }
+
+    // Require at least one authentication method
+    if (!hasPat && !hasAccessToken && !hasAccountId && !hasOauthProviders) {
       errors.push({
-        field: "gitlab.accessToken",
-        message: "GitLab access token is required unless OAuth2 providers are configured",
+        field: "gitlab.token",
+        message: "Authentication required: provide --token (PAT), --access-token (OAuth2), --account-id (stored OAuth2), or configure OAuth2 providers",
         severity: "error",
       });
     }

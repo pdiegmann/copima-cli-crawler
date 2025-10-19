@@ -671,7 +671,11 @@ describe("Configuration Loader", () => {
     });
 
     it("should auto-discover JSON config files", async () => {
-      mockFs.access.mockRejectedValueOnce(new Error("Not found")).mockRejectedValueOnce(new Error("Not found")).mockRejectedValueOnce(new Error("Not found")).mockResolvedValueOnce(undefined);
+      mockFs.access
+        .mockRejectedValueOnce(new Error("Not found"))
+        .mockRejectedValueOnce(new Error("Not found"))
+        .mockRejectedValueOnce(new Error("Not found"))
+        .mockResolvedValueOnce(undefined);
 
       mockFileLoaderInstance.loadJsonFile.mockResolvedValueOnce({
         gitlab: { host: "https://auto-json.gitlab.com", accessToken: "auto-json-token" },
