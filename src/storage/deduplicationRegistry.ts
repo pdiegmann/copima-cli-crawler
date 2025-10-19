@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, writeFileSync } from "fs";
-import { dirname } from "path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { dirname, join } from "path";
 import { createLogger } from "../logging";
 
 const logger = createLogger("DeduplicationRegistry");
@@ -190,7 +190,6 @@ export class DeduplicationRegistry {
       }
 
       const dir = dirname(this.registryPath);
-      const { mkdirSync } = require("fs");
       mkdirSync(dir, { recursive: true });
 
       writeFileSync(this.registryPath, JSON.stringify(registryData, null, 2), "utf-8");
@@ -271,12 +270,11 @@ export class DeduplicationRegistry {
  * @param enabled - Whether deduplication is enabled
  * @returns DeduplicationRegistry instance
  */
-export function createDeduplicationRegistry(rootDir: string, enabled: boolean = true): DeduplicationRegistry {
-  const { join } = require("path");
+export const createDeduplicationRegistry = (rootDir: string, enabled: boolean = true): DeduplicationRegistry => {
   const registryPath = join(rootDir, ".copima-registry.json");
 
   return new DeduplicationRegistry({
     registryPath,
     enabled,
   });
-}
+};

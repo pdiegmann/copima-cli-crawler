@@ -27,6 +27,10 @@ export const defaultConfig: Config = {
     fileNaming: "lowercase",
     prettyPrint: false,
     compression: "none",
+    deduplication: {
+      enabled: true,
+      registryPath: undefined, // Will default to <rootDir>/.copima-registry.json
+    },
   },
 
   logging: {

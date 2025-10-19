@@ -26,12 +26,7 @@ export class TokenManager {
    * 2. OAuth2 token from YAML storage - looked up by accountId
    * 3. OAuth2 token from explicit access/refresh tokens - stored if provided
    */
-  async getValidToken(options: {
-    pat?: string;
-    accountId?: string;
-    accessToken?: string;
-    refreshToken?: string;
-  }) {
+  async getValidToken(options: { pat?: string; accountId?: string; accessToken?: string; refreshToken?: string }) {
     // Priority 1: PAT (never stored, just used)
     if (options.pat) {
       logger.debug("Using Personal Access Token (PAT)");

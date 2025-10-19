@@ -335,6 +335,16 @@ export const crawlCommand = async (options: any): Promise<void> => {
       }
     }
 
+    // Report deduplication statistics
+    const { getDeduplicationStats, clearSharedDeduplicationRegistry } = await import("./storageFactory.js");
+    const dedupStats = getDeduplicationStats();
+    if (dedupStats) {
+      logger.info("Deduplication statistics:", dedupStats);
+      const totalSkipped = Object.values(dedupStats).reduce((sum, count) => sum + count, 0);
+      logger.info(`Total resources deduplicated: ${totalSkipped}`);
+    }
+    clearSharedDeduplicationRegistry();
+
     logger.info("GitLab crawl completed successfully");
   } catch (error) {
     logger.error("Crawl command failed", { error: error instanceof Error ? error.message : String(error) });
@@ -464,12 +474,12 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     logger.info(`Fetched ${Array.isArray(groups) ? groups.length : 0} groups`);
     logger.info(`Fetched ${Array.isArray(projects) ? projects.length : 0} projects`);
 
-    // Import hierarchical storage
-    const { createHierarchicalStorageManager } = await import("../../storage/hierarchicalStorage.js");
+    // Import storage factory
+    const { createHierarchicalStorageManagerWithDeduplication } = await import("./storageFactory.js");
     const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
 
-    // Create hierarchical storage manager
-    const storageManager = createHierarchicalStorageManager({
+    // Create hierarchical storage manager with deduplication
+    const storageManager = createHierarchicalStorageManagerWithDeduplication((this as any).config, {
       rootDir: outputDir,
       fileNaming: "lowercase",
       hierarchical: true,
@@ -590,15 +600,15 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
       resourceType: "", // Will be set for each resource type
     };
 
-    // Import hierarchical storage
-    const { createHierarchicalStorageManager } = await import("../../storage/hierarchicalStorage.js");
+    // Import storage factory
+    const { createHierarchicalStorageManagerWithDeduplication } = await import("./storageFactory.js");
     const { CommonResourcesFetcher } = await import("./commonResources.js");
 
     const flagsAny = _flags as any;
     const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
 
-    // Create hierarchical storage manager
-    const storageManager = createHierarchicalStorageManager({
+    // Create hierarchical storage manager with deduplication
+    const storageManager = createHierarchicalStorageManagerWithDeduplication((this as any).config, {
       rootDir: outputDir,
       fileNaming: "lowercase",
       hierarchical: true,
@@ -804,14 +814,19 @@ export const repository = async function (this: LocalContext, _flags: Record<str
         });
 
         // Fetch commits for this project (default branch, max 1000 commits)
-        await restFetcher.fetchCommits(projectId, projectPath, "main", (commit: unknown, ctx: CallbackContext) => {
-          callbackContext.resourceType = "commit";
-          return commit;
-        }, 1000);
-
+        await restFetcher.fetchCommits(
+          projectId,
+          projectPath,
+          "main",
+          (commit: unknown, ctx: CallbackContext) => {
+            callbackContext.resourceType = "commit";
+            return commit;
+          },
+          1000
+        );
       } catch (error) {
         logger.warn(`Failed to fetch repository resources for project ${projectPath}:`, {
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
         // Continue with next project even if this one fails
       }

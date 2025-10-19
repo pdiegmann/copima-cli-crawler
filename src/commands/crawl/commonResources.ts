@@ -3,6 +3,7 @@ import { loadConfig } from "../../config/loader";
 import type { CallbackContext, Config } from "../../config/types";
 import { createLogger } from "../../logging/logger";
 import { StorageManager } from "../../storage/storageManager";
+import { createStorageManagerWithDeduplication } from "./storageFactory.js";
 
 const logger = createLogger("commonResources");
 
@@ -19,7 +20,9 @@ export class CommonResourcesFetcher {
     this.config = config;
     const accessToken = config.gitlab.token || config.gitlab.accessToken || "";
     this.client = new GitLabGraphQLClient(this.config.gitlab.host, accessToken);
-    this.storageManager = new StorageManager(this.config.output);
+
+    // Create storage manager with deduplication support
+    this.storageManager = createStorageManagerWithDeduplication(this.config);
   }
 
   /**
@@ -94,7 +97,7 @@ export class CommonResourcesFetcher {
       // Split the full path to create hierarchy (e.g., "group/subgroup" => ["group", "subgroup"])
       const hierarchy = areaPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("members", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMembers as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMembers as any, false, "member", "id");
 
       logger.info(`Successfully wrote ${writtenCount} members for ${areaPath} to ${filePath}`);
     } catch (error) {
@@ -149,7 +152,7 @@ export class CommonResourcesFetcher {
       // Split the full path to create hierarchy (e.g., "group/subgroup" => ["group", "subgroup"])
       const hierarchy = areaPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("labels", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedLabels as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedLabels as any, false, "label", "id");
 
       logger.info(`Successfully wrote ${writtenCount} labels for ${areaPath} to ${filePath}`);
     } catch (error) {
@@ -386,7 +389,7 @@ export class CommonResourcesFetcher {
       // Split the full path to create hierarchy (e.g., "group/subgroup/project" => ["group", "subgroup", "project"])
       const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("pipelines", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines as any, false, "pipeline", "id");
 
       logger.info(`Successfully wrote ${writtenCount} pipelines for ${projectPath} to ${filePath}`);
     } catch (error) {
@@ -708,7 +711,7 @@ export class CommonResourcesFetcher {
       // Split the full path to create hierarchy (e.g., "group/subgroup/project" => ["group", "subgroup", "project"])
       const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("mergerequests", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMergeRequests as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMergeRequests as any, false, "merge_request", "id");
 
       logger.info(`Successfully wrote ${writtenCount} merge requests for ${projectPath} to ${filePath}`);
     } catch (error) {
@@ -720,11 +723,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetch snippets for a project
    */
-  async fetchSnippets(
-    projectId: string,
-    projectPath: string,
-    callback: (snippet: unknown, context: CallbackContext) => unknown | null
-  ): Promise<void> {
+  async fetchSnippets(projectId: string, projectPath: string, callback: (snippet: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($fullPath: ID!, $first: Int, $after: String) {
@@ -798,7 +797,7 @@ export class CommonResourcesFetcher {
 
       const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("snippets", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedSnippets as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedSnippets as any, false, "snippet", "id");
 
       logger.info(`Successfully wrote ${writtenCount} snippets for ${projectPath} to ${filePath}`);
     } catch (error) {
@@ -810,12 +809,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetch boards for a group or project
    */
-  async fetchBoards(
-    areaType: "group" | "project",
-    areaId: string,
-    areaPath: string,
-    callback: (board: unknown, context: CallbackContext) => unknown | null
-  ): Promise<void> {
+  async fetchBoards(areaType: "group" | "project", areaId: string, areaPath: string, callback: (board: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($fullPath: ID!, $first: Int, $after: String) {
@@ -883,7 +877,7 @@ export class CommonResourcesFetcher {
 
       const hierarchy = areaPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("boards", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBoards as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBoards as any, false, "board", "id");
 
       logger.info(`Successfully wrote ${writtenCount} boards for ${areaPath} to ${filePath}`);
     } catch (error) {
@@ -895,11 +889,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetch tags for a project
    */
-  async fetchTags(
-    projectId: string,
-    projectPath: string,
-    callback: (tag: unknown, context: CallbackContext) => unknown | null
-  ): Promise<void> {
+  async fetchTags(projectId: string, projectPath: string, callback: (tag: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($fullPath: ID!, $first: Int, $after: String) {
@@ -985,11 +975,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetch discussions (with notes) for a project
    */
-  async fetchDiscussions(
-    projectId: string,
-    projectPath: string,
-    callback: (discussion: unknown, context: CallbackContext) => unknown | null
-  ): Promise<void> {
+  async fetchDiscussions(projectId: string, projectPath: string, callback: (discussion: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($fullPath: ID!, $first: Int, $after: String) {
@@ -1031,7 +1017,7 @@ export class CommonResourcesFetcher {
 
       let hasNextPage = true;
       let after: string | null = null;
-      let allDiscussions: unknown[] = [];
+      const allDiscussions: unknown[] = [];
 
       while (hasNextPage) {
         const data: any = await this.client.query(query, {
@@ -1088,11 +1074,7 @@ export class CommonResourcesFetcher {
   /**
    * Fetch epics for a group (premium/ultimate feature)
    */
-  async fetchEpics(
-    groupId: string,
-    groupPath: string,
-    callback: (epic: unknown, context: CallbackContext) => unknown | null
-  ): Promise<void> {
+  async fetchEpics(groupId: string, groupPath: string, callback: (epic: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
         query($fullPath: ID!, $first: Int, $after: String) {

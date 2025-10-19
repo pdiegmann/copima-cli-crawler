@@ -2,7 +2,6 @@ import { GitLabGraphQLClient } from "../../api/gitlabGraphQLClient";
 import { loadConfig } from "../../config/loader";
 import type { CallbackContext } from "../../config/types";
 import { createLogger } from "../../logging/logger";
-import { StorageManager } from "../../storage/storageManager";
 
 const logger = createLogger("fetchUsers");
 
@@ -14,7 +13,10 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
   const config = await loadConfig();
   const accessToken = config.gitlab.token || config.gitlab.accessToken || "";
   const client = new GitLabGraphQLClient(config.gitlab.host, accessToken);
-  const storageManager = new StorageManager(config.output);
+
+  // Create storage manager with deduplication support
+  const { createStorageManagerWithDeduplication } = await import("./storageFactory.js");
+  const storageManager = createStorageManagerWithDeduplication(config);
 
   try {
     logger.info("Fetching users from GitLab...");
@@ -38,7 +40,7 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
     // Create hierarchical path and write to JSONL file
     // Users are stored at the root level since they're global resources
     const filePath = storageManager.createHierarchicalPath("users", []);
-    const writtenCount = storageManager.writeJsonlFile(filePath, processedUsers as any, false); // Overwrite existing file
+    const writtenCount = storageManager.writeJsonlFile(filePath, processedUsers as any, false, "user", "id"); // Overwrite existing file with deduplication
 
     logger.info(`Successfully wrote ${writtenCount} users to ${filePath}`);
   } catch (error) {
