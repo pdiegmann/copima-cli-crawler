@@ -10,7 +10,16 @@ describe("EnvironmentConfigLoader", () => {
     originalEnv = { ...process.env };
     // Clear all env vars
     Object.keys(process.env).forEach((key) => {
-      if (key.startsWith("GITLAB_") || key.startsWith("DATABASE_") || key.startsWith("OUTPUT_") || key.startsWith("LOG_") || key.startsWith("PROGRESS_") || key.startsWith("RESUME_") || key.startsWith("CALLBACK_") || key.startsWith("COPIMA_")) {
+      if (
+        key.startsWith("GITLAB_") ||
+        key.startsWith("DATABASE_") ||
+        key.startsWith("OUTPUT_") ||
+        key.startsWith("LOG_") ||
+        key.startsWith("PROGRESS_") ||
+        key.startsWith("RESUME_") ||
+        key.startsWith("CALLBACK_") ||
+        key.startsWith("COPIMA_")
+      ) {
         delete process.env[key];
       }
     });

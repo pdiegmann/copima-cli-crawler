@@ -26,12 +26,7 @@ export class TokenManager {
    * 2. OAuth2 token from YAML storage - looked up by accountId
    * 3. OAuth2 token from explicit access/refresh tokens - stored if provided
    */
-  async getValidToken(options: {
-    pat?: string;
-    accountId?: string;
-    accessToken?: string;
-    refreshToken?: string;
-  }): Promise<TokenSource | null> {
+  async getValidToken(options: { pat?: string; accountId?: string; accessToken?: string; refreshToken?: string }): Promise<TokenSource | null> {
     // Priority 1: PAT (never stored, just used)
     if (options.pat) {
       logger.debug("Using Personal Access Token (PAT)");
@@ -82,7 +77,7 @@ export class TokenManager {
       // First ensure a user exists
       const userId = randomUUID();
       const userEmail = `${accountId}@local`;
-      
+
       // Try to find existing user or create new one
       let existingUser = this.db.findUserByEmail(userEmail);
       if (!existingUser) {

@@ -115,7 +115,7 @@ describe("CallbackManager", () => {
     expect(mgr.isReady()).toBe(false);
 
     // Give time for async loading to fail
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // After async failure, callback should still be null
     expect(mgr.isReady()).toBe(false);
@@ -194,7 +194,7 @@ describe("CallbackManager", () => {
   it("should filter objects and log count", async () => {
     const mgr = createCallbackManager({
       enabled: true,
-      inlineCallback: (ctx: any, obj: any) => obj.id === 1 ? obj : false,
+      inlineCallback: (ctx: any, obj: any) => (obj.id === 1 ? obj : false),
     } as any);
 
     const objs = [{ id: 1 }, { id: 2 }, { id: 3 }];

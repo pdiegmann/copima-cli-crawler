@@ -86,9 +86,7 @@ describe("config/impl", () => {
 
       await showConfig({ format: "json" });
 
-      expect(console.log).toHaveBeenCalledWith(
-        JSON.stringify(mockConfig, null, 2)
-      );
+      expect(console.log).toHaveBeenCalledWith(JSON.stringify(mockConfig, null, 2));
     });
 
     it("should display config in YAML format", async () => {
@@ -111,9 +109,7 @@ describe("config/impl", () => {
 
       await showConfig({ section: "gitlab", format: "json" });
 
-      expect(console.log).toHaveBeenCalledWith(
-        JSON.stringify({ gitlab: mockConfig.gitlab }, null, 2)
-      );
+      expect(console.log).toHaveBeenCalledWith(JSON.stringify({ gitlab: mockConfig.gitlab }, null, 2));
     });
 
     it("should show configuration sources when source flag is set", async () => {
@@ -145,11 +141,7 @@ describe("config/impl", () => {
     it("should set config value in local config", async () => {
       await setConfig({ key: "gitlab.host", value: "https://gitlab.example.com" });
 
-      expect(mockWriteFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("copima.yaml"),
-        expect.any(String),
-        "utf8"
-      );
+      expect(mockWriteFileSync).toHaveBeenCalledWith(expect.stringContaining("copima.yaml"), expect.any(String), "utf8");
     });
 
     it("should set config value in global config", async () => {
@@ -159,11 +151,7 @@ describe("config/impl", () => {
         global: true,
       });
 
-      expect(mockWriteFileSync).toHaveBeenCalledWith(
-        expect.stringContaining(".config/copima/config.yaml"),
-        expect.any(String),
-        "utf8"
-      );
+      expect(mockWriteFileSync).toHaveBeenCalledWith(expect.stringContaining(".config/copima/config.yaml"), expect.any(String), "utf8");
     });
 
     it("should parse number type correctly", async () => {
@@ -216,10 +204,7 @@ describe("config/impl", () => {
         global: true,
       });
 
-      expect(mockMkdirSync).toHaveBeenCalledWith(
-        expect.any(String),
-        { recursive: true }
-      );
+      expect(mockMkdirSync).toHaveBeenCalledWith(expect.any(String), { recursive: true });
     });
 
     it("should merge with existing config", async () => {
@@ -286,21 +271,13 @@ describe("config/impl", () => {
     it("should remove config key from local config", async () => {
       await unsetConfig({ key: "gitlab.accessToken" });
 
-      expect(mockWriteFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("copima.yaml"),
-        expect.any(String),
-        "utf8"
-      );
+      expect(mockWriteFileSync).toHaveBeenCalledWith(expect.stringContaining("copima.yaml"), expect.any(String), "utf8");
     });
 
     it("should remove config key from global config", async () => {
       await unsetConfig({ key: "gitlab.accessToken", global: true });
 
-      expect(mockWriteFileSync).toHaveBeenCalledWith(
-        expect.stringContaining(".config/copima/config.yaml"),
-        expect.any(String),
-        "utf8"
-      );
+      expect(mockWriteFileSync).toHaveBeenCalledWith(expect.stringContaining(".config/copima/config.yaml"), expect.any(String), "utf8");
     });
 
     it("should handle non-existent config file", async () => {

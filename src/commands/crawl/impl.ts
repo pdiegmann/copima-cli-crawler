@@ -393,16 +393,11 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const gitlabHost = await resolveGitlabHostForFlags(this, flagsAny, logger);
     flagsAny.host = gitlabHost;
 
-    const { token, resolvedAccountId, source: tokenSource } = await resolveAccessTokenForAccount(
-      flagsAny,
-      requestedAccountId,
-      databasePath,
-      configAccessToken,
-      configPat,
-      configAccessToken,
-      configRefreshToken,
-      logger
-    );
+    const {
+      token,
+      resolvedAccountId,
+      source: tokenSource,
+    } = await resolveAccessTokenForAccount(flagsAny, requestedAccountId, databasePath, configAccessToken, configPat, configAccessToken, configRefreshToken, logger);
 
     if (resolvedAccountId) {
       flagsAny.accountId = flagsAny.accountId ?? resolvedAccountId;
@@ -462,8 +457,8 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const projects = await graphqlClient.fetchAllProjects();
 
     // Debug: Check if data is actually an array
-    logger.debug(`Groups type: ${Array.isArray(groups) ? 'array' : typeof groups}, length: ${Array.isArray(groups) ? groups.length : 'N/A'}`);
-    logger.debug(`Projects type: ${Array.isArray(projects) ? 'array' : typeof projects}, length: ${Array.isArray(projects) ? projects.length : 'N/A'}`);
+    logger.debug(`Groups type: ${Array.isArray(groups) ? "array" : typeof groups}, length: ${Array.isArray(groups) ? groups.length : "N/A"}`);
+    logger.debug(`Projects type: ${Array.isArray(projects) ? "array" : typeof projects}, length: ${Array.isArray(projects) ? projects.length : "N/A"}`);
 
     // Log and store results
     logger.info(`Fetched ${Array.isArray(groups) ? groups.length : 0} groups`);

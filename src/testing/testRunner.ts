@@ -1305,8 +1305,8 @@ export class TestRunner {
 
     <h2>Test Results</h2>
     ${result.results
-        .map(
-          (test) => `
+      .map(
+        (test) => `
         <div class="test ${test.success ? "passed" : "failed"}">
             <h3>${test.config.metadata.name} - ${test.success ? "PASSED" : "FAILED"}</h3>
             <p>${test.config.metadata.description}</p>
@@ -1318,8 +1318,8 @@ export class TestRunner {
             </div>
         </div>
     `
-        )
-        .join("")}
+      )
+      .join("")}
 </body>
 </html>`;
   }

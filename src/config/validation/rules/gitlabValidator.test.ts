@@ -149,9 +149,7 @@ describe("GitlabConfigValidator", () => {
       expect(result.isValid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0]?.field).toBe("gitlab.accessToken");
-      expect(result.errors[0]?.message).toBe(
-        "GitLab access token is required unless OAuth2 providers are configured"
-      );
+      expect(result.errors[0]?.message).toBe("GitLab access token is required unless OAuth2 providers are configured");
     });
 
     it("should pass when access token is missing but OAuth2 providers configured", () => {

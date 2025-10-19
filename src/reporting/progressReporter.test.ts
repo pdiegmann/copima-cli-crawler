@@ -298,7 +298,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -328,7 +328,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -357,7 +357,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -380,7 +380,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -453,7 +453,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -473,7 +473,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
