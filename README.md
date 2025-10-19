@@ -81,6 +81,92 @@ accounts:
 
 **Note**: Personal Access Tokens (PATs) are never stored in this file - they are only used at runtime.
 
+## Usage Examples
+
+### Using a Personal Access Token (PAT)
+
+Simple, one-time usage without storing credentials:
+
+```bash
+# Crawl areas using PAT
+copima areas --host https://gitlab.example.com --token your-pat-token
+
+# Crawl all steps using PAT from environment
+export GITLAB_HOST=https://gitlab.example.com
+export GITLAB_TOKEN=your-pat-token
+copima crawl
+
+# Use PAT with specific output directory
+copima crawl --host https://gitlab.example.com --token your-pat-token --output-dir ./data
+```
+
+### Using OAuth2 with Explicit Tokens
+
+Store and use OAuth2 tokens for automatic refresh:
+
+```bash
+# Provide all OAuth2 credentials to store them
+copima areas \
+  --host https://gitlab.example.com \
+  --account-id my-account \
+  --access-token oauth2-access-token \
+  --refresh-token oauth2-refresh-token
+
+# Subsequent runs can just use the account ID
+copima crawl --account-id my-account
+```
+
+### Using OAuth2 from Storage
+
+After authenticating with `copima auth`:
+
+```bash
+# Run OAuth2 authentication flow
+copima auth --config ./copima.yaml
+
+# Use stored tokens (auto-refreshed when expired)
+copima crawl --account-id my-account
+
+# Or let the CLI auto-select the account
+copima crawl
+```
+
+### Configuration File Examples
+
+**Simple PAT configuration** (`copima.yaml`):
+
+```yaml
+gitlab:
+  host: https://gitlab.example.com
+  token: your-pat-token
+
+output:
+  rootDir: ./output
+```
+
+**OAuth2 configuration** (`copima.yaml`):
+
+```yaml
+gitlab:
+  host: https://gitlab.example.com
+  accountId: my-account  # Will look up tokens from database.yaml
+
+output:
+  rootDir: ./output
+
+oauth2:
+  providers:
+    gitlab:
+      clientId: your-client-id
+      clientSecret: your-client-secret
+      redirectUri: http://localhost:3000/callback
+      authorizationUrl: https://gitlab.example.com/oauth/authorize
+      tokenUrl: https://gitlab.example.com/oauth/token
+      scopes:
+        - api
+        - read_api
+```
+
 
 # Project Introduction
 
