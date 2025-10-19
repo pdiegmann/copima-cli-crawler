@@ -54,3 +54,6 @@ test-tmp/
 suite-report.yaml
 output/areas/groups.jsonl
 output/areas/projects.jsonl
+
+# Unencrypted config files with secrets (use .enc.yaml versions)
+examples/unified-config.yaml
