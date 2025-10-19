@@ -73,37 +73,83 @@ const resolveAccessTokenForAccount = async (
   requestedAccountId: string | undefined,
   databasePath: string,
   configToken: string | undefined,
+  configPat: string | undefined,
+  configAccessToken: string | undefined,
+  configRefreshToken: string | undefined,
   logger: ReturnType<typeof createLogger>
-): Promise<{ token: string | null; resolvedAccountId: string | null; source: "flag" | "config" | "database" }> => {
-  const flagToken = flagsAny?.accessToken || flagsAny?.["access-token"];
+): Promise<{ token: string | null; resolvedAccountId: string | null; source: "pat" | "flag" | "config" | "oauth2" }> => {
+  // Priority 1: Check for PAT in flags or config
+  const flagPat = flagsAny?.token || flagsAny?.pat;
+  if (flagPat) {
+    logger.info("Using Personal Access Token (PAT) from command line");
+    return { token: flagPat, resolvedAccountId: requestedAccountId ?? null, source: "pat" };
+  }
 
-  if (flagToken) {
-    return { token: flagToken, resolvedAccountId: requestedAccountId ?? null, source: "flag" };
+  if (configPat) {
+    logger.info("Using Personal Access Token (PAT) from config");
+    return { token: configPat, resolvedAccountId: requestedAccountId ?? null, source: "pat" };
+  }
+
+  // Priority 2: Check for explicit OAuth2 tokens in flags
+  const flagAccessToken = flagsAny?.accessToken || flagsAny?.["access-token"];
+  const flagRefreshToken = flagsAny?.refreshToken || flagsAny?.["refresh-token"];
+  const flagAccountId = flagsAny?.accountId || flagsAny?.["account-id"] || requestedAccountId;
+
+  if (flagAccessToken && flagRefreshToken && flagAccountId) {
+    logger.info(`Storing and using OAuth2 tokens for account ${flagAccountId}`);
+    await ensureDatabaseReady(databasePath);
+    const db = getDatabase();
+    const tokenManager = new TokenManager(db);
+    const result = await tokenManager.getValidToken({
+      accountId: flagAccountId,
+      accessToken: flagAccessToken,
+      refreshToken: flagRefreshToken,
+    });
+    if (result) {
+      return { token: result.token, resolvedAccountId: result.accountId ?? null, source: "oauth2" };
+    }
+  }
+
+  // Priority 3: Check for explicit OAuth2 tokens in config
+  if (configAccessToken && configRefreshToken && requestedAccountId) {
+    logger.info(`Using OAuth2 tokens from config for account ${requestedAccountId}`);
+    await ensureDatabaseReady(databasePath);
+    const db = getDatabase();
+    const tokenManager = new TokenManager(db);
+    const result = await tokenManager.getValidToken({
+      accountId: requestedAccountId,
+      accessToken: configAccessToken,
+      refreshToken: configRefreshToken,
+    });
+    if (result) {
+      return { token: result.token, resolvedAccountId: result.accountId ?? null, source: "oauth2" };
+    }
+  }
+
+  // Priority 4: Use old behavior - look up from flags/config
+  if (flagAccessToken) {
+    return { token: flagAccessToken, resolvedAccountId: requestedAccountId ?? null, source: "flag" };
   }
 
   if (configToken) {
     return { token: configToken, resolvedAccountId: requestedAccountId ?? null, source: "config" };
   }
 
+  // Priority 5: Look up OAuth2 tokens from YAML storage
   await ensureDatabaseReady(databasePath);
 
   const db = getDatabase();
   const tokenManager = new TokenManager(db);
-  const accountFromStore = await tokenManager.resolveAccountId(requestedAccountId);
+  const result = await tokenManager.getValidToken({
+    accountId: requestedAccountId,
+  });
 
-  if (!accountFromStore) {
-    logger.warn("Unable to determine which account to use. Please authenticate or specify --account-id.");
-    return { token: null, resolvedAccountId: null, source: "database" };
+  if (!result) {
+    logger.warn("Unable to find valid authentication. Please use --token (PAT), --account-id (OAuth2), or run 'copima auth'.");
+    return { token: null, resolvedAccountId: null, source: "oauth2" };
   }
 
-  const resolvedAccountId = accountFromStore;
-  const updatedToken = await tokenManager.getAccessToken(resolvedAccountId);
-  if (!updatedToken) {
-    logger.warn(`No valid access token found for account '${resolvedAccountId}'. Please run 'copima auth' to authenticate.`);
-    return { token: null, resolvedAccountId, source: "database" };
-  }
-
-  return { token: updatedToken, resolvedAccountId, source: "database" };
+  return { token: result.token, resolvedAccountId: result.accountId ?? null, source: result.source };
 };
 
 export const markFlagsFromOrchestrator = (flags: Record<string, unknown> | undefined): Record<string, unknown> => {
@@ -339,12 +385,24 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const flagsAny = flags as any;
     const requestedAccountId = flagsAny?.accountId || flagsAny?.["account-id"];
     const databasePath = flagsAny?.database || "./database.yaml";
-    const configAccessToken = (this as any).config?.gitlab?.accessToken as string | undefined;
+    const config = (this as any).config;
+    const configPat = config?.gitlab?.token as string | undefined;
+    const configAccessToken = config?.gitlab?.accessToken as string | undefined;
+    const configRefreshToken = config?.gitlab?.refreshToken as string | undefined;
 
     const gitlabHost = await resolveGitlabHostForFlags(this, flagsAny, logger);
     flagsAny.host = gitlabHost;
 
-    const { token, resolvedAccountId, source: tokenSource } = await resolveAccessTokenForAccount(flagsAny, requestedAccountId, databasePath, configAccessToken, logger);
+    const { token, resolvedAccountId, source: tokenSource } = await resolveAccessTokenForAccount(
+      flagsAny,
+      requestedAccountId,
+      databasePath,
+      configAccessToken,
+      configPat,
+      configAccessToken,
+      configRefreshToken,
+      logger
+    );
 
     if (resolvedAccountId) {
       flagsAny.accountId = flagsAny.accountId ?? resolvedAccountId;
@@ -358,10 +416,12 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       return;
     }
 
-    if (tokenSource === "flag") {
+    if (tokenSource === "pat") {
+      logger.info(`Using Personal Access Token (PAT) for account '${accountLabel}'`);
+    } else if (tokenSource === "flag") {
       logger.info(`Using access token passed via parameter for account '${accountLabel}'`);
-    } else if (tokenSource === "database") {
-      logger.info(`Using access token retrieved from database for account '${accountLabel}'`);
+    } else if (tokenSource === "oauth2") {
+      logger.info(`Using OAuth2 token retrieved from storage for account '${accountLabel}'`);
     } else if (tokenSource === "config") {
       logger.info(`Using access token from configuration for account '${accountLabel}'`);
     }

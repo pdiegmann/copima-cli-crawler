@@ -7,8 +7,10 @@ import type { Config } from "./types.js";
 export const defaultConfig: Config = {
   gitlab: {
     host: "",
-    accessToken: "",
+    token: undefined,
+    accessToken: undefined,
     refreshToken: undefined,
+    accountId: undefined,
     timeout: 30000, // 30 seconds
     maxConcurrency: 5,
     rateLimit: 600, // 600 requests per minute (GitLab.com default)

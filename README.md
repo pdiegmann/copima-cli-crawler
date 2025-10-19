@@ -10,14 +10,16 @@ This project REQUIRES the STRICT USAGE of CERTAIN LIBRARIES AND UTILITIES whenev
 4. [winston](https://github.com/winstonjs/winston) as logging provider with /src/utils/logger.ts being the central/default logger
 5. [picocolors](https://github.com/alexeyraspopov/picocolors) for terminal output formatting with colors
 6. [treeify](https://github.com/notatestuser/treeify) for converting JS/TS objects into nicely formatted trees for terminal output
-7. [drizzle-orm](https://orm.drizzle.team/docs/overview) for database access and as ORM with Bun's integrated sqlite driver
+7. [js-yaml](https://github.com/nodeca/js-yaml) for YAML configuration and storage
 
 ## Non-Negotiable Assumptions
 
 The following rules MUST always be respected during design and implementation:
 
-1. Authentication MUST use **OAuth2 access tokens** only.
-2. Refreshing access tokens MUST also update the refresh tokens in the database.
+1. Authentication supports both **Personal Access Tokens (PAT)** and **OAuth2 access tokens**.
+   - PATs are simple and never stored - just passed as arguments/environment variables.
+   - OAuth2 tokens are stored in YAML with account identifiers for automatic refresh.
+2. Refreshing access tokens MUST also update the refresh tokens in the YAML storage.
    - Refresh tokens may be invalidated after use.
    - The refresh token from the refresh response MUST replace the old refresh token.
 3. Both GraphQL and REST APIs MUST be used.
@@ -32,47 +34,139 @@ The following rules MUST always be respected during design and implementation:
 7. Errors or incomplete work MUST trigger iterative improvement until validation succeeds.
 8. Simplicity MUST be prioritized in all design and code decisions.
 
-## Account and Credentials Database Schema
+## Authentication Methods
 
-```ts
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+The crawler supports three authentication methods in order of preference:
 
-export const user = sqliteTable("user", {
-  banExpires: integer("ban_expires", { mode: "timestamp" }),
-  banned: integer("banned", { mode: "boolean" }),
-  banReason: text("ban_reason"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
-  id: text("id").primaryKey(),
-  image: text("image"),
-  name: text("name").notNull(),
-  role: text("role"),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-});
+1. **Personal Access Token (PAT)**: Simple token-based auth, never stored
+   - Pass via `--token` flag or `GITLAB_TOKEN` environment variable
+   - Best for quick tests and automation
+   
+2. **OAuth2 with Explicit Tokens**: Store and use OAuth2 tokens
+   - Pass via `--account-id`, `--access-token`, and `--refresh-token` flags
+   - Tokens are stored in `database.yaml` for automatic refresh
+   - Account identifier enables token lookup and management
+   
+3. **OAuth2 from Storage**: Automatic lookup from stored tokens
+   - Run `copima auth` to authenticate and store tokens
+   - Pass `--account-id` to select which account to use
+   - Tokens are automatically refreshed when expired
 
-export const account = sqliteTable("account", {
-  accessToken: text("access_token"),
-  accessTokenExpiresAt: integer("access_token_expires_at", {
-    mode: "timestamp",
-  }),
-  accountId: text("account_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  id: text("id").primaryKey(),
-  idToken: text("id_token"),
-  password: text("password"),
-  providerId: text("provider_id").notNull(),
-  refreshToken: text("refresh_token"),
-  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
-    mode: "timestamp",
-  }),
-  scope: text("scope"),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
+### YAML Storage Format
+
+OAuth2 credentials are stored in `database.yaml`:
+
+```yaml
+users:
+  - id: "user-uuid"
+    name: "User Name"
+    email: "user@example.com"
+    emailVerified: false
+    createdAt: 2024-01-01T00:00:00.000Z
+    updatedAt: 2024-01-01T00:00:00.000Z
+
+accounts:
+  - id: "account-uuid"
+    accountId: "my-account"
+    providerId: "gitlab"
+    userId: "user-uuid"
+    accessToken: "access-token-value"
+    refreshToken: "refresh-token-value"
+    accessTokenExpiresAt: 2024-01-01T01:00:00.000Z
+    refreshTokenExpiresAt: null
+    scope: "api read_api"
+    createdAt: 2024-01-01T00:00:00.000Z
+    updatedAt: 2024-01-01T00:00:00.000Z
 ```
+
+**Note**: Personal Access Tokens (PATs) are never stored in this file - they are only used at runtime.
+
+## Usage Examples
+
+### Using a Personal Access Token (PAT)
+
+Simple, one-time usage without storing credentials:
+
+```bash
+# Crawl areas using PAT
+copima areas --host https://gitlab.example.com --token your-pat-token
+
+# Crawl all steps using PAT from environment
+export GITLAB_HOST=https://gitlab.example.com
+export GITLAB_TOKEN=your-pat-token
+copima crawl
+
+# Use PAT with specific output directory
+copima crawl --host https://gitlab.example.com --token your-pat-token --output-dir ./data
+```
+
+### Using OAuth2 with Explicit Tokens
+
+Store and use OAuth2 tokens for automatic refresh:
+
+```bash
+# Provide all OAuth2 credentials to store them
+copima areas \
+  --host https://gitlab.example.com \
+  --account-id my-account \
+  --access-token oauth2-access-token \
+  --refresh-token oauth2-refresh-token
+
+# Subsequent runs can just use the account ID
+copima crawl --account-id my-account
+```
+
+### Using OAuth2 from Storage
+
+After authenticating with `copima auth`:
+
+```bash
+# Run OAuth2 authentication flow
+copima auth --config ./copima.yaml
+
+# Use stored tokens (auto-refreshed when expired)
+copima crawl --account-id my-account
+
+# Or let the CLI auto-select the account
+copima crawl
+```
+
+### Configuration File Examples
+
+**Simple PAT configuration** (`copima.yaml`):
+
+```yaml
+gitlab:
+  host: https://gitlab.example.com
+  token: your-pat-token
+
+output:
+  rootDir: ./output
+```
+
+**OAuth2 configuration** (`copima.yaml`):
+
+```yaml
+gitlab:
+  host: https://gitlab.example.com
+  accountId: my-account  # Will look up tokens from database.yaml
+
+output:
+  rootDir: ./output
+
+oauth2:
+  providers:
+    gitlab:
+      clientId: your-client-id
+      clientSecret: your-client-secret
+      redirectUri: http://localhost:3000/callback
+      authorizationUrl: https://gitlab.example.com/oauth/authorize
+      tokenUrl: https://gitlab.example.com/oauth/token
+      scopes:
+        - api
+        - read_api
+```
+
 
 # Project Introduction
 

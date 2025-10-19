@@ -17,7 +17,8 @@ export class RestResourcesFetcher {
 
   constructor(config: Config) {
     this.config = config;
-    this.client = new GitLabRestClient(this.config.gitlab.host, this.config.gitlab.accessToken);
+    const accessToken = config.gitlab.token || config.gitlab.accessToken || "";
+    this.client = new GitLabRestClient(this.config.gitlab.host, accessToken);
     this.storageManager = new StorageManager(this.config.output);
   }
 

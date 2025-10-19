@@ -42,9 +42,6 @@
     "test:e2e:dry-run": "bun run test:e2e examples/test-configs/dry-run-test.yaml --dry-run",
     "release": "bun run scripts/release.ts",
     "release:local": "bun run scripts/release.ts",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
     "codegen": "graphql-codegen-esm --config codegen.ts"
   },
   "exports": {
@@ -83,7 +80,6 @@
     "@stricli/auto-complete": "^1.2.0",
     "@stricli/core": "^1.2.0",
     "date-fns": "^4.1.0",
-    "drizzle-orm": "^0.44.5",
     "get-port": "^7.1.0",
     "js-yaml": "^4.1.0",
     "open": "^10.2.0",
@@ -107,7 +103,6 @@
     "@types/node-fetch": "^2.6.13",
     "@types/treeify": "^1.0.3",
     "@typescript-eslint/parser": "^8.44.1",
-    "drizzle-kit": "^0.31.5",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

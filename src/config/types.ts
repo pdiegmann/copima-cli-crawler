@@ -102,10 +102,14 @@ export type CallbackContext = {
 export type GitLabConfig = {
   /** GitLab host URL (e.g., https://gitlab.com) */
   host: string;
+  /** Personal Access Token (PAT) for API authentication - not stored in YAML */
+  token?: string;
   /** OAuth2 access token for API authentication */
-  accessToken: string;
+  accessToken?: string;
   /** OAuth2 refresh token for token renewal */
   refreshToken?: string;
+  /** Account ID for looking up OAuth2 tokens from YAML storage */
+  accountId?: string;
   /** API request timeout in milliseconds */
   timeout?: number;
   /** Maximum concurrent API requests */
@@ -196,8 +200,10 @@ export type PartialConfig = {
  */
 export type EnvMapping = {
   GITLAB_HOST?: string;
+  GITLAB_TOKEN?: string;
   GITLAB_ACCESS_TOKEN?: string;
   GITLAB_REFRESH_TOKEN?: string;
+  GITLAB_ACCOUNT_ID?: string;
   GITLAB_TIMEOUT?: string;
   GITLAB_MAX_CONCURRENCY?: string;
   GITLAB_RATE_LIMIT?: string;
@@ -241,8 +247,10 @@ export type CliArgs = {
 
   // GitLab configuration
   host?: string;
+  token?: string;
   accessToken?: string;
   refreshToken?: string;
+  accountId?: string;
   timeout?: number;
   maxConcurrency?: number;
   rateLimit?: number;
