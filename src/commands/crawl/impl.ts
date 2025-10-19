@@ -201,6 +201,7 @@ const createWriteJSONL = (context: LocalContext, callbackManager: any, callbackC
   };
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const crawlCommand = async (options: any): Promise<void> => {
   try {
     logger.info("🚀 Starting complete GitLab crawl with enhanced orchestrator");
@@ -379,6 +380,7 @@ const executeTestModeSteps = async (steps: string[], options: any, logger: any):
   }
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const areas = async function (this: LocalContext, flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
 
@@ -582,6 +584,7 @@ export const users = async function (this: LocalContext, flags: Record<string, u
   }
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const resources = async function (this: LocalContext, _flags: Record<string, unknown>): Promise<void> {
   const logger = this.logger;
   const { graphqlClient } = this;
@@ -592,8 +595,7 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
       logger.info("Starting Step 3: Crawling area-specific resources");
     }
 
-    // Initialize callback manager
-    const callbackManager = createCallbackManager((this as any).config?.callbacks || { enabled: false });
+    // Initialize callback context for resource type tracking
     const callbackContext: CallbackContext = {
       host: (this as any).config?.gitlab?.host,
       accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
@@ -601,20 +603,7 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
     };
 
     // Import storage factory
-    const { createHierarchicalStorageManagerWithDeduplication } = await import("./storageFactory.js");
     const { CommonResourcesFetcher } = await import("./commonResources.js");
-
-    const flagsAny = _flags as any;
-    const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
-
-    // Create hierarchical storage manager with deduplication
-    const storageManager = createHierarchicalStorageManagerWithDeduplication((this as any).config, {
-      rootDir: outputDir,
-      fileNaming: "lowercase",
-      hierarchical: true,
-      compression: "none",
-      prettyPrint: false,
-    });
 
     // Get all groups and projects from the areas step
     const groups = await graphqlClient.fetchAllGroups();
@@ -627,41 +616,35 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
 
     // Process each group and fetch its resources
     for (const group of groups) {
-      const area = {
-        id: group.id,
-        fullPath: group.fullPath,
-        type: "group" as const,
-      };
-
       logger.info(`Fetching resources for group: ${group.fullPath}`);
 
       try {
         // Fetch and store members for this group
-        await resourceFetcher.fetchMembers("group", group.id, group.fullPath, (member: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchMembers("group", group.id, group.fullPath, (member: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "member";
           return member;
         });
 
         // Fetch and store labels for this group
-        await resourceFetcher.fetchLabels("group", group.id, group.fullPath, (label: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchLabels("group", group.id, group.fullPath, (label: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "label";
           return label;
         });
 
         // Fetch milestones for this group
-        await resourceFetcher.fetchMilestones("group", group.id, group.fullPath, (milestone: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchMilestones("group", group.id, group.fullPath, (milestone: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "milestone";
           return milestone;
         });
 
         // Fetch boards for this group
-        await resourceFetcher.fetchBoards("group", group.id, group.fullPath, (board: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchBoards("group", group.id, group.fullPath, (board: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "board";
           return board;
         });
 
         // Fetch epics for this group (premium/ultimate feature)
-        await resourceFetcher.fetchEpics(group.id, group.fullPath, (epic: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchEpics(group.id, group.fullPath, (epic: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "epic";
           return epic;
         });
@@ -686,68 +669,68 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
 
       try {
         // Fetch and store members for this project
-        await resourceFetcher.fetchMembers("project", project.id, area.fullPath, (member: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchMembers("project", project.id, area.fullPath, (member: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "member";
           return member;
         });
 
         // Fetch and store labels for this project
-        await resourceFetcher.fetchLabels("project", project.id, area.fullPath, (label: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchLabels("project", project.id, area.fullPath, (label: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "label";
           return label;
         });
 
         // Fetch issues for this project
-        await resourceFetcher.fetchIssues(project.id, area.fullPath, (issue: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchIssues(project.id, area.fullPath, (issue: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "issue";
           return issue;
         });
 
         // Fetch merge requests for this project
-        await resourceFetcher.fetchMergeRequests(project.id, area.fullPath, (mr: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchMergeRequests(project.id, area.fullPath, (mr: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "merge_request";
           return mr;
         });
 
         // Fetch pipelines for this project
-        await resourceFetcher.fetchPipelines(project.id, area.fullPath, (pipeline: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchPipelines(project.id, area.fullPath, (pipeline: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "pipeline";
           return pipeline;
         });
 
         // Fetch milestones for this project
-        await resourceFetcher.fetchMilestones("project", project.id, area.fullPath, (milestone: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchMilestones("project", project.id, area.fullPath, (milestone: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "milestone";
           return milestone;
         });
 
         // Fetch releases for this project
-        await resourceFetcher.fetchReleases(project.id, area.fullPath, (release: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchReleases(project.id, area.fullPath, (release: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "release";
           return release;
         });
 
         // Fetch snippets for this project
-        await resourceFetcher.fetchSnippets(project.id, area.fullPath, (snippet: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchSnippets(project.id, area.fullPath, (snippet: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "snippet";
           return snippet;
         });
 
         // NOTE: Tags are not available via GraphQL in this GitLab version
-        // TODO: Implement tags fetching in Step 4 (REST resources) instead
-        // await resourceFetcher.fetchTags(project.id, area.fullPath, (tag: unknown, ctx: CallbackContext) => {
+        // Future enhancement: Implement tags fetching in Step 4 (REST resources) instead
+        // await resourceFetcher.fetchTags(project.id, area.fullPath, (tag: unknown, _ctx: CallbackContext) => {
         //   callbackContext.resourceType = "tag";
         //   return tag;
         // });
 
         // Fetch discussions for this project
-        await resourceFetcher.fetchDiscussions(project.id, area.fullPath, (discussion: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchDiscussions(project.id, area.fullPath, (discussion: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "discussion";
           return discussion;
         });
 
         // Fetch boards for this project
-        await resourceFetcher.fetchBoards("project", project.id, area.fullPath, (board: unknown, ctx: CallbackContext) => {
+        await resourceFetcher.fetchBoards("project", project.id, area.fullPath, (board: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "board";
           return board;
         });
@@ -777,8 +760,7 @@ export const repository = async function (this: LocalContext, _flags: Record<str
       logger.info("Starting Step 4: Crawling repository resources");
     }
 
-    // Initialize callback manager
-    const callbackManager = createCallbackManager((this as any).config?.callbacks || { enabled: false });
+    // Initialize callback context for resource type tracking
     const callbackContext: CallbackContext = {
       host: (this as any).config?.gitlab?.host,
       accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
@@ -802,13 +784,13 @@ export const repository = async function (this: LocalContext, _flags: Record<str
 
       try {
         // Fetch branches for this project
-        await restFetcher.fetchBranches(projectId, projectPath, (branch: unknown, ctx: CallbackContext) => {
+        await restFetcher.fetchBranches(projectId, projectPath, (branch: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "branch";
           return branch;
         });
 
         // Fetch tags for this project
-        await restFetcher.fetchTags(projectId, projectPath, (tag: unknown, ctx: CallbackContext) => {
+        await restFetcher.fetchTags(projectId, projectPath, (tag: unknown, _ctx: CallbackContext) => {
           callbackContext.resourceType = "tag";
           return tag;
         });
@@ -818,7 +800,7 @@ export const repository = async function (this: LocalContext, _flags: Record<str
           projectId,
           projectPath,
           "main",
-          (commit: unknown, ctx: CallbackContext) => {
+          (commit: unknown, _ctx: CallbackContext) => {
             callbackContext.resourceType = "commit";
             return commit;
           },

@@ -75,6 +75,7 @@ export class ConfigMerger {
     return result as Partial<Config>;
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   private deepMergeWithArrayAppend(target: any, source: any): any {
     if (this.isObject(target) && this.isObject(source)) {
       const result = { ...target };
