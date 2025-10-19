@@ -62,11 +62,4 @@ examples/unified-config.yaml
 examples/unified-config.yaml
 examples/test-configs/repository-test.yaml
 database.yaml
-output/.copima-registry.json
-output/group-01/group.jsonl
-output/group-01/group-02/group.jsonl
-output/group-01/group-02/project-02/project.jsonl
-output/group-01/group-03/group.jsonl
-output/group-01/project-01/project.jsonl
-output/group-01/test/project.jsonl
-output/users/users.jsonl
+**/output
