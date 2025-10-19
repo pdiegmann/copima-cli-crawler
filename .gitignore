@@ -61,3 +61,4 @@ output/areas/projects.jsonl
 examples/unified-config.yaml
 examples/unified-config.yaml
 examples/test-configs/repository-test.yaml
+database.yaml
