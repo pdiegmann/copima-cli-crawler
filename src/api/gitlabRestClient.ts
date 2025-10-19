@@ -18,7 +18,7 @@ export class GitLabRestClient {
         method,
         headers: {
           "Content-Type": "application/json",
-          "PRIVATE-TOKEN": this.accessToken,
+          Authorization: `Bearer ${this.accessToken}`,
         },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -32,7 +32,7 @@ export class GitLabRestClient {
       const responseText = await response.text();
       try {
         return JSON.parse(responseText) as T;
-      } catch (parseError) {
+      } catch {
         logger.error(`Failed to parse JSON response. Status: ${response.status}, Body: ${responseText.substring(0, 500)}`);
         throw new Error("Failed to parse JSON");
       }

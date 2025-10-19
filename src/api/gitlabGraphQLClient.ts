@@ -114,52 +114,43 @@ export class GitLabGraphQLClient {
       }
     };
 
-    try {
-      logger.debug(`Making GraphQL request to: ${this.baseUrl}`);
+    logger.debug(`Making GraphQL request to: ${this.baseUrl}`);
 
-      const queryString = this.getQueryString(query);
-      let response = await makeRequest(this.accessToken, queryString);
+    const queryString = this.getQueryString(query);
+    let response = await makeRequest(this.accessToken, queryString);
 
-      if (response.status === 401 && this.refreshToken && this.oauth2Config) {
-        logger.info("Access token appears to be expired, attempting refresh");
+    if (response.status === 401 && this.refreshToken && this.oauth2Config) {
+      logger.info("Access token appears to be expired, attempting refresh");
 
-        try {
-          await this.refreshAccessToken();
-          response = await makeRequest(this.accessToken, queryString);
-        } catch (error) {
-          logger.error("Failed to refresh token, proceeding with original error", {
-            error: error instanceof Error ? error.message : String(error),
-          });
-        }
+      try {
+        await this.refreshAccessToken();
+        response = await makeRequest(this.accessToken, queryString);
+      } catch (error) {
+        logger.error("Failed to refresh token, proceeding with original error", {
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
-
-      if (!response.ok) {
-        const errorText = await response.text().catch(() => "Unable to read response body");
-
-        if (response.status === 401) {
-          throw new Error("Authentication failed: Invalid or expired access token.");
-        }
-
-        throw new Error(`GraphQL request failed: ${response.status} - ${errorText}`);
-      }
-
-      const result = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
-      if (result.errors && result.errors.length > 0) {
-        const errorMessages = result.errors.map((e) => e.message).join(", ");
-        const errorMessage = `GraphQL query returned errors: ${errorMessages}`;
-        logger.error(`GraphQL errors: ${errorMessages}`, { errors: result.errors });
-        throw new Error(errorMessage);
-      }
-
-      return result.data;
-    } catch (error) {
-      logger.error("Caught error in query method:", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-
-      throw error;
     }
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "Unable to read response body");
+
+      if (response.status === 401) {
+        throw new Error("Authentication failed: Invalid or expired access token.");
+      }
+
+      throw new Error(`GraphQL request failed: ${response.status} - ${errorText}`);
+    }
+
+    const result = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
+    if (result.errors && result.errors.length > 0) {
+      const errorMessages = result.errors.map((e) => e.message).join(", ");
+      const errorMessage = `GraphQL query returned errors: ${errorMessages}`;
+      // Don't log here - let calling code decide how to handle/log
+      throw new Error(errorMessage);
+    }
+
+    return result.data;
   }
 
   private getQueryString(query: any): string {
