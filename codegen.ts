@@ -2,9 +2,9 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "https://gitlab.com/api/graphql",
+  schema: "schema.graphql",
   documents: "src/api/queries/**/*.graphql",
-  hooks: { afterOneFileWrite: ["eslint --fix", "prettier --write"] },
+  hooks: {},
   config: {
     namingConvention: "keep",
     useTypeImports: true,

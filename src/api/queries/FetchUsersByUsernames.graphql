@@ -36,7 +36,6 @@ query FetchUsersByUsernames($usernames: [String!]!, $first: Int, $after: String)
         emoji
         message
         messageHtml
-        clearStatusAt
       }
 
       # Namespace Information

@@ -29,7 +29,6 @@ query FetchComprehensiveUser($id: UserID!) {
       emoji
       message
       messageHtml
-      clearStatusAt
     }
 
     # Namespace Information

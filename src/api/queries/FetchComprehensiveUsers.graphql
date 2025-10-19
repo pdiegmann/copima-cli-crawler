@@ -36,7 +36,6 @@ query FetchComprehensiveUsers($first: Int, $after: String) {
         emoji
         message
         messageHtml
-        clearStatusAt
       }
 
       # Namespace Information

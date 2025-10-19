@@ -34,7 +34,6 @@ query FetchComprehensiveSubgroups($fullPath: ID!, $first: Int, $after: String) {
         }
         subgroupCreationLevel
         projectCreationLevel
-        actualRepositorySizeLimit
         lfsEnabled
         requestAccessEnabled
         rootStorageStatistics {

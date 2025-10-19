@@ -57,17 +57,6 @@ query FetchComprehensiveGroupProjects($fullPath: ID!, $first: Int, $after: Strin
         topics
         tagList
 
-        # Compliance frameworks
-        complianceFrameworks {
-          nodes {
-            id
-            name
-            description
-            color
-            pipelineConfigurationFullPath
-          }
-        }
-
         # Project members with user data
         projectMembers {
           nodes {

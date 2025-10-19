@@ -520,15 +520,6 @@ query FetchComprehensiveProject($fullPath: ID!) {
               title
               color
             }
-            milestone {
-              id
-              title
-            }
-            assignee {
-              id
-              username
-              name
-            }
           }
         }
       }
@@ -600,15 +591,6 @@ query FetchComprehensiveProject($fullPath: ID!) {
           authorEmail
           authoredDate
         }
-      }
-    }
-
-    # Compliance frameworks
-    complianceFrameworks {
-      nodes {
-        id
-        name
-        description
       }
     }
   }

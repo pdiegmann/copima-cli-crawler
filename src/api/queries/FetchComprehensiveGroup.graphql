@@ -26,18 +26,8 @@ query FetchComprehensiveGroup($fullPath: ID!) {
     }
     subgroupCreationLevel
     projectCreationLevel
-    actualRepositorySizeLimit
     lfsEnabled
     requestAccessEnabled
-    complianceFrameworks {
-      nodes {
-        id
-        name
-        description
-        color
-        pipelineConfigurationFullPath
-      }
-    }
     customEmoji {
       nodes {
         id
@@ -119,20 +109,6 @@ query FetchComprehensiveGroup($fullPath: ID!) {
           username
           name
         }
-      }
-    }
-    vulnerabilities {
-      nodes {
-        id
-        title
-        description
-        state
-        severity
-        reportType
-        detectedAt
-        dismissedAt
-        resolvedAt
-        confirmedAt
       }
     }
     workItemTypes {

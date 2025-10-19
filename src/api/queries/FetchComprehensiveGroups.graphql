@@ -33,7 +33,6 @@ query FetchComprehensiveGroups($first: Int, $after: String) {
       }
       subgroupCreationLevel
       projectCreationLevel
-      actualRepositorySizeLimit
       lfsEnabled
       requestAccessEnabled
       rootStorageStatistics {

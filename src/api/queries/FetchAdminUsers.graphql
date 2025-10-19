@@ -36,7 +36,6 @@ query FetchAdminUsers($first: Int, $after: String) {
         emoji
         message
         messageHtml
-        clearStatusAt
       }
 
       # User Permissions
