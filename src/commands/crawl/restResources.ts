@@ -17,7 +17,9 @@ export class RestResourcesFetcher {
 
   constructor(config: Config) {
     this.config = config;
-    this.client = new GitLabRestClient(this.config.gitlab.host, this.config.gitlab.accessToken);
+    // REST API requires /api/v4 prefix
+    const apiUrl = `${this.config.gitlab.host}/api/v4`;
+    this.client = new GitLabRestClient(apiUrl, this.config.gitlab.accessToken);
     this.storageManager = new StorageManager(this.config.output);
   }
 
