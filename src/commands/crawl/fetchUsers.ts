@@ -12,7 +12,8 @@ const logger = createLogger("fetchUsers");
  */
 export const fetchUsers = async (callback: (user: unknown, context: CallbackContext) => unknown | null): Promise<void> => {
   const config = await loadConfig();
-  const client = new GitLabGraphQLClient(config.gitlab.host, config.gitlab.accessToken);
+  const accessToken = config.gitlab.token || config.gitlab.accessToken || "";
+  const client = new GitLabGraphQLClient(config.gitlab.host, accessToken);
   const storageManager = new StorageManager(config.output);
 
   try {

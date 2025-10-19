@@ -416,10 +416,12 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       return;
     }
 
-    if (tokenSource === "flag") {
+    if (tokenSource === "pat") {
+      logger.info(`Using Personal Access Token (PAT) for account '${accountLabel}'`);
+    } else if (tokenSource === "flag") {
       logger.info(`Using access token passed via parameter for account '${accountLabel}'`);
-    } else if (tokenSource === "database") {
-      logger.info(`Using access token retrieved from database for account '${accountLabel}'`);
+    } else if (tokenSource === "oauth2") {
+      logger.info(`Using OAuth2 token retrieved from storage for account '${accountLabel}'`);
     } else if (tokenSource === "config") {
       logger.info(`Using access token from configuration for account '${accountLabel}'`);
     }

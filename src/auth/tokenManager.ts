@@ -80,29 +80,29 @@ export class TokenManager {
     } else {
       // Create new account
       // First ensure a user exists
-      let userId = randomUUID();
-      const users = this.db.getAllAccounts();
-      if (users.length === 0) {
+      const userId = randomUUID();
+      const userEmail = `${accountId}@local`;
+      
+      // Try to find existing user or create new one
+      let existingUser = this.db.findUserByEmail(userEmail);
+      if (!existingUser) {
         // Create a default user
         const user = {
           id: userId,
           name: "Default User",
-          email: `${accountId}@local`,
+          email: userEmail,
           emailVerified: false,
           createdAt: now,
           updatedAt: now,
         };
-        this.db.upsertUser(user);
-      } else {
-        // Use the first available user
-        userId = users[0]!.userId;
+        existingUser = this.db.upsertUser(user);
       }
 
       this.db.insertAccount({
         id: randomUUID(),
         accountId,
         providerId: "gitlab",
-        userId,
+        userId: existingUser.id,
         accessToken,
         refreshToken,
         createdAt: now,
