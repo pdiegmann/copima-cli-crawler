@@ -26,7 +26,12 @@ export class TokenManager {
    * 2. OAuth2 token from YAML storage - looked up by accountId
    * 3. OAuth2 token from explicit access/refresh tokens - stored if provided
    */
-  async getValidToken(options: { pat?: string; accountId?: string; accessToken?: string; refreshToken?: string }) {
+  async getValidToken(options: {
+    pat?: string;
+    accountId?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  }): Promise<{ token: string; source: "pat" | "oauth2"; accountId?: string } | null> {
     // Priority 1: PAT (never stored, just used)
     if (options.pat) {
       logger.debug("Using Personal Access Token (PAT)");
@@ -57,7 +62,7 @@ export class TokenManager {
   /**
    * Store OAuth2 tokens for an account
    */
-  private async storeOAuth2Tokens(accountId: string, accessToken: string, refreshToken: string) {
+  private async storeOAuth2Tokens(accountId: string, accessToken: string, refreshToken: string): Promise<void> {
     const { randomUUID } = await import("node:crypto");
     const now = new Date();
 
@@ -107,7 +112,7 @@ export class TokenManager {
     }
   }
 
-  async getAccessToken(accountId: string) {
+  async getAccessToken(accountId: string): Promise<string | null> {
     try {
       const accountRecord = this.db.findAccountByAccountId(accountId);
 
@@ -134,7 +139,7 @@ export class TokenManager {
     }
   }
 
-  async resolveAccountId(accountId?: string) {
+  async resolveAccountId(accountId?: string): Promise<string | null> {
     try {
       if (accountId) {
         const accountRecord = this.db.findAccountByAccountId(accountId);
@@ -202,7 +207,7 @@ export class TokenManager {
   }
 
   // eslint-disable-next-line sonarjs/no-invariant-returns
-  async refreshAccessToken(accountId: string) {
+  async refreshAccessToken(accountId: string): Promise<string | null> {
     try {
       const accountRecord = this.db.findAccountByAccountId(accountId);
 
@@ -222,7 +227,7 @@ export class TokenManager {
     }
   }
 
-  private async updateTokens(accountId: string, tokenResponse: OAuth2TokenResponse) {
+  private async updateTokens(accountId: string, tokenResponse: OAuth2TokenResponse): Promise<void> {
     const now = new Date();
     const accessTokenExpiresAt = addSeconds(now, tokenResponse.expires_in);
     const refreshTokenExpiresAt = tokenResponse.refresh_expires_in ? addSeconds(now, tokenResponse.refresh_expires_in) : null;

@@ -62,6 +62,7 @@ export class StorageManager {
    * @param idField - Optional field name to use as ID for deduplication (default: 'id').
    * @returns The number of lines written.
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   writeJsonlFile(filePath: string, data: SafeRecord | SafeRecord[], append: boolean = true, resourceType?: string, idField: string = "id"): number {
     try {
       const dataArray = Array.isArray(data) ? data : [data];

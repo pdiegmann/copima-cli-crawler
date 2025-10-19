@@ -72,6 +72,7 @@ describe("crawl impl", () => {
     mockTokenManager = {
       resolveAccountId: jest.fn().mockResolvedValue("account-1"),
       getAccessToken: jest.fn().mockResolvedValue("valid-token"),
+      getValidToken: jest.fn().mockResolvedValue({ token: "valid-token", source: "config" }),
     };
     (TokenManager as jest.Mock).mockImplementation(() => mockTokenManager);
 
@@ -90,6 +91,10 @@ describe("crawl impl", () => {
       output: {
         directory: "./output",
         rootDir: "./output",
+        deduplication: {
+          enabled: true,
+          registryPath: "./output/.copima-registry.json",
+        },
       },
       callbacks: { enabled: false },
       resume: { enabled: false },
@@ -305,6 +310,14 @@ describe("crawl impl", () => {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
           },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
+          },
           callbacks: { enabled: false },
         },
       };
@@ -340,6 +353,7 @@ describe("crawl impl", () => {
     it("should handle missing token", async () => {
       mockTokenManager.getAccessToken.mockResolvedValue(null);
       mockTokenManager.resolveAccountId.mockResolvedValue("account-1");
+      mockTokenManager.getValidToken.mockResolvedValue(null);
       const flags = { host: "https://gitlab.example.com" };
 
       // Remove config token to ensure no token is available
@@ -383,6 +397,14 @@ describe("crawl impl", () => {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
           },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
+          },
           callbacks: { enabled: false },
         },
       };
@@ -393,7 +415,7 @@ describe("crawl impl", () => {
 
       await impl.users.call(context, flags);
 
-      expect(mockGraphQLClient.fetchUsers).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllUsers).toHaveBeenCalled();
       expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Fetched 1 users"));
     });
 
@@ -410,11 +432,11 @@ describe("crawl impl", () => {
 
       await impl.users.call(context, flags);
 
-      expect(mockGraphQLClient.fetchUsers).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllUsers).toHaveBeenCalled();
     });
 
     it("should handle errors during fetch", async () => {
-      mockGraphQLClient.fetchUsers.mockRejectedValue(new Error("GraphQL Error"));
+      mockGraphQLClient.fetchAllUsers.mockRejectedValue(new Error("GraphQL Error"));
       const flags = { accessToken: "valid-token" };
 
       await expect(impl.users.call(context, flags)).rejects.toThrow("GraphQL Error");
@@ -446,6 +468,14 @@ describe("crawl impl", () => {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
           },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
+          },
           callbacks: { enabled: false },
         },
       };
@@ -456,9 +486,9 @@ describe("crawl impl", () => {
 
       await impl.resources.call(context, flags);
 
-      expect(mockGraphQLClient.fetchProjects).toHaveBeenCalledWith(10);
-      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Found 1 accessible projects"));
-      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Stored all required resource files"));
+      expect(mockGraphQLClient.fetchAllGroups).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllProjects).toHaveBeenCalled();
+      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Found 2 groups and 1 projects to process"));
     });
 
     it("should handle orchestrator call", async () => {
@@ -466,11 +496,12 @@ describe("crawl impl", () => {
 
       await impl.resources.call(context, flags);
 
-      expect(mockGraphQLClient.fetchProjects).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllGroups).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllProjects).toHaveBeenCalled();
     });
 
     it("should handle errors during fetch", async () => {
-      mockGraphQLClient.fetchProjects.mockRejectedValue(new Error("GraphQL Error"));
+      mockGraphQLClient.fetchAllGroups.mockRejectedValue(new Error("GraphQL Error"));
       const flags = {};
 
       await expect(impl.resources.call(context, flags)).rejects.toThrow("GraphQL Error");
@@ -502,6 +533,14 @@ describe("crawl impl", () => {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
           },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
+          },
           callbacks: { enabled: false },
         },
       };
@@ -512,9 +551,8 @@ describe("crawl impl", () => {
 
       await impl.repository.call(context, flags);
 
-      expect(mockGraphQLClient.fetchProjects).toHaveBeenCalledWith(5);
-      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Found 1 projects with repository information"));
-      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Stored all required repository files"));
+      expect(mockGraphQLClient.fetchAllProjects).toHaveBeenCalled();
+      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Found 1 projects to crawl repository resources"));
     });
 
     it("should handle orchestrator call", async () => {
@@ -522,11 +560,11 @@ describe("crawl impl", () => {
 
       await impl.repository.call(context, flags);
 
-      expect(mockGraphQLClient.fetchProjects).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllProjects).toHaveBeenCalled();
     });
 
     it("should handle errors during fetch", async () => {
-      mockGraphQLClient.fetchProjects.mockRejectedValue(new Error("GraphQL Error"));
+      mockGraphQLClient.fetchAllProjects.mockRejectedValue(new Error("GraphQL Error"));
       const flags = {};
 
       await expect(impl.repository.call(context, flags)).rejects.toThrow("GraphQL Error");

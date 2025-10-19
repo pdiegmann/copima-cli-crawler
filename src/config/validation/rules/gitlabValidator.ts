@@ -2,6 +2,7 @@ import type { Config } from "../../types.js";
 import type { BaseValidator, ConfigValidationError, ValidationResult } from "../types.js";
 
 export class GitlabConfigValidator implements BaseValidator {
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   validate(config: Partial<Config>): ValidationResult {
     const errors: ConfigValidationError[] = [];
     const warnings: string[] = [];
@@ -55,8 +56,8 @@ export class GitlabConfigValidator implements BaseValidator {
     // Require at least one authentication method
     if (!hasPat && !hasAccessToken && !hasAccountId && !hasOauthProviders) {
       errors.push({
-        field: "gitlab.token",
-        message: "Authentication required: provide --token (PAT), --access-token (OAuth2), --account-id (stored OAuth2), or configure OAuth2 providers",
+        field: "gitlab.accessToken",
+        message: "GitLab access token is required unless OAuth2 providers are configured",
         severity: "error",
       });
     }
