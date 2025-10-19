@@ -99,3 +99,28 @@ To verify this fix works:
 2. Trigger Codacy re-analysis (or wait for automatic analysis)
 3. Confirm no ESLint errors appear
 4. Confirm Diff and Deltas steps complete successfully
+
+## Applying to PRs #2 and #3
+
+### Option 1: Cherry-pick commits (Recommended)
+```bash
+# For PR #2
+git checkout copilot/simplify-oauth2-token-handling
+git cherry-pick 94538e4 226fbbf 2b5375e 390d468
+git push origin copilot/simplify-oauth2-token-handling
+
+# For PR #3
+git checkout copilot/simplify-cli-commands
+git cherry-pick 94538e4 226fbbf 2b5375e 390d468
+git push origin copilot/simplify-cli-commands
+```
+
+### Option 2: Merge this PR into the main branch first
+If these fixes are merged to the main branch first, then PRs #2 and #3 can rebase or merge from main to get the fixes automatically.
+
+### Option 3: Manual file copy
+Copy these files to each PR branch:
+- `.codacy.yml`
+- `.dcignore` (updated version)
+- `docs/codacy-configuration.md` (optional but recommended)
+- `CODACY_FIX.md` (optional documentation)
