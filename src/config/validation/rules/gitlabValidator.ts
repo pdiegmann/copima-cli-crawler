@@ -55,7 +55,7 @@ export class GitlabConfigValidator implements BaseValidator {
     // Require at least one authentication method
     if (!hasPat && !hasAccessToken && !hasAccountId && !hasOauthProviders) {
       errors.push({
-        field: "gitlab.token",
+        field: "gitlab.accessToken",
         message: "Authentication required: provide --token (PAT), --access-token (OAuth2), --account-id (stored OAuth2), or configure OAuth2 providers",
         severity: "error",
       });

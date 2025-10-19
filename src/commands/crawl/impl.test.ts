@@ -72,6 +72,7 @@ describe("crawl impl", () => {
     mockTokenManager = {
       resolveAccountId: jest.fn().mockResolvedValue("account-1"),
       getAccessToken: jest.fn().mockResolvedValue("valid-token"),
+      getValidToken: jest.fn().mockResolvedValue({ token: "valid-token", source: "config" }),
     };
     (TokenManager as jest.Mock).mockImplementation(() => mockTokenManager);
 
@@ -90,6 +91,10 @@ describe("crawl impl", () => {
       output: {
         directory: "./output",
         rootDir: "./output",
+        deduplication: {
+          enabled: true,
+          registryPath: "./output/.copima-registry.json",
+        },
       },
       callbacks: { enabled: false },
       resume: { enabled: false },
@@ -305,6 +310,14 @@ describe("crawl impl", () => {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
           },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
+          },
           callbacks: { enabled: false },
         },
       };
@@ -383,6 +396,14 @@ describe("crawl impl", () => {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
           },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
+          },
           callbacks: { enabled: false },
         },
       };
@@ -393,7 +414,7 @@ describe("crawl impl", () => {
 
       await impl.users.call(context, flags);
 
-      expect(mockGraphQLClient.fetchUsers).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllUsers).toHaveBeenCalled();
       expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Fetched 1 users"));
     });
 
@@ -410,11 +431,11 @@ describe("crawl impl", () => {
 
       await impl.users.call(context, flags);
 
-      expect(mockGraphQLClient.fetchUsers).toHaveBeenCalled();
+      expect(mockGraphQLClient.fetchAllUsers).toHaveBeenCalled();
     });
 
     it("should handle errors during fetch", async () => {
-      mockGraphQLClient.fetchUsers.mockRejectedValue(new Error("GraphQL Error"));
+      mockGraphQLClient.fetchAllUsers.mockRejectedValue(new Error("GraphQL Error"));
       const flags = { accessToken: "valid-token" };
 
       await expect(impl.users.call(context, flags)).rejects.toThrow("GraphQL Error");
@@ -445,6 +466,14 @@ describe("crawl impl", () => {
           gitlab: {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
+          },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
           },
           callbacks: { enabled: false },
         },
@@ -501,6 +530,14 @@ describe("crawl impl", () => {
           gitlab: {
             host: "https://gitlab.example.com",
             accessToken: "valid-token",
+          },
+          output: {
+            directory: "./output",
+            rootDir: "./output",
+            deduplication: {
+              enabled: true,
+              registryPath: "./output/.copima-registry.json",
+            },
           },
           callbacks: { enabled: false },
         },
