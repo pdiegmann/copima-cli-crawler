@@ -517,8 +517,11 @@ export class TestRunner {
   private async validateResults(config: TestConfig, crawlerResult: CrawlerExecutionResult): Promise<ValidationResults> {
     const { validation } = config;
 
+    // Resolve outputDir relative to workingDir if it's relative
+    const outputDir = join(config.execution.workingDir, config.execution.outputDir);
+
     // Validate files
-    const files = await Promise.all(validation.expectedFiles.map((expectedFile) => this.validateFile(expectedFile, config.execution.outputDir)));
+    const files = await Promise.all(validation.expectedFiles.map((expectedFile) => this.validateFile(expectedFile, outputDir)));
 
     // Validate logs
     const logs = this.validateLogs(validation.logs, crawlerResult.stdout, crawlerResult.stderr);
@@ -527,7 +530,7 @@ export class TestRunner {
     const performance = this.validatePerformance(validation.performance, crawlerResult);
 
     // Validate data quality
-    const dataQuality = await this.validateDataQuality(validation.dataQuality, crawlerResult.generatedFiles, config.execution.outputDir);
+    const dataQuality = await this.validateDataQuality(validation.dataQuality, crawlerResult.generatedFiles, outputDir);
 
     return {
       files,
@@ -1305,8 +1308,8 @@ export class TestRunner {
 
     <h2>Test Results</h2>
     ${result.results
-        .map(
-          (test) => `
+      .map(
+        (test) => `
         <div class="test ${test.success ? "passed" : "failed"}">
             <h3>${test.config.metadata.name} - ${test.success ? "PASSED" : "FAILED"}</h3>
             <p>${test.config.metadata.description}</p>
@@ -1318,8 +1321,8 @@ export class TestRunner {
             </div>
         </div>
     `
-        )
-        .join("")}
+      )
+      .join("")}
 </body>
 </html>`;
   }

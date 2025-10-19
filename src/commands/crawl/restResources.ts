@@ -45,8 +45,8 @@ export class RestResourcesFetcher {
         }
       }
 
-      // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository"];
+      // Store in hierarchical structure - matches pattern from commonResources
+      const hierarchy = [...projectPath.split("/"), "repository"];
       const filePath = this.storageManager.createHierarchicalPath("branches", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBranches as any, false);
 
@@ -80,8 +80,8 @@ export class RestResourcesFetcher {
         }
       }
 
-      // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository"];
+      // Store in hierarchical structure - matches pattern from commonResources
+      const hierarchy = [...projectPath.split("/"), "repository"];
       const filePath = this.storageManager.createHierarchicalPath("tags", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTags as any, false);
 
@@ -153,7 +153,7 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "branches", branchName];
+      const hierarchy = [...projectPath.split("/"), "repository", "branches", branchName];
       const filePath = this.storageManager.createHierarchicalPath("commits", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedCommits as any, false);
 
@@ -198,7 +198,7 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "branches", branchName];
+      const hierarchy = [...projectPath.split("/"), "repository", "branches", branchName];
       const filePath = this.storageManager.createHierarchicalPath("tree", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTreeItems as any, false);
 
@@ -234,7 +234,7 @@ export class RestResourcesFetcher {
       if (processedContent) {
         // Store in hierarchical structure
         const sanitizedFilePath = filePath.replace(/[/\\:*?"<>|]/g, "_");
-        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "files"];
+        const hierarchy = [...projectPath.split("/"), "repository", "files"];
         const fileName = `${sanitizedFilePath}_content`;
         const outputPath = this.storageManager.createHierarchicalPath(fileName, hierarchy);
         const writtenCount = this.storageManager.writeJsonlFile(outputPath, [processedContent] as any, false);
@@ -295,7 +295,7 @@ export class RestResourcesFetcher {
       const processedRefs = callback(refs, context);
       if (processedRefs) {
         // Store in hierarchical structure
-        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "repository", "commits"];
+        const hierarchy = [...projectPath.split("/"), "repository", "commits"];
         const filePath = this.storageManager.createHierarchicalPath(`${commitSha}_refs`, hierarchy);
         this.storageManager.writeJsonlFile(filePath, [processedRefs] as any, false);
 
@@ -325,7 +325,7 @@ export class RestResourcesFetcher {
       const processedArtifacts = callback(artifacts, context);
       if (processedArtifacts) {
         // Store in hierarchical structure
-        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "jobs"];
+        const hierarchy = [...projectPath.split("/"), "jobs"];
         const filePath = this.storageManager.createHierarchicalPath(`${jobId}_artifacts`, hierarchy);
         this.storageManager.writeJsonlFile(filePath, [processedArtifacts] as any, false);
 
@@ -355,7 +355,7 @@ export class RestResourcesFetcher {
       const processedLogs = callback(logs, context);
       if (processedLogs) {
         // Store in hierarchical structure
-        const hierarchy = ["groups", ...projectPath.split("/"), "projects", "jobs"];
+        const hierarchy = [...projectPath.split("/"), "jobs"];
         const filePath = this.storageManager.createHierarchicalPath(`${jobId}_logs`, hierarchy);
         this.storageManager.writeJsonlFile(filePath, [processedLogs] as any, false);
 
@@ -468,7 +468,7 @@ export class RestResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects", "security"];
+      const hierarchy = [...projectPath.split("/"), "security"];
       const filePath = this.storageManager.createHierarchicalPath("vulnerabilities", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedVulnerabilities as any, false);
 
