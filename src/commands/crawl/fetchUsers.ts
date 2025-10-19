@@ -2,6 +2,7 @@ import { GitLabGraphQLClient } from "../../api/gitlabGraphQLClient";
 import { loadConfig } from "../../config/loader";
 import type { CallbackContext } from "../../config/types";
 import { createLogger } from "../../logging/logger";
+import type { SafeRecord } from "../../types/api";
 
 const logger = createLogger("fetchUsers");
 
@@ -40,7 +41,13 @@ export const fetchUsers = async (callback: (user: unknown, context: CallbackCont
     // Create hierarchical path and write to JSONL file
     // Users are stored at the root level since they're global resources
     const filePath = storageManager.createHierarchicalPath("users", []);
-    const writtenCount = storageManager.writeJsonlFile(filePath, processedUsers, false, "user", "id"); // Overwrite existing file with deduplication
+    const writtenCount = storageManager.writeJsonlFile(
+      filePath,
+      processedUsers as SafeRecord[],
+      false,
+      "user",
+      "id",
+    ); // Overwrite existing file with deduplication
 
     logger.info(`Successfully wrote ${writtenCount} users to ${filePath}`);
   } catch (error) {

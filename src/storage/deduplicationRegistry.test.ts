@@ -158,7 +158,7 @@ describe("DeduplicationRegistry", () => {
 
       const entries = registry.getEntriesForType("users");
       expect(entries).toHaveLength(1);
-      expect(entries[0].checksumOrSize).toBe("abc123");
+      expect(entries[0]?.checksumOrSize).toBe("abc123");
     });
 
     it("should update existing entry if marked again", () => {
@@ -172,7 +172,7 @@ describe("DeduplicationRegistry", () => {
 
       const entries = registry.getEntriesForType("users");
       expect(entries).toHaveLength(1);
-      expect(entries[0].filePath).toBe("/output/users-new.jsonl");
+      expect(entries[0]?.filePath).toBe("/output/users-new.jsonl");
     });
 
     it("should do nothing when registry is disabled", () => {
@@ -212,7 +212,7 @@ describe("DeduplicationRegistry", () => {
       registry.markBatchWritten("users", [], "/output/users.jsonl");
 
       const stats = registry.getStats();
-      expect(stats.users).toBeUndefined();
+      expect(stats["users"]).toBeUndefined();
     });
   });
 
@@ -238,8 +238,8 @@ describe("DeduplicationRegistry", () => {
       registry.markWritten("projects", "project-1", "/output/projects.jsonl");
 
       const stats = registry.getStats();
-      expect(stats.users).toBe(2);
-      expect(stats.projects).toBe(1);
+      expect(stats["users"]).toBe(2);
+      expect(stats["projects"]).toBe(1);
     });
 
     it("should handle multiple resource types", () => {
@@ -253,9 +253,9 @@ describe("DeduplicationRegistry", () => {
       registry.markBatchWritten("groups", ["g1"], "/output/groups.jsonl");
 
       const stats = registry.getStats();
-      expect(stats.users).toBe(3);
-      expect(stats.projects).toBe(2);
-      expect(stats.groups).toBe(1);
+      expect(stats["users"]).toBe(3);
+      expect(stats["projects"]).toBe(2);
+      expect(stats["groups"]).toBe(1);
     });
   });
 
@@ -333,7 +333,7 @@ describe("DeduplicationRegistry", () => {
       expect(registry2.isWritten("projects", "project-1")).toBe(true);
 
       const entries = registry2.getEntriesForType("users");
-      expect(entries[0].checksumOrSize).toBe("checksum-1");
+      expect(entries[0]?.checksumOrSize).toBe("checksum-1");
     });
 
     it("should not save when registry is disabled", () => {

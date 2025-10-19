@@ -209,7 +209,7 @@ describe("Deduplication Integration Tests", () => {
 
       // Verify deduplication stats
       const stats = registry.getStats();
-      expect(stats.member).toBe(3); // Total unique members
+      expect(stats["member"]).toBe(3); // Total unique members
     });
 
     it("should handle large datasets efficiently", () => {
@@ -249,7 +249,7 @@ describe("Deduplication Integration Tests", () => {
 
       // Verify total unique users
       const stats = registry.getStats();
-      expect(stats.user).toBe(1500);
+      expect(stats["user"]).toBe(1500);
     });
   });
 
