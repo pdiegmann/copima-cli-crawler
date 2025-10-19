@@ -1,8 +1,17 @@
 ---
-# Disable ESLint engine in Codacy to avoid conflicts with eslint-plugin-angular
-# Our project uses ESLint 9 flat config locally, which is not compatible with
-# Codacy's Docker image that includes incompatible plugins like eslint-plugin-angular
+# Codacy Configuration
+#
+# Fixes the ESLint9 issue where Codacy's Docker image includes eslint-plugin-angular
+# which is incompatible with ESLint 9 (uses deprecated context.getScope() API).
+#
+# The project uses ESLint 9 flat config (eslint.config.ts) locally with TypeScript-ESLint
+# and other modern plugins. Codacy's codacy-eslint9:0.0.48 image comes with pre-configured
+# plugins that conflict with our setup.
+#
+# Solution: Disable Codacy's ESLint engine and rely on local linting + other Codacy engines.
+
 engines:
+  # Disable ESLint to avoid conflicts with eslint-plugin-angular
   eslint:
     enabled: false
   
@@ -15,10 +24,11 @@ engines:
       - "**/*.spec.ts"
       - "**/*.test.ts"
   
-  # Use TypeScript-specific analysis instead
+  # TypeScript-specific analysis
   metrics:
     enabled: true
 
+# Global exclusions for all engines
 exclude_paths:
   - "node_modules/**"
   - "dist/**"
@@ -31,3 +41,5 @@ exclude_paths:
   - "yarn.lock"
   - "build.config.ts"
   - "scripts/**"
+  - "drizzle/**"
+  - ".github/**"
