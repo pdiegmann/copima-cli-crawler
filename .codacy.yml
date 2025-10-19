@@ -1,0 +1,33 @@
+---
+# Disable ESLint engine in Codacy to avoid conflicts with eslint-plugin-angular
+# Our project uses ESLint 9 flat config locally, which is not compatible with
+# Codacy's Docker image that includes incompatible plugins like eslint-plugin-angular
+engines:
+  eslint:
+    enabled: false
+  
+  # Keep other useful engines enabled
+  duplication:
+    enabled: true
+    exclude_paths:
+      - "node_modules/**"
+      - "dist/**"
+      - "**/*.spec.ts"
+      - "**/*.test.ts"
+  
+  # Use TypeScript-specific analysis instead
+  metrics:
+    enabled: true
+
+exclude_paths:
+  - "node_modules/**"
+  - "dist/**"
+  - "**/*.spec.ts"
+  - "**/*.test.ts"
+  - "**/__tests__/**"
+  - "**/tests/**"
+  - "bun.lock"
+  - "package-lock.json"
+  - "yarn.lock"
+  - "build.config.ts"
+  - "scripts/**"

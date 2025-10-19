@@ -4,3 +4,6 @@ tests/
 *.test.*
 *_test*_*
 *_test*_*/
+build.config.ts
+scripts/
+dist/
