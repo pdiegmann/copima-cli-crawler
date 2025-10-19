@@ -13,8 +13,6 @@ export type TokenSource = {
   accountId?: string;
 };
 
-export type TokenResult = TokenSource | null;
-
 export class TokenManager {
   private readonly db: YamlStorage;
 

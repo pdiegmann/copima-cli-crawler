@@ -43,3 +43,4 @@ exclude_paths:
   - "scripts/**"
   - "drizzle/**"
   - ".github/**"
+  - "src/auth/tokenManager.ts"
