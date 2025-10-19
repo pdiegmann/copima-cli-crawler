@@ -50,6 +50,7 @@ describe("crawl impl", () => {
         { id: "2", fullPath: "group2", name: "Group 2" },
       ]),
       fetchAllProjects: jest.fn().mockResolvedValue([{ id: "1", fullPath: "project1", name: "Project 1" }]),
+      fetchAllUsers: jest.fn().mockResolvedValue([{ id: "1", username: "user1", name: "User 1" }]),
       fetchUsers: jest.fn().mockResolvedValue([{ id: "1", username: "user1", name: "User 1" }]),
       fetchProjects: jest.fn().mockResolvedValue({
         nodes: [{ id: "1", name: "Project 1" }],
@@ -85,6 +86,10 @@ describe("crawl impl", () => {
       gitlab: {
         host: "https://gitlab.example.com",
         accessToken: "config-token",
+      },
+      output: {
+        directory: "./output",
+        rootDir: "./output",
       },
       callbacks: { enabled: false },
       resume: { enabled: false },
@@ -148,6 +153,13 @@ describe("crawl impl", () => {
         createWriteStream: jest.fn().mockReturnValue({
           write: jest.fn(),
           end: jest.fn(),
+          on: jest.fn(function (this: any, event: string, handler: any) {
+            if (event === "finish") {
+              // Immediately call the finish handler
+              setImmediate(handler);
+            }
+            return this;
+          }),
         }),
       };
       jest.doMock("fs", () => mockFs);
@@ -161,7 +173,7 @@ describe("crawl impl", () => {
       jest.doMock("path", () => mockPath);
     });
 
-    it("should execute areas and users steps by default", async () => {
+    it("should execute all four steps by default", async () => {
       const options = {
         database: "./test-db.yaml",
         accessToken: "test-token",
@@ -171,7 +183,7 @@ describe("crawl impl", () => {
       await impl.crawlCommand(options);
 
       expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Starting complete GitLab crawl"));
-      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Executing steps: areas, users"));
+      expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("Executing steps: areas, users, resources, repository"));
       expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("completed successfully"));
     });
 
