@@ -39,19 +39,18 @@ jobs:
       - name: Create checksums
         run: |
           cd dist
-          sha256sum * > checksums.txt
+          sha256sum copima-cli-* > checksums.txt
           cat checksums.txt
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ steps.version.outputs.VERSION }}
+          name: Release ${{ steps.version.outputs.VERSION }}
           draft: false
           prerelease: false
+          files: |
+            dist/copima-cli-*
+            dist/checksums.txt
           body: |
             ## What's Changed
 
@@ -90,43 +89,3 @@ jobs:
             ### Verification
 
             You can verify the integrity of the downloads using the checksums provided in the `checksums.txt` file.
-
-      - name: Upload Windows Executable
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/copima-cli-windows.exe
-          asset_name: copima-cli-windows.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload macOS x64 Executable
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/copima-cli-macos-x64
-          asset_name: copima-cli-macos-x64
-          asset_content_type: application/octet-stream
-
-      - name: Upload macOS ARM64 Executable
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/copima-cli-macos-arm64
-          asset_name: copima-cli-macos-arm64
-          asset_content_type: application/octet-stream
-
-      - name: Upload Checksums
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/checksums.txt
-          asset_name: checksums.txt
-          asset_content_type: text/plain
