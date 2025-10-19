@@ -14,7 +14,7 @@ export const areasCommand = buildCommand({
       host: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "GitLab instance host",
+        brief: "GitLab instance URL (e.g., https://gitlab.com)",
         optional: true,
       },
       token: {
@@ -26,43 +26,43 @@ export const areasCommand = buildCommand({
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 access token",
+        brief: "GitLab access token for authentication",
         optional: true,
       },
       "refresh-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 refresh token",
+        brief: "OAuth2 refresh token (optional)",
         optional: true,
       },
       "account-id": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Account ID to use for authentication",
+        brief: "Account ID from stored accounts (optional)",
         optional: true,
       },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Output directory for JSONL files",
+        brief: "Output directory for data files (default: ./output)",
         optional: true,
       },
       resume: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase(),
-        brief: "Resume from previous crawl state",
+        brief: "Resume from previous crawl (true/false)",
         optional: true,
       },
       database: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Database file path",
+        brief: "Database file path (default: ./database.yaml)",
         optional: true,
       },
     },
   },
   docs: {
-    brief: "Step 1: Crawl available areas (groups and projects)",
+    brief: "Crawl groups and projects (Step 1 of 4)",
   },
 });
 
@@ -80,7 +80,7 @@ export const usersCommand = buildCommand({
       host: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "GitLab instance host",
+        brief: "GitLab instance URL (e.g., https://gitlab.com)",
         optional: true,
       },
       token: {
@@ -92,37 +92,37 @@ export const usersCommand = buildCommand({
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 access token",
+        brief: "GitLab access token for authentication",
         optional: true,
       },
       "refresh-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 refresh token",
+        brief: "OAuth2 refresh token (optional)",
         optional: true,
       },
       "account-id": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Account ID to use for authentication",
+        brief: "Account ID from stored accounts (optional)",
         optional: true,
       },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Output directory for JSONL files",
+        brief: "Output directory for data files (default: ./output)",
         optional: true,
       },
       resume: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase(),
-        brief: "Resume from previous crawl state",
+        brief: "Resume from previous crawl (true/false)",
         optional: true,
       },
     },
   },
   docs: {
-    brief: "Step 2: Crawl all available users",
+    brief: "Crawl all users from GitLab instance (Step 2 of 4)",
   },
 });
 
@@ -140,7 +140,7 @@ export const resourcesCommand = buildCommand({
       host: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "GitLab instance host",
+        brief: "GitLab instance URL (e.g., https://gitlab.com)",
         optional: true,
       },
       token: {
@@ -152,37 +152,37 @@ export const resourcesCommand = buildCommand({
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 access token",
+        brief: "GitLab access token for authentication",
         optional: true,
       },
       "refresh-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 refresh token",
+        brief: "OAuth2 refresh token (optional)",
         optional: true,
       },
       "account-id": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Account ID to use for authentication",
+        brief: "Account ID from stored accounts (optional)",
         optional: true,
       },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Output directory for JSONL files",
+        brief: "Output directory for data files (default: ./output)",
         optional: true,
       },
       resume: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase(),
-        brief: "Resume from previous crawl state",
+        brief: "Resume from previous crawl (true/false)",
         optional: true,
       },
     },
   },
   docs: {
-    brief: "Step 3: Crawl area-specific resources",
+    brief: "Crawl issues, MRs, labels, and other resources (Step 3 of 4)",
   },
 });
 
@@ -200,7 +200,7 @@ export const repositoryCommand = buildCommand({
       host: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "GitLab instance host",
+        brief: "GitLab instance URL (e.g., https://gitlab.com)",
         optional: true,
       },
       token: {
@@ -212,37 +212,37 @@ export const repositoryCommand = buildCommand({
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 access token",
+        brief: "GitLab access token for authentication",
         optional: true,
       },
       "refresh-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 refresh token",
+        brief: "OAuth2 refresh token (optional)",
         optional: true,
       },
       "account-id": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Account ID to use for authentication",
+        brief: "Account ID from stored accounts (optional)",
         optional: true,
       },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Output directory for JSONL files",
+        brief: "Output directory for data files (default: ./output)",
         optional: true,
       },
       resume: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase(),
-        brief: "Resume from previous crawl state",
+        brief: "Resume from previous crawl (true/false)",
         optional: true,
       },
     },
   },
   docs: {
-    brief: "Step 4: Crawl repository resources",
+    brief: "Crawl commits, branches, tags, and files (Step 4 of 4)",
   },
 });
 
@@ -260,7 +260,7 @@ export const crawlAllCommand = buildCommand({
       host: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "GitLab instance host",
+        brief: "GitLab instance URL (e.g., https://gitlab.com)",
         optional: true,
       },
       token: {
@@ -272,55 +272,55 @@ export const crawlAllCommand = buildCommand({
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 access token",
+        brief: "GitLab access token for authentication",
         optional: true,
       },
       "refresh-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "OAuth2 refresh token",
+        brief: "OAuth2 refresh token (optional)",
         optional: true,
       },
       "account-id": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Account ID to use for authentication",
+        brief: "Account ID from stored accounts (optional)",
         optional: true,
       },
       output: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Output directory for JSONL files",
+        brief: "Output directory for data files (default: ./output)",
         optional: true,
       },
       database: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Database file path",
+        brief: "Database file path (default: ./database.yaml)",
         optional: true,
       },
       resume: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase() === "true",
-        brief: "Resume from previous crawl state",
+        brief: "Resume from previous crawl (true/false)",
         optional: true,
       },
       steps: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Comma-separated list of steps to run (areas,users,resources,repository)",
+        brief: "Comma-separated steps: areas,users,resources,repository (default: all)",
         optional: true,
       },
       verbose: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase() === "true",
-        brief: "Enable verbose logging",
+        brief: "Enable detailed logging output",
         optional: true,
       },
     },
   },
   docs: {
-    brief: "Run complete GitLab crawl (all 4 steps)",
+    brief: "Run complete GitLab crawl with all 4 steps",
   },
 });
 
@@ -335,58 +335,40 @@ export const crawlCommand = buildCommand({
       parameters: [],
     },
     flags: {
-      "dry-run": {
-        kind: "parsed",
-        parse: (input: string) => input.toLowerCase() === "true",
-        brief: "Run in dry-run mode (no data will be written)",
-        optional: true,
-      },
-      "output-dir": {
+      host: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Output directory for crawled data",
-        optional: true,
-      },
-      resume: {
-        kind: "parsed",
-        parse: (input: string) => input.toLowerCase() === "true",
-        brief: "Resume from last successful step",
-        optional: true,
-      },
-      step: {
-        kind: "parsed",
-        parse: (input: string) => input,
-        brief: "Start from specific step (areas, users, projects)",
-        optional: true,
-      },
-      "gitlab-url": {
-        kind: "parsed",
-        parse: (input: string) => input,
-        brief: "GitLab instance URL",
+        brief: "GitLab instance URL (e.g., https://gitlab.com)",
         optional: true,
       },
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "GitLab access token",
+        brief: "GitLab access token for authentication",
         optional: true,
       },
       "account-id": {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Account ID to use for authentication",
+        brief: "Account ID to use for authentication (from stored accounts)",
+        optional: true,
+      },
+      output: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Output directory for crawled data (default: ./output)",
+        optional: true,
+      },
+      database: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Database file path (default: ./database.yaml)",
         optional: true,
       },
       steps: {
         kind: "parsed",
         parse: (input: string) => input,
-        brief: "Comma-separated list of steps to run (areas,users,resources,repository)",
-        optional: true,
-      },
-      host: {
-        kind: "parsed",
-        parse: (input: string) => input,
-        brief: "GitLab instance host",
+        brief: "Comma-separated steps to run: areas,users,resources,repository (default: all)",
         optional: true,
       },
       token: {
@@ -395,28 +377,28 @@ export const crawlCommand = buildCommand({
         brief: "Personal Access Token (PAT)",
         optional: true,
       },
-      output: {
+      resume: {
         kind: "parsed",
-        parse: (input: string) => input,
-        brief: "Output directory for JSONL files",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Resume from last successful step",
         optional: true,
       },
-      database: {
+      "dry-run": {
         kind: "parsed",
-        parse: (input: string) => input,
-        brief: "Database file path",
+        parse: (input: string) => input.toLowerCase() === "true",
+        brief: "Validate configuration without crawling data",
         optional: true,
       },
       verbose: {
         kind: "parsed",
         parse: (input: string) => input.toLowerCase() === "true",
-        brief: "Enable verbose logging",
+        brief: "Enable detailed logging output",
         optional: true,
       },
     },
   },
   docs: {
-    brief: "Run GitLab crawl operation",
+    brief: "Crawl GitLab instance and extract data (all steps or specific ones)",
   },
 });
 

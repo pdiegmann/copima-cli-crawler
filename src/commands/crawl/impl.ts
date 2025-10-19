@@ -275,7 +275,7 @@ export const crawlCommand = async (options: any): Promise<void> => {
     }
 
     const config = await loadConfig();
-    const candidateHost = options.host || options["gitlab-url"] || config.gitlab.host;
+    const candidateHost = options.host || config.gitlab.host;
     const gitlabHost = normalizeGitlabHost(candidateHost);
 
     if (!options.host) {
