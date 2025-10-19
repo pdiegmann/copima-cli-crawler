@@ -402,23 +402,61 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const projects = await graphqlClient.fetchAllProjects();
 
     // Debug: Check if data is actually an array
-    logger.debug(`Groups type: ${Array.isArray(groups) ? 'array' : typeof groups}, length: ${Array.isArray(groups) ? groups.length : 'N/A'}`);
-    logger.debug(`Projects type: ${Array.isArray(projects) ? 'array' : typeof projects}, length: ${Array.isArray(projects) ? projects.length : 'N/A'}`);
+    logger.debug(`Groups type: ${Array.isArray(groups) ? "array" : typeof groups}, length: ${Array.isArray(groups) ? groups.length : "N/A"}`);
+    logger.debug(`Projects type: ${Array.isArray(projects) ? "array" : typeof projects}, length: ${Array.isArray(projects) ? projects.length : "N/A"}`);
 
     // Log and store results
     logger.info(`Fetched ${Array.isArray(groups) ? groups.length : 0} groups`);
     logger.info(`Fetched ${Array.isArray(projects) ? projects.length : 0} projects`);
 
-    // Implement JSONL storage logic with callback processing
-    const outputDir = (this.path as any)?.resolve?.("output", "areas") ?? "";
-    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
+    // Import hierarchical storage
+    const { createHierarchicalStorageManager } = await import("../../storage/hierarchicalStorage.js");
+    const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
 
-    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
+    // Create hierarchical storage manager
+    const storageManager = createHierarchicalStorageManager({
+      rootDir: outputDir,
+      fileNaming: "lowercase",
+      hierarchical: true,
+      compression: "none",
+      prettyPrint: false,
+    });
 
-    await writeJSONL((this.path as any)?.join?.(outputDir, "groups.jsonl") ?? "", groups, "group");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "projects.jsonl") ?? "", projects, "project");
+    // Process groups through callback and store in hierarchical structure
+    callbackContext.resourceType = "group";
+    const processedGroups = await callbackManager.processObjects(callbackContext, groups);
 
-    logger.info("Stored areas in JSONL files with callback processing");
+    // Store each group in its hierarchical path
+    for (const group of processedGroups) {
+      const area = {
+        id: group.id,
+        fullPath: group.fullPath,
+        type: "group" as const,
+      };
+
+      // Write group metadata to its own directory
+      await storageManager.writeJSONLToHierarchy(area, "group", [group]);
+      logger.debug(`Stored group: ${group.fullPath}`);
+    }
+
+    // Process projects through callback and store in hierarchical structure
+    callbackContext.resourceType = "project";
+    const processedProjects = await callbackManager.processObjects(callbackContext, projects);
+
+    // Store each project in its hierarchical path
+    for (const project of processedProjects) {
+      const area = {
+        id: project.id,
+        fullPath: project.fullPath || `project-${project.id}`,
+        type: "project" as const,
+      };
+
+      // Write project metadata to its own directory
+      await storageManager.writeJSONLToHierarchy(area, "project", [project]);
+      logger.debug(`Stored project: ${area.fullPath}`);
+    }
+
+    logger.info(`Stored ${processedGroups.length} groups and ${processedProjects.length} projects in hierarchical structure`);
   } catch (error) {
     logger.error("Error during Step 1: Crawling areas", { error: error instanceof Error ? error.message : String(error) });
     throw error;
@@ -497,34 +535,167 @@ export const resources = async function (this: LocalContext, _flags: Record<stri
       resourceType: "", // Will be set for each resource type
     };
 
-    // Get available projects with their basic info using generated operations
-    const _projects = await graphqlClient.fetchProjects(10);
+    // Import hierarchical storage
+    const { createHierarchicalStorageManager } = await import("../../storage/hierarchicalStorage.js");
+    const { CommonResourcesFetcher } = await import("./commonResources.js");
 
-    logger.info("Fetched available projects");
-    logger.info(`Found ${_projects.nodes.length} accessible projects`);
+    const flagsAny = _flags as any;
+    const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
 
-    // Implement JSONL storage logic for resources with callback processing
-    const outputDir = (this.path as any)?.resolve?.("output", "resources") ?? "";
-    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
+    // Create hierarchical storage manager
+    const storageManager = createHierarchicalStorageManager({
+      rootDir: outputDir,
+      fileNaming: "lowercase",
+      hierarchical: true,
+      compression: "none",
+      prettyPrint: false,
+    });
 
-    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
+    // Get all groups and projects from the areas step
+    const groups = await graphqlClient.fetchAllGroups();
+    const projects = await graphqlClient.fetchAllProjects();
 
-    // Create all expected resource files as required by the test configuration
-    // Use empty arrays for resources that don't exist or can't be safely queried
-    const emptyData: any[] = [];
+    logger.info(`Found ${groups.length} groups and ${projects.length} projects to process`);
 
-    await writeJSONL((this.path as any)?.join?.(outputDir, "labels.jsonl") ?? "", emptyData, "label");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "issues.jsonl") ?? "", emptyData, "issue");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "boards.jsonl") ?? "", emptyData, "board");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "epics.jsonl") ?? "", emptyData, "epic");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "audit_events.jsonl") ?? "", emptyData, "audit_event");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "snippets.jsonl") ?? "", emptyData, "snippet");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "metadata.jsonl") ?? "", emptyData, "metadata");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "pipelines.jsonl") ?? "", emptyData, "pipeline");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "releases.jsonl") ?? "", emptyData, "release");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "branches.jsonl") ?? "", emptyData, "branch");
+    // Create CommonResourcesFetcher instance
+    const resourceFetcher = new CommonResourcesFetcher((this as any).config);
 
-    logger.info("Stored all required resource files in JSONL format with callback processing");
+    // Process each group and fetch its resources
+    for (const group of groups) {
+      const area = {
+        id: group.id,
+        fullPath: group.fullPath,
+        type: "group" as const,
+      };
+
+      logger.info(`Fetching resources for group: ${group.fullPath}`);
+
+      try {
+        // Fetch and store members for this group
+        await resourceFetcher.fetchMembers("group", group.id, group.fullPath, (member: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "member";
+          return member;
+        });
+
+        // Fetch and store labels for this group
+        await resourceFetcher.fetchLabels("group", group.id, group.fullPath, (label: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "label";
+          return label;
+        });
+
+        // Fetch milestones for this group
+        await resourceFetcher.fetchMilestones("group", group.id, group.fullPath, (milestone: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "milestone";
+          return milestone;
+        });
+
+        // Fetch boards for this group
+        await resourceFetcher.fetchBoards("group", group.id, group.fullPath, (board: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "board";
+          return board;
+        });
+
+        // Fetch epics for this group (premium/ultimate feature)
+        await resourceFetcher.fetchEpics(group.id, group.fullPath, (epic: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "epic";
+          return epic;
+        });
+
+        logger.debug(`Completed resources for group: ${group.fullPath}`);
+      } catch (error) {
+        logger.warn(`Failed to fetch resources for group ${group.fullPath}:`, {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+
+    // Process each project and fetch its resources
+    for (const project of projects) {
+      const area = {
+        id: project.id,
+        fullPath: project.fullPath || `project-${project.id}`,
+        type: "project" as const,
+      };
+
+      logger.info(`Fetching resources for project: ${area.fullPath}`);
+
+      try {
+        // Fetch and store members for this project
+        await resourceFetcher.fetchMembers("project", project.id, area.fullPath, (member: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "member";
+          return member;
+        });
+
+        // Fetch and store labels for this project
+        await resourceFetcher.fetchLabels("project", project.id, area.fullPath, (label: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "label";
+          return label;
+        });
+
+        // Fetch issues for this project
+        await resourceFetcher.fetchIssues(project.id, area.fullPath, (issue: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "issue";
+          return issue;
+        });
+
+        // Fetch merge requests for this project
+        await resourceFetcher.fetchMergeRequests(project.id, area.fullPath, (mr: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "merge_request";
+          return mr;
+        });
+
+        // Fetch pipelines for this project
+        await resourceFetcher.fetchPipelines(project.id, area.fullPath, (pipeline: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "pipeline";
+          return pipeline;
+        });
+
+        // Fetch milestones for this project
+        await resourceFetcher.fetchMilestones("project", project.id, area.fullPath, (milestone: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "milestone";
+          return milestone;
+        });
+
+        // Fetch releases for this project
+        await resourceFetcher.fetchReleases(project.id, area.fullPath, (release: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "release";
+          return release;
+        });
+
+        // Fetch snippets for this project
+        await resourceFetcher.fetchSnippets(project.id, area.fullPath, (snippet: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "snippet";
+          return snippet;
+        });
+
+        // NOTE: Tags are not available via GraphQL in this GitLab version
+        // TODO: Implement tags fetching in Step 4 (REST resources) instead
+        // await resourceFetcher.fetchTags(project.id, area.fullPath, (tag: unknown, ctx: CallbackContext) => {
+        //   callbackContext.resourceType = "tag";
+        //   return tag;
+        // });
+
+        // Fetch discussions for this project
+        await resourceFetcher.fetchDiscussions(project.id, area.fullPath, (discussion: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "discussion";
+          return discussion;
+        });
+
+        // Fetch boards for this project
+        await resourceFetcher.fetchBoards("project", project.id, area.fullPath, (board: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "board";
+          return board;
+        });
+
+        logger.debug(`Completed resources for project: ${area.fullPath}`);
+      } catch (error) {
+        logger.warn(`Failed to fetch resources for project ${area.fullPath}:`, {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+
+    logger.info(`Stored resources for ${groups.length} groups and ${projects.length} projects in hierarchical structure`);
   } catch (error) {
     logger.error("Error during Step 3: Crawling resources", { error: error instanceof Error ? error.message : String(error) });
     throw error;
@@ -549,26 +720,49 @@ export const repository = async function (this: LocalContext, _flags: Record<str
       resourceType: "", // Will be set for each resource type
     };
 
-    // Get available projects with basic repository information using generated operations
-    const projects = await graphqlClient.fetchProjects(5);
+    // Get all projects to crawl repository resources
+    const projects = await graphqlClient.fetchAllProjects();
+    logger.info(`Found ${projects.length} projects to crawl repository resources`);
 
-    logger.info(`Found ${projects.nodes.length} projects with repository information`);
+    // Initialize REST resources fetcher
+    const { RestResourcesFetcher } = await import("./restResources.js");
+    const restFetcher = new RestResourcesFetcher((this as any).config);
 
-    // Implement JSONL storage logic with callback processing
-    const outputDir = (this.path as any)?.resolve?.("output", "repository") ?? "";
-    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
+    // Iterate through each project and fetch repository resources
+    for (const project of projects) {
+      const projectId = project.id.replace("gid://gitlab/Project/", "");
+      const projectPath = project.fullPath || `project-${projectId}`;
 
-    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
+      logger.info(`Fetching repository resources for project: ${projectPath}`);
 
-    // Create all expected repository files as required by the test configuration
-    // Use empty arrays for resources that don't exist or can't be safely queried
-    const emptyData: any[] = [];
+      try {
+        // Fetch branches for this project
+        await restFetcher.fetchBranches(projectId, projectPath, (branch: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "branch";
+          return branch;
+        });
 
-    await writeJSONL((this.path as any)?.join?.(outputDir, "branches.jsonl") ?? "", emptyData, "branch");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "commits.jsonl") ?? "", emptyData, "commit");
-    await writeJSONL((this.path as any)?.join?.(outputDir, "tags.jsonl") ?? "", emptyData, "tag");
+        // Fetch tags for this project
+        await restFetcher.fetchTags(projectId, projectPath, (tag: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "tag";
+          return tag;
+        });
 
-    logger.info("Stored all required repository files in JSONL format with callback processing");
+        // Fetch commits for this project (default branch, max 1000 commits)
+        await restFetcher.fetchCommits(projectId, projectPath, "main", (commit: unknown, ctx: CallbackContext) => {
+          callbackContext.resourceType = "commit";
+          return commit;
+        }, 1000);
+
+      } catch (error) {
+        logger.warn(`Failed to fetch repository resources for project ${projectPath}:`, {
+          error: error instanceof Error ? error.message : String(error)
+        });
+        // Continue with next project even if this one fails
+      }
+    }
+
+    logger.info("Completed Step 4: Repository resources crawling");
   } catch (error) {
     logger.error("Error during Step 4: Crawling repository resources", { error: error instanceof Error ? error.message : String(error) });
     throw error;

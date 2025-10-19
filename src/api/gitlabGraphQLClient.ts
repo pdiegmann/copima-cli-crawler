@@ -145,8 +145,9 @@ export class GitLabGraphQLClient {
 
       const result = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
       if (result.errors && result.errors.length > 0) {
-        const errorMessage = `GraphQL query returned errors: ${result.errors.map((e) => e.message).join(", ")}`;
-        logger.error("GraphQL errors:", { errors: result.errors });
+        const errorMessages = result.errors.map((e) => e.message).join(", ");
+        const errorMessage = `GraphQL query returned errors: ${errorMessages}`;
+        logger.error(`GraphQL errors: ${errorMessages}`, { errors: result.errors });
         throw new Error(errorMessage);
       }
 

@@ -40,6 +40,7 @@
     "test:e2e:suite": "bun run test:e2e examples/test-configs/test-suite.yaml",
     "test:e2e:template": "bun run test:e2e examples/test-configs/template-test.yaml",
     "test:e2e:dry-run": "bun run test:e2e examples/test-configs/dry-run-test.yaml --dry-run",
+    "test:e2e:repository": "bun run test:e2e examples/test-configs/repository-test.yaml",
     "release": "bun run scripts/release.ts",
     "release:local": "bun run scripts/release.ts",
     "db:generate": "drizzle-kit generate",

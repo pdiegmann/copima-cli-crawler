@@ -26,10 +26,13 @@ export class CommonResourcesFetcher {
    */
   async fetchMembers(areaType: "group" | "project", areaId: string, areaPath: string, callback: (member: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
+      // Use different field names for groups vs projects
+      const membersField = areaType === "group" ? "groupMembers" : "projectMembers";
+
       const query = `
-        query($id: ID!) {
-          ${areaType}(id: $id) {
-            groupMembers {
+        query($fullPath: ID!) {
+          ${areaType}(fullPath: $fullPath) {
+            ${membersField} {
               nodes {
                 id
                 accessLevel {
@@ -60,14 +63,6 @@ export class CommonResourcesFetcher {
                 createdAt
                 updatedAt
                 expiresAt
-                inviteEmail
-                inviteAcceptedAt
-                requestedAt
-                inviteSource
-                mergeRequestInteraction {
-                  canMerge
-                  canUpdate
-                }
               }
             }
           }
@@ -75,8 +70,9 @@ export class CommonResourcesFetcher {
       `;
 
       logger.info(`Fetching members for ${areaType}: ${areaPath}`);
-      const data = (await this.client.query(query, { id: areaId })) as any;
-      const members = (data[areaType] && data[areaType].groupMembers?.nodes) || [];
+      logger.info(`DEBUG: Using variables: { fullPath: "${areaPath}" }`);
+      const data = (await this.client.query(query, { fullPath: areaPath })) as any;
+      const members = (data[areaType] && data[areaType][membersField]?.nodes) || [];
 
       const context: CallbackContext = {
         host: this.config.gitlab.host,
@@ -94,7 +90,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup" => ["group", "subgroup"])
+      const hierarchy = areaPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("members", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMembers as any, false);
 
@@ -111,8 +108,8 @@ export class CommonResourcesFetcher {
   async fetchLabels(areaType: "group" | "project", areaId: string, areaPath: string, callback: (label: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
-        query($id: ID!) {
-          ${areaType}(id: $id) {
+        query($fullPath: ID!) {
+          ${areaType}(fullPath: $fullPath) {
             labels {
               nodes {
                 id
@@ -122,8 +119,6 @@ export class CommonResourcesFetcher {
                 textColor
                 createdAt
                 updatedAt
-                lockOnMerge
-                removeOnClose
               }
             }
           }
@@ -131,7 +126,7 @@ export class CommonResourcesFetcher {
       `;
 
       logger.info(`Fetching labels for ${areaType}: ${areaPath}`);
-      const data = (await this.client.query(query, { id: areaId })) as any;
+      const data = (await this.client.query(query, { fullPath: areaPath })) as any;
       const labels = (data[areaType] && data[areaType].labels?.nodes) || [];
 
       const context: CallbackContext = {
@@ -150,7 +145,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup" => ["group", "subgroup"])
+      const hierarchy = areaPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("labels", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedLabels as any, false);
 
@@ -167,8 +163,8 @@ export class CommonResourcesFetcher {
   async fetchReleases(projectId: string, projectPath: string, callback: (release: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
-        query($id: ID!, $first: Int, $after: String) {
-          project(id: $id) {
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
             releases(first: $first, after: $after) {
               pageInfo {
                 hasNextPage
@@ -191,7 +187,6 @@ export class CommonResourcesFetcher {
                     title
                     description
                     state
-                    webUrl
                   }
                 }
                 evidences {
@@ -204,27 +199,7 @@ export class CommonResourcesFetcher {
                 }
                 links {
                   editUrl
-                  issuesUrl
-                  mergeRequestsUrl
                   selfUrl
-                }
-                releaseAssets {
-                  count
-                  sources {
-                    nodes {
-                      format
-                      url
-                    }
-                  }
-                  links {
-                    nodes {
-                      id
-                      name
-                      url
-                      directAssetUrl
-                      linkType
-                    }
-                  }
                 }
                 author {
                   id
@@ -248,11 +223,6 @@ export class CommonResourcesFetcher {
                     email
                     avatarUrl
                   }
-                  committer {
-                    name
-                    email
-                    avatarUrl
-                  }
                 }
               }
             }
@@ -269,7 +239,7 @@ export class CommonResourcesFetcher {
       // Paginate through all releases
       while (hasNextPage) {
         const data: any = await this.client.query(query, {
-          id: projectId,
+          fullPath: projectPath,
           first: 100,
           after,
         });
@@ -300,7 +270,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup/project" => ["group", "subgroup", "project"])
+      const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("releases", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedReleases as any, false);
 
@@ -322,8 +293,8 @@ export class CommonResourcesFetcher {
   ): Promise<void> {
     try {
       const query = `
-        query($id: ID!, $first: Int, $after: String) {
-          project(id: $id) {
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
             pipelines(first: $first, after: $after) {
               pageInfo {
                 hasNextPage
@@ -335,231 +306,31 @@ export class CommonResourcesFetcher {
                 sha
                 beforeSha
                 status
-                detailedStatus {
-                  id
-                  group
-                  icon
-                  text
-                  label
-                  tooltip
-                  hasDetails
-                  detailsPath
-                  illustration
-                  favicon
-                  action {
-                    id
-                    path
-                    title
-                    icon
-                    buttonTitle
-                  }
-                }
                 source
                 ref
                 refPath
-                tag
-                yaml_errors: yamlErrors
                 user {
                   id
                   username
                   name
-                  avatarUrl
-                  webUrl
-                  state
                 }
                 createdAt
                 updatedAt
                 startedAt
                 finishedAt
-                committedAt
                 duration
-                queuedDuration
                 coverage
-                webUrl
                 commit {
                   id
                   sha
                   shortId
                   title
-                  message
-                  description
                   authoredDate
                   committedDate
-                  webUrl
-                  author {
-                    name
-                    email
-                    avatarUrl
-                  }
-                  committer {
-                    name
-                    email
-                    avatarUrl
-                  }
-                }
-                downstream {
-                  nodes {
-                    id
-                    path
-                    project {
-                      id
-                      name
-                      fullPath
-                    }
-                  }
-                }
-                upstream {
-                  id
-                  path
-                  project {
-                    id
-                    name
-                    fullPath
-                  }
                 }
                 retryable
                 cancelable
-                userPermissions {
-                  adminPipeline
-                  destroyPipeline
-                  updatePipeline
-                }
-                configSource
-                mergeRequestEventType
-                mergeRequest {
-                  id
-                  iid
-                  title
-                  webUrl
-                }
-                warnings
                 totalJobs
-                warningMessages {
-                  nodes {
-                    content
-                  }
-                }
-                securityReportSummary {
-                  dast {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                  sast {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                  dependencyScanning {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                  containerScanning {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                  secretDetection {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                  coverageFuzzing {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                  apiFuzzing {
-                    vulnerabilitiesCount
-                    scannedResourcesCount
-                  }
-                }
-                jobs {
-                  nodes {
-                    id
-                    name
-                    stage {
-                      name
-                      id
-                    }
-                    status
-                    detailedStatus {
-                      id
-                      group
-                      icon
-                      text
-                      label
-                      tooltip
-                    }
-                    createdAt
-                    startedAt
-                    finishedAt
-                    duration
-                    queuedDuration
-                    webUrl
-                    webPath
-                    playable
-                    retryable
-                    cancelable
-                    scheduledAt
-                    allowFailure
-                    tags
-                    refName
-                    refPath
-                    artifacts {
-                      nodes {
-                        name
-                        path
-                        fileType
-                        fileFormat
-                        size
-                        downloadPath
-                      }
-                    }
-                    needs {
-                      nodes {
-                        id
-                        name
-                      }
-                    }
-                    userPermissions {
-                      readBuild
-                      readJobArtifacts
-                      updateBuild
-                    }
-                  }
-                }
-                stages {
-                  nodes {
-                    id
-                    name
-                    status
-                    detailedStatus {
-                      id
-                      group
-                      icon
-                      text
-                      label
-                    }
-                    groups {
-                      nodes {
-                        id
-                        name
-                        size
-                        status
-                        detailedStatus {
-                          id
-                          group
-                          icon
-                          text
-                          label
-                        }
-                        jobs {
-                          nodes {
-                            id
-                            name
-                            status
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -575,7 +346,7 @@ export class CommonResourcesFetcher {
       // Paginate through pipelines until we reach maxPipelines
       while (hasNextPage && allPipelines.length < maxPipelines) {
         const data: any = await this.client.query(query, {
-          id: projectId,
+          fullPath: projectPath,
           first: Math.min(100, maxPipelines - allPipelines.length),
           after,
         });
@@ -611,7 +382,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup/project" => ["group", "subgroup", "project"])
+      const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("pipelines", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedPipelines as any, false);
 
@@ -633,8 +405,8 @@ export class CommonResourcesFetcher {
   ): Promise<void> {
     try {
       const query = `
-        query($id: ID!) {
-          ${areaType}(id: $id) {
+        query($fullPath: ID!) {
+          ${areaType}(fullPath: $fullPath) {
             milestones {
               nodes {
                 id
@@ -646,11 +418,7 @@ export class CommonResourcesFetcher {
                 startDate
                 createdAt
                 updatedAt
-                webUrl
-                projectId
-                groupId
                 expired
-                upcomingDue
                 stats {
                   totalIssuesCount
                   closedIssuesCount
@@ -662,7 +430,7 @@ export class CommonResourcesFetcher {
       `;
 
       logger.info(`Fetching milestones for ${areaType}: ${areaPath}`);
-      const data = (await this.client.query(query, { id: areaId })) as any;
+      const data = (await this.client.query(query, { fullPath: areaPath })) as any;
       const milestones = (data[areaType] && data[areaType].milestones?.nodes) || [];
 
       const context: CallbackContext = {
@@ -681,7 +449,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = areaType === "group" ? ["groups", areaPath] : ["groups", ...areaPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup" => ["group", "subgroup"])
+      const hierarchy = areaPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("milestones", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMilestones as any, false);
 
@@ -698,8 +467,8 @@ export class CommonResourcesFetcher {
   async fetchIssues(projectId: string, projectPath: string, callback: (issue: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
-        query($id: ID!, $first: Int, $after: String) {
-          project(id: $id) {
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
             issues(first: $first, after: $after) {
               pageInfo {
                 hasNextPage
@@ -729,11 +498,6 @@ export class CommonResourcesFetcher {
                 totalTimeSpent
                 humanTimeEstimate
                 humanTotalTimeSpent
-                closedBy {
-                  id
-                  username
-                  name
-                }
                 author {
                   id
                   username
@@ -765,85 +529,14 @@ export class CommonResourcesFetcher {
                   title
                   description
                   state
-                  webUrl
                 }
                 taskCompletionStatus {
                   count
                   completedCount
                 }
-                healthStatus
-                weight
-                blocked
-                blockedByCount
-                epic {
-                  id
-                  iid
-                  title
-                  webUrl
-                }
-                iteration {
-                  id
-                  title
-                  description
-                  state
-                  webUrl
-                }
-                userPermissions {
-                  adminIssue
-                  createNote
-                  pushCode
-                  readIssue
-                  reopenIssue
-                  updateIssue
-                }
                 reference
                 moved
-                movedTo {
-                  id
-                  iid
-                  title
-                }
-                duplicatedTo {
-                  id
-                  iid
-                  title
-                }
-                serviceType
                 severity
-                alertManagementAlert {
-                  id
-                  iid
-                  title
-                  description
-                  severity
-                  status
-                  service
-                  monitoringTool
-                  startedAt
-                  endedAt
-                  eventCount
-                  fingerprint
-                }
-                customerRelationsContacts {
-                  nodes {
-                    id
-                    firstName
-                    lastName
-                    email
-                    phone
-                    description
-                    organization {
-                      id
-                      name
-                    }
-                  }
-                }
-                escalationStatus
-                escalationPolicy {
-                  id
-                  name
-                  description
-                }
               }
             }
           }
@@ -859,7 +552,7 @@ export class CommonResourcesFetcher {
       // Paginate through all issues
       while (hasNextPage) {
         const data: any = await this.client.query(query, {
-          id: projectId,
+          fullPath: projectPath,
           first: 100,
           after,
         });
@@ -890,7 +583,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup/project" => ["group", "subgroup", "project"])
+      const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("issues", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedIssues as any, false);
 
@@ -907,8 +601,8 @@ export class CommonResourcesFetcher {
   async fetchMergeRequests(projectId: string, projectPath: string, callback: (mergeRequest: unknown, context: CallbackContext) => unknown | null): Promise<void> {
     try {
       const query = `
-        query($id: ID!, $first: Int, $after: String) {
-          project(id: $id) {
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
             mergeRequests(first: $first, after: $after) {
               pageInfo {
                 hasNextPage
@@ -919,209 +613,50 @@ export class CommonResourcesFetcher {
                 iid
                 title
                 description
-                descriptionHtml
                 state
-                detailedMergeStatus
                 createdAt
                 updatedAt
                 mergedAt
                 closedAt
                 sourceBranch
                 targetBranch
-                sourceBranchExists
-                targetBranchExists
                 reference
-                references {
-                  full
-                  relative
-                  short
-                }
                 webUrl
                 upvotes
                 downvotes
                 userNotesCount
-                shouldRemoveSourceBranch
-                forceRemoveSourceBranch
-                allowCollaboration
-                allowMaintainerToPush
-                squash
-                squashOnMerge
-                mergeable
-                mergeableDiscussionsState
-                workInProgress
                 draft
-                discussionLocked
-                timeEstimate
-                totalTimeSpent
-                humanTimeEstimate
-                humanTotalTimeSpent
-                rebaseInProgress
-                mergeTrainsCount
-                hasSecurityReports
-                autoMergeEnabled
-                preparedAt
-                mergeUser {
-                  id
-                  username
-                  name
-                  avatarUrl
-                  webUrl
-                }
+                mergeable
                 author {
                   id
                   username
                   name
                   avatarUrl
-                  webUrl
-                  state
                 }
                 assignees {
                   nodes {
                     id
                     username
                     name
-                    avatarUrl
-                    webUrl
-                    state
-                  }
-                }
-                reviewers {
-                  nodes {
-                    id
-                    username
-                    name
-                    avatarUrl
-                    webUrl
-                    state
                   }
                 }
                 labels {
                   nodes {
                     id
                     title
-                    description
                     color
-                    textColor
                   }
                 }
                 milestone {
                   id
-                  iid
                   title
-                  description
                   state
-                  webUrl
-                  dueDate
-                  startDate
-                }
-                userPermissions {
-                  adminMergeRequest
-                  canMerge
-                  cherryPickOnCurrentMergeRequest
-                  createNote
-                  pushToSourceBranch
-                  readMergeRequest
-                  removeSourceBranch
-                  revertOnCurrentMergeRequest
-                  updateMergeRequest
                 }
                 approved
-                approvedBy {
-                  nodes {
-                    id
-                    username
-                    name
-                    avatarUrl
-                  }
-                }
                 commitCount
-                commitsWithoutMergeCommits {
-                  nodes {
-                    id
-                    sha
-                    shortId
-                    title
-                    message
-                    authoredDate
-                    committedDate
-                    webUrl
-                    author {
-                      name
-                      email
-                      avatarUrl
-                    }
-                    committer {
-                      name
-                      email
-                      avatarUrl
-                    }
-                  }
-                }
-                headPipeline {
-                  id
-                  iid
-                  sha
-                  status
-                  detailedStatus {
-                    id
-                    group
-                    icon
-                    text
-                    label
-                    tooltip
-                  }
-                  createdAt
-                  updatedAt
-                  startedAt
-                  finishedAt
-                  duration
-                  queuedDuration
-                  webUrl
-                }
-                mergeTrain {
-                  id
-                  status
-                  mergedAt
-                  user {
-                    id
-                    username
-                    name
-                  }
-                }
-                diffRefs {
-                  baseSha
-                  headSha
-                  startSha
-                }
                 diffStats {
                   additions
                   deletions
-                  fileCount
-                }
-                conflicts
-                projectId
-                targetProjectId
-                sourceProjectId
-                sourceProject {
-                  id
-                  name
-                  nameWithNamespace
-                  fullPath
-                  webUrl
-                }
-                targetProject {
-                  id
-                  name
-                  nameWithNamespace
-                  fullPath
-                  webUrl
-                }
-                subscribed
-                blocking
-                blockedByCount
-                taskCompletionStatus {
-                  count
-                  completedCount
                 }
               }
             }
@@ -1138,7 +673,7 @@ export class CommonResourcesFetcher {
       // Paginate through all merge requests
       while (hasNextPage) {
         const data: any = await this.client.query(query, {
-          id: projectId,
+          fullPath: projectPath,
           first: 100,
           after,
         });
@@ -1169,7 +704,8 @@ export class CommonResourcesFetcher {
       }
 
       // Store in hierarchical structure
-      const hierarchy = ["groups", ...projectPath.split("/"), "projects"];
+      // Split the full path to create hierarchy (e.g., "group/subgroup/project" => ["group", "subgroup", "project"])
+      const hierarchy = projectPath.split("/");
       const filePath = this.storageManager.createHierarchicalPath("mergerequests", hierarchy);
       const writtenCount = this.storageManager.writeJsonlFile(filePath, processedMergeRequests as any, false);
 
@@ -1177,6 +713,474 @@ export class CommonResourcesFetcher {
     } catch (error) {
       logger.error(`Failed to fetch merge requests for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
       throw error;
+    }
+  }
+
+  /**
+   * Fetch snippets for a project
+   */
+  async fetchSnippets(
+    projectId: string,
+    projectPath: string,
+    callback: (snippet: unknown, context: CallbackContext) => unknown | null
+  ): Promise<void> {
+    try {
+      const query = `
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
+            snippets(first: $first, after: $after) {
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+              nodes {
+                id
+                title
+                description
+                fileName
+                visibilityLevel
+                createdAt
+                updatedAt
+                author {
+                  id
+                  username
+                  name
+                }
+                blobs {
+                  nodes {
+                    name
+                    path
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching snippets for project: ${projectPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allSnippets: unknown[] = [];
+
+      while (hasNextPage) {
+        const data: any = await this.client.query(query, {
+          fullPath: projectPath,
+          first: 100,
+          after,
+        });
+
+        const snippetsData: any = (data["project"] && (data["project"] as any).snippets) || [];
+        const snippets = snippetsData?.nodes || [];
+        allSnippets = allSnippets.concat(snippets);
+
+        hasNextPage = snippetsData?.pageInfo?.hasNextPage || false;
+        after = snippetsData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched ${snippets.length} snippets (total: ${allSnippets.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "snippets",
+      };
+
+      const processedSnippets: unknown[] = [];
+      for (const snippet of allSnippets) {
+        const processedSnippet = callback(snippet, context);
+        if (processedSnippet) {
+          processedSnippets.push(processedSnippet);
+        }
+      }
+
+      const hierarchy = projectPath.split("/");
+      const filePath = this.storageManager.createHierarchicalPath("snippets", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedSnippets as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} snippets for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch snippets for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch boards for a group or project
+   */
+  async fetchBoards(
+    areaType: "group" | "project",
+    areaId: string,
+    areaPath: string,
+    callback: (board: unknown, context: CallbackContext) => unknown | null
+  ): Promise<void> {
+    try {
+      const query = `
+        query($fullPath: ID!, $first: Int, $after: String) {
+          ${areaType}(fullPath: $fullPath) {
+            boards(first: $first, after: $after) {
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+              nodes {
+                id
+                name
+                createdAt
+                updatedAt
+                lists {
+                  nodes {
+                    id
+                    title
+                    listType
+                    position
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching boards for ${areaType}: ${areaPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allBoards: unknown[] = [];
+
+      while (hasNextPage) {
+        const data: any = await this.client.query(query, {
+          fullPath: areaPath,
+          first: 100,
+          after,
+        });
+
+        const boardsData: any = (data[areaType] && (data[areaType] as any).boards) || [];
+        const boards = boardsData?.nodes || [];
+        allBoards = allBoards.concat(boards);
+
+        hasNextPage = boardsData?.pageInfo?.hasNextPage || false;
+        after = boardsData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched ${boards.length} boards (total: ${allBoards.length}) for ${areaPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: areaId,
+        resourceType: "boards",
+      };
+
+      const processedBoards: unknown[] = [];
+      for (const board of allBoards) {
+        const processedBoard = callback(board, context);
+        if (processedBoard) {
+          processedBoards.push(processedBoard);
+        }
+      }
+
+      const hierarchy = areaPath.split("/");
+      const filePath = this.storageManager.createHierarchicalPath("boards", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBoards as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} boards for ${areaPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch boards for ${areaType} ${areaPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch tags for a project
+   */
+  async fetchTags(
+    projectId: string,
+    projectPath: string,
+    callback: (tag: unknown, context: CallbackContext) => unknown | null
+  ): Promise<void> {
+    try {
+      const query = `
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
+            repository {
+              tags(first: $first, after: $after) {
+                pageInfo {
+                  hasNextPage
+                  endCursor
+                }
+                nodes {
+                  name
+                  message
+                  target {
+                    ... on Commit {
+                      id
+                      sha
+                      shortId
+                      title
+                      authoredDate
+                      committedDate
+                      author {
+                        name
+                        email
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching tags for project: ${projectPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allTags: unknown[] = [];
+
+      while (hasNextPage) {
+        const data: any = await this.client.query(query, {
+          fullPath: projectPath,
+          first: 100,
+          after,
+        });
+
+        const tagsData: any = (data["project"]?.repository && (data["project"].repository as any).tags) || [];
+        const tags = tagsData?.nodes || [];
+        allTags = allTags.concat(tags);
+
+        hasNextPage = tagsData?.pageInfo?.hasNextPage || false;
+        after = tagsData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched ${tags.length} tags (total: ${allTags.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "tags",
+      };
+
+      const processedTags: unknown[] = [];
+      for (const tag of allTags) {
+        const processedTag = callback(tag, context);
+        if (processedTag) {
+          processedTags.push(processedTag);
+        }
+      }
+
+      const hierarchy = projectPath.split("/");
+      const filePath = this.storageManager.createHierarchicalPath("tags", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedTags as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} tags for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch tags for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch discussions (with notes) for a project
+   */
+  async fetchDiscussions(
+    projectId: string,
+    projectPath: string,
+    callback: (discussion: unknown, context: CallbackContext) => unknown | null
+  ): Promise<void> {
+    try {
+      const query = `
+        query($fullPath: ID!, $first: Int, $after: String) {
+          project(fullPath: $fullPath) {
+            issues(first: $first, after: $after) {
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+              nodes {
+                iid
+                discussions {
+                  nodes {
+                    id
+                    createdAt
+                    notes {
+                      nodes {
+                        id
+                        body
+                        createdAt
+                        updatedAt
+                        author {
+                          id
+                          username
+                          name
+                        }
+                        system
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching discussions for project: ${projectPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allDiscussions: unknown[] = [];
+
+      while (hasNextPage) {
+        const data: any = await this.client.query(query, {
+          fullPath: projectPath,
+          first: 100,
+          after,
+        });
+
+        const issuesData: any = (data["project"] && (data["project"] as any).issues) || [];
+        const issues = issuesData?.nodes || [];
+
+        // Extract discussions from issues
+        for (const issue of issues) {
+          const discussions = issue.discussions?.nodes || [];
+          for (const discussion of discussions) {
+            allDiscussions.push({
+              ...discussion,
+              issueIid: issue.iid,
+            });
+          }
+        }
+
+        hasNextPage = issuesData?.pageInfo?.hasNextPage || false;
+        after = issuesData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched discussions from ${issues.length} issues (total: ${allDiscussions.length}) for ${projectPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: projectId,
+        resourceType: "discussions",
+      };
+
+      const processedDiscussions: unknown[] = [];
+      for (const discussion of allDiscussions) {
+        const processedDiscussion = callback(discussion, context);
+        if (processedDiscussion) {
+          processedDiscussions.push(processedDiscussion);
+        }
+      }
+
+      const hierarchy = projectPath.split("/");
+      const filePath = this.storageManager.createHierarchicalPath("discussions", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedDiscussions as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} discussions for ${projectPath} to ${filePath}`);
+    } catch (error) {
+      logger.error(`Failed to fetch discussions for project ${projectPath}:`, { error: error instanceof Error ? error.message : String(error) });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch epics for a group (premium/ultimate feature)
+   */
+  async fetchEpics(
+    groupId: string,
+    groupPath: string,
+    callback: (epic: unknown, context: CallbackContext) => unknown | null
+  ): Promise<void> {
+    try {
+      const query = `
+        query($fullPath: ID!, $first: Int, $after: String) {
+          group(fullPath: $fullPath) {
+            epics(first: $first, after: $after) {
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+              nodes {
+                id
+                iid
+                title
+                description
+                state
+                createdAt
+                updatedAt
+                closedAt
+                startDate
+                dueDate
+                author {
+                  id
+                  username
+                  name
+                }
+                labels {
+                  nodes {
+                    id
+                    title
+                    color
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      logger.info(`Fetching epics for group: ${groupPath}`);
+
+      let hasNextPage = true;
+      let after: string | null = null;
+      let allEpics: unknown[] = [];
+
+      while (hasNextPage) {
+        const data: any = await this.client.query(query, {
+          fullPath: groupPath,
+          first: 100,
+          after,
+        });
+
+        const epicsData: any = (data["group"] && (data["group"] as any).epics) || [];
+        const epics = epicsData?.nodes || [];
+        allEpics = allEpics.concat(epics);
+
+        hasNextPage = epicsData?.pageInfo?.hasNextPage || false;
+        after = epicsData?.pageInfo?.endCursor || null;
+
+        logger.debug(`Fetched ${epics.length} epics (total: ${allEpics.length}) for ${groupPath}`);
+      }
+
+      const context: CallbackContext = {
+        host: this.config.gitlab.host,
+        accountId: groupId,
+        resourceType: "epics",
+      };
+
+      const processedEpics: unknown[] = [];
+      for (const epic of allEpics) {
+        const processedEpic = callback(epic, context);
+        if (processedEpic) {
+          processedEpics.push(processedEpic);
+        }
+      }
+
+      const hierarchy = groupPath.split("/");
+      const filePath = this.storageManager.createHierarchicalPath("epics", hierarchy);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedEpics as any, false);
+
+      logger.info(`Successfully wrote ${writtenCount} epics for ${groupPath} to ${filePath}`);
+    } catch (error) {
+      // Epics are a premium/ultimate feature - log as warning if not available
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes("epics") || errorMessage.includes("Field") || errorMessage.includes("premium") || errorMessage.includes("ultimate")) {
+        logger.warn(`Epics feature not available for group ${groupPath} (requires GitLab Premium/Ultimate):`, { error: errorMessage });
+      } else {
+        logger.error(`Failed to fetch epics for group ${groupPath}:`, { error: errorMessage });
+        throw error;
+      }
     }
   }
 }
