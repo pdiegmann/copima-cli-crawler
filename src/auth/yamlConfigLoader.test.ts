@@ -59,27 +59,21 @@ auth:
     it("should throw error when file does not exist", () => {
       mockExistsSync.mockReturnValue(false);
 
-      expect(() => loader.loadConfig("/nonexistent.yaml")).toThrow(
-        "OAuth2 configuration file not found"
-      );
+      expect(() => loader.loadConfig("/nonexistent.yaml")).toThrow("OAuth2 configuration file not found");
     });
 
     it("should throw error for invalid YAML syntax", () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue("invalid: yaml: syntax:");
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Invalid OAuth2 configuration file"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Invalid OAuth2 configuration file");
     });
 
     it("should throw error when auth.oauth2 section is missing", () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue("some:\n  other: config");
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Missing auth.oauth2 configuration section"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Missing auth.oauth2 configuration section");
     });
 
     it("should throw error when providers array is missing", () => {
@@ -91,9 +85,7 @@ auth:
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(yamlContent);
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Missing or invalid auth.oauth2.providers array"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Missing or invalid auth.oauth2.providers array");
     });
 
     it("should throw error when providers array is empty", () => {
@@ -105,9 +97,7 @@ auth:
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(yamlContent);
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "No OAuth2 providers configured"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("No OAuth2 providers configured");
     });
 
     it("should throw error when provider is missing name", () => {
@@ -121,9 +111,7 @@ auth:
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(yamlContent);
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Provider name is required"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Provider name is required");
     });
 
     it("should throw error when provider is missing clientId", () => {
@@ -137,9 +125,7 @@ auth:
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(yamlContent);
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Provider 'gitlab' is missing clientId"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Provider 'gitlab' is missing clientId");
     });
 
     it("should throw error when provider is missing clientSecret", () => {
@@ -153,9 +139,7 @@ auth:
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(yamlContent);
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Provider 'gitlab' is missing clientSecret"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Provider 'gitlab' is missing clientSecret");
     });
 
     it("should throw error when default provider does not exist", () => {
@@ -171,9 +155,7 @@ auth:
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(yamlContent);
 
-      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow(
-        "Default provider 'nonexistent' not found in providers list"
-      );
+      expect(() => loader.loadConfig("/path/to/config.yaml")).toThrow("Default provider 'nonexistent' not found in providers list");
     });
   });
 
@@ -229,9 +211,7 @@ auth:
     it("should throw error when no OAuth2 configuration in YAML", () => {
       const invalidConfig: OAuth2ConfigFile = { auth: {} as any };
 
-      expect(() => loader.getProviderFromYaml(invalidConfig)).toThrow(
-        "No OAuth2 configuration found in YAML file"
-      );
+      expect(() => loader.getProviderFromYaml(invalidConfig)).toThrow("No OAuth2 configuration found in YAML file");
     });
 
     it("should throw error when no provider specified and no default", () => {
@@ -249,15 +229,11 @@ auth:
         },
       };
 
-      expect(() => loader.getProviderFromYaml(configNoDefault)).toThrow(
-        "No provider specified and no default provider configured"
-      );
+      expect(() => loader.getProviderFromYaml(configNoDefault)).toThrow("No provider specified and no default provider configured");
     });
 
     it("should throw error when specified provider not found", () => {
-      expect(() => loader.getProviderFromYaml(validConfig, "nonexistent")).toThrow(
-        "Provider 'nonexistent' not found in configuration"
-      );
+      expect(() => loader.getProviderFromYaml(validConfig, "nonexistent")).toThrow("Provider 'nonexistent' not found in configuration");
     });
 
     it("should handle custom provider with URLs", () => {
@@ -307,9 +283,7 @@ auth:
         },
       };
 
-      expect(() => loader.getProviderFromYaml(customConfig, "custom")).toThrow(
-        "Custom provider 'custom' must specify authorizationUrl and tokenUrl"
-      );
+      expect(() => loader.getProviderFromYaml(customConfig, "custom")).toThrow("Custom provider 'custom' must specify authorizationUrl and tokenUrl");
     });
   });
 

@@ -63,9 +63,7 @@ describe("OAuth2Manager", () => {
     it("should throw error when OAuth2 is not enabled", async () => {
       const disabledManager = new OAuth2Manager({ ...defaultConfig, enabled: false });
 
-      await expect(disabledManager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow(
-        "OAuth2 is not enabled"
-      );
+      await expect(disabledManager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow("OAuth2 is not enabled");
     });
 
     it("should throw error when token endpoint not configured", async () => {
@@ -74,9 +72,7 @@ describe("OAuth2Manager", () => {
         tokenEndpoint: undefined,
       });
 
-      await expect(noEndpointManager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow(
-        "Token endpoint not configured"
-      );
+      await expect(noEndpointManager.refreshAccessToken(mockRefreshRequest)).rejects.toThrow("Token endpoint not configured");
     });
 
     it("should include scope in request when provided", async () => {

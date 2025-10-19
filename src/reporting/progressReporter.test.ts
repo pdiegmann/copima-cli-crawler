@@ -126,8 +126,8 @@ describe("ProgressReporter", () => {
       progressReporter.updateResourceCount("projects", { total: 200, processed: 100 });
 
       const stats = progressReporter.getStats();
-      expect(stats.resourceCounts!["users"].total).toBe(100);
-      expect(stats.resourceCounts!["projects"].total).toBe(200);
+      expect(stats.resourceCounts!["users"]!.total).toBe(100);
+      expect(stats.resourceCounts!["projects"]!.total).toBe(200);
     });
 
     it("should overwrite resource counts on update", () => {
@@ -135,8 +135,8 @@ describe("ProgressReporter", () => {
       progressReporter.updateResourceCount("users", { processed: 50, errors: 2 });
 
       const stats = progressReporter.getStats();
-      expect(stats.resourceCounts!["users"].processed).toBe(50);
-      expect(stats.resourceCounts!["users"].errors).toBe(2);
+      expect(stats.resourceCounts!["users"]!.processed).toBe(50);
+      expect(stats.resourceCounts!["users"]!.errors).toBe(2);
     });
   });
 
@@ -298,7 +298,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -328,7 +328,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -357,7 +357,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -380,7 +380,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -453,7 +453,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 
@@ -473,7 +473,7 @@ describe("ProgressReporter", () => {
       progressReporter.start();
 
       // Wait for interval to trigger
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       progressReporter.stop();
 

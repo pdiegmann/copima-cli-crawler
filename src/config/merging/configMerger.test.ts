@@ -336,7 +336,7 @@ describe("ConfigMerger", () => {
       const result = merger.mergeWithStrategy([config1, config2], "append");
 
       // With append strategy, arrays should be concatenated
-      expect(result.oauth2?.providers?.gitlab?.scopes).toEqual(["read_user", "api"]);
+      expect(result.oauth2?.providers?.["gitlab"]?.scopes).toEqual(["read_user", "api"]);
     });
 
     it("handles empty arrays with append strategy", () => {
@@ -357,7 +357,7 @@ describe("ConfigMerger", () => {
 
       const result = merger.mergeWithStrategy([config1, config2], "append");
 
-      expect(result.oauth2?.providers?.gitlab?.scopes).toEqual(["api"]);
+      expect(result.oauth2?.providers?.["gitlab"]?.scopes).toEqual(["api"]);
     });
 
     it("merges non-array fields with append strategy", () => {
@@ -411,7 +411,7 @@ describe("ConfigMerger", () => {
       const result = merger.mergeWithStrategy([config1, config2], "append");
 
       expect(result["gitlab"]).toEqual({ host: "host1", timeout: 1000 });
-      expect(result.oauth2?.providers?.gitlab?.scopes).toEqual(["read", "write"]);
+      expect(result.oauth2?.providers?.["gitlab"]?.scopes).toEqual(["read", "write"]);
     });
   });
 

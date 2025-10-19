@@ -393,16 +393,11 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const gitlabHost = await resolveGitlabHostForFlags(this, flagsAny, logger);
     flagsAny.host = gitlabHost;
 
-    const { token, resolvedAccountId, source: tokenSource } = await resolveAccessTokenForAccount(
-      flagsAny,
-      requestedAccountId,
-      databasePath,
-      configAccessToken,
-      configPat,
-      configAccessToken,
-      configRefreshToken,
-      logger
-    );
+    const {
+      token,
+      resolvedAccountId,
+      source: tokenSource,
+    } = await resolveAccessTokenForAccount(flagsAny, requestedAccountId, databasePath, configAccessToken, configPat, configAccessToken, configRefreshToken, logger);
 
     if (resolvedAccountId) {
       flagsAny.accountId = flagsAny.accountId ?? resolvedAccountId;

@@ -46,7 +46,7 @@ describe("RefreshTokenManager", () => {
         expect.objectContaining({
           refreshToken: "new_refresh_token",
           refreshTokenExpiresAt: expect.any(Date),
-        }),
+        })
       );
     });
 
@@ -66,7 +66,7 @@ describe("RefreshTokenManager", () => {
         expect.objectContaining({
           refreshToken: "new_refresh_token",
           refreshTokenExpiresAt: null,
-        }),
+        })
       );
     });
 
@@ -85,7 +85,7 @@ describe("RefreshTokenManager", () => {
         expect.objectContaining({
           refreshToken: undefined,
           refreshTokenExpiresAt: null,
-        }),
+        })
       );
     });
   });

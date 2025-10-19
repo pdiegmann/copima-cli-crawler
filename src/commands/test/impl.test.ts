@@ -58,9 +58,7 @@ describe("test/impl", () => {
     it("lists example configurations when --list-examples flag is set", async () => {
       mockExistsSync.mockReturnValue(false);
 
-      await expect(
-        testImpl({ "list-examples": true }, "test.yaml")
-      ).resolves.toBeUndefined();
+      await expect(testImpl({ "list-examples": true }, "test.yaml")).resolves.toBeUndefined();
 
       expect(mockLogger.info).toHaveBeenCalledWith("Available example test configurations:");
       expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining("examples/test-configs/basic-test.yaml"));
