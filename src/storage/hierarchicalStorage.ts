@@ -3,6 +3,7 @@ import { access, mkdir, writeFile } from "fs/promises";
 import { join } from "path";
 import { createLogger } from "../logging";
 import type { GitLabGroup, GitLabProject } from "../types/api.js";
+import { DeduplicationRegistry } from "./deduplicationRegistry.js";
 
 const logger = createLogger("HierarchicalStorage");
 
@@ -22,9 +23,11 @@ export type GitLabArea = {
 
 export class HierarchicalStorageManager {
   private config: HierarchicalStorageConfig;
+  private deduplicationRegistry?: DeduplicationRegistry;
 
-  constructor(config: HierarchicalStorageConfig) {
+  constructor(config: HierarchicalStorageConfig, deduplicationRegistry?: DeduplicationRegistry) {
     this.config = config;
+    this.deduplicationRegistry = deduplicationRegistry;
   }
 
   /**
@@ -44,11 +47,40 @@ export class HierarchicalStorageManager {
   }
 
   /**
-   * Write data to JSONL files in hierarchical structure
+   * Write data to JSONL files in hierarchical structure with optional deduplication
    */
-  async writeJSONLToHierarchy(area: GitLabArea, resourceType: string, data: any[]): Promise<void> {
+  async writeJSONLToHierarchy(area: GitLabArea, resourceType: string, data: any[], idField: string = "id"): Promise<void> {
     if (!data || data.length === 0) {
       logger.debug("No data to write", { area: area.fullPath, resourceType });
+      return;
+    }
+
+    // Filter out duplicates if deduplication is enabled
+    let filteredData = data;
+    if (this.deduplicationRegistry && this.deduplicationRegistry.isEnabled()) {
+      filteredData = data.filter((item) => {
+        if (!item) return false;
+
+        const itemId = item[idField];
+        if (!itemId) {
+          logger.warn(`Item missing ${idField} field, cannot deduplicate`, { resourceType });
+          return true; // Include items without ID
+        }
+
+        const id = String(itemId);
+        if (this.deduplicationRegistry!.isWritten(resourceType, id)) {
+          logger.debug(`Skipping duplicate ${resourceType}: ${id}`);
+          return false;
+        }
+
+        return true;
+      });
+
+      logger.debug(`Deduplication for ${area.fullPath}/${resourceType}: ${data.length} -> ${filteredData.length} items (${data.length - filteredData.length} duplicates skipped)`);
+    }
+
+    if (filteredData.length === 0) {
+      logger.debug("No new data to write after deduplication", { area: area.fullPath, resourceType });
       return;
     }
 
@@ -60,13 +92,22 @@ export class HierarchicalStorageManager {
     await this.ensureDirectoryStructure(directoryPath);
 
     // Write JSONL data
-    await this.writeJSONLData(filePath, data);
+    await this.writeJSONLData(filePath, filteredData);
+
+    // Mark resources as written in registry
+    if (this.deduplicationRegistry && this.deduplicationRegistry.isEnabled()) {
+      const writtenIds = filteredData.map((item) => String(item[idField])).filter((id) => id && id !== "undefined");
+      if (writtenIds.length > 0) {
+        this.deduplicationRegistry.markBatchWritten(resourceType, writtenIds, filePath);
+        this.deduplicationRegistry.save();
+      }
+    }
 
     logger.info("JSONL data written to hierarchical structure", {
       area: area.fullPath,
       resourceType,
       filePath,
-      recordCount: data.length,
+      recordCount: filteredData.length,
     });
   }
 
@@ -264,6 +305,24 @@ export class HierarchicalStorageManager {
   }
 
   /**
+   * Sets the deduplication registry for this storage manager.
+   *
+   * @param registry - The deduplication registry to use.
+   */
+  setDeduplicationRegistry(registry: DeduplicationRegistry): void {
+    this.deduplicationRegistry = registry;
+  }
+
+  /**
+   * Gets the deduplication registry if one is configured.
+   *
+   * @returns The deduplication registry or undefined.
+   */
+  getDeduplicationRegistry(): DeduplicationRegistry | undefined {
+    return this.deduplicationRegistry;
+  }
+
+  /**
    * Calculate total storage size for an area
    */
   async calculateAreaSize(area: GitLabArea): Promise<number> {
@@ -301,7 +360,7 @@ export class HierarchicalStorageManager {
 /**
  * Create hierarchical storage manager with default configuration
  */
-export const createHierarchicalStorageManager = (config: Partial<HierarchicalStorageConfig> = {}): HierarchicalStorageManager => {
+export const createHierarchicalStorageManager = (config: Partial<HierarchicalStorageConfig> = {}, deduplicationRegistry?: DeduplicationRegistry): HierarchicalStorageManager => {
   const defaultConfig: HierarchicalStorageConfig = {
     rootDir: "./output",
     fileNaming: "lowercase",
@@ -311,5 +370,5 @@ export const createHierarchicalStorageManager = (config: Partial<HierarchicalSto
     ...config,
   };
 
-  return new HierarchicalStorageManager(defaultConfig);
+  return new HierarchicalStorageManager(defaultConfig, deduplicationRegistry);
 };

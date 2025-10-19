@@ -15,3 +15,12 @@ export type HierarchicalPath = {
   full: string;
   relative: string;
 };
+
+// Export deduplication registry
+export { DeduplicationRegistry, createDeduplicationRegistry } from "./deduplicationRegistry.js";
+export type { DeduplicationRegistryConfig, RegistryEntry } from "./deduplicationRegistry.js";
+
+// Export storage managers
+export { StorageManager, createStorageManager } from "./storageManager.js";
+export { HierarchicalStorageManager, createHierarchicalStorageManager } from "./hierarchicalStorage.js";
+export type { HierarchicalStorageConfig, GitLabArea } from "./hierarchicalStorage.js";
