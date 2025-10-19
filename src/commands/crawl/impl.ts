@@ -206,7 +206,7 @@ export const crawlCommand = async (options: any): Promise<void> => {
     logger.info("🚀 Starting complete GitLab crawl with enhanced orchestrator");
 
     // Parse steps from options
-    const stepsString = options.steps || "areas,users";
+    const stepsString = options.steps || "areas,users,resources,repository";
     const steps = stepsString.split(",").map((s: string) => s.trim());
 
     logger.info(`Executing steps: ${steps.join(", ")}`);
