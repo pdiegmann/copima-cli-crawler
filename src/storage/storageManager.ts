@@ -73,7 +73,7 @@ export class StorageManager {
       // Filter out duplicates if deduplication is enabled
       let filteredData = dataArray;
       if (this.deduplicationRegistry && this.deduplicationRegistry.isEnabled() && resourceType) {
-        filteredData = dataArray.filter((item) => {
+        filteredData = dataArray.filter((item: SafeRecord) => {
           if (!item) return false;
 
           const itemId = item[idField];

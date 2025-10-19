@@ -58,7 +58,7 @@ export class HierarchicalStorageManager {
     // Filter out duplicates if deduplication is enabled
     let filteredData = data;
     if (this.deduplicationRegistry && this.deduplicationRegistry.isEnabled()) {
-      filteredData = data.filter((item) => {
+      filteredData = data.filter((item: any) => {
         if (!item) return false;
 
         const itemId = item[idField];

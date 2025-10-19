@@ -271,7 +271,9 @@ export class DeduplicationRegistry {
  * @returns DeduplicationRegistry instance
  */
 export const createDeduplicationRegistry = (rootDir: string, enabled: boolean = true): DeduplicationRegistry => {
-  const registryPath = join(rootDir, ".copima-registry.json");
+  // Sanitize the rootDir to prevent path traversal attacks
+  const sanitizedRootDir = rootDir.replace(/\.\./g, "");
+  const registryPath = join(sanitizedRootDir, ".copima-registry.json");
 
   return new DeduplicationRegistry({
     registryPath,
