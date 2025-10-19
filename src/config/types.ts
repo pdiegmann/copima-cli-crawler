@@ -144,6 +144,13 @@ export type OutputConfig = {
   prettyPrint?: boolean;
   /** Compression for output files */
   compression?: "none" | "gzip" | "brotli";
+  /** Enable deduplication of resources across crawl steps */
+  deduplication?: {
+    /** Enable or disable deduplication (default: true) */
+    enabled?: boolean;
+    /** Path to registry file (default: <rootDir>/.copima-registry.json) */
+    registryPath?: string;
+  };
 };
 
 /**

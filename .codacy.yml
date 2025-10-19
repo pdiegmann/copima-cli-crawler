@@ -15,6 +15,11 @@ engines:
   eslint:
     enabled: false
   
+  # Disable PMD/other JavaScript engines that check for outdated ES5/Flow patterns
+  # This is a modern TypeScript project using ES2015+, not Flow
+  pmdjavascript:
+    enabled: false
+  
   # Keep other useful engines enabled
   duplication:
     enabled: true

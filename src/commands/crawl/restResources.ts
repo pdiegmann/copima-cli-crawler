@@ -3,6 +3,7 @@ import { loadConfig } from "../../config/loader";
 import type { CallbackContext, Config } from "../../config/types";
 import { createLogger } from "../../logging/logger";
 import { StorageManager } from "../../storage/storageManager";
+import { createStorageManagerWithDeduplication } from "./storageFactory.js";
 
 const logger = createLogger("restResources");
 
@@ -21,7 +22,9 @@ export class RestResourcesFetcher {
     const apiUrl = `${this.config.gitlab.host}/api/v4`;
     const accessToken = config.gitlab.token || config.gitlab.accessToken || "";
     this.client = new GitLabRestClient(apiUrl, accessToken);
-    this.storageManager = new StorageManager(this.config.output);
+
+    // Create storage manager with deduplication support
+    this.storageManager = createStorageManagerWithDeduplication(this.config);
   }
 
   /**
@@ -50,7 +53,7 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure - matches pattern from commonResources
       const hierarchy = [...projectPath.split("/"), "repository"];
       const filePath = this.storageManager.createHierarchicalPath("branches", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBranches as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedBranches as any, false, "branch", "name");
 
       logger.info(`Successfully wrote ${writtenCount} branches for ${projectPath} to ${filePath}`);
     } catch (error) {
@@ -472,7 +475,7 @@ export class RestResourcesFetcher {
       // Store in hierarchical structure
       const hierarchy = [...projectPath.split("/"), "security"];
       const filePath = this.storageManager.createHierarchicalPath("vulnerabilities", hierarchy);
-      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedVulnerabilities as any, false);
+      const writtenCount = this.storageManager.writeJsonlFile(filePath, processedVulnerabilities as any, false, "vulnerability", "id");
 
       logger.info(`Successfully wrote ${writtenCount} vulnerabilities for ${projectPath} to ${filePath}`);
     } catch (error) {
