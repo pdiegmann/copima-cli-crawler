@@ -1,0 +1,95 @@
+# GitLab Crawler Template Test Configuration
+# This file demonstrates all available test configuration options
+
+# Test metadata
+metadata:
+  name: "Template Test - Full Configuration Example"
+  description: "Demonstrates all available test configuration options"
+  version: "1.0.0"
+  author: "GitLab Crawler Team"
+  tags: ["e2e", "template", "comprehensive", "full-stack"]
+  timeout: 600000
+
+# GitLab instance configuration
+gitlab:
+  host: "https://git.hnnl.eu"
+  accessToken: "YOUR_GITLAB_TOKEN_HERE"
+  timeout: 30000
+  maxConcurrency: 5
+  rateLimit: 600
+
+# Test execution settings
+execution:
+  workingDir: "./test-tmp/template"
+  outputDir: "./test-tmp/template-output"
+  databasePath: "./test-tmp/template-test.db"
+  steps: ["areas", "users", "resources"]
+  testResume: true
+  testCallbacks: false
+
+# Expected outcomes and validation rules
+validation:
+  expectedFiles:
+    - path: "groups.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      maxRecords: 1000
+      requiredFields: ["id", "name", "fullPath", "description", "visibility"]
+    - path: "projects.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      maxRecords: 5000
+      requiredFields: ["id", "name", "fullPath", "description", "visibility"]
+    - path: "users.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      maxRecords: 10000
+      requiredFields: ["id", "username", "email", "name", "state"]
+    - path: "issues.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      maxRecords: 100000
+      requiredFields: ["id", "iid", "title", "state", "createdAt"]
+    - path: "merge_requests.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      maxRecords: 50000
+      requiredFields: ["id", "iid", "title", "state", "createdAt"]
+    - path: "labels.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      requiredFields: ["id", "title", "color"]
+    - path: "milestones.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      requiredFields: ["id", "title", "state"]
+
+  logs:
+    expectedLevels: ["info", "debug"]
+    requiredMessages:
+      - "Starting.*crawl"
+      - "Completed.*crawl"
+      - "Processing.*groups"
+      - "Processing.*projects"
+      - "Processing.*users"
+    forbiddenMessages:
+      - "FATAL"
+      - "CRITICAL"
+    maxErrors: 0
+    maxWarnings: 20
+
+  performance:
+    maxExecutionTime: 600000
+    maxMemoryUsage: 2048
+
+  dataQuality:
+    validateJsonStructure: true
+    checkDuplicates: true
+    validateRequiredFields: true
+
+# Cleanup settings
+cleanup:
+  cleanOutputDir: true
+  cleanDatabase: true
+  cleanLogs: false
+  keepOnFailure: true

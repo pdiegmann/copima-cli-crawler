@@ -1,0 +1,77 @@
+# GitLab Crawler Test Suite Configuration
+# This file orchestrates multiple tests for comprehensive validation
+
+# Suite metadata
+metadata:
+  name: "GitLab Crawler Test Suite"
+  description: "Comprehensive test suite validating all crawler functionality"
+  version: "1.0.0"
+
+# Individual tests in the suite
+# Note: This is a suite configuration, so each test reference should point to actual test config files
+# For now, we'll include the basic test inline as an example
+tests:
+  - metadata:
+      name: "Basic Areas + Users Test"
+      description: "Real GitLab connection test with areas and users steps"
+      version: "1.0.0"
+      author: "GitLab Crawler Team"
+      tags: ["e2e", "basic", "areas", "users"]
+      timeout: 300000
+    gitlab:
+      host: "https://git.hnnl.eu"
+      accessToken: "YOUR_GITLAB_TOKEN_HERE"
+      timeout: 30000
+      maxConcurrency: 5
+      rateLimit: 600
+    execution:
+      workingDir: "./test-tmp/suite-basic"
+      outputDir: "./test-tmp/suite-basic-output"
+      databasePath: "./test-tmp/suite-basic.db"
+      steps: ["areas", "users"]
+      testResume: false
+      testCallbacks: false
+    validation:
+      expectedFiles:
+        - path: "groups.jsonl"
+          format: "jsonl"
+          minRecords: 1
+          requiredFields: ["id", "name", "fullPath"]
+        - path: "projects.jsonl"
+          format: "jsonl"
+          minRecords: 1
+          requiredFields: ["id", "name", "fullPath"]
+        - path: "users.jsonl"
+          format: "jsonl"
+          minRecords: 1
+          requiredFields: ["id", "username", "email"]
+      logs:
+        expectedLevels: ["info", "debug"]
+        requiredMessages:
+          - "Starting.*crawl"
+          - "Completed.*crawl"
+        forbiddenMessages:
+          - "FATAL"
+          - "CRITICAL"
+        maxErrors: 0
+        maxWarnings: 10
+      performance:
+        maxExecutionTime: 300000
+        maxMemoryUsage: 1024
+      dataQuality:
+        validateJsonStructure: true
+        checkDuplicates: false
+        validateRequiredFields: true
+    cleanup:
+      cleanOutputDir: true
+      cleanDatabase: true
+      cleanLogs: false
+      keepOnFailure: true
+
+# Suite-level settings
+settings:
+  parallel: false
+  maxParallel: 3
+  stopOnFailure: true
+  generateReport: true
+  reportFormat: "yaml"

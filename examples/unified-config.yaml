@@ -1,0 +1,71 @@
+# GitLab Crawler Basic E2E Test Configuration
+# This test validates areas and users crawling steps against git.hnnl.eu
+
+# Test metadata
+metadata:
+  name: "Basic GitLab Crawler Test"
+  description: "E2E test validating areas and users crawling steps"
+  version: "1.0.0"
+  author: "GitLab Crawler Team"
+  tags: ["e2e", "basic", "areas", "users"]
+  timeout: 300000
+
+# GitLab instance configuration
+gitlab:
+  host: "https://git.hnnl.eu"
+  accessToken: "YOUR_GITLAB_TOKEN_HERE"
+  timeout: 30000
+  maxConcurrency: 5
+  rateLimit: 600
+
+# Test execution settings
+execution:
+  workingDir: "./test-tmp"
+  outputDir: "./test-tmp/output"
+  databasePath: "./test-tmp/test-crawler.db"
+  steps: ["areas", "users"]
+  testResume: false
+  testCallbacks: false
+
+# Expected outcomes and validation rules
+validation:
+  expectedFiles:
+    - path: "groups.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      requiredFields: ["id", "name", "fullPath"]
+    - path: "projects.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      requiredFields: ["id", "name", "fullPath"]
+    - path: "users.jsonl"
+      format: "jsonl"
+      minRecords: 1
+      requiredFields: ["id", "username", "email"]
+
+  logs:
+    expectedLevels: ["info", "debug"]
+    requiredMessages:
+      - "Starting.*crawl"
+      - "Completed.*crawl"
+    forbiddenMessages:
+      - "FATAL"
+      - "CRITICAL"
+    maxErrors: 0
+    maxWarnings: 10
+
+  performance:
+    maxExecutionTime: 300000
+    maxMemoryUsage: 1024
+
+  dataQuality:
+    validateJsonStructure: true
+    checkDuplicates: false
+    validateRequiredFields: true
+
+# Cleanup settings
+cleanup:
+  cleanOutputDir: true
+  cleanDatabase: true
+  cleanLogs: false
+  keepOnFailure: true

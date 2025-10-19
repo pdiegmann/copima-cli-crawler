@@ -35,3 +35,20 @@ tmp/
 database.sqlite
 database.sqlite-shm
 database.sqlite-wal
+
+# Test data and outputs
+test-tmp/
+*.db
+*.db-shm
+*.db-wal
+
+# Test output directories
+**/dry-run-output/
+**/template-output/
+**/test-output/
+
+# Test state and progress files
+**/dry-run-state/
+**/template-state/
+**/test-state/
+suite-report.yaml

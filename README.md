@@ -293,3 +293,104 @@ Both commands launch the same interactive flow; use whichever is more convenient
 When any command needs configuration and none is available (or critical fields such as `gitlab.host` are blank and no OAuth provider is configured), the wizard is triggered automatically—as long as the CLI is running in an interactive terminal. When that happens the wizard will also launch the auth flow once configuration is stored so you can complete setup in one shot. Non-interactive environments (CI pipelines, scripts, etc.) still fail fast with a clear validation error instead of hanging for input.
 
 The wizard writes YAML or JSON depending on the target filename and will reuse existing values wherever possible, only prompting for the fields that are missing or invalid.
+
+## Testing and Validation
+
+The project includes comprehensive E2E testing capabilities to validate the crawler functionality.
+
+### Available Test Configurations
+
+The `examples/` directory contains several test configurations:
+
+1. **unified-config.yaml** - Basic E2E test with PAT authentication
+   - Tests: areas + users steps
+   - Auth: Personal Access Token
+   - Instance: git.hnnl.eu
+   - Cleanup: Remove on success, keep on failure
+
+2. **test-configs/dry-run-test.yaml** - Mock execution without API calls
+   - Tests: areas + users + resources steps
+   - Auth: Mock token (no real API calls)
+   - Cleanup: Remove on success, keep on failure
+
+3. **test-configs/template-test.yaml** - Full configuration example
+   - Tests: All steps with comprehensive validation
+   - Auth: Personal Access Token
+   - Shows: All available configuration options
+
+4. **test-configs/test-suite.yaml** - Test suite orchestration
+   - Runs: Multiple tests sequentially
+   - Contains: Dry-run + Basic + Template tests
+
+### Running Tests
+
+```bash
+# Basic E2E test (areas + users)
+bun run test:e2e:basic
+
+# Dry-run test (mock mode)
+bun run test:e2e:dry-run
+
+# Template test (full configuration)
+bun run test:e2e:template
+
+# Full test suite
+bun run test:e2e:suite
+
+# Run specific test configuration
+bun run src/bin/cli.ts test examples/unified-config.yaml
+
+# Unit tests
+bun test                    # Bun test runner
+bun run test               # Jest test suite
+bun run test:watch         # Jest watch mode
+bun run test:coverage      # Test coverage report
+```
+
+### Test Configuration Structure
+
+```yaml
+# GitLab connection
+gitlab:
+  host: "git.hnnl.eu"
+  apiVersion: "v4"
+  token: "your-access-token"
+  sslVerify: true
+
+# Test configuration
+test:
+  name: "Test Name"
+  timeout: 300
+  cleanup:
+    enabled: true
+    onFailure: "keep"
+    onSuccess: "remove"
+
+  steps:
+    - name: "areas"
+      enabled: true
+    - name: "users"
+      enabled: true
+
+  validation:
+    groups:
+      minCount: 1
+      requiredFields: ["id", "name", "fullPath"]
+    users:
+      minCount: 1
+      requiredFields: ["id", "username", "email"]
+```
+
+### Test Modes
+
+- **Real Mode**: Uses actual GitLab API with valid access token
+- **Mock Mode**: Simulates API calls without connecting to GitLab (token starts with "mock_" or "test_")
+
+### Validation
+
+Tests validate:
+- Output file existence and format (JSONL)
+- Minimum record counts per resource type
+- Required fields presence in each record
+- Data structure integrity
+- Cleanup behavior (success vs. failure)

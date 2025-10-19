@@ -874,8 +874,16 @@ export class TestRunner {
     const args = this.buildStepArgs(config.execution.steps);
     this.addHostArgument(args, config.gitlab.host);
 
-    const accountId = await this.resolveAccountId(config.gitlab);
-    this.addCredentialArgs(args, accountId);
+    const accountContext = await this.resolveAccountContext(config.gitlab);
+    if (accountContext) {
+      // Add access token for PAT and mock accounts
+      if (accountContext.accountId.startsWith("pat-") || accountContext.accountId.startsWith("mock-")) {
+        args.push("--access-token", accountContext.accessToken);
+      } else {
+        // Add account-id for OAuth2 accounts
+        this.addCredentialArgs(args, accountContext.accountId);
+      }
+    }
     this.addOutputArgs(args, config.execution.outputDir, config.execution.databasePath);
 
     return args;
@@ -988,6 +996,37 @@ export class TestRunner {
       return cachedContext;
     }
 
+    // Check for direct access token first (PAT support)
+    if (gitlabConfig.accessToken && typeof gitlabConfig.accessToken === "string") {
+      const accessToken = gitlabConfig.accessToken.trim();
+
+      // Skip mock tokens
+      if (accessToken.startsWith("test_") || accessToken.startsWith("mock_")) {
+        console.log("Test runner: Using mock access token (mock mode)");
+        const context = {
+          accountId: "mock-account",
+          accessToken,
+        };
+        if (cacheKey) {
+          this.accountContextCache.set(cacheKey, context);
+        }
+        return context;
+      }
+
+      // Use direct PAT without requiring OAuth2 storage
+      const hostIdentifier = this.extractHostIdentifier(gitlabConfig.host);
+      const context = {
+        accountId: `pat-${hostIdentifier}-${Date.now()}`,
+        accessToken,
+      };
+      if (cacheKey) {
+        this.accountContextCache.set(cacheKey, context);
+      }
+      console.log(`Test runner: Using direct PAT for ${gitlabConfig.host}`);
+      return context;
+    }
+
+    // Fall back to OAuth2 account lookup from storage
     try {
       const { initStorage } = await import("../account/storage.js");
       const { TokenManager } = await import("../auth/tokenManager.js");
@@ -1015,6 +1054,18 @@ export class TestRunner {
     } catch (error) {
       console.warn("Test runner: Failed to resolve OAuth2 account context", error);
       return null;
+    }
+  }
+
+  /**
+   * Extracts a simple host identifier from URL.
+   */
+  private extractHostIdentifier(host: string): string {
+    try {
+      const url = new URL(host);
+      return url.hostname.replace(/\./g, "-");
+    } catch {
+      return host.replace(/[^a-zA-Z0-9]/g, "-");
     }
   }
 
@@ -1254,8 +1305,8 @@ export class TestRunner {
 
     <h2>Test Results</h2>
     ${result.results
-      .map(
-        (test) => `
+        .map(
+          (test) => `
         <div class="test ${test.success ? "passed" : "failed"}">
             <h3>${test.config.metadata.name} - ${test.success ? "PASSED" : "FAILED"}</h3>
             <p>${test.config.metadata.description}</p>
@@ -1267,8 +1318,8 @@ export class TestRunner {
             </div>
         </div>
     `
-      )
-      .join("")}
+        )
+        .join("")}
 </body>
 </html>`;
   }

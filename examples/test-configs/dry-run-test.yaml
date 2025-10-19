@@ -1,0 +1,70 @@
+# GitLab Crawler Dry-Run Test Configuration
+# This test uses mock mode to validate the crawler workflow without making actual API calls
+
+# Test metadata
+metadata:
+  name: "Dry-Run Test"
+  description: "Mock execution test without actual API calls"
+  version: "1.0.0"
+  author: "GitLab Crawler Team"
+  tags: ["e2e", "mock", "dry-run"]
+  timeout: 120000
+
+# GitLab instance configuration (mock mode)
+gitlab:
+  host: "https://gitlab.example.com"
+  accessToken: "mock_token_for_testing"
+  timeout: 30000
+  maxConcurrency: 5
+  rateLimit: 600
+
+# Test execution settings
+execution:
+  workingDir: "./test-tmp/dry-run"
+  outputDir: "./test-tmp/dry-run-output"
+  databasePath: "./test-tmp/dry-run-test.db"
+  steps: ["areas", "users", "resources"]
+  testResume: false
+  testCallbacks: false
+
+# Expected outcomes and validation rules
+validation:
+  expectedFiles:
+    - path: "groups.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      requiredFields: ["id", "name", "fullPath"]
+    - path: "projects.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      requiredFields: ["id", "name", "fullPath"]
+    - path: "users.jsonl"
+      format: "jsonl"
+      minRecords: 0
+      requiredFields: ["id", "username"]
+
+  logs:
+    expectedLevels: ["info", "debug"]
+    requiredMessages:
+      - "mock.*mode"
+    forbiddenMessages:
+      - "FATAL"
+      - "CRITICAL"
+    maxErrors: 0
+    maxWarnings: 10
+
+  performance:
+    maxExecutionTime: 120000
+    maxMemoryUsage: 512
+
+  dataQuality:
+    validateJsonStructure: true
+    checkDuplicates: false
+    validateRequiredFields: false
+
+# Cleanup settings
+cleanup:
+  cleanOutputDir: true
+  cleanDatabase: true
+  cleanLogs: false
+  keepOnFailure: true

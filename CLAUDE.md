@@ -138,21 +138,92 @@ User and account tables with OAuth2 token storage:
 
 ## Configuration Examples
 
-### Basic Auth Setup
+### Available Test Configurations
+
+The `examples/` directory contains several test configurations:
+
+1. **unified-config.yaml** - Basic E2E test with PAT authentication
+   - Tests: areas + users steps
+   - Auth: Personal Access Token (YOUR_GITLAB_TOKEN_HERE)
+   - Instance: git.hnnl.eu
+   - Cleanup: Remove on success, keep on failure
+
+2. **test-configs/dry-run-test.yaml** - Mock execution without API calls
+   - Tests: areas + users + resources steps
+   - Auth: Mock token (no real API calls)
+   - Cleanup: Remove on success, keep on failure
+
+3. **test-configs/template-test.yaml** - Full configuration example
+   - Tests: All steps with comprehensive validation
+   - Auth: Personal Access Token
+   - Shows: All available configuration options
+
+4. **test-configs/test-suite.yaml** - Test suite orchestration
+   - Runs: Multiple tests sequentially
+   - Contains: Dry-run + Basic + Template tests
+
+### Running Tests
 
 ```bash
-# Authenticate with GitLab instance
-bun run dev:auth --config examples/unified-config.yaml
+# Basic E2E test (areas + users)
+bun run test:e2e:basic
+
+# Dry-run test (mock mode)
+bun run test:e2e:dry-run
+
+# Template test (full configuration)
+bun run test:e2e:template
+
+# Full test suite
+bun run test:e2e:suite
+
+# Run specific test configuration
+bun run src/bin/cli.ts test examples/unified-config.yaml
 ```
 
-### Test Configuration
+### Basic Test Configuration Structure
 
-Use `examples/unified-config.yaml` for both authentication and testing. The file includes:
+```yaml
+# GitLab connection
+gitlab:
+  host: "git.hnnl.eu"
+  apiVersion: "v4"
+  token: "YOUR_GITLAB_TOKEN_HERE"
+  sslVerify: true
 
-- GitLab instance configuration
-- OAuth2 provider setup
-- Database and output settings
-- E2E test validation rules
+# Test configuration
+test:
+  name: "Basic GitLab Crawler Test"
+  timeout: 300
+  cleanup:
+    enabled: true
+    onFailure: "keep"
+    onSuccess: "remove"
+
+  steps:
+    - name: "areas"
+      enabled: true
+    - name: "users"
+      enabled: true
+
+  validation:
+    groups:
+      minCount: 1
+      requiredFields: ["id", "name", "fullPath"]
+    users:
+      minCount: 1
+      requiredFields: ["id", "username", "email"]
+```
+
+### Authentication Setup
+
+```bash
+# Authenticate with GitLab instance (OAuth2 flow)
+bun run dev:auth --config examples/unified-config.yaml
+
+# Note: PAT authentication doesn't require the auth command
+# The token is used directly from the configuration file
+```
 
 ## Development Workflow
 
