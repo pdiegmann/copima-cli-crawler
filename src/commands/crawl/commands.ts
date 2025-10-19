@@ -17,6 +17,12 @@ export const areasCommand = buildCommand({
         brief: "GitLab instance host",
         optional: true,
       },
+      token: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Personal Access Token (PAT)",
+        optional: true,
+      },
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
@@ -77,6 +83,12 @@ export const usersCommand = buildCommand({
         brief: "GitLab instance host",
         optional: true,
       },
+      token: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Personal Access Token (PAT)",
+        optional: true,
+      },
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
@@ -129,6 +141,12 @@ export const resourcesCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "GitLab instance host",
+        optional: true,
+      },
+      token: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Personal Access Token (PAT)",
         optional: true,
       },
       "access-token": {
@@ -185,6 +203,12 @@ export const repositoryCommand = buildCommand({
         brief: "GitLab instance host",
         optional: true,
       },
+      token: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Personal Access Token (PAT)",
+        optional: true,
+      },
       "access-token": {
         kind: "parsed",
         parse: (input: string) => input,
@@ -237,6 +261,12 @@ export const crawlAllCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "GitLab instance host",
+        optional: true,
+      },
+      token: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Personal Access Token (PAT)",
         optional: true,
       },
       "access-token": {
@@ -357,6 +387,12 @@ export const crawlCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "GitLab instance host",
+        optional: true,
+      },
+      token: {
+        kind: "parsed",
+        parse: (input: string) => input,
+        brief: "Personal Access Token (PAT)",
         optional: true,
       },
       output: {
