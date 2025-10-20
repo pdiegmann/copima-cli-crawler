@@ -90,7 +90,6 @@ export class GitLabGraphQLClient {
     }
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   async query<T>(query: any, variables: SafeRecord = {}): Promise<T> {
     const makeRequest = async (token: string, queryString: string): Promise<Response> => {
       const controller = new AbortController();
