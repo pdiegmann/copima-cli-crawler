@@ -1,6 +1,24 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "@jest/globals";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import * as fs from "fs";
 import * as path from "path";
+
+// Create the mock logger instance
+const mockLogger = {
+  info: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
+  log: jest.fn(),
+};
+
+// Create the mock function that accepts a context parameter
+const mockCreateLogger = jest.fn((context: string) => mockLogger);
+
+// Mock the logger module before importing HierarchicalStorageManager
+jest.mock("../logging", () => ({
+  createLogger: mockCreateLogger,
+}));
+
 import { HierarchicalStorageManager, type GitLabArea } from "./hierarchicalStorage";
 
 const TEST_DIR = path.join(__dirname, "__test_hierarchical_output__");
