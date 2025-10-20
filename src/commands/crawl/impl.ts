@@ -461,6 +461,30 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       return;
     }
 
+    // Initialize progress manager
+    const { createCrawlProgressManager } = await import("../../reporting/crawlProgressManager.js");
+    const progressManager = createCrawlProgressManager({
+      enableBars: flagsAny?.verbose !== false, // Enable bars unless verbose is explicitly false
+      showDetails: true,
+    });
+
+    // Initialize resume manager
+    const ResumeManager = (await import("../../resume/resumeManager.js")).default;
+    const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
+    const resumeFilePath = `${outputDir}/.crawl-resume.yaml`;
+    const resumeManager = new ResumeManager(resumeFilePath);
+
+    // Load existing resume state or initialize new session
+    let resumeState = resumeManager.loadState();
+    if (!resumeState) {
+      resumeState = resumeManager.initializeSession(gitlabHost, accountLabel);
+      logger.info(`Initialized new crawl session: ${resumeState.sessionId}`);
+    } else {
+      logger.info(`Resuming crawl session: ${resumeState.sessionId}`);
+      logger.info(`Last update: ${resumeState.lastUpdate}`);
+      logger.info(`Completed steps: ${resumeState.completedSteps.join(", ") || "none"}`);
+    }
+
     // Create or reuse GraphQL client with the correct host and token
     const graphqlClient = (this as any).graphqlClient ?? createGraphQLClient(gitlabHost, token);
     if (!(this as any).graphqlClient) {
@@ -480,37 +504,8 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
     const maxProjects = flagsAny?.["max-projects"] || flagsAny?.maxProjects;
     const specificGroups = flagsAny?.groups ? (flagsAny.groups as string).split(",").map((g) => g.trim()) : undefined;
 
-    // If specific groups are requested, fetch them individually
-    let groups: any[] = [];
-    if (specificGroups && specificGroups.length > 0) {
-      logger.info(`Fetching ${specificGroups.length} specific groups: ${specificGroups.join(", ")}`);
-      for (const groupPath of specificGroups) {
-        try {
-          const group = await graphqlClient.fetchGroup(groupPath);
-          groups.push(group);
-          logger.debug(`Fetched specific group: ${groupPath}`);
-        } catch (error) {
-          logger.warn(`Failed to fetch group ${groupPath}:`, { error });
-        }
-      }
-    } else {
-      // Fetch groups and projects using generated GraphQL operations with limits
-      groups = await graphqlClient.fetchAllGroups(maxGroups ? { maxGroups } : undefined);
-    }
-
-    const projects = await graphqlClient.fetchAllProjects(maxProjects ? { maxProjects } : undefined);
-
-    // Debug: Check if data is actually an array
-    logger.debug(`Groups type: ${Array.isArray(groups) ? "array" : typeof groups}, length: ${Array.isArray(groups) ? groups.length : "N/A"}`);
-    logger.debug(`Projects type: ${Array.isArray(projects) ? "array" : typeof projects}, length: ${Array.isArray(projects) ? projects.length : "N/A"}`);
-
-    // Log and store results
-    logger.info(`Fetched ${Array.isArray(groups) ? groups.length : 0} groups`);
-    logger.info(`Fetched ${Array.isArray(projects) ? projects.length : 0} projects`);
-
     // Import storage factory
     const { createHierarchicalStorageManagerWithDeduplication } = await import("./storageFactory.js");
-    const outputDir = flagsAny?.output || (this as any).config?.output?.directory || "./output";
 
     // Create hierarchical storage manager with deduplication
     const storageManager = createHierarchicalStorageManagerWithDeduplication((this as any).config, {
@@ -521,41 +516,161 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       prettyPrint: false,
     });
 
-    // Process groups through callback and store in hierarchical structure
-    callbackContext.resourceType = "group";
-    const processedGroups = await callbackManager.processObjects(callbackContext, groups);
+    // Check if groups substep is already completed
+    const groupsCompleted = resumeManager.isStepCompleted("areas", "groups");
+    const projectsCompleted = resumeManager.isStepCompleted("areas", "projects");
 
-    // Store each group in its hierarchical path
-    for (const group of processedGroups) {
-      const area = {
-        id: group.id,
-        fullPath: group.fullPath,
-        type: "group" as const,
-      };
+    // Get resume cursors for groups and projects
+    const groupsResumeCursor = resumeManager.getResumeCursor("areas", "groups");
+    const projectsResumeCursor = resumeManager.getResumeCursor("areas", "projects");
 
-      // Write group metadata to its own directory
-      await storageManager.writeJSONLToHierarchy(area, "group", [group]);
-      logger.debug(`Stored group: ${group.fullPath}`);
+    if (groupsCompleted) {
+      logger.info("Groups substep already completed, skipping...");
+    }
+    if (projectsCompleted) {
+      logger.info("Projects substep already completed, skipping...");
     }
 
-    // Process projects through callback and store in hierarchical structure
-    callbackContext.resourceType = "project";
-    const processedProjects = await callbackManager.processObjects(callbackContext, projects);
-
-    // Store each project in its hierarchical path
-    for (const project of processedProjects) {
-      const area = {
-        id: project.id,
-        fullPath: project.fullPath || `project-${project.id}`,
-        type: "project" as const,
-      };
-
-      // Write project metadata to its own directory
-      await storageManager.writeJSONLToHierarchy(area, "project", [project]);
-      logger.debug(`Stored project: ${area.fullPath}`);
+    // Start progress tracking for groups
+    const groupsTarget = specificGroups?.length || maxGroups || 100;
+    if (!groupsCompleted) {
+      progressManager.startStep("Groups", "fetching", groupsTarget);
     }
 
-    logger.info(`Stored ${processedGroups.length} groups and ${processedProjects.length} projects in hierarchical structure`);
+    // Set up progress callback for groups
+    graphqlClient.setProgressCallback((current, total, phase) => {
+      if (!groupsCompleted) {
+        progressManager.updateStep("Groups", current, total, phase as any);
+      }
+    });
+
+    // Track total groups/projects stored
+    let totalGroupsStored = 0;
+    let totalProjectsStored = 0;
+
+    // Stream groups with incremental storage (page-by-page)
+    if (!groupsCompleted && specificGroups && specificGroups.length > 0) {
+      logger.info(`Fetching ${specificGroups.length} specific groups: ${specificGroups.join(", ")}`);
+      for (const groupPath of specificGroups) {
+        try {
+          const group = await graphqlClient.fetchGroup(groupPath);
+
+          // Process and store immediately
+          callbackContext.resourceType = "group";
+          const processedGroups = await callbackManager.processObjects(callbackContext, [group]);
+
+          for (const processedGroup of processedGroups) {
+            const area = {
+              id: processedGroup.id,
+              fullPath: processedGroup.fullPath,
+              type: "group" as const,
+            };
+            await storageManager.writeJSONLToHierarchy(area, "group", [processedGroup]);
+            totalGroupsStored++;
+          }
+
+          progressManager.updateStep("Groups", totalGroupsStored, specificGroups.length, "storing");
+          logger.debug(`Stored group: ${group.fullPath}`);
+        } catch (error) {
+          logger.warn(`Failed to fetch group ${groupPath}:`, { error });
+        }
+      }
+    } else if (!groupsCompleted) {
+      // Stream groups with incremental storage and resume support
+      const streamOptions = maxGroups ? { maxGroups, resumeAfter: groupsResumeCursor } : { resumeAfter: groupsResumeCursor };
+
+      if (groupsResumeCursor) {
+        logger.info(`Resuming groups from cursor: ${groupsResumeCursor}`);
+      }
+
+      await graphqlClient.streamGroups(async (nodes, pageInfo, totalFetched) => {
+        // Process page immediately
+        callbackContext.resourceType = "group";
+        const processedGroups = await callbackManager.processObjects(callbackContext, nodes);
+
+        // Store each group immediately to disk
+        for (const group of processedGroups) {
+          const area = {
+            id: group.id,
+            fullPath: group.fullPath,
+            type: "group" as const,
+          };
+          await storageManager.writeJSONLToHierarchy(area, "group", [group]);
+          totalGroupsStored++;
+          logger.debug(`Stored group: ${group.fullPath}`);
+        }
+
+        // Update progress with storing phase
+        progressManager.updateStep("Groups", totalFetched, maxGroups || totalFetched, "storing");
+
+        // Update resume state after each page with pagination cursor
+        resumeManager.updateStepProgress("areas", "groups", totalFetched, pageInfo.endCursor, maxGroups || totalFetched);
+
+        if (pageInfo.endCursor) {
+          logger.debug(`Saved groups resume cursor: ${pageInfo.endCursor}`);
+        }
+      }, streamOptions);
+    }
+
+    // Complete groups step and mark in resume state
+    if (!groupsCompleted) {
+      progressManager.completeStep("Groups");
+      resumeManager.completeStep("areas", "groups");
+      logger.info(`Completed groups substep: ${totalGroupsStored} groups stored`);
+    }
+
+    // Start progress tracking for projects
+    const projectsTarget = maxProjects || 100;
+    if (!projectsCompleted) {
+      progressManager.startStep("Projects", "fetching", projectsTarget);
+    }
+
+    // Stream projects with incremental storage and resume support (page-by-page)
+    if (!projectsCompleted) {
+      const streamOptions = maxProjects ? { maxProjects, resumeAfter: projectsResumeCursor } : { resumeAfter: projectsResumeCursor };
+
+      if (projectsResumeCursor) {
+        logger.info(`Resuming projects from cursor: ${projectsResumeCursor}`);
+      }
+
+      await graphqlClient.streamProjects(async (nodes, pageInfo, totalFetched) => {
+        // Process page immediately
+        callbackContext.resourceType = "project";
+        const processedProjects = await callbackManager.processObjects(callbackContext, nodes);
+
+        // Store each project immediately to disk
+        for (const project of processedProjects) {
+          const area = {
+            id: project.id,
+            fullPath: project.fullPath || `project-${project.id}`,
+            type: "project" as const,
+          };
+          await storageManager.writeJSONLToHierarchy(area, "project", [project]);
+          totalProjectsStored++;
+          logger.debug(`Stored project: ${area.fullPath}`);
+        }
+
+        // Update progress with storing phase
+        progressManager.updateStep("Projects", totalFetched, maxProjects || totalFetched, "storing");
+
+        // Update resume state after each page with pagination cursor
+        resumeManager.updateStepProgress("areas", "projects", totalFetched, pageInfo.endCursor, maxProjects || totalFetched);
+
+        if (pageInfo.endCursor) {
+          logger.debug(`Saved projects resume cursor: ${pageInfo.endCursor}`);
+        }
+      }, streamOptions);
+
+      // Complete projects step and mark in resume state
+      progressManager.completeStep("Projects");
+      resumeManager.completeStep("areas", "projects");
+      logger.info(`Completed projects substep: ${totalProjectsStored} projects stored`);
+    }
+
+    // Stop progress manager and show summary
+    progressManager.stop();
+
+    logger.info(`Stored ${totalGroupsStored} groups and ${totalProjectsStored} projects in hierarchical structure`);
   } catch (error) {
     logger.error("Error during Step 1: Crawling areas", { error: error instanceof Error ? error.message : String(error) });
     throw error;
@@ -587,11 +702,42 @@ export const users = async function (this: LocalContext, flags: Record<string, u
       return;
     }
 
+    // Initialize progress manager
+    const { createCrawlProgressManager } = await import("../../reporting/crawlProgressManager.js");
+    const progressManager = createCrawlProgressManager({
+      enableBars: (flags as any)?.verbose !== false,
+      showDetails: true,
+    });
+
+    // Initialize resume manager
+    const ResumeManager = (await import("../../resume/resumeManager.js")).default;
+    const outputDir = (flags as any)?.output || (this as any).config?.output?.directory || "./output";
+    const resumeFilePath = `${outputDir}/.crawl-resume.yaml`;
+    const resumeManager = new ResumeManager(resumeFilePath);
+
+    // Load existing resume state or initialize new session
+    let resumeState = resumeManager.loadState();
+    if (!resumeState) {
+      const host = (this as any).config?.gitlab?.host || "";
+      const accountId = (this as any).config?.gitlab?.accessToken || "";
+      resumeState = resumeManager.initializeSession(host, accountId);
+      logger.info(`Initialized new crawl session: ${resumeState.sessionId}`);
+    }
+
+    // Check if users step is already completed
+    const usersCompleted = resumeManager.isStepCompleted("users");
+    const usersResumeCursor = resumeManager.getResumeCursor("users");
+
+    if (usersCompleted) {
+      logger.info("Users step already completed, skipping...");
+      return;
+    }
+
     // Initialize callback manager
     const callbackManager = createCallbackManager((this as any).config?.callbacks || { enabled: false });
     const callbackContext: CallbackContext = {
       host: (this as any).config?.gitlab?.host,
-      accountId: (this as any).config?.gitlab?.accessToken, // Using access token as account identifier
+      accountId: (this as any).config?.gitlab?.accessToken,
       resourceType: "user",
     };
 
@@ -599,21 +745,55 @@ export const users = async function (this: LocalContext, flags: Record<string, u
     const flagsAny = flags as any;
     const maxUsers = flagsAny?.["max-users"] || flagsAny?.maxUsers;
 
-    // Fetch users using generated GraphQL operations with limit
-    const users = await graphqlClient.fetchAllUsers(maxUsers ? { maxUsers } : undefined);
+    // Start progress tracking
+    const usersTarget = maxUsers || 100;
+    progressManager.startStep("Users", "fetching", usersTarget);
 
-    // Log and store results
-    logger.info(`Fetched ${users.length} users`);
+    // Set up progress callback
+    graphqlClient.setProgressCallback((current, total, phase) => {
+      progressManager.updateStep("Users", current, total, phase as any);
+    });
 
-    // Implement JSONL storage logic with callback processing
-    const outputDir = (this.path as any)?.resolve?.("output", "users") ?? "";
-    (this.fs as any)?.mkdirSync?.(outputDir, { recursive: true });
+    // Prepare output directory
+    (this.fs as any)?.mkdirSync?.((this.path as any)?.resolve?.(outputDir, "users") ?? outputDir, { recursive: true });
 
-    const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
+    // Track total users stored
+    let totalUsersStored = 0;
 
-    await writeJSONL((this.path as any)?.join?.(outputDir, "users.jsonl") ?? "", users, "user");
+    // Stream users with incremental storage and resume support
+    const streamOptions = maxUsers ? { maxUsers, resumeAfter: usersResumeCursor } : { resumeAfter: usersResumeCursor };
 
-    logger.info("Stored users in JSONL files with callback processing");
+    if (usersResumeCursor) {
+      logger.info(`Resuming users from cursor: ${usersResumeCursor}`);
+    }
+
+    await graphqlClient.streamUsers(async (nodes, pageInfo, totalFetched) => {
+      // Process page immediately
+      const processedUsers = await callbackManager.processObjects(callbackContext, nodes);
+
+      // Store each user immediately to disk
+      const usersFilePath = (this.path as any)?.join?.((this.path as any)?.resolve?.(outputDir, "users") ?? outputDir, "users.jsonl") ?? "";
+      const writeJSONL = createWriteJSONL(this, callbackManager, callbackContext);
+      await writeJSONL(usersFilePath, processedUsers, "user");
+      totalUsersStored += processedUsers.length;
+
+      // Update progress
+      progressManager.updateStep("Users", totalFetched, maxUsers || totalFetched, "storing");
+
+      // Update resume state after each page
+      resumeManager.updateStepProgress("users", undefined, totalFetched, pageInfo.endCursor, maxUsers || totalFetched);
+
+      if (pageInfo.endCursor) {
+        logger.debug(`Saved users resume cursor: ${pageInfo.endCursor}`);
+      }
+    }, streamOptions);
+
+    // Complete users step
+    progressManager.completeStep("Users");
+    resumeManager.completeStep("users");
+    progressManager.stop();
+
+    logger.info(`Completed users step: ${totalUsersStored} users stored`);
   } catch (error) {
     logger.error("Error during Step 2: Crawling users", { error: error instanceof Error ? error.message : String(error) });
     throw error;

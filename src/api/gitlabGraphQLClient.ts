@@ -17,6 +17,9 @@ const logger = createLogger("GitLabGraphQLClient");
 
 type PageInfo = Omit<CustomPageInfo, "endCursor"> & { endCursor?: string | null };
 
+type ProgressCallback = (current: number, total: number, phase: string) => void;
+type PageCallback<T> = (nodes: T[], pageInfo: { hasNextPage: boolean; endCursor?: string }, totalFetched: number) => Promise<void>;
+
 export class GitLabGraphQLClient {
   private baseUrl: string;
   private accessToken: string;
@@ -26,6 +29,7 @@ export class GitLabGraphQLClient {
     clientSecret: string;
     tokenEndpoint: string;
   };
+  private progressCallback?: ProgressCallback;
 
   constructor(
     baseUrl: string,
@@ -37,11 +41,13 @@ export class GitLabGraphQLClient {
         clientSecret: string;
         tokenEndpoint?: string;
       };
+      onProgress?: ProgressCallback;
     }
   ) {
     this.baseUrl = `${baseUrl}/api/graphql`;
     this.accessToken = accessToken;
     this.refreshToken = options?.refreshToken;
+    this.progressCallback = options?.onProgress;
     logger.debug(graphql.name);
 
     if (options?.oauth2) {
@@ -50,6 +56,13 @@ export class GitLabGraphQLClient {
         tokenEndpoint: options.oauth2.tokenEndpoint || `${baseUrl}/oauth/token`,
       };
     }
+  }
+
+  /**
+   * Set progress callback for tracking fetch operations
+   */
+  setProgressCallback(callback: ProgressCallback): void {
+    this.progressCallback = callback;
   }
 
   private async refreshAccessToken(): Promise<void> {
@@ -178,26 +191,51 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchAllUsers(options?: { maxUsers?: number }): Promise<GitLabUser[]> {
+  /**
+   * Stream users with incremental processing (recommended for large datasets)
+   * @param onPage Callback invoked for each page of results - should store data immediately
+   * @param options Fetching options including max users and resume cursor
+   */
+  async streamUsers(onPage: PageCallback<GitLabUser>, options?: { maxUsers?: number; resumeAfter?: string }): Promise<{ totalFetched: number; lastCursor?: string }> {
     try {
-      let allUsers: GitLabUser[] = [];
+      let totalFetched = 0;
       let hasNextPage = true;
-      let after: string | undefined = undefined;
+      let after: string | undefined = options?.resumeAfter;
       const maxUsers = options?.maxUsers;
 
-      logger.info(maxUsers ? `Starting to fetch users with pagination (max: ${maxUsers})` : "Starting to fetch all users with pagination");
+      logger.info(
+        maxUsers
+          ? `Starting to stream users with pagination (max: ${maxUsers}${after ? `, resuming from cursor` : ""})`
+          : `Starting to stream all users with pagination${after ? ` (resuming from cursor)` : ""}`
+      );
 
       while (hasNextPage) {
         // If we have a max limit, adjust page size to not overfetch
-        const pageSize = maxUsers ? Math.min(40, maxUsers - allUsers.length) : 40;
+        const pageSize = maxUsers ? Math.min(40, maxUsers - totalFetched) : 40;
 
         if (pageSize <= 0) break;
 
         const result = await this.fetchUsers(pageSize, after);
-        allUsers = allUsers.concat(result.nodes);
+
+        // Process page immediately via callback (stores to disk)
+        await onPage(
+          result.nodes,
+          {
+            hasNextPage: result.pageInfo.hasNextPage || false,
+            endCursor: result.pageInfo.endCursor || undefined,
+          },
+          totalFetched + result.nodes.length
+        );
+
+        totalFetched += result.nodes.length;
+
+        // Report progress
+        if (this.progressCallback) {
+          this.progressCallback(totalFetched, maxUsers || totalFetched, "fetching");
+        }
 
         // Check if we've hit the max limit
-        if (maxUsers && allUsers.length >= maxUsers) {
+        if (maxUsers && totalFetched >= maxUsers) {
           logger.info(`Reached maximum user limit of ${maxUsers}`);
           break;
         }
@@ -205,15 +243,29 @@ export class GitLabGraphQLClient {
         hasNextPage = result.pageInfo.hasNextPage || false;
         after = result.pageInfo.endCursor || undefined;
 
-        logger.debug(`Fetched ${result.nodes.length} users (total: ${allUsers.length})`);
+        logger.debug(`Fetched ${result.nodes.length} users (total: ${totalFetched})`);
       }
 
-      logger.info(`Successfully fetched ${allUsers.length} users across ${Math.ceil(allUsers.length / 40)} pages`);
-      return allUsers;
+      logger.info(`Successfully streamed ${totalFetched} users across ${Math.ceil(totalFetched / 40)} pages`);
+      return { totalFetched, lastCursor: after };
     } catch (error) {
-      logger.error("Failed to fetch all users:", { error });
+      logger.error("Failed to stream users:", { error });
       throw error;
     }
+  }
+
+  /**
+   * Fetch all users (legacy method - buffers in memory)
+   * @deprecated Use streamUsers for better memory efficiency and resume support
+   */
+  async fetchAllUsers(options?: { maxUsers?: number }): Promise<GitLabUser[]> {
+    const allUsers: GitLabUser[] = [];
+
+    await this.streamUsers(async (nodes) => {
+      allUsers.push(...nodes);
+    }, options);
+
+    return allUsers;
   }
 
   async fetchGroups(first: number = 40, after?: string): Promise<{ nodes: GroupNode[]; pageInfo: PageInfo }> {
@@ -230,26 +282,51 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchAllGroups(options?: { maxGroups?: number }): Promise<GroupNode[]> {
+  /**
+   * Stream groups with incremental processing (recommended for large datasets)
+   * @param onPage Callback invoked for each page of results - should store data immediately
+   * @param options Fetching options including max groups and resume cursor
+   */
+  async streamGroups(onPage: PageCallback<GroupNode>, options?: { maxGroups?: number; resumeAfter?: string }): Promise<{ totalFetched: number; lastCursor?: string }> {
     try {
-      let allGroups: GroupNode[] = [];
+      let totalFetched = 0;
       let hasNextPage = true;
-      let after: string | undefined = undefined;
+      let after: string | undefined = options?.resumeAfter;
       const maxGroups = options?.maxGroups;
 
-      logger.info(maxGroups ? `Starting to fetch groups with pagination (max: ${maxGroups})` : "Starting to fetch all groups with pagination");
+      logger.info(
+        maxGroups
+          ? `Starting to stream groups with pagination (max: ${maxGroups}${after ? `, resuming from cursor` : ""})`
+          : `Starting to stream all groups with pagination${after ? ` (resuming from cursor)` : ""}`
+      );
 
       while (hasNextPage) {
         // If we have a max limit, adjust page size to not overfetch
-        const pageSize = maxGroups ? Math.min(40, maxGroups - allGroups.length) : 40;
+        const pageSize = maxGroups ? Math.min(40, maxGroups - totalFetched) : 40;
 
         if (pageSize <= 0) break;
 
         const result = await this.fetchGroups(pageSize, after);
-        allGroups = allGroups.concat(result.nodes);
+
+        // Process page immediately via callback (stores to disk)
+        await onPage(
+          result.nodes,
+          {
+            hasNextPage: result.pageInfo.hasNextPage || false,
+            endCursor: result.pageInfo.endCursor || undefined,
+          },
+          totalFetched + result.nodes.length
+        );
+
+        totalFetched += result.nodes.length;
+
+        // Report progress
+        if (this.progressCallback) {
+          this.progressCallback(totalFetched, maxGroups || totalFetched, "fetching");
+        }
 
         // Check if we've hit the max limit
-        if (maxGroups && allGroups.length >= maxGroups) {
+        if (maxGroups && totalFetched >= maxGroups) {
           logger.info(`Reached maximum group limit of ${maxGroups}`);
           break;
         }
@@ -257,15 +334,29 @@ export class GitLabGraphQLClient {
         hasNextPage = result.pageInfo.hasNextPage || false;
         after = result.pageInfo.endCursor || undefined;
 
-        logger.debug(`Fetched ${result.nodes.length} groups (total: ${allGroups.length})`);
+        logger.debug(`Fetched ${result.nodes.length} groups (total: ${totalFetched})`);
       }
 
-      logger.info(`Successfully fetched ${allGroups.length} groups across ${Math.ceil(allGroups.length / 40)} pages`);
-      return allGroups;
+      logger.info(`Successfully streamed ${totalFetched} groups across ${Math.ceil(totalFetched / 40)} pages`);
+      return { totalFetched, lastCursor: after };
     } catch (error) {
-      logger.error("Failed to fetch all groups:", { error });
+      logger.error("Failed to stream groups:", { error });
       throw error;
     }
+  }
+
+  /**
+   * Fetch all groups (legacy method - buffers in memory)
+   * @deprecated Use streamGroups for better memory efficiency and resume support
+   */
+  async fetchAllGroups(options?: { maxGroups?: number }): Promise<GroupNode[]> {
+    const allGroups: GroupNode[] = [];
+
+    await this.streamGroups(async (nodes) => {
+      allGroups.push(...nodes);
+    }, options);
+
+    return allGroups;
   }
 
   async fetchProjects(first: number = 40, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
@@ -282,26 +373,51 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchAllProjects(options?: { maxProjects?: number }): Promise<GitLabProject[]> {
+  /**
+   * Stream projects with incremental processing (recommended for large datasets)
+   * @param onPage Callback invoked for each page of results - should store data immediately
+   * @param options Fetching options including max projects and resume cursor
+   */
+  async streamProjects(onPage: PageCallback<GitLabProject>, options?: { maxProjects?: number; resumeAfter?: string }): Promise<{ totalFetched: number; lastCursor?: string }> {
     try {
-      let allProjects: GitLabProject[] = [];
+      let totalFetched = 0;
       let hasNextPage = true;
-      let after: string | undefined = undefined;
+      let after: string | undefined = options?.resumeAfter;
       const maxProjects = options?.maxProjects;
 
-      logger.info(maxProjects ? `Starting to fetch projects with pagination (max: ${maxProjects})` : "Starting to fetch all projects with pagination");
+      logger.info(
+        maxProjects
+          ? `Starting to stream projects with pagination (max: ${maxProjects}${after ? `, resuming from cursor` : ""})`
+          : `Starting to stream all projects with pagination${after ? ` (resuming from cursor)` : ""}`
+      );
 
       while (hasNextPage) {
         // If we have a max limit, adjust page size to not overfetch
-        const pageSize = maxProjects ? Math.min(40, maxProjects - allProjects.length) : 40;
+        const pageSize = maxProjects ? Math.min(40, maxProjects - totalFetched) : 40;
 
         if (pageSize <= 0) break;
 
         const result = await this.fetchProjects(pageSize, after);
-        allProjects = allProjects.concat(result.nodes);
+
+        // Process page immediately via callback (stores to disk)
+        await onPage(
+          result.nodes,
+          {
+            hasNextPage: result.pageInfo.hasNextPage || false,
+            endCursor: result.pageInfo.endCursor || undefined,
+          },
+          totalFetched + result.nodes.length
+        );
+
+        totalFetched += result.nodes.length;
+
+        // Report progress
+        if (this.progressCallback) {
+          this.progressCallback(totalFetched, maxProjects || totalFetched, "fetching");
+        }
 
         // Check if we've hit the max limit
-        if (maxProjects && allProjects.length >= maxProjects) {
+        if (maxProjects && totalFetched >= maxProjects) {
           logger.info(`Reached maximum project limit of ${maxProjects}`);
           break;
         }
@@ -309,15 +425,29 @@ export class GitLabGraphQLClient {
         hasNextPage = result.pageInfo.hasNextPage || false;
         after = result.pageInfo.endCursor || undefined;
 
-        logger.debug(`Fetched ${result.nodes.length} projects (total: ${allProjects.length})`);
+        logger.debug(`Fetched ${result.nodes.length} projects (total: ${totalFetched})`);
       }
 
-      logger.info(`Successfully fetched ${allProjects.length} projects across ${Math.ceil(allProjects.length / 40)} pages`);
-      return allProjects;
+      logger.info(`Successfully streamed ${totalFetched} projects across ${Math.ceil(totalFetched / 40)} pages`);
+      return { totalFetched, lastCursor: after };
     } catch (error) {
-      logger.error("Failed to fetch all projects:", { error });
+      logger.error("Failed to stream projects:", { error });
       throw error;
     }
+  }
+
+  /**
+   * Fetch all projects (legacy method - buffers in memory)
+   * @deprecated Use streamProjects for better memory efficiency and resume support
+   */
+  async fetchAllProjects(options?: { maxProjects?: number }): Promise<GitLabProject[]> {
+    const allProjects: GitLabProject[] = [];
+
+    await this.streamProjects(async (nodes) => {
+      allProjects.push(...nodes);
+    }, options);
+
+    return allProjects;
   }
 
   async fetchGroupProjects(groupId: string, first: number = 100, after?: string): Promise<{ nodes: GitLabProject[]; pageInfo: PageInfo }> {
