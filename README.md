@@ -172,6 +172,53 @@ bun run lint:fix
 
 See the **[Development Setup](https://github.com/pdiegmann/copima-cli-crawler/wiki/development-Setup)** guide for detailed development instructions.
 
+## 🚀 Release Process
+
+This project uses an automated release workflow that:
+
+1. **Builds** cross-platform executables (Windows, macOS Intel, macOS ARM64)
+2. **Runs** tests with coverage reporting
+3. **Updates** the CHANGELOG.md automatically with release information
+4. **Creates** a GitHub release with downloadable binaries
+
+### Creating a Release
+
+To create a new release:
+
+1. Update the version in `package.json`:
+   ```bash
+   # Update version field in package.json
+   npm version patch|minor|major
+   ```
+
+2. Create and push a git tag:
+   ```bash
+   git tag v0.2.5
+   git push origin v0.2.5
+   ```
+
+3. The GitHub Actions workflow will automatically:
+   - Build executables for all platforms
+   - Update CHANGELOG.md with the new version
+   - Create a GitHub release with binaries and checksums
+   - Commit the updated CHANGELOG.md back to the main branch
+
+### Changelog Management
+
+The CHANGELOG.md follows [Keep a Changelog](https://keepachangelog.com/) format and is automatically updated during releases with:
+
+- Version number and release date
+- Template sections for Added, Fixed, and Changed items
+- Version reference links
+
+You can manually update the changelog entry after release to add specific details about what changed in that version.
+
+To manually update the changelog locally:
+
+```bash
+bun run scripts/update-changelog.ts <version> [date] [changes]
+```
+
 ## 📄 License
 
 This project is licensed under the MIT License.

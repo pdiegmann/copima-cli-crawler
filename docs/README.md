@@ -21,11 +21,11 @@ This directory contains **technical reference documentation** for developers wor
 
 ### Technical References
 
-| File | Purpose | Wiki Equivalent |
-|------|---------|----------------|
-| [`crawling-process.md`](crawling-process.md) | Quick reference for 4-step crawl workflow | [architecture-Crawling-Process](https://github.com/pdiegmann/copima-cli-crawler/wiki/architecture-Crawling-Process) (more detailed) |
-| [`graphql-schema-to-steps.md`](graphql-schema-to-steps.md) | GraphQL type → crawl step mapping table | [architecture-GraphQL-Schema-Reference](https://github.com/pdiegmann/copima-cli-crawler/wiki/architecture-GraphQL-Schema-Reference) (more detailed) |
-| [`deduplication.md`](deduplication.md) | Deduplication system technical reference | [core-concepts-Deduplication](https://github.com/pdiegmann/copima-cli-crawler/wiki/core-concepts-Deduplication) (more detailed) |
+| File                                                       | Purpose                                   | Wiki Equivalent                                                                                                                                     |
+| ---------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`crawling-process.md`](crawling-process.md)               | Quick reference for 4-step crawl workflow | [architecture-Crawling-Process](https://github.com/pdiegmann/copima-cli-crawler/wiki/architecture-Crawling-Process) (more detailed)                 |
+| [`graphql-schema-to-steps.md`](graphql-schema-to-steps.md) | GraphQL type → crawl step mapping table   | [architecture-GraphQL-Schema-Reference](https://github.com/pdiegmann/copima-cli-crawler/wiki/architecture-GraphQL-Schema-Reference) (more detailed) |
+| [`deduplication.md`](deduplication.md)                     | Deduplication system technical reference  | [core-concepts-Deduplication](https://github.com/pdiegmann/copima-cli-crawler/wiki/core-concepts-Deduplication) (more detailed)                     |
 
 ## Documentation Hierarchy
 
@@ -70,6 +70,7 @@ If you need to add technical reference documentation:
 User-facing documentation should go in the [GitHub Wiki](https://github.com/pdiegmann/copima-cli-crawler/wiki):
 
 1. Clone the wiki repository:
+
    ```bash
    git clone https://github.com/pdiegmann/copima-cli-crawler.wiki.git
    ```
@@ -84,6 +85,7 @@ User-facing documentation should go in the [GitHub Wiki](https://github.com/pdie
    - `troubleshooting-*.md` - Problem-solving guides
 
 3. Commit and push:
+
    ```bash
    git add your-new-file.md
    git commit -m "Add [topic] documentation"
