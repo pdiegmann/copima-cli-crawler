@@ -14,6 +14,7 @@ type CommandContext = {
   args: string[];
   command: string;
   accessTokenArg: string | null;
+  patTokenArg: string | null;
 };
 
 type AuthenticationResult = {
@@ -41,16 +42,21 @@ class CLICommandClassifier {
   static parseCommandContext(args: string[]): CommandContext {
     const command = args.length > 0 ? args[0]! : "";
     const accessTokenArg = args.find((arg) => arg.startsWith("--access-token=")) || (args.includes("--access-token") ? (args[args.indexOf("--access-token") + 1] ?? null) : null);
+    const patTokenArg =
+      args.find((arg) => arg.startsWith("--token=")) ||
+      (args.includes("--token") ? (args[args.indexOf("--token") + 1] ?? null) : null) ||
+      args.find((arg) => arg.startsWith("--pat=")) ||
+      (args.includes("--pat") ? (args[args.indexOf("--pat") + 1] ?? null) : null);
 
-    return { args, command, accessTokenArg };
+    return { args, command, accessTokenArg, patTokenArg };
   }
 
   static classifyAuthentication(context: CommandContext): AuthenticationResult {
-    const { args, command, accessTokenArg } = context;
+    const { args, command, accessTokenArg, patTokenArg } = context;
 
     const isHelpCommand = args.includes("--help") || args.includes("-h") || args.length === 0;
     const isLocalCommand = this.LOCAL_COMMANDS.includes(command as any);
-    const hasToken = Boolean(accessTokenArg);
+    const hasToken = Boolean(accessTokenArg || patTokenArg);
     const isTestMode = Boolean(accessTokenArg && (accessTokenArg.startsWith("test_") || accessTokenArg.includes("test") || accessTokenArg === this.TEST_TOKEN_IDENTIFIER));
 
     const requiresAuth = !isLocalCommand && !hasToken && !isHelpCommand;
@@ -62,7 +68,7 @@ class CLICommandClassifier {
     const isHelpCommand = context.args.includes("--help") || context.args.includes("-h") || context.args.length === 0;
     const isLocalCommand = this.LOCAL_COMMANDS.includes(context.command as any);
 
-    return isLocalCommand || auth.isTestMode || isHelpCommand;
+    return isLocalCommand || auth.isTestMode || isHelpCommand || auth.hasToken;
   }
 }
 
