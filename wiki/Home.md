@@ -26,29 +26,19 @@ Welcome to the comprehensive documentation for the COPIMA CLI Crawler - a powerf
 
 ### User Guides
 - **[Command Reference](guides/Command-Reference.md)** - Complete CLI command documentation
-- **[Configuration Reference](guides/Configuration-Reference.md)** - All configuration options explained
 - **[Authentication Setup](guides/Authentication-Setup.md)** - Setting up authentication methods
-- **[Running Individual Steps](guides/Individual-Steps.md)** - Executing specific crawl steps
-- **[Resume & Recovery](guides/Resume-Recovery.md)** - Handling interrupted crawls
 - **[Custom Callbacks](guides/Custom-Callbacks.md)** - Implementing data processing hooks
-- **[Testing Your Configuration](guides/Testing.md)** - E2E testing and validation
+- **[Testing](guides/Testing.md)** - E2E testing and validation
 
 ### API Reference
 - **[GraphQL Client](api-reference/GraphQL-Client.md)** - GitLabGraphQLClient API
 - **[REST Client](api-reference/REST-Client.md)** - GitLabRestClient API
 - **[Storage Manager](api-reference/Storage-Manager.md)** - Storage and file operations
-- **[Progress Reporter](api-reference/Progress-Reporter.md)** - Progress reporting API
-- **[Resume Manager](api-reference/Resume-Manager.md)** - Resume state management
 - **[Callback Manager](api-reference/Callback-Manager.md)** - Callback system API
-- **[Config Loader](api-reference/Config-Loader.md)** - Configuration loading API
 
 ### Development
 - **[Development Setup](development/Setup.md)** - Setting up development environment
-- **[Project Structure](development/Project-Structure.md)** - Code organization and modules
-- **[Building & Testing](development/Building-Testing.md)** - Build process and test execution
 - **[Contributing Guidelines](development/Contributing.md)** - How to contribute
-- **[Code Style & Conventions](development/Code-Style.md)** - Coding standards
-- **[Release Process](development/Release-Process.md)** - How releases are created
 
 ### Troubleshooting & FAQ
 - **[Common Issues](troubleshooting/Common-Issues.md)** - Frequently encountered problems

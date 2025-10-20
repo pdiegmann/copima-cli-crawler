@@ -21,7 +21,18 @@ wiki/
 │   ├── Storage.md                  # JSONL hierarchical storage
 │   └── Deduplication.md            # Duplicate prevention
 ├── guides/                          # Task-oriented documentation
-│   └── Command-Reference.md        # Complete CLI command reference
+│   ├── Command-Reference.md        # Complete CLI command reference
+│   ├── Authentication-Setup.md     # Detailed authentication setup
+│   ├── Custom-Callbacks.md         # Custom data processing
+│   └── Testing.md                  # Testing and validation
+├── api-reference/                   # API documentation for developers
+│   ├── GraphQL-Client.md           # GraphQL client API
+│   ├── REST-Client.md              # REST client API
+│   ├── Storage-Manager.md          # Storage system API
+│   └── Callback-Manager.md         # Callback system API
+├── development/                     # For contributors
+│   ├── Setup.md                    # Development environment setup
+│   └── Contributing.md             # Contributing guidelines
 └── troubleshooting/                 # Problem solving
     ├── Common-Issues.md            # Frequent problems and solutions
     └── FAQ.md                      # Frequently asked questions

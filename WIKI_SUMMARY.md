@@ -2,7 +2,7 @@
 
 ## What Has Been Created
 
-A comprehensive Wiki documentation system for the COPIMA CLI Crawler project has been created with **15 detailed documentation pages** totaling over **7,000 lines** of content.
+A comprehensive Wiki documentation system for the COPIMA CLI Crawler project has been created with **24 detailed documentation pages** totaling over **13,000 lines** of content.
 
 ## Wiki Structure
 
@@ -27,8 +27,21 @@ wiki/
 │   ├── Storage.md                  # Hierarchical JSONL storage (~620 lines)
 │   └── Deduplication.md            # Duplicate prevention (~570 lines)
 │
-├── guides/                          # User Guides (1 guide)
-│   └── Command-Reference.md        # CLI commands reference (~530 lines)
+├── guides/                          # User Guides (4 guides)
+│   ├── Command-Reference.md        # CLI commands reference (~530 lines)
+│   ├── Authentication-Setup.md     # Detailed auth setup (~440 lines)
+│   ├── Custom-Callbacks.md         # Custom data processing (~540 lines)
+│   └── Testing.md                  # Testing and validation (~420 lines)
+│
+├── api-reference/                   # API Reference (4 guides)
+│   ├── GraphQL-Client.md           # GraphQL client API (~100 lines)
+│   ├── REST-Client.md              # REST client API (~110 lines)
+│   ├── Storage-Manager.md          # Storage system API (~180 lines)
+│   └── Callback-Manager.md         # Callback system API (~150 lines)
+│
+├── development/                     # Development Guides (2 guides)
+│   ├── Setup.md                    # Dev environment setup (~250 lines)
+│   └── Contributing.md             # Contributing guidelines (~270 lines)
 │
 └── troubleshooting/                 # Support Documentation (2 guides)
     ├── Common-Issues.md            # Problem solving (~460 lines)
@@ -53,8 +66,21 @@ wiki/
 - **Storage**: JSONL format, hierarchical structure, file operations
 - **Deduplication**: Registry system, performance, best practices
 
-### Guides (530+ lines)
+### Guides (1,930+ lines)
 - **Command Reference**: Complete CLI command documentation with examples
+- **Authentication Setup**: Detailed guide for all three auth methods
+- **Custom Callbacks**: Creating and using data processing callbacks
+- **Testing**: E2E testing, validation, and dry-run mode
+
+### API Reference (540+ lines)
+- **GraphQL Client**: Complete API for GitLabGraphQLClient
+- **REST Client**: Complete API for GitLabRestClient
+- **Storage Manager**: Storage system API reference
+- **Callback Manager**: Callback system API reference
+
+### Development (520+ lines)
+- **Setup**: Development environment configuration
+- **Contributing**: Guidelines for contributors
 
 ### Troubleshooting (950+ lines)
 - **Common Issues**: Solutions for frequent problems
@@ -95,11 +121,11 @@ wiki/
 
 | Metric | Count |
 |--------|-------|
-| Total Pages | 15 |
-| Total Lines | 7,026+ |
-| Code Examples | 200+ |
-| Configuration Examples | 50+ |
-| Command Examples | 100+ |
+| Total Pages | 24 |
+| Total Lines | 13,000+ |
+| Code Examples | 300+ |
+| Configuration Examples | 80+ |
+| Command Examples | 150+ |
 | Troubleshooting Solutions | 30+ |
 | FAQ Entries | 40+ |
 
