@@ -30,6 +30,10 @@ dist
 .sonarqube/
 .scannerwork/
 
+# CI/CD generated reports (keep template in repo, ignore generated reports)
+.github/reports/*-report-*.md
+.github/reports/generated-*
+
 tmp/
 .DS_Store
 database.sqlite

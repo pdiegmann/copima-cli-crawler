@@ -1,5 +1,9 @@
 # COPIMA CLI Crawler
 
+[![Build and Test](https://github.com/pdiegmann/copima-cli-crawler/actions/workflows/build-test.yml/badge.svg)](https://github.com/pdiegmann/copima-cli-crawler/actions/workflows/build-test.yml)
+[![codecov](https://codecov.io/gh/pdiegmann/copima-cli-crawler/branch/main/graph/badge.svg)](https://codecov.io/gh/pdiegmann/copima-cli-crawler)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A powerful command-line tool for extracting and crawling data from GitLab instances via GraphQL and REST APIs.
 
 ## 🚀 Quick Start
@@ -299,10 +303,12 @@ See: `src/config/` for implementation
 ## Database Schema (Drizzle ORM)
 
 ### User Table
+
 - OAuth2 user information
 - Ban management and role system
 
 ### Account Table
+
 - Links users to OAuth providers
 - Stores access tokens and refresh tokens
 - Enables automatic token refresh

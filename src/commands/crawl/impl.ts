@@ -475,9 +475,30 @@ export const areas = async function (this: LocalContext, flags: Record<string, u
       resourceType: "", // Will be set for each resource type
     };
 
-    // Fetch groups and projects using generated GraphQL operations
-    const groups = await graphqlClient.fetchAllGroups();
-    const projects = await graphqlClient.fetchAllProjects();
+    // Get limits and specific groups from flags
+    const maxGroups = flagsAny?.["max-groups"] || flagsAny?.maxGroups;
+    const maxProjects = flagsAny?.["max-projects"] || flagsAny?.maxProjects;
+    const specificGroups = flagsAny?.groups ? (flagsAny.groups as string).split(",").map((g) => g.trim()) : undefined;
+
+    // If specific groups are requested, fetch them individually
+    let groups: any[] = [];
+    if (specificGroups && specificGroups.length > 0) {
+      logger.info(`Fetching ${specificGroups.length} specific groups: ${specificGroups.join(", ")}`);
+      for (const groupPath of specificGroups) {
+        try {
+          const group = await graphqlClient.fetchGroup(groupPath);
+          groups.push(group);
+          logger.debug(`Fetched specific group: ${groupPath}`);
+        } catch (error) {
+          logger.warn(`Failed to fetch group ${groupPath}:`, { error });
+        }
+      }
+    } else {
+      // Fetch groups and projects using generated GraphQL operations with limits
+      groups = await graphqlClient.fetchAllGroups(maxGroups ? { maxGroups } : undefined);
+    }
+
+    const projects = await graphqlClient.fetchAllProjects(maxProjects ? { maxProjects } : undefined);
 
     // Debug: Check if data is actually an array
     logger.debug(`Groups type: ${Array.isArray(groups) ? "array" : typeof groups}, length: ${Array.isArray(groups) ? groups.length : "N/A"}`);
@@ -574,8 +595,12 @@ export const users = async function (this: LocalContext, flags: Record<string, u
       resourceType: "user",
     };
 
-    // Fetch users using generated GraphQL operations
-    const users = await graphqlClient.fetchAllUsers();
+    // Get max users limit from flags
+    const flagsAny = flags as any;
+    const maxUsers = flagsAny?.["max-users"] || flagsAny?.maxUsers;
+
+    // Fetch users using generated GraphQL operations with limit
+    const users = await graphqlClient.fetchAllUsers(maxUsers ? { maxUsers } : undefined);
 
     // Log and store results
     logger.info(`Fetched ${users.length} users`);

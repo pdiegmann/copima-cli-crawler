@@ -44,8 +44,8 @@ Deduplication is **enabled by default**. Configure it in your config file:
 output:
   rootDir: ./output
   deduplication:
-    enabled: true  # default: true
-    registryPath: ./output/.copima-registry.json  # optional, auto-generated if not specified
+    enabled: true # default: true
+    registryPath: ./output/.copima-registry.json # optional, auto-generated if not specified
 ```
 
 To disable deduplication:
@@ -161,11 +161,11 @@ At the end of each crawl, deduplication statistics are logged:
 You can also query statistics programmatically:
 
 ```typescript
-import { getDeduplicationStats } from './commands/crawl/storageFactory';
+import { getDeduplicationStats } from "./commands/crawl/storageFactory";
 
 const stats = getDeduplicationStats();
 if (stats) {
-  console.log('Resources deduplicated:', stats);
+  console.log("Resources deduplicated:", stats);
 }
 ```
 
@@ -219,9 +219,9 @@ rm output/.copima-registry.json
 ```
 
 ```typescript
-import { createDeduplicationRegistry } from './storage/deduplicationRegistry';
+import { createDeduplicationRegistry } from "./storage/deduplicationRegistry";
 
-const registry = createDeduplicationRegistry('./output');
+const registry = createDeduplicationRegistry("./output");
 registry.clearAll();
 registry.save();
 ```
@@ -243,6 +243,7 @@ logging:
 ```
 
 You'll see messages like:
+
 ```
 [DEBUG] Skipping duplicate user: gid://gitlab/User/123
 [DEBUG] Deduplication: 150 -> 142 items (8 duplicates skipped)

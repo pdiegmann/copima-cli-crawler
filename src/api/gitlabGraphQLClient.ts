@@ -90,7 +90,6 @@ export class GitLabGraphQLClient {
     }
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   async query<T>(query: any, variables: SafeRecord = {}): Promise<T> {
     const makeRequest = async (token: string, queryString: string): Promise<Response> => {
       const controller = new AbortController();
@@ -179,17 +178,29 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchAllUsers(): Promise<GitLabUser[]> {
+  async fetchAllUsers(options?: { maxUsers?: number }): Promise<GitLabUser[]> {
     try {
       let allUsers: GitLabUser[] = [];
       let hasNextPage = true;
       let after: string | undefined = undefined;
+      const maxUsers = options?.maxUsers;
 
-      logger.info("Starting to fetch all users with pagination");
+      logger.info(maxUsers ? `Starting to fetch users with pagination (max: ${maxUsers})` : "Starting to fetch all users with pagination");
 
       while (hasNextPage) {
-        const result = await this.fetchUsers(40, after);
+        // If we have a max limit, adjust page size to not overfetch
+        const pageSize = maxUsers ? Math.min(40, maxUsers - allUsers.length) : 40;
+
+        if (pageSize <= 0) break;
+
+        const result = await this.fetchUsers(pageSize, after);
         allUsers = allUsers.concat(result.nodes);
+
+        // Check if we've hit the max limit
+        if (maxUsers && allUsers.length >= maxUsers) {
+          logger.info(`Reached maximum user limit of ${maxUsers}`);
+          break;
+        }
 
         hasNextPage = result.pageInfo.hasNextPage || false;
         after = result.pageInfo.endCursor || undefined;
@@ -197,7 +208,7 @@ export class GitLabGraphQLClient {
         logger.debug(`Fetched ${result.nodes.length} users (total: ${allUsers.length})`);
       }
 
-      logger.info(`Successfully fetched all ${allUsers.length} users across ${Math.ceil(allUsers.length / 40)} pages`);
+      logger.info(`Successfully fetched ${allUsers.length} users across ${Math.ceil(allUsers.length / 40)} pages`);
       return allUsers;
     } catch (error) {
       logger.error("Failed to fetch all users:", { error });
@@ -219,17 +230,29 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchAllGroups(): Promise<GroupNode[]> {
+  async fetchAllGroups(options?: { maxGroups?: number }): Promise<GroupNode[]> {
     try {
       let allGroups: GroupNode[] = [];
       let hasNextPage = true;
       let after: string | undefined = undefined;
+      const maxGroups = options?.maxGroups;
 
-      logger.info("Starting to fetch all groups with pagination");
+      logger.info(maxGroups ? `Starting to fetch groups with pagination (max: ${maxGroups})` : "Starting to fetch all groups with pagination");
 
       while (hasNextPage) {
-        const result = await this.fetchGroups(40, after);
+        // If we have a max limit, adjust page size to not overfetch
+        const pageSize = maxGroups ? Math.min(40, maxGroups - allGroups.length) : 40;
+
+        if (pageSize <= 0) break;
+
+        const result = await this.fetchGroups(pageSize, after);
         allGroups = allGroups.concat(result.nodes);
+
+        // Check if we've hit the max limit
+        if (maxGroups && allGroups.length >= maxGroups) {
+          logger.info(`Reached maximum group limit of ${maxGroups}`);
+          break;
+        }
 
         hasNextPage = result.pageInfo.hasNextPage || false;
         after = result.pageInfo.endCursor || undefined;
@@ -237,7 +260,7 @@ export class GitLabGraphQLClient {
         logger.debug(`Fetched ${result.nodes.length} groups (total: ${allGroups.length})`);
       }
 
-      logger.info(`Successfully fetched all ${allGroups.length} groups across ${Math.ceil(allGroups.length / 40)} pages`);
+      logger.info(`Successfully fetched ${allGroups.length} groups across ${Math.ceil(allGroups.length / 40)} pages`);
       return allGroups;
     } catch (error) {
       logger.error("Failed to fetch all groups:", { error });
@@ -259,17 +282,29 @@ export class GitLabGraphQLClient {
     }
   }
 
-  async fetchAllProjects(): Promise<GitLabProject[]> {
+  async fetchAllProjects(options?: { maxProjects?: number }): Promise<GitLabProject[]> {
     try {
       let allProjects: GitLabProject[] = [];
       let hasNextPage = true;
       let after: string | undefined = undefined;
+      const maxProjects = options?.maxProjects;
 
-      logger.info("Starting to fetch all projects with pagination");
+      logger.info(maxProjects ? `Starting to fetch projects with pagination (max: ${maxProjects})` : "Starting to fetch all projects with pagination");
 
       while (hasNextPage) {
-        const result = await this.fetchProjects(40, after);
+        // If we have a max limit, adjust page size to not overfetch
+        const pageSize = maxProjects ? Math.min(40, maxProjects - allProjects.length) : 40;
+
+        if (pageSize <= 0) break;
+
+        const result = await this.fetchProjects(pageSize, after);
         allProjects = allProjects.concat(result.nodes);
+
+        // Check if we've hit the max limit
+        if (maxProjects && allProjects.length >= maxProjects) {
+          logger.info(`Reached maximum project limit of ${maxProjects}`);
+          break;
+        }
 
         hasNextPage = result.pageInfo.hasNextPage || false;
         after = result.pageInfo.endCursor || undefined;
@@ -277,7 +312,7 @@ export class GitLabGraphQLClient {
         logger.debug(`Fetched ${result.nodes.length} projects (total: ${allProjects.length})`);
       }
 
-      logger.info(`Successfully fetched all ${allProjects.length} projects across ${Math.ceil(allProjects.length / 40)} pages`);
+      logger.info(`Successfully fetched ${allProjects.length} projects across ${Math.ceil(allProjects.length / 40)} pages`);
       return allProjects;
     } catch (error) {
       logger.error("Failed to fetch all projects:", { error });

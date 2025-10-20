@@ -40,7 +40,7 @@ jobs:
         id: tests
         run: |
           echo "::group::Test Results"
-          if bun run test:coverage; then
+          if bun run test:coverage:ci; then
             echo "✅ Tests passed"
             echo "TEST_STATUS=passed" >> $GITHUB_OUTPUT
           else
@@ -49,7 +49,7 @@ jobs:
             # Ensure coverage directory exists even if tests fail
             mkdir -p coverage
             # Try to generate coverage with --passWithNoTests if available
-            bun run test:coverage --passWithNoTests || echo "Coverage generation attempted"
+            bun run test:coverage:ci --passWithNoTests || echo "Coverage generation attempted"
           fi
           echo "::endgroup::"
         continue-on-error: true

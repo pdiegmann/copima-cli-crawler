@@ -9,11 +9,13 @@ Configuration files containing sensitive data (access tokens) are encrypted usin
 ### Setup
 
 1. Ensure SOPS is installed:
+
    ```bash
    brew install sops
    ```
 
 2. Set the age key file location (add to your shell profile):
+
    ```bash
    export SOPS_AGE_KEY_FILE=$HOME/.config/sops/age/keys.txt
    ```
@@ -23,16 +25,19 @@ Configuration files containing sensitive data (access tokens) are encrypted usin
 ### Usage
 
 **Decrypt a config file:**
+
 ```bash
 sops -d examples/unified-config.enc.yaml > examples/unified-config.yaml
 ```
 
 **Edit encrypted config directly:**
+
 ```bash
 sops examples/unified-config.enc.yaml
 ```
 
 **Encrypt a new config file:**
+
 ```bash
 sops -e examples/unified-config.yaml > examples/unified-config.enc.yaml
 ```

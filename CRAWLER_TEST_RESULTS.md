@@ -1,6 +1,7 @@
 # GitLab Crawler Test Results
 
 ## Test Environment
+
 - **Date**: October 20, 2025
 - **Environment**: GitHub Actions Runner (sandboxed)
 - **Network Access**: Limited (no external DNS resolution)
@@ -15,6 +16,7 @@
 **Root Cause**: The function checked for `options.accessToken` but not `options.token`, causing PAT authentication to fail.
 
 **Fix**: Added check for `options.token` with proper priority:
+
 1. Test token (from global test runner)
 2. Personal Access Token via `--token` flag
 3. OAuth2 access token via `--access-token` flag
@@ -29,6 +31,7 @@
 **Root Cause**: The config loader validates all required fields, but wasn't aware of the CLI arguments.
 
 **Fix**: Modified the call to `loadConfig()` to pass CLI arguments:
+
 ```typescript
 const cliArgs = {
   host: options.host,
@@ -45,6 +48,7 @@ const config = await loadConfig(cliArgs);
 ### Mock Mode (Test Mode)
 
 **Command Used**:
+
 ```bash
 bun run dev crawl --host https://gitlab.example.com --token "mock_test_token" --output ./output --steps areas,users,resources,repository --verbose true
 ```
@@ -52,35 +56,41 @@ bun run dev crawl --host https://gitlab.example.com --token "mock_test_token" --
 **Result**: ✅ **SUCCESS**
 
 **Output Files Created**:
+
 - `output/areas/groups.jsonl` - 2 mock groups
 - `output/areas/projects.jsonl` - 3 mock projects
 - `output/users/users.jsonl` - 2 mock users
 
 **Notes**:
+
 - Steps 3 (resources) and 4 (repository) are logged but don't create mock data yet
-- Mock mode is triggered when token starts with "mock_" or "test_"
+- Mock mode is triggered when token starts with "mock*" or "test*"
 - All core crawler logic executes successfully
 
 ### Real GitLab Instance Test
 
 **Attempted Command**:
+
 ```bash
 bun run dev crawl --host https://gitlab.com --token "glpat-lwYp6P2o0joF-HW9T0V8v286MQp1OmZ1YTN2Cw.01.121pg36o7" --output ./test-output --steps areas --verbose true
 ```
 
 **Result**: ❌ **BLOCKED BY NETWORK RESTRICTIONS**
 
-**Error**: 
+**Error**:
+
 ```
 Unable to connect. Is the computer able to access the url?
 ```
 
 **Root Cause**: The test environment (GitHub Actions runner) does not have external network access. DNS resolution for `gitlab.com` fails:
+
 ```
 ping: gitlab.com: No address associated with hostname
 ```
 
 **Expected Behavior** (if network access were available):
+
 1. Authenticate with GitLab using the provided PAT
 2. Fetch all accessible groups via GraphQL API
 3. Fetch all accessible projects via GraphQL API
@@ -133,13 +143,16 @@ To fully validate the crawler against the target repository `algomus.fr/dezrann/
 According to the README.md API Schema Mapping, the crawler should handle:
 
 ### Step 1 - Areas (✅ Implemented)
+
 - Groups
 - Projects
 
 ### Step 2 - Users (✅ Implemented)
+
 - Users
 
 ### Step 3 - Common/Group/Project Resources (✅ Implemented)
+
 - Memberships
 - Labels
 - Milestones
@@ -159,6 +172,7 @@ According to the README.md API Schema Mapping, the crawler should handle:
 - Snippets
 
 ### Step 4 - REST-Only Resources (✅ Implemented)
+
 - Commits
 - Branches
 - Tags
@@ -174,6 +188,7 @@ The crawler code is **functionally correct** after the fixes applied. The authen
 **The only blocker for real-world testing is the network restriction in the test environment.**
 
 Once deployed to an environment with network access, the crawler should successfully:
+
 1. Authenticate with the provided PAT
 2. Crawl all accessible resources from gitlab.com
 3. Store data in hierarchical JSONL format
@@ -184,6 +199,5 @@ Once deployed to an environment with network access, the crawler should successf
 1. `src/commands/crawl/impl.ts`:
    - Added PAT token handling in `crawlCommand` function
    - Fixed config loading to include CLI arguments
-   
 2. `test-crawl-config.yaml` (created):
    - Test configuration for manual testing

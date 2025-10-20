@@ -11,12 +11,14 @@ This test was conducted in a GitHub Actions runner environment with **limited ne
 ## Verification Status
 
 ✅ **Code Changes Verified**:
+
 - PAT authentication fix is correct
 - Configuration loading fix is correct
 - All unit tests for crawl implementation pass
 - Mock mode executes successfully
 
 ❌ **Real API Testing**:
+
 - Cannot be performed due to network restrictions
 - Requires execution in an environment with internet access
 
@@ -34,6 +36,7 @@ bun run dev crawl \
 ```
 
 Expected results:
+
 1. Authentication succeeds with the PAT
 2. Areas step crawls the `algomus.fr/dezrann/dezrann` project and related groups
 3. Users step fetches all accessible users

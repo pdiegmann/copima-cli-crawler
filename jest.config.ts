@@ -26,10 +26,10 @@ module.exports = {
     "^get-port$": "<rootDir>/src/__mocks__/get-port.ts",
   },
 
-  // Coverage configuration for SonarQube
-  collectCoverage: true,
+  // Coverage configuration for SonarQube and Codecov
+  collectCoverage: false, // Disabled by default, enable with --coverage flag
   coverageDirectory: "coverage",
-  coverageReporters: ["text", "lcov", "html"],
+  coverageReporters: ["text", "text-summary", "lcov", "html", "json", "json-summary"],
   collectCoverageFrom: [
     "src/**/*.{ts,js}",
     "!src/**/*.d.ts",
@@ -50,4 +50,7 @@ module.exports = {
       statements: 80,
     },
   },
+  // Improve coverage display
+  verbose: true,
+  coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "\\.test\\.(ts|js)$", "\\.d\\.ts$"],
 };
