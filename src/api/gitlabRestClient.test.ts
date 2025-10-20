@@ -58,7 +58,7 @@ describe("GitLabRestClient", () => {
         method: "GET",
         headers: expect.objectContaining({
           "Content-Type": "application/json",
-          "PRIVATE-TOKEN": "test-token",
+          Authorization: "Bearer test-token",
         }),
       })
     );
