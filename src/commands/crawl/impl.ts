@@ -229,6 +229,7 @@ export const crawlCommand = async (options: any): Promise<void> => {
     let token: string | null = null;
     const requestedAccountId = options.accountId || options["account-id"];
     const accessToken = options.accessToken || options["access-token"];
+    const pat = options.token; // Personal Access Token
     let resolvedAccountId: string | null = null;
 
     // First check for global test token (set by test runner)
@@ -237,6 +238,10 @@ export const crawlCommand = async (options: any): Promise<void> => {
     if ((global as any).testAccessToken) {
       token = (global as any).testAccessToken;
       logger.info(`Using access token passed via test parameter for account '${displayAccount()}'`);
+    } else if (pat) {
+      // Priority: Personal Access Token (PAT)
+      logger.info(`Using Personal Access Token (PAT) for account '${displayAccount()}'`);
+      token = pat;
     } else if (accessToken) {
       logger.info(`Using access token passed via parameter for account '${displayAccount()}'`);
       token = accessToken;
@@ -275,7 +280,13 @@ export const crawlCommand = async (options: any): Promise<void> => {
       return;
     }
 
-    const config = await loadConfig();
+    // Load config with CLI args to avoid validation errors
+    const cliArgs = {
+      host: options.host,
+      accessToken: token,
+      output: options.output,
+    };
+    const config = await loadConfig(cliArgs);
     const candidateHost = options.host || config.gitlab.host;
     const gitlabHost = normalizeGitlabHost(candidateHost);
 
