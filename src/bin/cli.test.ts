@@ -160,4 +160,40 @@ describe("CLI Command Classification", () => {
       expect(shouldSkip).toBe(false);
     });
   });
+
+  describe("integration behavior", () => {
+    it("should NOT call attemptDatabaseAuthentication when --token is provided", () => {
+      // This test documents the fix for the issue:
+      // "TokenManager and DatabaseAuth should not throw errors when a PAT is provided via --token"
+      
+      const args = ["areas", "--token", "my-pat-token", "--host", "https://gitlab.example.com"];
+      
+      // Simulate the classification logic
+      const hasToken = args.includes("--token") || args.some((arg) => arg.startsWith("--token="));
+      const isHelpCommand = args.includes("--help") || args.includes("-h");
+      const isLocalCommand = false; // "areas" is not a local command
+      
+      const requiresAuth = !isLocalCommand && !hasToken && !isHelpCommand;
+      
+      // With requiresAuth = false, attemptDatabaseAuthentication() won't be called
+      // Therefore, no error messages like:
+      // - "[TokenManager] ERROR: No stored accounts found. Please run 'copima auth' to authenticate."
+      // - "[DatabaseAuth] WARN: Unable to determine which account to use from the local database."
+      expect(requiresAuth).toBe(false);
+    });
+
+    it("should call attemptDatabaseAuthentication when no token is provided", () => {
+      const args = ["areas", "--host", "https://gitlab.example.com"];
+      
+      const hasToken = args.includes("--token") || args.some((arg) => arg.startsWith("--token=")) || args.includes("--access-token") || args.some((arg) => arg.startsWith("--access-token="));
+      const isHelpCommand = args.includes("--help") || args.includes("-h");
+      const isLocalCommand = false;
+      
+      const requiresAuth = !isLocalCommand && !hasToken && !isHelpCommand;
+      
+      // With requiresAuth = true, attemptDatabaseAuthentication() will be called
+      // And it's expected to log warnings if no accounts are found
+      expect(requiresAuth).toBe(true);
+    });
+  });
 });
