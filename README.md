@@ -174,13 +174,16 @@ This project is aimed at crawling all accessible resources (e.g., groups, projec
 
 ## 📚 Documentation
 
-- **[HOW_TO.md](HOW_TO.md)** - **Start here!** Complete beginner-friendly guide for using this tool
-- **README.md** (this file) - Technical documentation for developers and advanced users
-- **[docs/](docs/)** - Additional technical documentation
+- **[📖 Wiki](https://github.com/pdiegmann/copima-cli-crawler/wiki)** - **Start here!** Complete documentation including guides, API reference, and examples
+  - **[How-To Guide](https://github.com/pdiegmann/copima-cli-crawler/wiki/How-To-Guide)** - Beginner-friendly step-by-step guide
+  - **[Quick Start](https://github.com/pdiegmann/copima-cli-crawler/wiki/getting-started-Quick-Start)** - Get up and running in 5 minutes
+  - **[Architecture Overview](https://github.com/pdiegmann/copima-cli-crawler/wiki/architecture-Overview)** - System design and structure
+- **README.md** (this file) - Quick reference for developers
+- **[CHANGELOG.md](https://github.com/pdiegmann/copima-cli-crawler/wiki/Changelog)** - Release notes and version history
 
 ## 🚀 Quick Start
 
-If you're new to this tool or want step-by-step instructions, see the **[HOW_TO.md](HOW_TO.md)** guide.
+If you're new to this tool or want step-by-step instructions, see the **[How-To Guide](https://github.com/pdiegmann/copima-cli-crawler/wiki/How-To-Guide)** in the wiki.
 
 For experienced users, here's a quick start:
 
@@ -523,7 +526,7 @@ oauth:
   redirectUri: "http://localhost:8080/callback"
 ```
 
-For complete configuration documentation, see [HOW_TO.md](HOW_TO.md).
+For complete configuration documentation, see the [Configuration System](https://github.com/pdiegmann/copima-cli-crawler/wiki/core-concepts-Configuration) guide in the wiki.
 
 ## Testing and Validation
 
