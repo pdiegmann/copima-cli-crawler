@@ -182,26 +182,58 @@ const createRelease = async (): Promise<void> => {
   console.log("- dist/copima-cli-macos-x64");
   console.log("- dist/copima-cli-macos-arm64");
 
-  // Check if we're in a git repository and have changes
+  // Commit changes and create git tag
   try {
-    /* eslint-disable sonarjs/no-os-command-from-path */
-    const gitStatus = execSync("git status --porcelain", { encoding: "utf-8" });
-    /* eslint-enable sonarjs/no-os-command-from-path */
-    if (gitStatus.trim()) {
-      console.log("\n⚠️  Warning: You have uncommitted changes.");
-      console.log("Consider committing changes before creating a release.");
-    }
-  } catch {
-    console.log("\n⚠️  Not in a git repository or git not available.");
-  }
+    console.log("\n📝 Committing changes...");
 
-  console.log("\n🎉 Release build completed!");
-  console.log("\nNext steps:");
-  console.log("1. Test the executables locally");
-  console.log("2. Commit any changes and push to main branch");
-  console.log("3. Create a git tag and push it to trigger GitHub Actions");
-  console.log(`   git tag v${newVersion} && git push origin v${newVersion}`);
-  console.log("4. Or manually upload the files to GitHub releases");
+    // Check if we're in a git repository
+    /* eslint-disable sonarjs/no-os-command-from-path */
+    execSync("git rev-parse --git-dir", { stdio: "ignore" });
+
+    // Check if there are any changes to commit
+    const gitStatus = execSync("git status --porcelain", { encoding: "utf-8" });
+
+    if (gitStatus.trim()) {
+      // Stage all changes
+
+      execSync("git add .", { stdio: "inherit" });
+
+      console.log("✅ Staged all changes");
+
+      // Commit with release message
+      const commitMessage = `chore(release): bump version to ${newVersion}`;
+      /* eslint-disable sonarjs/os-command */
+      execSync(`git commit -m "${commitMessage}"`, { stdio: "inherit" });
+      /* eslint-enable sonarjs/os-command */
+      console.log(`✅ Committed changes: ${commitMessage}`);
+    } else {
+      console.log("ℹ️  No changes to commit");
+    }
+
+    // Create git tag
+    console.log(`\n🏷️  Creating git tag v${newVersion}...`);
+    /* eslint-disable sonarjs/os-command */
+    execSync(`git tag -a v${newVersion} -m "Release v${newVersion}"`, { stdio: "inherit" });
+    /* eslint-enable sonarjs/os-command */
+    console.log(`✅ Created tag v${newVersion}`);
+    /* eslint-enable sonarjs/no-os-command-from-path */
+
+    console.log("\n🎉 Release completed successfully!");
+    console.log("\nNext steps:");
+    console.log("1. Test the executables locally");
+    console.log("2. Push the commit and tag to trigger GitHub Actions:");
+    console.log(`   git push && git push origin v${newVersion}`);
+    console.log("3. Or push both at once:");
+    console.log("   git push --follow-tags");
+  } catch (error) {
+    console.error("\n❌ Git operations failed:", error);
+    console.log("\n⚠️  Release build completed but git operations failed.");
+    console.log("\nYou can manually:");
+    console.log(`1. Commit changes: git add . && git commit -m 'chore(release): bump version to ${newVersion}'`);
+    console.log(`2. Create tag: git tag -a v${newVersion} -m 'Release v${newVersion}'`);
+    console.log(`3. Push: git push && git push origin v${newVersion}`);
+    process.exit(1);
+  }
 };
 
 createRelease().catch((error) => {
