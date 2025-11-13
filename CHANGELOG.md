@@ -5,6 +5,20 @@ All notable changes to the Copima CLI Crawler project will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2025-11-13
+
+### Added
+
+- New features and enhancements in this release
+
+### Fixed
+
+- Bug fixes and improvements
+
+### Changed
+
+- Updates to existing functionality
+
 ## [0.2.5] - 2025-11-13
 
 ### Added
@@ -88,6 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAuth2 token manager with automatic refresh
 - Callback system for custom data processing
 
+[0.2.6]: https://github.com/pdiegmann/copima-cli-crawler/releases/tag/v0.2.6
 [0.2.5]: https://github.com/pdiegmann/copima-cli-crawler/releases/tag/v0.2.5
 [0.2.4]: https://github.com/pdiegmann/copima-cli-crawler/releases/tag/v0.2.4
 [0.2.0]: https://github.com/pdiegmann/copima-cli-crawler/releases/tag/v0.2.0
