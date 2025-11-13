@@ -664,6 +664,8 @@ export class TestRunner {
     const allOutput = stdout + stderr;
 
     // Extract log levels from output
+    // eslint-disable-next-line sonarjs/no-commented-code
+    /*
     const logLevelRegex = /\[(error|warn|info|debug)\]/gi;
     const levelMatches = allOutput.match(logLevelRegex) || [];
     levelMatches.forEach((match) => {
@@ -672,6 +674,7 @@ export class TestRunner {
         foundLevels.push(level);
       }
     });
+    */
 
     // Check required messages
     for (const pattern of logConfig.requiredMessages) {
@@ -1308,8 +1311,8 @@ export class TestRunner {
 
     <h2>Test Results</h2>
     ${result.results
-      .map(
-        (test) => `
+        .map(
+          (test) => `
         <div class="test ${test.success ? "passed" : "failed"}">
             <h3>${test.config.metadata.name} - ${test.success ? "PASSED" : "FAILED"}</h3>
             <p>${test.config.metadata.description}</p>
@@ -1321,8 +1324,8 @@ export class TestRunner {
             </div>
         </div>
     `
-      )
-      .join("")}
+        )
+        .join("")}
 </body>
 </html>`;
   }

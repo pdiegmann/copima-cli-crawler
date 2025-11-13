@@ -63,11 +63,13 @@ export const setConfigCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "Configuration key to set",
+        optional: true,
       },
       value: {
         kind: "parsed",
         parse: (input: string) => input,
         brief: "Configuration value",
+        optional: true,
       },
       global: {
         kind: "parsed",
@@ -109,6 +111,7 @@ export const unsetConfigCommand = buildCommand({
         kind: "parsed",
         parse: (input: string) => input,
         brief: "Configuration key to remove",
+        optional: true,
       },
       global: {
         kind: "parsed",
