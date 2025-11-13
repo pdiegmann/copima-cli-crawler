@@ -1,15 +1,170 @@
 #!/usr/bin/env bun
 
 import { execSync } from "child_process";
-import { existsSync, readFileSync, rmSync } from "fs";
+import { existsSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { buildExecutables } from "../build.config";
+
+type BumpType = "major" | "minor" | "patch";
+
+type Version = {
+  major: number;
+  minor: number;
+  patch: number;
+};
+
+const parseVersion = (version: string): Version => {
+  const match = version.match(/^(\d+)\.(\d+)\.(\d+)/);
+  if (!match) {
+    throw new Error(`Invalid version format: ${version}`);
+  }
+  return {
+    major: parseInt(match[1], 10),
+    minor: parseInt(match[2], 10),
+    patch: parseInt(match[3], 10),
+  };
+};
+
+const formatVersion = (version: Version): string => {
+  return `${version.major}.${version.minor}.${version.patch}`;
+};
+
+const bumpVersion = (version: Version, type: BumpType): Version => {
+  switch (type) {
+    case "major":
+      return { major: version.major + 1, minor: 0, patch: 0 };
+    case "minor":
+      return { major: version.major, minor: version.minor + 1, patch: 0 };
+    case "patch":
+      return { major: version.major, minor: version.minor, patch: version.patch + 1 };
+  }
+};
+
+const isVersionAvailableOnNpm = async (packageName: string, version: string): Promise<boolean> => {
+  try {
+    /* eslint-disable sonarjs/os-command */
+    const result = execSync(`npm view ${packageName}@${version} version 2>/dev/null`, {
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    /* eslint-enable sonarjs/os-command */
+    // If npm view succeeds and returns the version, it exists
+    return result.trim() === "";
+  } catch {
+    // Version doesn't exist on npm (npm view failed)
+    return true;
+  }
+};
+
+const isVersionAvailableInGit = (version: string): boolean => {
+  try {
+    /* eslint-disable sonarjs/os-command */
+    execSync(`git rev-parse v${version}`, { stdio: "ignore" });
+    /* eslint-enable sonarjs/os-command */
+    // Tag exists
+    return false;
+  } catch {
+    // Tag doesn't exist
+    return true;
+  }
+};
+
+const findAvailableVersion = async (packageName: string, baseVersion: Version): Promise<Version> => {
+  const candidateVersion = { ...baseVersion };
+  let attempts = 0;
+  const maxAttempts = 100;
+
+  while (attempts < maxAttempts) {
+    const versionString = formatVersion(candidateVersion);
+    console.log(`🔍 Checking availability of version ${versionString}...`);
+
+    const npmAvailable = await isVersionAvailableOnNpm(packageName, versionString);
+    const gitAvailable = isVersionAvailableInGit(versionString);
+
+    if (npmAvailable && gitAvailable) {
+      console.log(`✅ Version ${versionString} is available!`);
+      return candidateVersion;
+    }
+
+    if (!npmAvailable) {
+      console.log(`⚠️  Version ${versionString} exists on npm`);
+    }
+    if (!gitAvailable) {
+      console.log(`⚠️  Tag v${versionString} exists in git`);
+    }
+
+    // Increment patch version and try again
+    candidateVersion.patch++;
+    attempts++;
+  }
+
+  throw new Error(`Could not find available version after ${maxAttempts} attempts`);
+};
+
+const updatePackageJson = (newVersion: string): void => {
+  const packageJsonPath = resolve("./package.json");
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+  packageJson.version = newVersion;
+  writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, "utf-8");
+  console.log(`✅ Updated package.json to version ${newVersion}`);
+};
 
 const createRelease = async (): Promise<void> => {
   console.log("🚀 Starting release process...\n");
 
+  // Parse command-line arguments
+  const args = process.argv.slice(2);
+  const bumpType = args[0] as BumpType | undefined;
+
+  // Validate bump type if provided
+  if (bumpType && !["major", "minor", "patch"].includes(bumpType)) {
+    console.error(`❌ Invalid bump type: ${bumpType}`);
+    console.error("Usage: bun run release [major|minor|patch]");
+    process.exit(1);
+  }
+
+  // Get current version from package.json
+  const packageJsonPath = resolve("./package.json");
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+  const currentVersion = packageJson.version;
+  const packageName = packageJson.name;
+
+  console.log(`📦 Package: ${packageName}`);
+  console.log(`📌 Current version: ${currentVersion}\n`);
+
+  let newVersion: string;
+  const parsedVersion = parseVersion(currentVersion);
+
+  if (bumpType) {
+    console.log(`🔼 Bumping ${bumpType} version...\n`);
+    const bumpedVersion = bumpVersion(parsedVersion, bumpType);
+    const availableVersion = await findAvailableVersion(packageName, bumpedVersion);
+    newVersion = formatVersion(availableVersion);
+
+    if (newVersion !== formatVersion(bumpedVersion)) {
+      console.log(`\n⚠️  Originally planned version ${formatVersion(bumpedVersion)} was taken, using ${newVersion} instead.\n`);
+    }
+
+    // Update package.json with new version
+    updatePackageJson(newVersion);
+  } else {
+    newVersion = currentVersion;
+    console.log("ℹ️  No version bump requested, using current version.\n");
+
+    // Still check if current version is available
+    const npmAvailable = await isVersionAvailableOnNpm(packageName, newVersion);
+    const gitAvailable = isVersionAvailableInGit(newVersion);
+
+    if (!npmAvailable) {
+      console.log(`⚠️  Warning: Version ${newVersion} already exists on npm.`);
+    }
+    if (!gitAvailable) {
+      console.log(`⚠️  Warning: Tag v${newVersion} already exists in git.`);
+    }
+  }
+
   // Clean and build
-  console.log("🧹 Cleaning previous builds...");
+  console.log("\n🧹 Cleaning previous builds...");
   const distDir = resolve("./dist");
 
   if (existsSync(distDir)) {
@@ -20,12 +175,8 @@ const createRelease = async (): Promise<void> => {
   // Build executables
   await buildExecutables();
 
-  // Get version from package.json
-  const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"));
-  const version = packageJson.version;
-
   console.log("\n📋 Release Summary:");
-  console.log(`Version: ${version}`);
+  console.log(`Version: ${newVersion}`);
   console.log("Files created:");
   console.log("- dist/copima-cli-windows.exe");
   console.log("- dist/copima-cli-macos-x64");
@@ -40,18 +191,6 @@ const createRelease = async (): Promise<void> => {
       console.log("\n⚠️  Warning: You have uncommitted changes.");
       console.log("Consider committing changes before creating a release.");
     }
-
-    // Check if tag already exists
-    try {
-      /* eslint-disable sonarjs/os-command */
-      execSync(`git rev-parse v${version}`, { stdio: "ignore" });
-      /* eslint-enable sonarjs/os-command */
-      console.log(`\n⚠️  Tag v${version} already exists.`);
-      console.log("Consider updating the version in package.json before releasing.");
-    } catch {
-      // Tag doesn't exist, which is good
-      console.log(`\n✅ Tag v${version} is available.`);
-    }
   } catch {
     console.log("\n⚠️  Not in a git repository or git not available.");
   }
@@ -61,7 +200,7 @@ const createRelease = async (): Promise<void> => {
   console.log("1. Test the executables locally");
   console.log("2. Commit any changes and push to main branch");
   console.log("3. Create a git tag and push it to trigger GitHub Actions");
-  console.log(`   git tag v${version} && git push origin v${version}`);
+  console.log(`   git tag v${newVersion} && git push origin v${newVersion}`);
   console.log("4. Or manually upload the files to GitHub releases");
 };
 
