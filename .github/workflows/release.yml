@@ -39,25 +39,10 @@ jobs:
           fail_ci_if_error: false
         continue-on-error: true
 
-  # Build binaries on native platforms
+  # Build all binaries on macOS ARM64 with cross-compilation
   build:
     needs: test
-    strategy:
-      matrix:
-        include:
-          - os: macos-latest
-            target: bun-darwin-arm64
-            name: macos-arm64
-            extension: ""
-          - os: macos-13 # Intel Mac
-            target: bun-darwin-x64
-            name: macos-x64
-            extension: ""
-          - os: ubuntu-latest
-            target: bun-windows-x64
-            name: windows
-            extension: ".exe"
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -71,22 +56,34 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build executable
+      - name: Build all executables
         run: |
           mkdir -p dist
-          bun build --compile --target=${{ matrix.target }} --outfile=dist/copima-cli-${{ matrix.name }}${{ matrix.extension }} ./src/bin/cli.ts
 
-      - name: Sign macOS binary (ad-hoc)
-        if: runner.os == 'macOS'
+          # Build macOS ARM64
+          bun build --compile --target=bun-darwin-arm64 --outfile=dist/copima-cli-macos-arm64 ./src/bin/cli.ts
+
+          # Build macOS Intel (x64)
+          bun build --compile --target=bun-darwin-x64 --outfile=dist/copima-cli-macos-x64 ./src/bin/cli.ts
+
+          # Build Windows (cross-compile from macOS)
+          bun build --compile --target=bun-windows-x64 --outfile=dist/copima-cli-windows.exe ./src/bin/cli.ts
+
+      - name: Sign macOS binaries (ad-hoc)
         run: |
-          codesign -s - --force --deep dist/copima-cli-${{ matrix.name }}
-          codesign -dv dist/copima-cli-${{ matrix.name }}
+          # Sign both macOS binaries
+          codesign -s - --force --deep dist/copima-cli-macos-arm64
+          codesign -s - --force --deep dist/copima-cli-macos-x64
 
-      - name: Upload artifact
+          # Verify signatures
+          codesign -dv dist/copima-cli-macos-arm64
+          codesign -dv dist/copima-cli-macos-x64
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: copima-cli-${{ matrix.name }}
-          path: dist/copima-cli-${{ matrix.name }}${{ matrix.extension }}
+          name: executables
+          path: dist/copima-cli-*
           retention-days: 1
 
   # Create release and upload all artifacts

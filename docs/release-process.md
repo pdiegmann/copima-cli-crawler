@@ -40,16 +40,20 @@ The release workflow consists of three jobs:
 - Uploads coverage to Codecov
 - Must pass before building
 
-### 2. Build Job (Matrix)
-Builds executables on native platforms to ensure proper code signing:
+### 2. Build Job (macOS ARM64)
+Builds all executables on a single macOS ARM64 runner:
 
-| Platform | Runner | Target | Output |
-|----------|--------|--------|--------|
-| macOS ARM64 | `macos-latest` | `bun-darwin-arm64` | `copima-cli-macos-arm64` |
-| macOS Intel | `macos-13` | `bun-darwin-x64` | `copima-cli-macos-x64` |
-| Windows | `ubuntu-latest` | `bun-windows-x64` | `copima-cli-windows.exe` |
+| Platform | Target | Output |
+|----------|--------|--------|
+| macOS ARM64 | `bun-darwin-arm64` | `copima-cli-macos-arm64` |
+| macOS Intel | `bun-darwin-x64` | `copima-cli-macos-x64` |
+| Windows | `bun-windows-x64` | `copima-cli-windows.exe` |
 
-**Important:** macOS binaries are built on macOS runners and ad-hoc signed with `codesign -s -` to prevent Gatekeeper issues.
+**Key Points:**
+- All binaries built on `macos-latest` (Apple Silicon)
+- macOS binaries are ad-hoc signed with `codesign -s -` to prevent Gatekeeper issues
+- Cross-compilation from macOS ARM64 works for Windows and macOS Intel
+- Simpler and faster than matrix builds across multiple platforms
 
 ### 3. Release Job (Ubuntu)
 - Downloads all build artifacts
@@ -59,12 +63,14 @@ Builds executables on native platforms to ensure proper code signing:
 
 ## macOS Code Signing
 
-### Why Native Builds?
+### Why Build on macOS?
 
 Cross-compiling macOS binaries on Linux produces unsigned binaries that macOS Gatekeeper blocks with:
 ```
 "copima-cli-macos-x64" is damaged and can't be opened
 ```
+
+Building on a macOS runner allows us to sign the binaries, which prevents this issue. Fortunately, we can cross-compile both Windows and macOS Intel binaries from a single macOS ARM64 runner.
 
 ### Ad-Hoc Signing
 
@@ -145,18 +151,21 @@ This is expected with ad-hoc signing:
 
 If automated release fails:
 
-1. **Build locally on each platform**
+1. **Build locally on macOS**
    ```bash
-   # On macOS (ARM64)
-   bun build --compile --target=bun-darwin-arm64 --outfile=copima-cli-macos-arm64 ./src/bin/cli.ts
-   codesign -s - --force copima-cli-macos-arm64
+   # Build all binaries (on macOS)
+   mkdir -p dist
 
-   # On macOS (Intel)
-   bun build --compile --target=bun-darwin-x64 --outfile=copima-cli-macos-x64 ./src/bin/cli.ts
-   codesign -s - --force copima-cli-macos-x64
+   # macOS ARM64
+   bun build --compile --target=bun-darwin-arm64 --outfile=dist/copima-cli-macos-arm64 ./src/bin/cli.ts
+   codesign -s - --force dist/copima-cli-macos-arm64
 
-   # On any platform (for Windows)
-   bun build --compile --target=bun-windows-x64 --outfile=copima-cli-windows.exe ./src/bin/cli.ts
+   # macOS Intel (cross-compile)
+   bun build --compile --target=bun-darwin-x64 --outfile=dist/copima-cli-macos-x64 ./src/bin/cli.ts
+   codesign -s - --force dist/copima-cli-macos-x64
+
+   # Windows (cross-compile)
+   bun build --compile --target=bun-windows-x64 --outfile=dist/copima-cli-windows.exe ./src/bin/cli.ts
    ```
 
 2. **Create checksums**
