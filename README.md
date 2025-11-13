@@ -174,12 +174,15 @@ See the **[Development Setup](https://github.com/pdiegmann/copima-cli-crawler/wi
 
 ## 🚀 Release Process
 
+**For detailed release process documentation, including macOS code signing, see [docs/release-process.md](docs/release-process.md).**
+
 This project uses an automated release workflow that:
 
-1. **Builds** cross-platform executables (Windows, macOS Intel, macOS ARM64)
-2. **Runs** tests with coverage reporting
-3. **Updates** the CHANGELOG.md automatically with release information
-4. **Creates** a GitHub release with downloadable binaries
+1. **Builds** cross-platform executables on native platforms (Windows, macOS Intel, macOS ARM64)
+2. **Signs** macOS binaries with ad-hoc signing to prevent Gatekeeper issues
+3. **Runs** tests with coverage reporting
+4. **Updates** the CHANGELOG.md automatically with release information
+5. **Creates** a GitHub release with downloadable binaries and checksums
 
 ### Creating a Release
 

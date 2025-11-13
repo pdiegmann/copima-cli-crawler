@@ -10,15 +10,12 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  # Run tests once on Linux
+  test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -42,23 +39,99 @@ jobs:
           fail_ci_if_error: false
         continue-on-error: true
 
-      - name: Build executables
-        run: bun run scripts/build.ts
+  # Build binaries on native platforms
+  build:
+    needs: test
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: bun-darwin-arm64
+            name: macos-arm64
+            extension: ""
+          - os: macos-13 # Intel Mac
+            target: bun-darwin-x64
+            name: macos-x64
+            extension: ""
+          - os: ubuntu-latest
+            target: bun-windows-x64
+            name: windows
+            extension: ".exe"
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build executable
+        run: |
+          mkdir -p dist
+          bun build --compile --target=${{ matrix.target }} --outfile=dist/copima-cli-${{ matrix.name }}${{ matrix.extension }} ./src/bin/cli.ts
+
+      - name: Sign macOS binary (ad-hoc)
+        if: runner.os == 'macOS'
+        run: |
+          codesign -s - --force --deep dist/copima-cli-${{ matrix.name }}
+          codesign -dv dist/copima-cli-${{ matrix.name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: copima-cli-${{ matrix.name }}
+          path: dist/copima-cli-${{ matrix.name }}${{ matrix.extension }}
+          retention-days: 1
+
+  # Create release and upload all artifacts
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
       - name: Get version
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Organize artifacts
+        run: |
+          # Move artifacts from subdirectories to dist root
+          find dist -type f -name "copima-cli-*" -exec mv {} dist/ \;
+          # Remove empty artifact directories
+          find dist -type d -empty -delete
+          ls -la dist/
+
       - name: Update CHANGELOG.md
         run: |
-          # Extract version without 'v' prefix
           VERSION="${{ steps.version.outputs.VERSION }}"
           RELEASE_DATE=$(date +%Y-%m-%d)
-
-          # Update the changelog with a template entry
           bun run scripts/update-changelog.ts "$VERSION" "$RELEASE_DATE"
 
-          # Check if changelog was updated
           if git diff --quiet CHANGELOG.md; then
             echo "ℹ️  No changes to CHANGELOG.md"
           else
@@ -71,15 +144,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          # Check if there are changes to commit
           if ! git diff --quiet CHANGELOG.md; then
-            # Fetch main branch
             git fetch origin main:main
-            
-            # Create a temporary branch from main
             git checkout main
-            
-            # Apply the changelog changes
             git add CHANGELOG.md
             git commit -m "docs: update CHANGELOG.md for version ${{ steps.version.outputs.VERSION }}"
             git push origin main
