@@ -26,6 +26,8 @@ jspm_packages/
 *.tsbuildinfo
 dist
 
+*.bun-build
+
 # SonarQube
 .sonarqube/
 .scannerwork/
