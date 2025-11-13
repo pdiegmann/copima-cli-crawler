@@ -216,15 +216,16 @@ const createRelease = async (): Promise<void> => {
     execSync(`git tag -a v${newVersion} -m "Release v${newVersion}"`, { stdio: "inherit" });
     /* eslint-enable sonarjs/os-command */
     console.log(`✅ Created tag v${newVersion}`);
+
+    // Push commit and tag
+    console.log("\n⬆️  Pushing commit and tag to remote...");
+    execSync("git push --follow-tags", { stdio: "inherit" });
     /* eslint-enable sonarjs/no-os-command-from-path */
+    console.log("✅ Pushed commit and tag to remote");
 
     console.log("\n🎉 Release completed successfully!");
-    console.log("\nNext steps:");
-    console.log("1. Test the executables locally");
-    console.log("2. Push the commit and tag to trigger GitHub Actions:");
-    console.log(`   git push && git push origin v${newVersion}`);
-    console.log("3. Or push both at once:");
-    console.log("   git push --follow-tags");
+    console.log("\nThe commit and tag have been pushed to trigger GitHub Actions.");
+    console.log("Monitor the release at: https://github.com/pdiegmann/copima-cli-crawler/actions");
   } catch (error) {
     console.error("\n❌ Git operations failed:", error);
     console.log("\n⚠️  Release build completed but git operations failed.");
