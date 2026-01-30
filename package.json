@@ -80,7 +80,7 @@
     ".{js,css,md}": "prettier — write"
   },
   "dependencies": {
-    "@stricli/auto-complete": "^1.2.4",
+    "@stricli/auto-complete": "^1.2.5",
     "@stricli/core": "^1.2.4",
     "@types/cli-progress": "^3.11.6",
     "cli-progress": "^3.12.0",
